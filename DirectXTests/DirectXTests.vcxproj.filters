@@ -1,0 +1,363 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="DxErr">
+      <UniqueIdentifier>{79e9fed4-800a-412f-b9a9-7ff6ca6187ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{18425cc4-1b8c-49cc-9e52-a71eed4d167f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Bindables">
+      <UniqueIdentifier>{ea05ed40-a8f7-4317-9e45-ab6586e4d387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Bindables">
+      <UniqueIdentifier>{64e86cb3-3149-4f31-887d-090192cea3a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Entities">
+      <UniqueIdentifier>{687f8b45-be92-4bf7-a5f9-f81f427b529d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Entities">
+      <UniqueIdentifier>{8af7dd6b-4276-4284-a0c1-e7462f52df83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Animation">
+      <UniqueIdentifier>{5e175f41-4d06-4eda-9556-1acff9334f21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Animation">
+      <UniqueIdentifier>{0743faf6-848e-4d2e-bf84-acc39c7fff02}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageManager.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsThrowMacros.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsThrowMacros.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="DxgiInfoManager.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="WideStringUtility.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="dxerr.h">
+      <Filter>DxErr</Filter>
+    </ClInclude>
+    <ClInclude Include="Bindable.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLayout.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Rasterizer.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeTexture.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilState.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendState.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMesh.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedVertexBuffer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="PoolAllocator.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Game.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="DxgiInfoManager.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXExample.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="dxerr.cpp">
+      <Filter>DxErr</Filter>
+    </ClCompile>
+    <ClCompile Include="Bindable.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="InputLayout.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Rasterizer.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeTexture.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageManager.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilState.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="BlendState.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMesh.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedVertexBuffer.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Archivos de origen\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DXGetErrorString.inl">
+      <Filter>DxErr</Filter>
+    </None>
+    <None Include="DXGetErrorDescription.inl">
+      <Filter>DxErr</Filter>
+    </None>
+    <None Include="DXTrace.inl">
+      <Filter>DxErr</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="vertex.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="fragment.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="composeVertex.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="composeDeferredPixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="texturePixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="skyboxPixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="skyboxVertex.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="deferredPixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="composePixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="cubeVertex.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="blankPixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="plainTexturePixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SolidPixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DiffusePixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SkinnedPixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SkinnedVertex.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
