@@ -155,9 +155,6 @@
     <ClInclude Include="Entity.h">
       <Filter>Archivos de encabezado\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="SkinnedMesh.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="SkinnedVertexBuffer.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -178,6 +175,15 @@
     </ClInclude>
     <ClInclude Include="PoolAllocator.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="BindableSlotsInfo.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedMesh.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -274,9 +280,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Archivos de origen\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="SkinnedMesh.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="SkinnedVertexBuffer.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -297,6 +300,12 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedMesh.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Archivos de origen\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +366,12 @@
       <Filter>shaders</Filter>
     </FxCompile>
     <FxCompile Include="SkinnedVertex.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowVertex.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

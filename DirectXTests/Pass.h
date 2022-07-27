@@ -20,11 +20,11 @@ public:
 	void Update(Graphics& gfx);
 	void Bind(Graphics& gfx);
 	void Unbind(Graphics& gfx);
-	unsigned char GetIdx() { return m_idx; }
+	unsigned char GetIdx() { return m_slot; }
 public:
 	const unsigned int layer;	
 private:
 	std::vector<Bindable*> m_binds;
 	static unsigned char static_idx;
-	unsigned char m_idx;
+	unsigned char m_slot;
 };

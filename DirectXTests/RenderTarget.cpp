@@ -3,7 +3,10 @@
 
 namespace wrl = Microsoft::WRL;
 
-RenderTarget::RenderTarget(Graphics& gfx, IDXGISwapChain* swapChain) : m_idx(0){
+std::unordered_map<int, int> boundShaderResources;
+int idCount;
+
+RenderTarget::RenderTarget(Graphics& gfx, IDXGISwapChain* swapChain) : m_slot(0), m_id(idCount++){
 	INFOMAN(gfx);
 
 	// Get back buffer
@@ -43,7 +46,7 @@ RenderTarget::RenderTarget(Graphics& gfx, IDXGISwapChain* swapChain) : m_idx(0){
 
 }
 
-RenderTarget::RenderTarget(Graphics& gfx, int width, int height, DXGI_FORMAT format, int count) : m_idx(0), m_width(width), m_height(height){
+RenderTarget::RenderTarget(Graphics& gfx, int width, int height, DXGI_FORMAT format, int count, int slot) : m_slot(slot), m_id(idCount++), m_width(width), m_height(height){
 	INFOMAN(gfx);	
 
 	// Depth-Stencil Texture
@@ -127,7 +130,8 @@ void RenderTarget::Bind(Graphics& gfx) const {
 	if (locked) return;
 
 	if (isShaderResource) {
-		GetContext(gfx)->PSSetShaderResources(m_idx, m_srv.size(), m_srv[0].GetAddressOf());
+		GetContext(gfx)->PSSetShaderResources(m_slot, m_srv.size(), m_srv[0].GetAddressOf());
+		boundShaderResources[m_slot] = m_id;
 	}
 	else {
 		//ID3D11RenderTargetView* const * srv = (m_rtv.size() ? m_rtv[0].GetAddressOf() : nullptr);
@@ -144,20 +148,31 @@ void RenderTarget::Unbind(Graphics& gfx) const {
 	if (locked) return;
 
 	if (isShaderResource) {
+		/*
 		std::vector<ID3D11ShaderResourceView*> nullViews(m_srv.size(), nullptr);
-		GetContext(gfx)->PSSetShaderResources(m_idx, m_srv.size(), nullViews.data());
+		GetContext(gfx)->PSSetShaderResources(m_slot, m_srv.size(), nullViews.data());
+		boundShaderResources[m_slot] = -1;
+		*/
 	}
-	/*
+	
 	else {
-		if (m_rtv.size()) {
-			std::vector<ID3D11ShaderResourceView*> nullViews(m_rtv.size(), nullptr);
-			GetContext(gfx)->OMSetRenderTargets(m_rtv.size(), nullViews.data());
+		if (m_rtv.size()) 
+		{
+			std::vector<ID3D11RenderTargetView*> nullViews(m_rtv.size(), nullptr);
+			GetContext(gfx)->OMSetRenderTargets(m_rtv.size(), nullViews.data(), nullptr);
 		}
-		else {
-			GetContext(gfx)->OMSetRenderTargets(1, nullptr, nullptr);
+		else 
+		{
+			ID3D11RenderTargetView* nullviews[1] = { nullptr };
+			GetContext(gfx)->OMSetRenderTargets(1, nullviews, nullptr);
 		}
-	}
-	*/
+
+		if (boundShaderResources.count(m_slot) &&
+			boundShaderResources[m_slot] == m_id) 
+		{
+			GetContext(gfx)->PSSetShaderResources(m_slot, m_srv.size(), m_srv[0].GetAddressOf());
+		}
+	}	
 }
 
 void RenderTarget::Clear(Graphics& gfx, float r, float g, float b) {

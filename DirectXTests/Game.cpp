@@ -23,7 +23,7 @@
 #include <vector>
 
 Game::Game() {
-	window = new Window(800, 800, "Game");
+	window = new Window(1024, 1024, "Game");
 	renderer = new Renderer(*window->gfx);
 	dt = 0.01f;
 }
@@ -82,7 +82,7 @@ void Game::Update(float dt) {
 	lastX = window->mouse.GetX();
 	lastY = window->mouse.GetY();
 
-	float moveSpeed = 10.0f;
+	float moveSpeed = 50.0f;
 
 	if (window->keyboard.KeyIsPressed('W')) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0,0,1) * moveSpeed * dt);

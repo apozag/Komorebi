@@ -18,6 +18,8 @@ class Pass;
 class Scene;
 class Skeleton;
 class Model;
+class Animation;
+class Node;
 
 class ModelLoader {
 public:
@@ -31,9 +33,11 @@ private:
 	static void processNode(Graphics& gfx, aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
 	static void processNodeBones(Graphics& gfx, aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
 	static Mesh* processMesh(Graphics& gfx, aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent);
+	static Animation* processAnimation(const aiScene* scene);
 	static SkinnedMesh* processSkinnedMesh(Graphics& gfx, aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
 	static std::string directory;
 
+	static std::vector<Node*> boneNodes;
 	static std::vector<std::string> boneNames;
 	static std::vector<DirectX::XMMATRIX> boneOffsets;
 };

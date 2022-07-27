@@ -2,6 +2,7 @@
 
 #define NOMINMAX
 
+#include <utility>
 #include <iostream>
 #include <algorithm>
 #include "ModelLoader.h"
@@ -16,8 +17,10 @@
 #include "Rasterizer.h"
 #include "DepthStencilState.h"
 #include "Model.h"
+#include "Animation.h"
 
 std::string ModelLoader::directory;
+std::vector<Node*> ModelLoader::boneNodes;
 std::vector<std::string> ModelLoader::boneNames;
 std::vector<DirectX::XMMATRIX> ModelLoader::boneOffsets;
 
@@ -38,12 +41,23 @@ Model* ModelLoader::LoadModel(Graphics& gfx, std::string path, Scene* sceneGraph
         std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
         return nullptr;
     }
+
     Model* model = new Model(gfx);
     Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
     directory = path.substr(0, path.find_last_of('/')+1);
     processNode(gfx, scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
-    processNodeBones(gfx, scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
 
+    boneNodes.resize(boneNames.size());
+
+    processNodeBones(gfx, scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
+    if (scene->HasAnimations()) {
+        model->m_hasAnimation = true;
+        model->m_animation = processAnimation(scene);
+    }
+
+    boneNames.clear();
+    boneOffsets.clear();
+    boneNodes.clear();
     return model;
 }
 
@@ -65,10 +79,10 @@ Mesh* ModelLoader::GenerateMesh(Graphics& gfx, std::vector<POD::Vertex> vertices
 
 Mesh* ModelLoader::GenerateQuad(Graphics& gfx, Scene* sceneGraph, Node* sceneGraphParent, float scale) {
     std::vector<POD::Vertex> vertices {
-        {{-1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
-        {{ 1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
-        {{ 1.0f*scale, -1.0f*scale, 0.5f*scale}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
-        {{-1.0f*scale, -1.0f*scale, 0.5f*scale}, {0, 0, 1}, {0, 1, 0}, {0, 1}}
+        {{-1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {0, 0}},
+        {{ 1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {1, 0}},
+        {{ 1.0f*scale, -1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {1, 1}},
+        {{-1.0f*scale, -1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {0, 1}}
     };
 
     std::vector<unsigned short> indices {
@@ -157,15 +171,19 @@ void ModelLoader::processNodeBones(Graphics& gfx, aiNode* node, const aiScene* s
     Entity* entity = nullptr;
 
     const char* nodeName = node->mName.C_Str();
+    int nodeIdx = -1;
     for (int i = 0; i < boneNames.size(); i++) {
         if (boneNames[i] == nodeName) {
             entity = new Bone(model->m_skeleton, i, boneOffsets[i]);
+            nodeIdx = i;
             break;
         }
     }
 
     Node* sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
-    /*
+    
+    if(nodeIdx > 0) boneNodes[nodeIdx] = sceneNode;
+
     Pass* aabbPass = new Pass(gfx, "cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
     aabbPass->AddBindable(new Rasterizer(gfx, true, true));
     aabbPass->AddBindable(new DepthStencilState(gfx,
@@ -173,8 +191,7 @@ void ModelLoader::processNodeBones(Graphics& gfx, aiNode* node, const aiScene* s
     ));
 
     ModelLoader::GenerateCube(gfx, sceneGraph, sceneNode)->AddPass(aabbPass);
-    */
-    
+        
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
         processNodeBones(gfx, node->mChildren[i], scene, sceneGraph, sceneNode, model);
@@ -378,4 +395,49 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(Graphics& gfx, aiMesh* mesh, const 
     sceneGraph->AddNode(m, Transform(), sceneGraphParent);
 
     return m;
+}
+
+Animation* ModelLoader::processAnimation(const aiScene* scene) {
+    aiAnimation* animation = scene->mAnimations[0];
+    std::vector<Animation::Channel> channels;
+
+    // TODO: account for multiple animations
+
+
+    for (int i = 0; i < animation->mNumChannels; i++) {
+        aiNodeAnim* channel = animation->mChannels[i];
+
+        Node* boneNode = nullptr;
+        std::string boneName(channel->mNodeName.C_Str());
+        for (int j = 0; j < boneNames.size(); j++) {
+            if (boneName == boneNames[j]) {
+                boneNode = boneNodes[j];
+                break;
+            }
+        }
+
+        if (boneNode == nullptr) continue;
+
+        std::vector<Animation::Keyframe> keyframes(channel->mNumPositionKeys);
+        for (int j = 0; j < channel->mNumPositionKeys; j++) {
+            const aiVectorKey& pos = channel->mPositionKeys[j];
+            const aiQuatKey& rot = channel->mRotationKeys[j];
+            const aiVectorKey& scale = channel->mScalingKeys[j];
+            keyframes[j] = {
+                pos.mTime,
+                {pos.mValue.x, pos.mValue.y, pos.mValue.z},
+                {rot.mValue.x, rot.mValue.y, rot.mValue.z, rot.mValue.w},
+                {pos.mValue.x, pos.mValue.y, pos.mValue.z},
+            };
+        }
+
+        channels.push_back({
+            std::move(keyframes),
+            boneNode
+        });
+
+        
+    }
+
+    return new Animation(animation->mDuration, animation->mTicksPerSecond, std::move(channels));
 }

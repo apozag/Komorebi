@@ -4,7 +4,7 @@
 
 namespace wrl = Microsoft::WRL;
 
-Texture2D::Texture2D(Graphics& gfx, std::string path, unsigned int idx): m_idx(idx) {
+Texture2D::Texture2D(Graphics& gfx, std::string path, unsigned int slot): m_slot(slot) {
 	INFOMAN(gfx);
 
 	Image img = ImageManager::loadImage(path);
@@ -36,10 +36,10 @@ Texture2D::Texture2D(Graphics& gfx, std::string path, unsigned int idx): m_idx(i
 }
 
 void Texture2D::Bind(Graphics& gfx) const {
-	GetContext(gfx)->PSSetShaderResources(m_idx, 1u, m_srv.GetAddressOf());
+	GetContext(gfx)->PSSetShaderResources(m_slot, 1u, m_srv.GetAddressOf());
 }
 
 void Texture2D::Unbind(Graphics& gfx) const {
 	ID3D11ShaderResourceView* nullViews[] = { nullptr };
-	GetContext(gfx)->PSSetShaderResources(m_idx, 1u, nullViews);
+	GetContext(gfx)->PSSetShaderResources(m_slot, 1u, nullViews);
 }

@@ -2,7 +2,7 @@
 
 #include "Renderer.h"
 
-Skeleton::Skeleton(Graphics& gfx) : m_boneCBuff(gfx, CBuffSlots::BONES_CBUFF_SLOT){}
+Skeleton::Skeleton(Graphics& gfx) : m_boneCBuff(gfx, VCBUFF_BONES_SLOT){}
 
 void Skeleton::UpdateBone(int idx, DirectX::XMMATRIX matrix){
 	m_dirty = true;

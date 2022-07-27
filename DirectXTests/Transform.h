@@ -63,6 +63,25 @@ public:
 		return DirectX::XMVector4Transform(DirectX::XMVECTORF32({ 0.f, 1.f, 0.f, 0.f }), m_matrix);
 	}
 
+	void SetPosition(DirectX::SimpleMath::Vector3 pos) {
+		update();
+		m_position = pos;
+		compose();
+		m_dirty = true;
+	}
+	void SetRotation(DirectX::SimpleMath::Quaternion rot) {
+		update();
+		m_rotation = rot;
+		compose();
+		m_dirty = true;
+	}
+	void SetScale(DirectX::SimpleMath::Vector3 scale) {
+		update();
+		m_scale = scale;
+		compose();
+		m_dirty = true;
+	}
+
 	DirectX::SimpleMath::Vector3 PointToLocal(DirectX::SimpleMath::Vector3 point) {
 		return DirectX::XMVector4Transform({point.x, point.y, point.z, 1.0f}, GetInverseMatrix());
 	}
@@ -112,6 +131,7 @@ public:
 		m_invMatDirty = true;
 		m_dirty = true;
 	}
+
 private:
 
 	void update() {
@@ -131,6 +151,11 @@ private:
 		m_position = p;
 		m_rotation = r;
 		m_scale = s;
+	}
+
+	void compose() {
+		m_matrix = DirectX::XMMatrixTranslationFromVector(m_position)* DirectX::XMMatrixRotationQuaternion(m_rotation)* DirectX::XMMatrixScalingFromVector(m_scale);
+		m_invMatDirty = true;
 	}
 
 	DirectX::XMMATRIX m_matrix;

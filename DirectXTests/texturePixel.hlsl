@@ -16,7 +16,7 @@ struct VSout
 	float2 uv : TEXCOORD0;
 };
 
-Texture2D albedoTex : register(t0);
+Texture2D albedoTex : register(t3);
 Texture2D normalTex : register(t1);
 
 SamplerState texSampler;

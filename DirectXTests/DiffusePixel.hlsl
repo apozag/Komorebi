@@ -20,7 +20,7 @@ float4 main(VSout i) : SV_Target
 
 	float3 c = i.color;
 
-	c += max(0, dot(i.normal, -dir[0])) * color[0] * albedo;
+	c += max(0, dot(i.normal, dir[0])) * color[0] * albedo;
 
 	c += albedo * 0.3;
 

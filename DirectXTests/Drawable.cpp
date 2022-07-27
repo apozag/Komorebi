@@ -6,7 +6,7 @@
 #include "Drawable.h"
 
 Drawable::Drawable(Graphics& gfx) {
-	m_modelCbuffer = new VertexConstantBuffer<ModelMatrixData> (gfx, CBuffSlots::MODEL_CBUFF_SLOT);
+	m_modelCbuffer = new VertexConstantBuffer<ModelMatrixData> (gfx, VCBUFF_MODEL_SLOT);
 	AddBindable(m_modelCbuffer);
 }
 

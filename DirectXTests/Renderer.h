@@ -6,9 +6,10 @@
 #include <d3d11.h>
 #include "directxmath.h"
 
+#include "BindableSlotsInfo.h"
 #include "Defines.h"
-
 #include "ConstantBuffer.h"
+#include "Sampler.h"
 
 class Graphics;
 class Drawable;
@@ -18,22 +19,12 @@ class DirectionalLight;
 class PointLight;
 class Camera;
 class Transform;
+class RenderTarget;
 
 
 #define MAX_DIRLIGHTS   5
 #define MAX_SPOTLIGHTS  5
 #define MAX_POINTLIGHTS 5
-
-enum CBuffSlots {
-	DIRLIGHT_CBUFF_SLOT		= 0,
-	POINTLIGHT_CBUFF_SLOT	= 1,
-	SPOTLIGHT_CBUFF_SLOT	= 2,
-	VIEW_CBUFF_SLOT			= 3,
-	PROJ_CBUFF_SLOT			= 4,	
-	MODEL_CBUFF_SLOT		= 5,
-	BONES_CBUFF_SLOT		= 6,
-	FREE_CBUFF_SLOT			= 7,
-};
 
 class Renderer {
 private:
@@ -52,7 +43,6 @@ private:
 	struct alignas(16) DirLightData {
 		POD::Vector4 color[MAX_DIRLIGHTS];
 		POD::Vector4 dir[MAX_DIRLIGHTS];
-		DirectX::XMMATRIX viewProj[MAX_DIRLIGHTS];
 		unsigned int count;
 	};
 	struct alignas(16) PointLightData {
@@ -66,12 +56,17 @@ private:
 		POD::Vector3 color[MAX_SPOTLIGHTS];
 		unsigned int count;
 	};
+	struct alignas(16) LightTransformData {
+		DirectX::XMMATRIX viewProj[MAX_DIRLIGHTS];
+	};
 
 public:
-	Renderer(Graphics& gfx) : 
-		m_dirLightsCbuff(PixelConstantBuffer<DirLightData>(gfx, DIRLIGHT_CBUFF_SLOT)),
-		m_pointLightsCbuff(PixelConstantBuffer<PointLightData>(gfx, POINTLIGHT_CBUFF_SLOT)),
-		m_spotLightsCbuff(PixelConstantBuffer<SpotLightData>(gfx, SPOTLIGHT_CBUFF_SLOT))
+	Renderer(Graphics& gfx) :
+		m_dirLightsCbuff(PixelConstantBuffer<DirLightData>(gfx, PCBUFF_DIRLIGHT_SLOT)),
+		m_pointLightsCbuff(PixelConstantBuffer<PointLightData>(gfx, PCBUFF_POINTLIGHT_SLOT)),
+		m_spotLightsCbuff(PixelConstantBuffer<SpotLightData>(gfx, PCBUFF_SPOTLIGHT_SLOT)),
+		m_lightTransformCbuff(VertexConstantBuffer<LightTransformData>(gfx, VCBUFF_LIGHTTRANSFORM_SLOT)),
+		m_shadowMapSampler(gfx, D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, TEX2D_SHADOWMAP_SLOT)
 	{}
 	void SubmitDrawable(const Drawable* drawable, const Transform* transform, std::vector<Pass*> passes);
 	void SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform);
@@ -81,10 +76,9 @@ public:
 	void Render(Graphics& gfx);
 
 	friend bool compareJob(const Job& j1, const Job& j2);
+	friend bool compareCamera(const CameraView& c1, const CameraView& c2);
 
 private:
-
-	//bool IsInsideFrustum(const Camera& camera, const Transform& cameraTransform, const Drawable& drawable, const Transform& drawableTransform);
 
 	std::vector<Job> m_jobs;
 	std::vector<CameraView> m_cameras;
@@ -95,4 +89,10 @@ private:
 	PixelConstantBuffer<DirLightData> m_dirLightsCbuff;
 	PixelConstantBuffer<PointLightData> m_pointLightsCbuff;
 	PixelConstantBuffer<SpotLightData> m_spotLightsCbuff;
+
+	LightTransformData m_lightTransformData;
+	VertexConstantBuffer<LightTransformData> m_lightTransformCbuff;
+
+	std::vector<RenderTarget*> m_shadowMaps;
+	Sampler m_shadowMapSampler;
 };

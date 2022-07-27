@@ -29,4 +29,7 @@ public:
 	RenderTarget* m_rt;
 
 	virtual void Insert(Renderer& renderer, const Transform& worldTransform) override;
+
+public:
+	int m_priority;
 };

@@ -16,7 +16,6 @@ struct BoneCBuffData {
 };
 
 class Skeleton {
-	friend class SkinnedMesh;
 public:
 	Skeleton(Graphics& gfx);
 	void UpdateBone(int idx, DirectX::XMMATRIX matrix);

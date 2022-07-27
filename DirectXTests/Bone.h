@@ -9,10 +9,10 @@ class Skeleton;
 
 class Bone : public Entity{
 public:
-	Bone(Skeleton* skeleton, int idx, DirectX::XMMATRIX offsetMatrix) : m_idx(idx), m_skeleton(skeleton), mOffsetMatrix(offsetMatrix) {}
+	Bone(Skeleton* skeleton, int idx, DirectX::XMMATRIX offsetMatrix) : m_slot(idx), m_skeleton(skeleton), mOffsetMatrix(offsetMatrix) {}
 	void Insert(Renderer& renderer, const Transform& worldTransform) override;
 private:
-	int m_idx;
+	int m_slot;
 	DirectX::XMMATRIX mOffsetMatrix;
 	Skeleton* m_skeleton;
 };

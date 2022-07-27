@@ -11,44 +11,45 @@ struct VSout
 {
 	float4 pos : SV_Position;
 	float4 lightSpacePos : LIGHTPOS;
+	float4 worldPos : WORLDPOS;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 bitangent : BITANGENT;
 	float2 uv : TEXCOORD0;
 };
 
-Texture2D shadowMap : register(t0);
+SamplerState shadowMapSampler : register(s5);
+Texture2D shadowMap : register(t5);
 
-float calcShadow() {
+float3 calcShadow(float4 lightViewPosition) {
 	// perform perspective divide
-	vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
 	// transform to [0,1] range
-	projCoords = projCoords * 0.5 + 0.5;
-	// get depth of current fragment from light’s perspective
+	float3 projCoords = lightViewPosition.xyz;
+	projCoords.x =  lightViewPosition.x / lightViewPosition.w *0.5 + 0.5f;
+	projCoords.y = -lightViewPosition.y / lightViewPosition.w *0.5 + 0.5f;
+	projCoords.z =  lightViewPosition.z / lightViewPosition.w;
+
 	float currentDepth = projCoords.z > 1.0 ? 0.0 : projCoords.z;
 
-	float closestDepth = texture(shadowMap, projCoords.xy).r;
+	float closestDepth = shadowMap.Sample(shadowMapSampler, projCoords.xy).r;
 
 	float bias = 0.005;
 
-	return currentDepth - bias > closestDepth ? 0.0 : 1.0;
+	return closestDepth > (currentDepth-bias) ? 1.0 : 0.0;
 }
 
 float4 main(VSout i) : SV_Target
 {
-	float3x3 TBN = float3x3(i.tangent, i.bitangent, i.normal);
-	float3 surfNormal = normalTex.Sample(texSampler, i.uv).xyz;
-	float3 n = mul(surfNormal, TBN);
-
-	float3 albedo = float3(1,1,1,1)
+	
+	float3 albedo = float3(1,1,1);
 
 	float3 c = float3(0,0,0);
 
 	//diffuse
-	c += max(0, dot(n, -dir[0])) * color[0] * albedo * clacShadow();
+	c += max(0, dot(i.normal, -dir[0])) * color[0] * albedo * calcShadow(i.lightSpacePos);
 
 	//ambient
 	c += albedo * 0.3;
-
+	
 	return float4(c, 1);
 };

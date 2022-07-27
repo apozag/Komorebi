@@ -33,8 +33,8 @@ Pass::Pass(Graphics& gfx, const char* vsFilename, const char* psFilename, unsign
 	}
 	AddBindable(new PixelShader(gfx, psFilename));
 	AddBindable(new Rasterizer(gfx));
-	AddBindable(new Sampler(gfx));
-	m_idx = static_idx++;
+	AddBindable(new Sampler(gfx, D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0));
+	m_slot = static_idx++;
 }
 void Pass::AddBindable(Bindable* bind){
 	m_binds.push_back(bind);

@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "Light.h"
 #include "Camera.h"
+#include "RenderTarget.h"
 
 std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj);
 bool cullAABB(std::vector<DirectX::XMFLOAT4>&& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform);
@@ -44,14 +45,23 @@ void Renderer::SubmitDirectionalLight(const DirectionalLight* dirlight, const Tr
 	if (m_dirLightData.count >= MAX_DIRLIGHTS) return;
 
 	const DirectX::SimpleMath::Vector3& c = dirlight->GetColor();
-	const DirectX::SimpleMath::Vector3& f = worldTransform->GetForward();
+	const DirectX::SimpleMath::Vector3& f = -worldTransform->GetForward();
 
 	m_dirLightData.color[m_dirLightData.count] = { c.x, c.y, c.z};
 	m_dirLightData.dir[m_dirLightData.count] = { f.x, f.y, f.z};
-	m_dirLightData.count++;
+
+	m_lightTransformData.viewProj[m_dirLightData.count] = DirectX::XMMatrixTranspose(
+		DirectX::XMMatrixMultiply(
+			worldTransform->GetInverseMatrixUnsafe(),
+			dirlight->GetCamera()->getProj()
+		)
+	);
 
 	// Shadow mapping camera
 	m_cameras.push_back({ dirlight->GetCamera() , worldTransform });
+	m_shadowMaps.push_back(dirlight->GetShadowMap());
+
+	m_dirLightData.count++;
 }
 
 void Renderer::SubmitPointLight(const PointLight* pointlight, const Transform* worldTransform)
@@ -73,9 +83,13 @@ void Renderer::SubmitCamera(const Camera* camera, const Transform* worldTransfor
 bool compareJob(const Renderer::Job& j1, const Renderer::Job& j2) {
 	return j1.key < j2.key; 
 }
+bool compareCamera(const Renderer::CameraView& c1, const Renderer::CameraView& c2) {
+	return c1.camera->m_priority < c2.camera->m_priority;
+}
 
 void Renderer::Render(Graphics& gfx) {
 
+	// Light info to pixel shader
 	m_dirLightsCbuff.SetBuffer(m_dirLightData);
 	m_pointLightsCbuff.SetBuffer(m_pointLightData);
 	m_spotLightsCbuff.SetBuffer(m_spotLightData);
@@ -88,6 +102,21 @@ void Renderer::Render(Graphics& gfx) {
 	m_pointLightsCbuff.Bind(gfx);
 	m_spotLightsCbuff.Bind(gfx);
 
+	// Light transforms to vertex shader
+	m_lightTransformCbuff.SetBuffer(m_lightTransformData);
+	m_lightTransformCbuff.Update(gfx);
+	m_lightTransformCbuff.Bind(gfx);
+
+	// Shadowmap shader resources bound at the begginning. 
+	// When bound as render target, they will be bound back as srv when rendering is done.
+	for (RenderTarget* rt : m_shadowMaps) {
+		rt->Bind(gfx);
+	}
+	m_shadowMapSampler.Bind(gfx);
+
+	// Cameras sorted by priority. Specially important for shadow mapping.
+	std::sort(m_cameras.begin(), m_cameras.end(), compareCamera);
+
 	for (CameraView camView : m_cameras) {		
 
 		// Bind camera
@@ -95,7 +124,8 @@ void Renderer::Render(Graphics& gfx) {
 
 		int jobsToExecute = m_jobs.size();
 
-		// Update job sorting keys for this camera
+		// Update job sorting keys for this camera. 
+		// Some parts are independent from the camera, but oh well.
 		for (int i = 0; i < m_jobs.size(); i++) {
 
 			m_jobs[i].key = uint64_t(m_jobs[i].pass->layer) << 32;
@@ -126,6 +156,7 @@ void Renderer::Render(Graphics& gfx) {
 			
 		}
 
+		// Jobs sorted in an attempt to minimize state changes
 		std::sort(m_jobs.begin(), m_jobs.end(), compareJob);
 
 		// Dispatch jobs
@@ -152,6 +183,7 @@ void Renderer::Render(Graphics& gfx) {
 	}
 	m_jobs.clear();
 	m_cameras.clear();
+	m_shadowMaps.clear();
 	m_dirLightData.count = 0;
 	m_pointLightData.count = 0;
 	m_spotLightData.count = 0;

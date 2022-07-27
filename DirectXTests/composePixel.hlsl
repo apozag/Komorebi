@@ -1,11 +1,19 @@
-struct vs_out {
+struct VSout
+{
 	float4 pos : SV_Position;
-	float2 uv : TEXCOORD;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float3 bitangent : BITANGENT;
+	float2 uv : TEXCOORD0;
 };
 
-float4 main(vs_out input) : SV_Target0
+Texture2D mainTex : register(t0);
+
+SamplerState texSampler;
+
+float4 main(VSout input) : SV_Target0
 {
-	float4 c = float4(1, 0, 0, 1);// mainTex.Sample(smplr, input.uv);
+	float4 c =  mainTex.Sample(texSampler, input.uv);
 
 	return c;
 }

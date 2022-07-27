@@ -5,14 +5,14 @@ struct VSout
 	float2 uv : TEXCOORD0;
 };
 
-cbuffer Constant : register(b3)
+cbuffer Constant : register(b0)
 {
 	matrix viewproj;
 	matrix view;
 	matrix proj;
 };
 
-cbuffer Modeltransform : register(b5) {
+cbuffer Modeltransform : register(b1) {
 	matrix model;
 }
 

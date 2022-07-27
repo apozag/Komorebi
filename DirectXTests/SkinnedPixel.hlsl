@@ -9,8 +9,29 @@ cbuffer DirLights : register(b0) {
 struct VSout
 {
 	float4 pos : SV_Position;
+	float4 lightSpacePos : LIGHTPOS;
 	float3 normal : NORMAL;
 };
+
+SamplerState shadowMapSampler : register(s5);
+Texture2D shadowMap : register(t5);
+
+float calcShadow(float4 lightViewPosition) {
+	// perform perspective divide
+	// transform to [0,1] range
+	float3 projCoords = lightViewPosition.xyz;
+	projCoords.x = lightViewPosition.x / lightViewPosition.w * 0.5 + 0.5f;
+	projCoords.y = -lightViewPosition.y / lightViewPosition.w * 0.5 + 0.5f;
+	projCoords.z = lightViewPosition.z / lightViewPosition.w;
+
+	float currentDepth = projCoords.z > 1.0 ? 0.0 : projCoords.z;
+
+	float closestDepth = shadowMap.Sample(shadowMapSampler, projCoords.xy).r;
+
+	float bias = 0.005;
+
+	return closestDepth > (currentDepth - bias) ? 1.0 : 0.0;
+}
 
 float4 main(VSout i) : SV_Target
 {
@@ -19,7 +40,7 @@ float4 main(VSout i) : SV_Target
 
 	float3 c = float3(0,0,0);
 
-	c += max(0, dot(i.normal, -dir[0])) * color[0] * albedo;
+	c += max(0, dot(i.normal, -dir[0])) * color[0] * albedo * calcShadow(i.lightSpacePos);
 
 	c += albedo * 0.3;
 
