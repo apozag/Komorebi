@@ -19,6 +19,8 @@ public:
 	Node* AddNode(Entity* entity, const Transform& transform, Node* parent = nullptr);
 
 	Node* GetMainCameraNode() { return m_mainCamera; }
+
+	Node* GetRootNode() { return &m_transformHierarchy; }
 private:
 	void RenderTraverseNode(Node* node, Graphics& gfx, Renderer& renderer, bool dirty);
 

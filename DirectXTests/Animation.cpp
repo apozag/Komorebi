@@ -1,8 +1,19 @@
 #include "Animation.h"
 
-const Animation::Keyframe& findKeyframe(const std::vector<Animation::Keyframe>& keyframes, double timeMillis) {
-	for (const Animation::Keyframe& keyframe : keyframes) {
+Animation::Keyframe findKeyframe(const std::vector<Animation::Keyframe>& keyframes, double timeMillis) {
+	for (int i = 0; i < keyframes.size(); i++) {
+		const Animation::Keyframe& keyframe = keyframes[i];
 		if (keyframe.timeStamp >= timeMillis) {
+			if (i > 0) {
+				const Animation::Keyframe& keyframePrev = keyframes[i - 1];
+				float t = (timeMillis - keyframePrev.timeStamp) / (keyframe.timeStamp - keyframePrev.timeStamp);
+				return {
+					timeMillis,
+					DirectX::SimpleMath::Vector3::Lerp(keyframePrev.pos, keyframe.pos, t),
+					DirectX::SimpleMath::Quaternion::Lerp(keyframePrev.rot, keyframe.rot, t),
+					DirectX::SimpleMath::Vector3::Lerp(keyframePrev.scale, keyframe.scale, t)
+				};
+			}
 			return keyframe;
 		}
 	}
@@ -18,12 +29,11 @@ Animation::Animation(unsigned int numKeyframes, unsigned int keyframesPerSecond,
 }
 
 void Animation::Update() {
-	float timeMillis = std::fmod(m_timer.Peek(), m_durationMilliseconds)*0.01f;	
+	float timeMillis = std::fmod(m_timer.Peek(), m_durationMilliseconds);
 	for (Channel channel : m_channels) {
-		// TODO: lerp keyframes		
-		const Keyframe& keyframe = findKeyframe(channel.keyframes, timeMillis);
+		Keyframe keyframe = findKeyframe(channel.keyframes, timeMillis);
 		channel.node->localTransform.SetPosition(keyframe.pos);
 		channel.node->localTransform.SetRotation(keyframe.rot);
-		//channel.node->localTransform.SetScale(keyframe.scale);
+		channel.node->localTransform.SetScale(keyframe.scale);
 	}
 }

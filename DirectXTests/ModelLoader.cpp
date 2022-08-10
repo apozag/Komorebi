@@ -399,10 +399,13 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(Graphics& gfx, aiMesh* mesh, const 
 
 Animation* ModelLoader::processAnimation(const aiScene* scene) {
     aiAnimation* animation = scene->mAnimations[0];
+
+    double durationTicks = animation->mDuration;
+    double ticksPerSecond = animation->mTicksPerSecond * 0.1;
+
     std::vector<Animation::Channel> channels;
 
     // TODO: account for multiple animations
-
 
     for (int i = 0; i < animation->mNumChannels; i++) {
         aiNodeAnim* channel = animation->mChannels[i];
@@ -424,10 +427,10 @@ Animation* ModelLoader::processAnimation(const aiScene* scene) {
             const aiQuatKey& rot = channel->mRotationKeys[j];
             const aiVectorKey& scale = channel->mScalingKeys[j];
             keyframes[j] = {
-                pos.mTime,
+                pos.mTime * 1000 / ticksPerSecond,
                 {pos.mValue.x, pos.mValue.y, pos.mValue.z},
                 {rot.mValue.x, rot.mValue.y, rot.mValue.z, rot.mValue.w},
-                {pos.mValue.x, pos.mValue.y, pos.mValue.z},
+                {scale.mValue.x, scale.mValue.y, scale.mValue.z},
             };
         }
 
@@ -439,5 +442,5 @@ Animation* ModelLoader::processAnimation(const aiScene* scene) {
         
     }
 
-    return new Animation(animation->mDuration, animation->mTicksPerSecond, std::move(channels));
+    return new Animation(durationTicks, ticksPerSecond, std::move(channels));
 }

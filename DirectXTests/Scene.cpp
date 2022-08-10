@@ -70,8 +70,8 @@ void Scene::LoadScene(Graphics& gfx) {
 	//Models
 	Node* modelWrapperNode = AddNode(nullptr, Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
 	//Model* model = ModelLoader::LoadModel(gfx, "assets/rp_claudia_rigged_002_u3d.fbx", this, modelWrapperNode);
-	//Model* model = ModelLoader::LoadModel(gfx, "assets/huesitos.fbx", this, modelWrapperNode);// , modelWrapperNode);
-	Model* model = ModelLoader::LoadModel(gfx, "assets/animation_with_skeleton.fbx", this, modelWrapperNode);
+	Model* model = ModelLoader::LoadModel(gfx, "assets/huesitos.fbx", this, modelWrapperNode);// , modelWrapperNode);
+	//Model* model = ModelLoader::LoadModel(gfx, "assets/animation_with_skeleton.fbx", this, modelWrapperNode);
 	//Model* model = ModelLoader::LoadModel(gfx, "assets/nanosuit/nanosuit.obj", this, modelWrapperNode);
 	//Model model(gfx, "assets/box1.fbx", this, modelWrapperNode);
 	//Model model1(gfx, "assets/C96/C96.fbx", this, modelWrapperNode);

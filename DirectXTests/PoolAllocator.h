@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <stack>
@@ -13,3 +14,4 @@ private:
 	T* m_buffer;
 	size_t m_capacity;
 };
+*/

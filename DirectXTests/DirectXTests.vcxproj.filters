@@ -113,9 +113,6 @@
     <ClInclude Include="Viewport.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="CubeTexture.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
@@ -155,9 +152,6 @@
     <ClInclude Include="Entity.h">
       <Filter>Archivos de encabezado\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="SkinnedVertexBuffer.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Bone.h">
       <Filter>Archivos de encabezado\Entities</Filter>
     </ClInclude>
@@ -185,11 +179,14 @@
     <ClInclude Include="Animation.h">
       <Filter>Archivos de encabezado\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinnedVertexBuffer.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
@@ -209,9 +206,6 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Exception.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXExample.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
@@ -280,9 +274,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Archivos de origen\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="SkinnedVertexBuffer.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="Bone.cpp">
       <Filter>Archivos de origen\Entities</Filter>
     </ClCompile>
@@ -306,6 +297,12 @@
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>Archivos de origen\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedVertexBuffer.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

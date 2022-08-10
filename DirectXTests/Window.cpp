@@ -124,6 +124,8 @@ Window::Window(int width, int height, const char* name) {
 
 	gfx = std::make_unique<Graphics>(hWnd, width, height);
 
+	gfx->Init();
+
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
 
