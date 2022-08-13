@@ -7,15 +7,15 @@
 
 class RenderTarget : public Bindable{
 public:
-	RenderTarget(Graphics& gfx, IDXGISwapChain* m_swapChain);
-	RenderTarget(Graphics& gfx, int width, int height, DXGI_FORMAT format, int count, int slot);
+	RenderTarget(IDXGISwapChain* m_swapChain);
+	RenderTarget( int width, int height, DXGI_FORMAT format, int count, int slot);
 
-	void Bind(Graphics& gfx)const override;
-	void Unbind(Graphics& gfx)const override;
+	void Bind()const override;
+	void Unbind()const override;
 
-	void Update(Graphics& gfx) {};
+	void Update() {};
 
-	void Clear(Graphics& gfx, float r, float g, float b);
+	void Clear(float r, float g, float b);
 
 	void SetAsShaderResource();
 	void SetAsRenderTarget();

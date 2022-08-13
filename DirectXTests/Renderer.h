@@ -61,19 +61,19 @@ private:
 	};
 
 public:
-	Renderer(Graphics& gfx) :
-		m_dirLightsCbuff(PixelConstantBuffer<DirLightData>(gfx, PCBUFF_DIRLIGHT_SLOT)),
-		m_pointLightsCbuff(PixelConstantBuffer<PointLightData>(gfx, PCBUFF_POINTLIGHT_SLOT)),
-		m_spotLightsCbuff(PixelConstantBuffer<SpotLightData>(gfx, PCBUFF_SPOTLIGHT_SLOT)),
-		m_lightTransformCbuff(VertexConstantBuffer<LightTransformData>(gfx, VCBUFF_LIGHTTRANSFORM_SLOT)),
-		m_shadowMapSampler(gfx, D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, TEX2D_SHADOWMAP_SLOT)
+	Renderer( ) :
+		m_dirLightsCbuff(PixelConstantBuffer<DirLightData> ( PCBUFF_DIRLIGHT_SLOT)),
+		m_pointLightsCbuff(PixelConstantBuffer<PointLightData> ( PCBUFF_POINTLIGHT_SLOT)),
+		m_spotLightsCbuff(PixelConstantBuffer<SpotLightData> ( PCBUFF_SPOTLIGHT_SLOT)),
+		m_lightTransformCbuff(VertexConstantBuffer<LightTransformData> ( VCBUFF_LIGHTTRANSFORM_SLOT)),
+		m_shadowMapSampler ( D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, TEX2D_SHADOWMAP_SLOT)
 	{}
 	void SubmitDrawable(const Drawable* drawable, const Transform* transform, std::vector<Pass*> passes);
 	void SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform);
 	void SubmitDirectionalLight(const DirectionalLight* spotlight, const Transform* worldTransform);
 	void SubmitPointLight(const PointLight* spotlight, const Transform* worldTransform);
 	void SubmitCamera(const Camera* camera, const Transform* worldTransform);
-	void Render(Graphics& gfx);
+	void Render( );
 
 	friend bool compareJob(const Job& j1, const Job& j2);
 	friend bool compareCamera(const CameraView& c1, const CameraView& c2);

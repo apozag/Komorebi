@@ -4,8 +4,8 @@
 
 namespace wrl = Microsoft::WRL;
 
-SkinnedVertexBuffer::SkinnedVertexBuffer(Graphics& gfx, POD::SkinnedVertex* data, unsigned int size, unsigned int stride, unsigned int offset) {
-	INFOMAN(gfx);
+SkinnedVertexBuffer::SkinnedVertexBuffer( POD::SkinnedVertex* data, unsigned int size, unsigned int stride, unsigned int offset) {
+	INFOMAN;
 
 	D3D11_BUFFER_DESC bd = {};
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -18,16 +18,16 @@ SkinnedVertexBuffer::SkinnedVertexBuffer(Graphics& gfx, POD::SkinnedVertex* data
 	D3D11_SUBRESOURCE_DATA sd = {};
 	sd.pSysMem = data;
 
-	GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&bd, &sd, &m_vertexBuffer));
+	GFX_THROW_INFO(GetDevice ()->CreateBuffer(&bd, &sd, &m_vertexBuffer));
 
 	m_stride = stride;
 	m_offset = offset;
 }
-void SkinnedVertexBuffer::Bind(Graphics& gfx) const {
-	GetContext(gfx)->IASetVertexBuffers(0u, 1u, m_vertexBuffer.GetAddressOf(), &m_stride, &m_offset);
+void SkinnedVertexBuffer::Bind( ) const {
+	GetContext ()->IASetVertexBuffers(0u, 1u, m_vertexBuffer.GetAddressOf(), &m_stride, &m_offset);
 }
-void SkinnedVertexBuffer::Unbind(Graphics& gfx) const {
+void SkinnedVertexBuffer::Unbind( ) const {
 }
-void SkinnedVertexBuffer::Update(Graphics& gfx) {
+void SkinnedVertexBuffer::Update( ) {
 
 }

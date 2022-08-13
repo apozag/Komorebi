@@ -24,17 +24,17 @@ class Node;
 class ModelLoader {
 public:
 	ModelLoader() = delete;
-	static Model* LoadModel(Graphics& gfx, std::string filename, Scene* sceneGraph, Node* sceneGraphParent);
-	static Mesh* GenerateMesh(Graphics& gfx, std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices, Scene* sceneGraph, Node* sceneGraphParent);
-	static Mesh* GenerateQuad(Graphics& gfx, Scene* sceneGraph, Node* sceneGraphParent, float scale = 1);
-	static Mesh* GenerateCube(Graphics& gfx, Scene* sceneGraph, Node* sceneGraphParent, float scale = 1);
-	static Mesh* GenerateAABB(Graphics& gfx, DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max, Scene* sceneGraph, Node* sceneGraphParent);
+	static Model* LoadModel( std::string filename, Scene* sceneGraph, Node* sceneGraphParent);
+	static Mesh* GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices, Scene* sceneGraph, Node* sceneGraphParent);
+	static Mesh* GenerateQuad( Scene* sceneGraph, Node* sceneGraphParent, float scale = 1);
+	static Mesh* GenerateCube( Scene* sceneGraph, Node* sceneGraphParent, float scale = 1);
+	static Mesh* GenerateAABB( DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max, Scene* sceneGraph, Node* sceneGraphParent);
 private:
-	static void processNode(Graphics& gfx, aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
-	static void processNodeBones(Graphics& gfx, aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
-	static Mesh* processMesh(Graphics& gfx, aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent);
+	static void processNode( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
+	static void processNodeBones( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
+	static Mesh* processMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent);
 	static Animation* processAnimation(const aiScene* scene);
-	static SkinnedMesh* processSkinnedMesh(Graphics& gfx, aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
+	static SkinnedMesh* processSkinnedMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
 	static std::string directory;
 
 	static std::vector<Node*> boneNodes;

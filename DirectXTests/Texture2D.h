@@ -6,9 +6,9 @@
 
 class Texture2D : public Bindable {
 public:
-	Texture2D(Graphics& gfx, std::string path, unsigned int slot);
-	void Bind(Graphics& gfx)const override;
-	void Unbind(Graphics& gfx)const override;
+	Texture2D(std::string path, unsigned int slot);
+	void Bind()const override;
+	void Unbind()const override;
 private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
 	unsigned int m_slot;

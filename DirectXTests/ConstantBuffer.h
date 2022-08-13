@@ -6,9 +6,9 @@
 template<typename T>
 class ConstantBuffer : public Bindable {
 public:
-	ConstantBuffer(Graphics& gfx, unsigned int slot): m_dynamic(true), m_slot(slot) {
+	ConstantBuffer(unsigned int slot): m_dynamic(true), m_slot(slot) {
 
-		INFOMAN(gfx);
+		INFOMAN;
 
 		D3D11_BUFFER_DESC cbd = {};
 		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -18,12 +18,12 @@ public:
 		cbd.ByteWidth = sizeof(T);
 		cbd.StructureByteStride = 0;
 
-		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, NULL, m_constantBuffer.GetAddressOf()));
+		GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, NULL, m_constantBuffer.GetAddressOf()));
 	}
 
 
-	ConstantBuffer(Graphics& gfx, unsigned int slot, bool m_dynamic, const T& buffer) : m_dynamic(m_dynamic), m_slot(slot){
-		INFOMAN(gfx);
+	ConstantBuffer(unsigned int slot, bool m_dynamic, const T& buffer) : m_dynamic(m_dynamic), m_slot(slot){
+		INFOMAN;
 
 		D3D11_BUFFER_DESC cbd = {};
 		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -44,28 +44,28 @@ public:
 		sd.SysMemPitch = 0;
 		sd.SysMemSlicePitch = 0;
 
-		GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, &sd, m_constantBuffer.GetAddressOf()));
+		GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, &sd, m_constantBuffer.GetAddressOf()));
 	}
 
-	ConstantBuffer(Graphics& gfx, unsigned int slot, T& buffer) : ConstantBuffer(gfx, slot) {
+	ConstantBuffer(unsigned int slot, T& buffer) : ConstantBuffer(slot) {
 		SetBuffer(buffer);
 	}
 
-	virtual void Bind(Graphics& gfx) const override = 0;
-	virtual void Unbind(Graphics& gfx) const override = 0;
+	virtual void Bind() const override = 0;
+	virtual void Unbind() const override = 0;
 
-	void Update(Graphics& gfx) {
+	void Update() {
 		if (!m_dynamic) return;
-		INFOMAN(gfx);
+		INFOMAN;
 		D3D11_MAPPED_SUBRESOURCE msr;
-		GFX_THROW_INFO(GetContext(gfx)->Map(
+		GFX_THROW_INFO(GetContext()->Map(
 			m_constantBuffer.Get(), 0u,
 			D3D11_MAP_WRITE_DISCARD, 0u,
 			&msr
 		));
 		int size = sizeof(T);
 		memcpy(msr.pData, &m_cbuffer, size);
-		GetContext(gfx)->Unmap(m_constantBuffer.Get(), 0u);
+		GetContext()->Unmap(m_constantBuffer.Get(), 0u);
 	}
 
 	void SetBuffer(const T& cbuffer) {
@@ -85,12 +85,12 @@ class VertexConstantBuffer : public ConstantBuffer<T>{
 	using ConstantBuffer<T>::m_slot;
 	using Bindable::GetContext;
 public:
-	VertexConstantBuffer(Graphics& gfx, unsigned int slot) : ConstantBuffer<T>(gfx, slot) {}
-	VertexConstantBuffer(Graphics& gfx, unsigned int slot, bool m_dynamic, const T& buffer) : ConstantBuffer<T>(gfx, slot, m_dynamic, buffer) {}
-	void Bind(Graphics& gfx) const override {
-		GetContext(gfx)->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+	VertexConstantBuffer(unsigned int slot) : ConstantBuffer<T>(slot) {}
+	VertexConstantBuffer(unsigned int slot, bool m_dynamic, const T& buffer) : ConstantBuffer<T>(slot, m_dynamic, buffer) {}
+	void Bind() const override {
+		GetContext()->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 	}
-	void Unbind(Graphics& gfx) const override {}
+	void Unbind() const override {}
 };
 
 template<typename T>
@@ -99,10 +99,10 @@ class PixelConstantBuffer : public ConstantBuffer<T> {
 	using ConstantBuffer<T>::m_slot;
 	using Bindable::GetContext;
 public:
-	PixelConstantBuffer(Graphics& gfx, unsigned int slot) : ConstantBuffer<T>(gfx, slot) {}
-	PixelConstantBuffer(Graphics& gfx, unsigned int slot, bool m_dynamic, const T& buffer) : ConstantBuffer<T>(gfx, slot, m_dynamic, buffer) {}
-	void Bind(Graphics& gfx) const override {
-		GetContext(gfx)->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+	PixelConstantBuffer(unsigned int slot) : ConstantBuffer<T>(slot) {}
+	PixelConstantBuffer(unsigned int slot, bool m_dynamic, const T& buffer) : ConstantBuffer<T>(slot, m_dynamic, buffer) {}
+	void Bind() const override {
+		GetContext()->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 	}
-	void Unbind(Graphics& gfx) const override{}
+	void Unbind() const override{}
 };

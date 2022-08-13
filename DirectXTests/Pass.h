@@ -14,12 +14,12 @@
 
 class Pass {
 public:
-	Pass(Graphics& gfx, const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned = false);
+	Pass( const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned = false);
 	~Pass() {};
 	void AddBindable(Bindable* bind);
-	void Update(Graphics& gfx);
-	void Bind(Graphics& gfx);
-	void Unbind(Graphics& gfx);
+	void Update( );
+	void Bind( );
+	void Unbind( );
 	unsigned char GetIdx() { return m_slot; }
 public:
 	const unsigned int layer;	

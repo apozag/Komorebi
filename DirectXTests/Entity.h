@@ -1,12 +1,17 @@
 #pragma once
 
 #include "Transform.h"
+#include "Engine.h"
+#include "Window.h"
 
 class Renderer;
-class Node;
+class ScriptDispatcher;
 
 class Entity {
-	friend class Node;
 public:
-	virtual void Insert(Renderer& renderer, const Transform& worldTransform) = 0;
+	virtual void Insert(const Transform& worldTransform) = 0;
+protected:
+	Renderer* GetRenderer() const { return Engine::m_renderer; }
+	ScriptDispatcher* GetScriptDispatcher() const { return &Engine::m_scriptDispatcher; }
+	const Graphics* GetGraphics() const { return Engine::m_window->gfx; }
 };

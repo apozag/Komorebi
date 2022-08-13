@@ -32,7 +32,7 @@ DirectX::XMMATRIX aiMatrix4x4ToXMMATRIX(aiMatrix4x4 matrix) {
         matrix.a4, matrix.b4, matrix.c4, matrix.d4
     );
 }
-Model* ModelLoader::LoadModel(Graphics& gfx, std::string path, Scene* sceneGraph, Node* sceneGraphParent) {
+Model* ModelLoader::LoadModel( std::string path, Scene* sceneGraph, Node* sceneGraphParent) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 
@@ -42,14 +42,14 @@ Model* ModelLoader::LoadModel(Graphics& gfx, std::string path, Scene* sceneGraph
         return nullptr;
     }
 
-    Model* model = new Model(gfx);
+    Model* model = new Model ();
     Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
     directory = path.substr(0, path.find_last_of('/')+1);
-    processNode(gfx, scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
+    processNode ( scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
 
     boneNodes.resize(boneNames.size());
 
-    processNodeBones(gfx, scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
+    processNodeBones ( scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
     if (scene->HasAnimations()) {
         model->m_hasAnimation = true;
         model->m_animation = processAnimation(scene);
@@ -61,7 +61,7 @@ Model* ModelLoader::LoadModel(Graphics& gfx, std::string path, Scene* sceneGraph
     return model;
 }
 
-Mesh* ModelLoader::GenerateMesh(Graphics& gfx, std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices, Scene* sceneGraph, Node* sceneGraphParent) {
+Mesh* ModelLoader::GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices, Scene* sceneGraph, Node* sceneGraphParent) {
     POD::Vector3 min = vertices[0].pos, max = vertices[0].pos;
     for (int i = 1; i < vertices.size(); i++) {
         min.x = std::min(min.x, vertices[i].pos.x);
@@ -72,12 +72,12 @@ Mesh* ModelLoader::GenerateMesh(Graphics& gfx, std::vector<POD::Vertex> vertices
         max.y = std::max(max.y, vertices[i].pos.y);
         max.z = std::max(max.z, vertices[i].pos.z);
     }
-    Mesh* m = new Mesh(gfx, vertices, indices, { {min.x, min.y, min.z}, {max.x, max.y, max.z} });
+    Mesh* m = new Mesh ( vertices, indices, { {min.x, min.y, min.z}, {max.x, max.y, max.z} });
     sceneGraph->AddNode(m, Transform(), sceneGraphParent);
     return m;
 }
 
-Mesh* ModelLoader::GenerateQuad(Graphics& gfx, Scene* sceneGraph, Node* sceneGraphParent, float scale) {
+Mesh* ModelLoader::GenerateQuad( Scene* sceneGraph, Node* sceneGraphParent, float scale) {
     std::vector<POD::Vertex> vertices {
         {{-1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {0, 0}},
         {{ 1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {1, 0}},
@@ -90,10 +90,10 @@ Mesh* ModelLoader::GenerateQuad(Graphics& gfx, Scene* sceneGraph, Node* sceneGra
         0, 2, 3
     };
 
-    return GenerateMesh(gfx, vertices, indices, sceneGraph, sceneGraphParent);
+    return GenerateMesh ( vertices, indices, sceneGraph, sceneGraphParent);
 }
 
-Mesh* ModelLoader::GenerateCube(Graphics& gfx, Scene* sceneGraph, Node* sceneGraphParent, float scale) {
+Mesh* ModelLoader::GenerateCube( Scene* sceneGraph, Node* sceneGraphParent, float scale) {
     std::vector<POD::Vertex> vertices{
         {{-1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
         {{ 1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
@@ -115,10 +115,10 @@ Mesh* ModelLoader::GenerateCube(Graphics& gfx, Scene* sceneGraph, Node* sceneGra
         7, 6, 2,    2, 3, 7
     };
 
-    return GenerateMesh(gfx, vertices, indices, sceneGraph, sceneGraphParent);
+    return GenerateMesh ( vertices, indices, sceneGraph, sceneGraphParent);
 } 
 
-Mesh* ModelLoader::GenerateAABB(Graphics& gfx, DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max, Scene* sceneGraph, Node* sceneGraphParent) {
+Mesh* ModelLoader::GenerateAABB( DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max, Scene* sceneGraph, Node* sceneGraphParent) {
     std::vector<POD::Vertex> vertices{
         {{min.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
         {{max.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
@@ -140,10 +140,10 @@ Mesh* ModelLoader::GenerateAABB(Graphics& gfx, DirectX::SimpleMath::Vector3 min,
         7, 6, 2,    2, 3, 7
     };
 
-    return GenerateMesh(gfx, vertices, indices, sceneGraph, sceneGraphParent);
+    return GenerateMesh ( vertices, indices, sceneGraph, sceneGraphParent);
 }
 
-void ModelLoader::processNode(Graphics& gfx, aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model)
+void ModelLoader::processNode( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model)
 {
 
     Entity* entity = nullptr;
@@ -154,20 +154,20 @@ void ModelLoader::processNode(Graphics& gfx, aiNode* node, const aiScene* scene,
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         if (mesh->HasBones()) {
-            model->AddDrawable(processSkinnedMesh(gfx, mesh, scene, sceneGraph, sceneNode, model));
+            model->AddDrawable(processSkinnedMesh ( mesh, scene, sceneGraph, sceneNode, model));
         }
         else {
-            model->AddDrawable(processMesh(gfx, mesh, scene, sceneGraph, sceneNode));
+            model->AddDrawable(processMesh ( mesh, scene, sceneGraph, sceneNode));
         }
     }
 
     for(unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        processNode(gfx, node->mChildren[i], scene, sceneGraph, sceneNode, model);
+        processNode ( node->mChildren[i], scene, sceneGraph, sceneNode, model);
     }
 }
 
-void ModelLoader::processNodeBones(Graphics& gfx, aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
+void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
     Entity* entity = nullptr;
 
     const char* nodeName = node->mName.C_Str();
@@ -184,21 +184,21 @@ void ModelLoader::processNodeBones(Graphics& gfx, aiNode* node, const aiScene* s
     
     if(nodeIdx > 0) boneNodes[nodeIdx] = sceneNode;
 
-    Pass* aabbPass = new Pass(gfx, "cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
-    aabbPass->AddBindable(new Rasterizer(gfx, true, true));
-    aabbPass->AddBindable(new DepthStencilState(gfx,
+    Pass* aabbPass = new Pass ( "cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
+    aabbPass->AddBindable(new Rasterizer ( true, true));
+    aabbPass->AddBindable(new DepthStencilState (
         DepthStencilState::DepthStencilAccess::DEPTH_WRITE
     ));
 
-    ModelLoader::GenerateCube(gfx, sceneGraph, sceneNode)->AddPass(aabbPass);
+    ModelLoader::GenerateCube ( sceneGraph, sceneNode)->AddPass(aabbPass);
         
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        processNodeBones(gfx, node->mChildren[i], scene, sceneGraph, sceneNode, model);
+        processNodeBones ( node->mChildren[i], scene, sceneGraph, sceneNode, model);
     }
 }
 
-Mesh* ModelLoader::processMesh(Graphics& gfx, aiMesh* mesh, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent)
+Mesh* ModelLoader::processMesh( aiMesh* mesh, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent)
 {
     std::vector<POD::Vertex> vertices(mesh->mNumVertices);
     std::vector<unsigned short> indices(mesh->mNumFaces * 3u);
@@ -264,7 +264,7 @@ Mesh* ModelLoader::processMesh(Graphics& gfx, aiMesh* mesh, const aiScene* scene
         for (unsigned int j = 0; j < face.mNumIndices; j++)
             indices[i*3u + j] = face.mIndices[j];
     }
-    Mesh* m = new Mesh(gfx, vertices, indices, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
+    Mesh* m = new Mesh ( vertices, indices, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
 
     // material
     /*
@@ -279,7 +279,7 @@ Mesh* ModelLoader::processMesh(Graphics& gfx, aiMesh* mesh, const aiScene* scene
             if (material->GetTextureCount(types[i]) == 0) continue;
             aiString str;
             material->GetTexture(types[i], 0, &str);
-            m->AddBindable(new Texture2D(gfx, this->directory + str.C_Str(), i));
+            m->AddBindable(new Texture2D ( this->directory + str.C_Str(), i));
         }
     }
     */
@@ -288,7 +288,7 @@ Mesh* ModelLoader::processMesh(Graphics& gfx, aiMesh* mesh, const aiScene* scene
     return m;
 }
 
-SkinnedMesh* ModelLoader::processSkinnedMesh(Graphics& gfx, aiMesh* mesh, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model)
+SkinnedMesh* ModelLoader::processSkinnedMesh( aiMesh* mesh, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model)
 {
     std::vector<POD::SkinnedVertex> vertices(mesh->mNumVertices);
     std::vector<unsigned short> indices(mesh->mNumFaces * 3u);
@@ -373,7 +373,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(Graphics& gfx, aiMesh* mesh, const 
     }
     free(boneFreeSlots);
 
-    SkinnedMesh* m = new SkinnedMesh(gfx, vertices, indices, model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
+    SkinnedMesh* m = new SkinnedMesh ( vertices, indices, model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
 
     // material
     /*
@@ -388,7 +388,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(Graphics& gfx, aiMesh* mesh, const 
             if (material->GetTextureCount(types[i]) == 0) continue;
             aiString str;
             material->GetTexture(types[i], 0, &str);
-            m->AddBindable(new Texture2D(gfx, this->directory + str.C_Str(), i));
+            m->AddBindable(new Texture2D ( this->directory + str.C_Str(), i));
         }
     }
     */
@@ -401,7 +401,7 @@ Animation* ModelLoader::processAnimation(const aiScene* scene) {
     aiAnimation* animation = scene->mAnimations[0];
 
     double durationTicks = animation->mDuration;
-    double ticksPerSecond = animation->mTicksPerSecond * 0.1;
+    double ticksPerSecond = animation->mTicksPerSecond;
 
     std::vector<Animation::Channel> channels;
 

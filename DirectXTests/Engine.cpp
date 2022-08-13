@@ -5,24 +5,32 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "Window.h"
+#include "Script.h"
+#include "ScriptDispatcher.h"
 
 
 Renderer* Engine::m_renderer;
 Window* Engine::m_window;
 Scene* Engine::m_activeScene;
+ScriptDispatcher Engine::m_scriptDispatcher;
 float Engine::m_dt;
+float Engine::m_targetFramerate;
 
-int Engine::Start(const char* windowTitle, int windowWidth, int windowHeight, float targetFrameRate) 	
-{
+void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, float targetFramerate) {
 	m_window = new Window(windowWidth, windowHeight, windowTitle);
-	m_renderer = new Renderer(*m_window->gfx);
+	m_window->gfx->Init();
+	m_renderer = new Renderer();
+	m_targetFramerate = targetFramerate;
+}
 
-	long long minFrameTime = 1000 / 60;
+int Engine::Start() 	
+{	
+	long long minFrameTime = 1000 / m_targetFramerate;
 	Timer timer;
 
 	Graphics& gfx = *m_window->gfx;
 
-	m_activeScene->LoadScene(gfx);
+	//m_activeScene->LoadScene ;
 
 	while (true) {
 
@@ -30,9 +38,9 @@ int Engine::Start(const char* windowTitle, int windowWidth, int windowHeight, fl
 			return *ecode;
 		}
 
-		m_activeScene->RenderTraverse(gfx, *m_renderer);
+		m_activeScene->RenderTraverse ();
 
-		m_renderer->Render(gfx);
+		m_renderer->Render();
 		gfx.SwapBuffers();		
 
 		long long elapsed = timer.Mark();
@@ -43,7 +51,7 @@ int Engine::Start(const char* windowTitle, int windowWidth, int windowHeight, fl
 		m_dt = (float)(elapsed + to_sleep)*0.001f;
 
 		///////// PROVISIONAL///////////
-
+		/*
 		Transform& cameraTransform = m_activeScene->GetMainCameraNode()->localTransform;
 
 		float rotateSpeed = 0.3f;
@@ -83,6 +91,7 @@ int Engine::Start(const char* windowTitle, int windowWidth, int windowHeight, fl
 		if (m_window->keyboard.KeyIsPressed('Q')) {
 			cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 1, 0) * -moveSpeed * m_dt);
 		}
+		*/
 		////////////////////////////////
 	}
 

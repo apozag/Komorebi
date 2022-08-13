@@ -1,7 +1,7 @@
 #include "CubeTexture.h"
 #include "ImageManager.h"
 
-CubeTexture::CubeTexture(Graphics& gfx, std::string path, unsigned int slot) : m_slot(slot) {
+CubeTexture::CubeTexture(std::string path, unsigned int slot) : m_slot(slot) {
 	std::vector<Image> images(6);
 	D3D11_SUBRESOURCE_DATA sd[6];
 	for (int i = 0; i < 6; i++) {
@@ -26,7 +26,7 @@ CubeTexture::CubeTexture(Graphics& gfx, std::string path, unsigned int slot) : m
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_texture;
 
-	GetDevice(gfx)->CreateTexture2D(&texDesc, &sd[0], m_texture.GetAddressOf());
+	GetDevice()->CreateTexture2D(&texDesc, &sd[0], m_texture.GetAddressOf());
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = texDesc.Format;
@@ -34,18 +34,18 @@ CubeTexture::CubeTexture(Graphics& gfx, std::string path, unsigned int slot) : m
 	srvDesc.TextureCube.MipLevels = 1;
 	srvDesc.TextureCube.MostDetailedMip = 0;
 
-	GetDevice(gfx)->CreateShaderResourceView(m_texture.Get(), &srvDesc, m_srv.GetAddressOf());
+	GetDevice()->CreateShaderResourceView(m_texture.Get(), &srvDesc, m_srv.GetAddressOf());
 
 }
 
-void CubeTexture::Bind(Graphics& gfx) const {
-	GetContext(gfx)->PSSetShaderResources(m_slot, 1, m_srv.GetAddressOf());
+void CubeTexture::Bind() const {
+	GetContext()->PSSetShaderResources(m_slot, 1, m_srv.GetAddressOf());
 }
-void CubeTexture::Unbind(Graphics& gfx) const {
+void CubeTexture::Unbind() const {
 	ID3D11ShaderResourceView* nullViews[] = { nullptr };
-	GetContext(gfx)->PSSetShaderResources(m_slot, 1, nullViews);
+	GetContext()->PSSetShaderResources(m_slot, 1, nullViews);
 }
 
-void CubeTexture::Update(Graphics& gfx) {
+void CubeTexture::Update() {
 
 }

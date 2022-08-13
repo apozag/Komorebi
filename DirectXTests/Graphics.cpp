@@ -116,7 +116,7 @@ std::string Graphics::InfoException::GetErrorInfo() const noexcept
 
 
 
-Graphics::Graphics(HWND hWnd, int width, int height)
+Graphics::Graphics(HWND hWnd, int width, int height) : m_viewportWidth(width), m_viewportHeight(height)
 {
 	RECT rect;
 	D3D_FEATURE_LEVEL DX11 = D3D_FEATURE_LEVEL_11_0;
@@ -159,15 +159,11 @@ Graphics::Graphics(HWND hWnd, int width, int height)
 		&m_context));
 
 	// Back buffer creation
+	/*
 	wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
-	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
-	m_target = new RenderTarget(*this, m_swapChain);
-	m_target->SetAsRenderTarget();
-
-	// Viewport State (Pretty useless now)
-	m_viewport = new Viewport(*this, 0, 0, width, height);
-	
+	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));		
 	pBackBuffer->Release();
+	*/
 }
 
 Graphics::~Graphics()
@@ -201,13 +197,18 @@ void Graphics::SwapBuffers()
 
 void Graphics::ClearBuffer(float r, float g, float b) noexcept
 {
-	m_target->Clear(*this, r, g, b);
+	m_target->Clear( r, g, b);
 }
 
 void Graphics::Init()
 {
-	m_target->Bind(*this);
-	m_viewport->Bind(*this);
+	m_target = new RenderTarget(m_swapChain);
+	m_target->SetAsRenderTarget();
+
+	m_viewport = new Viewport(0,0, m_viewportWidth, m_viewportHeight);
+
+	m_target->Bind();
+	m_viewport->Bind();
 
 	m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
@@ -215,6 +216,6 @@ void Graphics::Init()
 void Graphics::Draw(unsigned int count) {	
 	m_context->Draw(count, 0);
 }
-void Graphics::DrawIndexed(unsigned int count) {
+void Graphics::DrawIndexed(unsigned int count) const {
 	m_context->DrawIndexed((UINT)count, 0u, 0u);
 }

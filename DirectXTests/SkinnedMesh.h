@@ -12,10 +12,10 @@ class Skeleton;
 
 class SkinnedMesh : public Drawable {
 public:
-	SkinnedMesh(Graphics& gfx, std::vector<POD::SkinnedVertex>& vertices, std::vector<unsigned short>& indices, Skeleton* skeleton, BVHData bvhData = BVHData());
+	SkinnedMesh( std::vector<POD::SkinnedVertex>& vertices, std::vector<unsigned short>& indices, Skeleton* skeleton, BVHData bvhData = BVHData());
 	SkinnedMesh(const SkinnedMesh& drawable);
 	SkinnedMesh* Clone();
-	void Draw(Graphics& gfx) const override;
+	void Draw( ) const override;
 private:
 	Skeleton* m_skeleton;
 };

@@ -1,8 +1,8 @@
 #include "DepthStencilState.h"
 #include "GraphicsThrowMacros.h"
 
-DepthStencilState::DepthStencilState(Graphics& gfx, int dsst, int refVal) : m_refVal(refVal) {
-	INFOMAN(gfx);
+DepthStencilState::DepthStencilState(int dsst, int refVal) : m_refVal(refVal) {
+	INFOMAN;
 
 	// Depth-Stencil State
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
@@ -49,9 +49,9 @@ DepthStencilState::DepthStencilState(Graphics& gfx, int dsst, int refVal) : m_re
 	dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 
-	GFX_THROW_INFO(GetDevice(gfx)->CreateDepthStencilState(&dsDesc, m_pDSState.GetAddressOf()));
+	GFX_THROW_INFO(GetDevice()->CreateDepthStencilState(&dsDesc, m_pDSState.GetAddressOf()));
 }
 
-void DepthStencilState::Bind(Graphics& gfx) const {
-	GetContext(gfx)->OMSetDepthStencilState(m_pDSState.Get(), m_refVal);
+void DepthStencilState::Bind() const {
+	GetContext()->OMSetDepthStencilState(m_pDSState.Get(), m_refVal);
 }

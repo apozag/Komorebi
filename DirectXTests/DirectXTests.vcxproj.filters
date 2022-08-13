@@ -35,9 +35,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -185,6 +182,12 @@
     <ClInclude Include="SkinnedVertexBuffer.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptDispatcher.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -303,6 +306,12 @@
     </ClCompile>
     <ClCompile Include="SkinnedVertexBuffer.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptDispatcher.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -23,8 +23,7 @@ public:
 		DirectX::SimpleMath::Vector3 max;
 	};
 public:
-	Drawable() = delete;
-	Drawable(Graphics& gfx);
+	Drawable();
 	Drawable(const Drawable& drawable);
 	Drawable* Clone();
 	void AddBindable(Bindable* bind);
@@ -33,9 +32,9 @@ public:
 	std::vector<Pass*> GetPasses() const { return m_passes; }
 	const BVHData& GetBVHData() const { return m_bvhData; }
 	
-	void Insert(Renderer& renderer, const Transform& worldTransform) override;
+	void Insert(const Transform& worldTransform) override;
 
-	virtual void Draw(Graphics& gfx) const;
+	virtual void Draw( ) const;
 
 protected:
 	BVHData m_bvhData;

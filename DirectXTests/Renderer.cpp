@@ -87,32 +87,32 @@ bool compareCamera(const Renderer::CameraView& c1, const Renderer::CameraView& c
 	return c1.camera->m_priority < c2.camera->m_priority;
 }
 
-void Renderer::Render(Graphics& gfx) {
+void Renderer::Render( ) {
 
 	// Light info to pixel shader
 	m_dirLightsCbuff.SetBuffer(m_dirLightData);
 	m_pointLightsCbuff.SetBuffer(m_pointLightData);
 	m_spotLightsCbuff.SetBuffer(m_spotLightData);
 
-	m_dirLightsCbuff.Update(gfx);
-	m_pointLightsCbuff.Update(gfx);
-	m_spotLightsCbuff.Update(gfx);
+	m_dirLightsCbuff.Update ();
+	m_pointLightsCbuff.Update ();
+	m_spotLightsCbuff.Update ();
 
-	m_dirLightsCbuff.Bind(gfx);
-	m_pointLightsCbuff.Bind(gfx);
-	m_spotLightsCbuff.Bind(gfx);
+	m_dirLightsCbuff.Bind ();
+	m_pointLightsCbuff.Bind ();
+	m_spotLightsCbuff.Bind ();
 
 	// Light transforms to vertex shader
 	m_lightTransformCbuff.SetBuffer(m_lightTransformData);
-	m_lightTransformCbuff.Update(gfx);
-	m_lightTransformCbuff.Bind(gfx);
+	m_lightTransformCbuff.Update ();
+	m_lightTransformCbuff.Bind ();
 
 	// Shadowmap shader resources bound at the begginning. 
 	// When bound as render target, they will be bound back as srv when rendering is done.
 	for (RenderTarget* rt : m_shadowMaps) {
-		rt->Bind(gfx);
+		rt->Bind ();
 	}
-	m_shadowMapSampler.Bind(gfx);
+	m_shadowMapSampler.Bind ();
 
 	// Cameras sorted by priority. Specially important for shadow mapping.
 	std::sort(m_cameras.begin(), m_cameras.end(), compareCamera);
@@ -120,7 +120,7 @@ void Renderer::Render(Graphics& gfx) {
 	for (CameraView camView : m_cameras) {		
 
 		// Bind camera
-		camView.camera->Bind(gfx, camView.transform);		
+		camView.camera->Bind ( camView.transform);		
 
 		int jobsToExecute = m_jobs.size();
 
@@ -170,16 +170,16 @@ void Renderer::Render(Graphics& gfx) {
 
 			job.drawable->m_modelCbuffer->SetBuffer({ DirectX::XMMatrixTranspose(job.transform->GetMatrix()) });
 
-			if (lastPass != job.pass) { job.pass->Bind(gfx); bindCount++; };
-			job.drawable->Draw(gfx);
-			if (nextPass != job.pass)  job.pass->Unbind(gfx);
+			if (lastPass != job.pass) { job.pass->Bind (); bindCount++; };
+			job.drawable->Draw ();
+			if (nextPass != job.pass)  job.pass->Unbind ();
 		}
 		/*
 		std::ostringstream os_;
 		os_ << "setPass: " << bindCount << " DrawCalls: " << jobsToExecute << "\n";
 		OutputDebugString( os_.str().c_str());
 		*/
-		camView.camera->Unbind(gfx);
+		camView.camera->Unbind ();
 	}
 	m_jobs.clear();
 	m_cameras.clear();

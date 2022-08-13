@@ -6,10 +6,10 @@
 
 class CubeTexture : public Bindable{
 public:
-	CubeTexture(Graphics& gfx, std::string path, unsigned int slot);
-	void Bind(Graphics& gfx)const override;
-	void Unbind(Graphics& gfx)const override;
-	void Update(Graphics& gfx);
+	CubeTexture(std::string path, unsigned int slot);
+	void Bind()const override;
+	void Unbind()const override;
+	void Update();
 private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
 	unsigned int m_slot;

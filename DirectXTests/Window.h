@@ -60,7 +60,7 @@ private:
 public: 
 	Keyboard keyboard;
 	Mouse mouse;
-	std::unique_ptr<Graphics> gfx;
+	Graphics* gfx;
 private: 
 	int width, height;
 	HWND hWnd;

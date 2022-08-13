@@ -12,9 +12,9 @@ class Scene {
 public:
 	Scene() = default;
 	~Scene() = default;
-	void LoadScene(Graphics& gfx);
+	void LoadScene( );
 
-	void RenderTraverse(Graphics& gfx, Renderer& renderer);
+	void RenderTraverse();
 
 	Node* AddNode(Entity* entity, const Transform& transform, Node* parent = nullptr);
 
@@ -22,7 +22,7 @@ public:
 
 	Node* GetRootNode() { return &m_transformHierarchy; }
 private:
-	void RenderTraverseNode(Node* node, Graphics& gfx, Renderer& renderer, bool dirty);
+	void RenderTraverseNode(Node* node, bool dirty);
 
 private:
 	Node* m_mainCamera;

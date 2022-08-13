@@ -181,7 +181,6 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="GraphicsThrowMacros.h" />
     <ClInclude Include="ImageManager.h" />
@@ -202,6 +201,8 @@
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Script.h" />
+    <ClInclude Include="ScriptDispatcher.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="SkinnedVertexBuffer.h" />
@@ -245,6 +246,8 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ScriptDispatcher.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="SkinnedMesh.cpp" />
     <ClCompile Include="SkinnedVertexBuffer.cpp" />

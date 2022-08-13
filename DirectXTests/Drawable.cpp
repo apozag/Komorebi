@@ -5,8 +5,8 @@
 
 #include "Drawable.h"
 
-Drawable::Drawable(Graphics& gfx) {
-	m_modelCbuffer = new VertexConstantBuffer<ModelMatrixData> (gfx, VCBUFF_MODEL_SLOT);
+Drawable::Drawable() {
+	m_modelCbuffer = new VertexConstantBuffer<ModelMatrixData>  ( VCBUFF_MODEL_SLOT);
 	AddBindable(m_modelCbuffer);
 }
 
@@ -35,21 +35,22 @@ void Drawable::AddPass(Pass* pass) {
 	m_passes.push_back(pass);
 }
 
-void Drawable::Insert(Renderer& renderer, const Transform& worldTransform) {
-	renderer.SubmitDrawable(this, &worldTransform, m_passes);
+void Drawable::Insert(const Transform& worldTransform) {
+	GetRenderer()->SubmitDrawable(this, &worldTransform, m_passes);
 }
 
-void Drawable::Draw(Graphics& gfx) const {
+void Drawable::Draw( ) const {
 	for (Bindable* bind : m_binds) {
-		bind->Update(gfx);
+		bind->Update ();
 	}
 
 	for (Bindable* bind : m_binds) {
-		bind->Bind(gfx);
+		bind->Bind ();
 	}
-	gfx.DrawIndexed(m_indexCount);
+	
+	GetGraphics()->DrawIndexed(m_indexCount);
 
 	for (Bindable* bind : m_binds) {
-		bind->Unbind(gfx);
+		bind->Unbind ();
 	}
 }

@@ -17,10 +17,10 @@ struct BoneCBuffData {
 
 class Skeleton {
 public:
-	Skeleton(Graphics& gfx);
+	Skeleton( );
 	void UpdateBone(int idx, DirectX::XMMATRIX matrix);
-	void Upload(Graphics& gfx);
-	void Bind(Graphics& gfx);
+	void Upload( );
+	void Bind( );
 	bool isDirty() { return m_dirty; }
 private:
 	bool m_dirty;

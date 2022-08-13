@@ -4,10 +4,10 @@
 
 class VertexShader : public Bindable {
 public:
-	VertexShader(Graphics& gfx, const char* filename);
-	void Bind(Graphics& gfx)const override;
-	void Unbind(Graphics& gfx)const override;
-	void Update(Graphics& gfx);
+	VertexShader(const char* filename);
+	void Bind()const override;
+	void Unbind()const override;
+	void Update();
 	ID3DBlob* GetBytecode() const;
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_vertexShader;

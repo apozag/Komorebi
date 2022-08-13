@@ -9,11 +9,11 @@ class Animation;
 
 class Model : public Entity{
 public:
-	Model(Graphics& gfx);
+	Model( );
 	void AddPass(Pass* pass);
 	void AddDrawable(Drawable* mesh);
 	const Drawable::BVHData& GetBVHData() const;
-	void Insert(Renderer& renderer, const Transform& worldTransform) override;
+	void Insert(const Transform& worldTransform) override;
 public:
 	Skeleton* m_skeleton;
 	Animation* m_animation;

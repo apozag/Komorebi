@@ -4,8 +4,8 @@
 
 namespace wrl = Microsoft::WRL;
 
-Texture2D::Texture2D(Graphics& gfx, std::string path, unsigned int slot): m_slot(slot) {
-	INFOMAN(gfx);
+Texture2D::Texture2D( std::string path, unsigned int slot): m_slot(slot) {
+	INFOMAN;
 
 	Image img = ImageManager::loadImage(path);
 
@@ -25,21 +25,21 @@ Texture2D::Texture2D(Graphics& gfx, std::string path, unsigned int slot): m_slot
 	desc.Width = img.width;
 	desc.Height = img.height;	
 	wrl::ComPtr<ID3D11Texture2D> pTexture;
-	GFX_THROW_INFO(GetDevice(gfx)->CreateTexture2D(&desc, &data, &pTexture));
+	GFX_THROW_INFO(GetDevice ()->CreateTexture2D(&desc, &data, &pTexture));
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = img.format;
 	srvDesc.Texture2D.MipLevels = 1;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	GFX_THROW_INFO(GetDevice(gfx)->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf()));
+	GFX_THROW_INFO(GetDevice ()->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf()));
 }
 
-void Texture2D::Bind(Graphics& gfx) const {
-	GetContext(gfx)->PSSetShaderResources(m_slot, 1u, m_srv.GetAddressOf());
+void Texture2D::Bind( ) const {
+	GetContext ()->PSSetShaderResources(m_slot, 1u, m_srv.GetAddressOf());
 }
 
-void Texture2D::Unbind(Graphics& gfx) const {
+void Texture2D::Unbind( ) const {
 	ID3D11ShaderResourceView* nullViews[] = { nullptr };
-	GetContext(gfx)->PSSetShaderResources(m_slot, 1u, nullViews);
+	GetContext ()->PSSetShaderResources(m_slot, 1u, nullViews);
 }

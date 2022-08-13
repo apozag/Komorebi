@@ -122,9 +122,7 @@ Window::Window(int width, int height, const char* name) {
 		throw WND_LAST_EXCEPT();
 	}
 
-	gfx = std::make_unique<Graphics>(hWnd, width, height);
-
-	gfx->Init();
+	gfx = new Graphics(hWnd, width, height);
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }

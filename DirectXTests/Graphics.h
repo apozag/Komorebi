@@ -55,7 +55,7 @@ public:
 	void ClearBuffer(float r, float g, float b) noexcept;
 	void Init();
 	void Draw(unsigned int count);
-	void DrawIndexed(unsigned int count);
+	void DrawIndexed(unsigned int count) const;
 	RenderTarget* GetDefaultRenderTarget() { return m_target; }
 private:
 	ID3D11Device* m_device;
@@ -66,4 +66,5 @@ private:
 #endif
 	RenderTarget* m_target;
 	Viewport* m_viewport;
+	int m_viewportWidth, m_viewportHeight;
 };

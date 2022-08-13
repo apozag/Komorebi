@@ -8,8 +8,8 @@
 #include "Skeleton.h"
 #include "Animation.h"
 
-Model::Model(Graphics& gfx) {
-    m_skeleton = new Skeleton(gfx);    
+Model::Model() {
+    m_skeleton = new Skeleton ();    
 }
 
 void Model::AddDrawable(Drawable* drawable) {
@@ -42,6 +42,6 @@ void Model::AddPass(Pass* pass){
         m_drawables[i]->AddPass(pass);
 }
 
-void Model::Insert(Renderer& renderer, const Transform& worldTransform) {
+void Model::Insert(const Transform& worldTransform) {
     if(m_hasAnimation) m_animation->Update();
 }

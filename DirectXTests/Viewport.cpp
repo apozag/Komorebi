@@ -1,6 +1,6 @@
 #include "Viewport.h"
 
-Viewport::Viewport(Graphics& gfx, int x, int y, int w, int h) {
+Viewport::Viewport( int x, int y, int w, int h) {
 	m_viewport = {};
 	m_viewport.TopLeftX = x;
 	m_viewport.TopLeftY = y;
@@ -10,8 +10,8 @@ Viewport::Viewport(Graphics& gfx, int x, int y, int w, int h) {
 	m_viewport.MinDepth = 0;
 }
 
-void Viewport::Bind(Graphics& gfx) const {
-	GetContext(gfx)->RSSetViewports(1, &m_viewport);
+void Viewport::Bind( ) const {
+	GetContext ()->RSSetViewports(1, &m_viewport);
 }
-void Viewport::Unbind(Graphics& gfx) const {
+void Viewport::Unbind( ) const {
 }

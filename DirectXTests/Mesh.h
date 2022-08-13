@@ -8,7 +8,7 @@
 
 class Mesh : public Drawable{
 public:
-	Mesh(Graphics& gfx, std::vector<POD::Vertex>& vertices, std::vector<unsigned short>& indices, BVHData bvhData = BVHData());
+	Mesh( std::vector<POD::Vertex>& vertices, std::vector<unsigned short>& indices, BVHData bvhData = BVHData());
 	Mesh(const Mesh& drawable);
 	Mesh* Clone();
 };

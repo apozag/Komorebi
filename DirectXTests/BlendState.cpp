@@ -1,6 +1,6 @@
 #include "BlendState.h"
 
-BlendState::BlendState(Graphics& gfx, bool enable) {
+BlendState::BlendState(bool enable) {
 	D3D11_BLEND_DESC BlendState;
 	ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
 	BlendState.RenderTarget[0].BlendEnable = enable;
@@ -11,12 +11,12 @@ BlendState::BlendState(Graphics& gfx, bool enable) {
 	BlendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 	BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	GetDevice(gfx)->CreateBlendState(&BlendState, &m_blendState);
+	GetDevice()->CreateBlendState(&BlendState, &m_blendState);
 }
 
-void BlendState::Bind(Graphics& gfx)const {
-	GetContext(gfx)->OMSetBlendState(m_blendState.Get(), NULL, 0xffffffff);
+void BlendState::Bind()const {
+	GetContext()->OMSetBlendState(m_blendState.Get(), NULL, 0xffffffff);
 }
-void BlendState::Unbind(Graphics& gfx)const {
-	GetContext(gfx)->OMSetBlendState(NULL, NULL, 0xffffffff);
+void BlendState::Unbind()const {
+	GetContext()->OMSetBlendState(NULL, NULL, 0xffffffff);
 }
