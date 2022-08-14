@@ -1,15 +1,21 @@
 #include "ScriptDispatcher.h"
 #include "Script.h"
 
-void  ScriptDispatcher::SubmitScript(Script* script) {
-	if (!script->m_initialized) m_startScripts.push_back(script);
-	m_updateScripts.push_back(script);
+void  ScriptDispatcher::SubmitScript(Script* script, Node* node) {
+	if (!script->m_initialized) m_startJobs.push_back({ script, node });
+	m_updateJobs.push_back({ script, node });
 }
 
 void ScriptDispatcher::DispatchScripts() {
-	for (Script* script : m_startScripts) {
-		script->Start();
-		script->m_initialized = true;
+	for (ScriptJob job : m_startJobs) {
+		job.script->Start(job.node);
+		job.script->m_initialized = true;
 	}
-	for (Script* script : m_updateScripts) script->Update();
+	for (ScriptJob job : m_updateJobs)
+	{
+		job.script->Update(job.node);
+	}
+
+	m_startJobs.clear();
+	m_updateJobs.clear();
 }

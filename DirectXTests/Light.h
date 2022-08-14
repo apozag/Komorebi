@@ -10,7 +10,7 @@ class Graphics;
 class DirectionalLight : public Entity {
 public:
 	DirectionalLight( DirectX::SimpleMath::Vector3 color);
-	void Insert(const Transform& worldTransform) override;
+	void Insert(Node* node, const Transform& worldTransform) override;
 	DirectX::SimpleMath::Vector3 GetColor() const { return color; }
 	const Camera* GetCamera() const { return m_camera; }
 	RenderTarget* GetShadowMap() const { return m_rt; }
@@ -23,7 +23,7 @@ private:
 class PointLight : public Entity {
 public:
 	PointLight( DirectX::SimpleMath::Vector3 color);
-	void Insert(const Transform& worldTransform) override;
+	void Insert(Node* node, const Transform& worldTransform) override;
 	DirectX::SimpleMath::Vector3 GetColor() const { return color; }
 private:
 	DirectX::SimpleMath::Vector3 color;
@@ -34,7 +34,7 @@ private:
 class SpotLight : public Entity {
 public:
 	SpotLight( DirectX::SimpleMath::Vector3 color, float phi, float theta);
-	void Insert(const Transform& worldTransform) override;
+	void Insert(Node* node, const Transform& worldTransform) override;
 	DirectX::SimpleMath::Vector3 GetColor() const { return color; }
 private:
 	DirectX::SimpleMath::Vector3 color;

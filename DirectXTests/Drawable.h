@@ -32,7 +32,7 @@ public:
 	std::vector<Pass*> GetPasses() const { return m_passes; }
 	const BVHData& GetBVHData() const { return m_bvhData; }
 	
-	void Insert(const Transform& worldTransform) override;
+	void Insert(Node* node, const Transform& worldTransform) override;
 
 	virtual void Draw( ) const;
 

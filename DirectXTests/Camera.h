@@ -17,7 +17,7 @@ public:
 	};
 public:
 	Camera(float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic = false);
-	void Bind( const Transform* worldTransform) const;
+	void Bind(const Transform* worldTransform) const;
 	void Unbind( ) const;
 	DirectX::XMMATRIX getProj() const;
 
@@ -28,7 +28,7 @@ public:
 	VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
 	RenderTarget* m_rt;
 
-	void Insert( const Transform& worldTransform) override;
+	void Insert(Node* node, const Transform& worldTransform) override;
 
 public:
 	int m_priority;

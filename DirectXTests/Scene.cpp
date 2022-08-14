@@ -91,18 +91,28 @@ void Scene::LoadScene( ) {
 Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* parent) {
 	if (!parent) parent = &m_transformHierarchy;
 	Node* node = new Node();
-	node->entity = entity;
+	node->entities = { entity };
 	node->parent = parent;
 	node->localTransform = transform;
 	parent->children.push_back(node);
 	return node;
 } 
 
-void Scene::RenderTraverse() {
-	RenderTraverseNode(&m_transformHierarchy, false);
+Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, Node* parent) {
+	if (!parent) parent = &m_transformHierarchy;
+	Node* node = new Node();
+	node->entities = entities;
+	node->parent = parent;
+	node->localTransform = transform;
+	parent->children.push_back(node);
+	return node;
 }
 
-void Scene::RenderTraverseNode(Node* node, bool dirty) {
+void Scene::Traverse() {
+	TraverseNode(&m_transformHierarchy, false);
+}
+
+void Scene::TraverseNode(Node* node, bool dirty) {
 
 	dirty |= node->localTransform.m_dirty;
 
@@ -116,16 +126,16 @@ void Scene::RenderTraverseNode(Node* node, bool dirty) {
 		node->localTransform.m_dirty = false;
 	}
 
-	Entity* entity = node->entity;
-	if (entity) {
-		node->globalTransform.update();
-		entity->Insert( node->globalTransform);
+	for (Entity* entity : node->entities) {
+		if (entity) {
+			node->globalTransform.update();
+			entity->Insert(node, node->globalTransform);
+		}
 	}
 
 	for (Node* child : node->children) {
-		RenderTraverseNode(child, dirty);
+		TraverseNode(child, dirty);
 	}
-
 }
 
 

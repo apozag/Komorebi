@@ -38,16 +38,16 @@ PointLight::PointLight( DirectX::SimpleMath::Vector3 color) :
 	}
 {}
 
-void DirectionalLight::Insert(const Transform& worldTransform) {
+void DirectionalLight::Insert(Node* node, const Transform& worldTransform) {
 	GetRenderer()->SubmitDirectionalLight(this, &worldTransform);
 }
 
-void SpotLight::Insert(const Transform& worldTransform)
+void SpotLight::Insert(Node* node, const Transform& worldTransform)
 {
 	GetRenderer()->SubmitSpotlight(this, &worldTransform);
 }
 
-void PointLight::Insert( const Transform& worldTransform) {
+void PointLight::Insert(Node* node, const Transform& worldTransform) {
 	GetRenderer()->SubmitPointLight(this, &worldTransform);
 }
 

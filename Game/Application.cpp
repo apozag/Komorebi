@@ -14,6 +14,9 @@
 #include "Rasterizer.h"
 #include "ModelLoader.h"
 
+// Scripts
+#include "CameraMovement.h"
+
 int CALLBACK WinMain(
 	HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -31,7 +34,8 @@ int CALLBACK WinMain(
 
 		// Cameras
 		Camera* camera = new Camera(1.0472f, 1, 0.1, 500, drt, false);
-		Node* cameraNode = scene->AddNode(camera, Transform(
+		CameraMovement* cameraMovement = new CameraMovement();
+		Node* cameraNode = scene->AddNode({ camera, cameraMovement }, Transform(
 			DirectX::XMMatrixMultiply(
 				//DirectX::XMMatrixRotationRollPitchYawFromVector({ 3.14 * 0.25, 0, 0 }),
 				DirectX::XMMatrixRotationRollPitchYawFromVector({ 0, 3.14, 0 }),

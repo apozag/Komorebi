@@ -35,7 +35,7 @@ void Drawable::AddPass(Pass* pass) {
 	m_passes.push_back(pass);
 }
 
-void Drawable::Insert(const Transform& worldTransform) {
+void Drawable::Insert(Node* node, const Transform& worldTransform) {
 	GetRenderer()->SubmitDrawable(this, &worldTransform, m_passes);
 }
 

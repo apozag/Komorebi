@@ -38,7 +38,9 @@ int Engine::Start()
 			return *ecode;
 		}
 
-		m_activeScene->RenderTraverse ();
+		m_activeScene->Traverse ();
+
+		m_scriptDispatcher.DispatchScripts();
 
 		m_renderer->Render();
 		gfx.SwapBuffers();		

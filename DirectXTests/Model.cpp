@@ -42,6 +42,6 @@ void Model::AddPass(Pass* pass){
         m_drawables[i]->AddPass(pass);
 }
 
-void Model::Insert(const Transform& worldTransform) {
+void Model::Insert(Node* node, const Transform& worldTransform) {
     if(m_hasAnimation) m_animation->Update();
 }

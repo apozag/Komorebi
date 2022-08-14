@@ -5,12 +5,11 @@
 class Script : public Entity{
 	friend class ScriptDispatcher;
 public:
-	Script() = delete;
-	void Insert(const Transform& worldTransform)override;
-
-	virtual void Start() {}
-	virtual void Update() {}
+	void Insert(Node* node, const Transform& worldTransform)override;
 
 private:
+	virtual void Start(Node* node) = 0;
+	virtual void Update(Node* node) = 0;
+
 	bool m_initialized = false;
 };

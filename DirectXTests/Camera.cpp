@@ -42,7 +42,7 @@ DirectX::XMMATRIX Camera::getProj() const {
 	return m_proj;
 }
 
-void Camera::Insert(const Transform& worldTransform)
+void Camera::Insert(Node* node, const Transform& worldTransform)
 {
 	GetRenderer()->SubmitCamera(this, &worldTransform);
 }

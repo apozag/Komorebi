@@ -16,10 +16,24 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{f4dfe62a-8457-4082-9614-d02c72f02828}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Scripts">
+      <UniqueIdentifier>{c468c345-b78e-4cc9-b990-05c36aa38835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scripts">
+      <UniqueIdentifier>{122e66d6-8498-45c8-be78-4caeb1baae42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="CameraMovement.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CameraMovement.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

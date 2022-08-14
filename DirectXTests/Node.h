@@ -9,7 +9,7 @@ class Scene;
 class Node {
 	friend class Scene;
 public:
-	Entity* entity;
+	std::vector<Entity*> entities;
 	Transform localTransform;
 	std::vector<Node*> children;
 	Node* parent;

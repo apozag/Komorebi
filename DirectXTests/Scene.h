@@ -14,15 +14,16 @@ public:
 	~Scene() = default;
 	void LoadScene( );
 
-	void RenderTraverse();
+	void Traverse();
 
 	Node* AddNode(Entity* entity, const Transform& transform, Node* parent = nullptr);
+	Node* AddNode(std::vector<Entity*> entities, const Transform& transform, Node* parent = nullptr);
 
 	Node* GetMainCameraNode() { return m_mainCamera; }
 
 	Node* GetRootNode() { return &m_transformHierarchy; }
 private:
-	void RenderTraverseNode(Node* node, bool dirty);
+	void TraverseNode(Node* node, bool dirty);
 
 private:
 	Node* m_mainCamera;

@@ -3,12 +3,18 @@
 #include <vector>
 
 class Script;
+class Node;
 
 class ScriptDispatcher {
+private:
+	struct ScriptJob {
+		Script* script;
+		Node* node;
+	};
 public:
-	void SubmitScript(Script* script);
+	void SubmitScript(Script* script, Node* node);
 	void DispatchScripts();
 private:
-	std::vector<Script*> m_startScripts;
-	std::vector<Script*> m_updateScripts;
+	std::vector<ScriptJob> m_startJobs;
+	std::vector<ScriptJob> m_updateJobs;
 };

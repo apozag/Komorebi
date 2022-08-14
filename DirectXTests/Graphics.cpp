@@ -157,13 +157,6 @@ Graphics::Graphics(HWND hWnd, int width, int height) : m_viewportWidth(width), m
 		&m_device, 
 		nullptr, 
 		&m_context));
-
-	// Back buffer creation
-	/*
-	wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
-	GFX_THROW_INFO(m_swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));		
-	pBackBuffer->Release();
-	*/
 }
 
 Graphics::~Graphics()
@@ -207,7 +200,7 @@ void Graphics::Init()
 
 	m_viewport = new Viewport(0,0, m_viewportWidth, m_viewportHeight);
 
-	m_target->Bind();
+	//m_target->Bind();
 	m_viewport->Bind();
 
 	m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

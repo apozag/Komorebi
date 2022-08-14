@@ -13,7 +13,7 @@ public:
 	void AddPass(Pass* pass);
 	void AddDrawable(Drawable* mesh);
 	const Drawable::BVHData& GetBVHData() const;
-	void Insert(const Transform& worldTransform) override;
+	void Insert(Node* node, const Transform& worldTransform) override;
 public:
 	Skeleton* m_skeleton;
 	Animation* m_animation;
