@@ -5,6 +5,7 @@
 class PixelShader : public Bindable{
 public:
 	PixelShader(const char* filename);
+	~PixelShader();
 	void Bind()const override;
 	void Unbind()const override;
 	void Update();

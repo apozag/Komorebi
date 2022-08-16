@@ -8,6 +8,12 @@ VertexShader::VertexShader( const char* filename) {
 	GFX_THROW_INFO(D3DReadFileToBlob(WideStringUtility::charToLPWSTR(filename).c_str(), &m_bytecodeBlob));
 	GFX_THROW_INFO(GetDevice ()->CreateVertexShader(m_bytecodeBlob->GetBufferPointer(), m_bytecodeBlob->GetBufferSize(), nullptr, m_vertexShader.GetAddressOf()));
 }
+
+VertexShader::~VertexShader() {
+	m_vertexShader->Release();
+	m_bytecodeBlob->Release();
+}
+
 void VertexShader::Bind( ) const {
 	GetContext ()->VSSetShader(m_vertexShader.Get(), nullptr, 0u);
 }

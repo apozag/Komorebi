@@ -14,6 +14,10 @@ BlendState::BlendState(bool enable) {
 	GetDevice()->CreateBlendState(&BlendState, &m_blendState);
 }
 
+BlendState::~BlendState() {
+	m_blendState->Release();
+}
+
 void BlendState::Bind()const {
 	GetContext()->OMSetBlendState(m_blendState.Get(), NULL, 0xffffffff);
 }

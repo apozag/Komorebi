@@ -51,6 +51,10 @@ public:
 		SetBuffer(buffer);
 	}
 
+	~ConstantBuffer() {
+		m_constantBuffer->Release();
+	}
+
 	virtual void Bind() const override = 0;
 	virtual void Unbind() const override = 0;
 

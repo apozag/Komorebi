@@ -5,6 +5,7 @@
 class IndexBuffer : public Bindable {
 public:
 	IndexBuffer(unsigned short* indices, unsigned int count);
+	~IndexBuffer();
 	void Bind()const override;
 	void Unbind()const override;
 	void Update();

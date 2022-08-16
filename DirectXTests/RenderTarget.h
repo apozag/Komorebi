@@ -9,6 +9,7 @@ class RenderTarget : public Bindable{
 public:
 	RenderTarget(IDXGISwapChain* m_swapChain);
 	RenderTarget( int width, int height, DXGI_FORMAT format, int count, int slot);
+	~RenderTarget();
 
 	void Bind()const override;
 	void Unbind()const override;

@@ -3,6 +3,7 @@
 class Sampler : public Bindable{
 public:
 	Sampler(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE mode, int slot);
+	~Sampler();
 	void Bind()const override;
 	void Unbind()const override;
 private:

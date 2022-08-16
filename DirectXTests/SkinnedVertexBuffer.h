@@ -6,6 +6,7 @@
 class SkinnedVertexBuffer : public Bindable {
 public:
 	SkinnedVertexBuffer(POD::SkinnedVertex* vertices, unsigned int size, unsigned int stride, unsigned int offset);
+	~SkinnedVertexBuffer();
 	void Bind()const override;
 	void Unbind()const override;
 	void Update();

@@ -7,6 +7,7 @@
 class Texture2D : public Bindable {
 public:
 	Texture2D(std::string path, unsigned int slot);
+	~Texture2D();
 	void Bind()const override;
 	void Unbind()const override;
 private:

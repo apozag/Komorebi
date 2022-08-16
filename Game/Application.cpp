@@ -37,7 +37,6 @@ int CALLBACK WinMain(
 		CameraMovement* cameraMovement = new CameraMovement();
 		Node* cameraNode = scene->AddNode({ camera, cameraMovement }, Transform(
 			DirectX::XMMatrixMultiply(
-				//DirectX::XMMatrixRotationRollPitchYawFromVector({ 3.14 * 0.25, 0, 0 }),
 				DirectX::XMMatrixRotationRollPitchYawFromVector({ 0, 3.14, 0 }),
 				DirectX::XMMatrixTranslationFromVector({ 0, 20, 100 })
 			)
@@ -57,21 +56,18 @@ int CALLBACK WinMain(
 		Pass* shadowPass = new Pass("ShadowVertex.cso", "ShadowPixel.cso", PASSLAYER_OPAQUE);
 		Pass* aabbPass = new Pass("cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
 
-		defaultPass->AddBindable(new DepthStencilState(
-			DepthStencilState::DepthStencilAccess::DEPTH_READ |
-			DepthStencilState::DepthStencilAccess::DEPTH_WRITE
-		));
 
-		shadowPass->AddBindable(new DepthStencilState(
+		DepthStencilState* dsState = new DepthStencilState(
 			DepthStencilState::DepthStencilAccess::DEPTH_READ |
 			DepthStencilState::DepthStencilAccess::DEPTH_WRITE
-		));
+		); 
+
+		defaultPass->AddBindable(dsState);
+
+		shadowPass->AddBindable(dsState);
 
 		aabbPass->AddBindable(new Rasterizer(true, true));
-		aabbPass->AddBindable(new DepthStencilState(
-			DepthStencilState::DepthStencilAccess::DEPTH_READ |
-			DepthStencilState::DepthStencilAccess::DEPTH_WRITE
-		));
+		aabbPass->AddBindable(dsState);
 
 		Pass* skyboxPass = new Pass("skyboxVertex.cso", "skyboxPixel.cso", PASSLAYER_SKYBOX);
 		skyboxPass->AddBindable(new DepthStencilState(DepthStencilState::DepthStencilAccess::DEPTH_READ));

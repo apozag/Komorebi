@@ -6,6 +6,7 @@
 class VertexBuffer : public Bindable{
 public:
 	VertexBuffer(POD::Vertex* vertices, unsigned int size, unsigned int stride, unsigned int offset);
+	~VertexBuffer();
 	void Bind()const override;
 	void Unbind()const override;
 	void Update();

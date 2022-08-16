@@ -9,6 +9,10 @@ PixelShader::PixelShader( const char* filename) {
 	GFX_THROW_INFO(D3DReadFileToBlob(WideStringUtility::charToLPWSTR(filename).c_str(), &pBlob));
 	GFX_THROW_INFO(GetDevice ()->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, m_pixelShader.GetAddressOf()));
 }
+PixelShader::~PixelShader() {
+	m_pixelShader->Release();
+}
+
 void PixelShader::Bind( ) const {
 	GetContext ()->PSSetShader(m_pixelShader.Get(), nullptr, 0u);
 }

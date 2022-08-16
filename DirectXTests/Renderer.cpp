@@ -152,6 +152,7 @@ void Renderer::Render( ) {
 				);
 			m_jobs[i].key &= ~(uint64_t(1) << 34);
 			m_jobs[i].key |= uint64_t(cull) << 34;
+
 			jobsToExecute -= cull;
 			
 		}
@@ -161,18 +162,20 @@ void Renderer::Render( ) {
 
 		// Dispatch jobs
 		int bindCount = 0;
+		Pass* lastPass = nullptr;
 		for (int i = 0; i < jobsToExecute; i++) {
 
 			Job job = m_jobs[i];
 
-			Pass* lastPass = i > 0 ? m_jobs[i-1].pass : nullptr;
-			Pass* nextPass = i < jobsToExecute - 1 ? m_jobs[i+1].pass : nullptr;
-
-			job.drawable->m_modelCbuffer->SetBuffer({ DirectX::XMMatrixTranspose(job.transform->GetMatrix()) });
+			Pass* nextPass = i < jobsToExecute - 1 ? m_jobs[i+1].pass : nullptr;			
 
 			if (lastPass != job.pass) { job.pass->Bind (); bindCount++; };
-			job.drawable->Draw ();
-			if (nextPass != job.pass)  job.pass->Unbind ();
+
+			job.drawable->Draw (DirectX::XMMatrixTranspose(job.transform->GetMatrix()));
+
+			if (nextPass != job.pass) job.pass->Unbind();
+
+			lastPass = job.pass;
 		}
 		/*
 		std::ostringstream os_;

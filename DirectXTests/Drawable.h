@@ -34,7 +34,7 @@ public:
 	
 	void Insert(Node* node, const Transform& worldTransform) override;
 
-	virtual void Draw( ) const;
+	virtual void Draw(DirectX::XMMATRIX&& modelMatrix) const;
 
 protected:
 	BVHData m_bvhData;

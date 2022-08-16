@@ -23,6 +23,11 @@ SkinnedVertexBuffer::SkinnedVertexBuffer( POD::SkinnedVertex* data, unsigned int
 	m_stride = stride;
 	m_offset = offset;
 }
+
+SkinnedVertexBuffer::~SkinnedVertexBuffer() {
+	m_vertexBuffer->Release();
+}
+
 void SkinnedVertexBuffer::Bind( ) const {
 	GetContext ()->IASetVertexBuffers(0u, 1u, m_vertexBuffer.GetAddressOf(), &m_stride, &m_offset);
 }

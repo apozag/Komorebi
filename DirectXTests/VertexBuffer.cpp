@@ -23,6 +23,11 @@ VertexBuffer::VertexBuffer( POD::Vertex* data, unsigned int size, unsigned int s
 	m_stride = stride;
 	m_offset = offset;
 }
+
+VertexBuffer::~VertexBuffer() {
+	m_vertexBuffer->Release();
+}
+
 void VertexBuffer::Bind( ) const {
 	GetContext ()->IASetVertexBuffers(0u, 1u, m_vertexBuffer.GetAddressOf(), &m_stride, &m_offset);
 }

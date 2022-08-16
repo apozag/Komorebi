@@ -19,6 +19,11 @@ IndexBuffer::IndexBuffer(unsigned short* indices, unsigned int count) {
 	GFX_THROW_INFO(GetDevice()->CreateBuffer(&ibd, &isd, m_indexBuffer.GetAddressOf()));
 	m_count = count;
 }
+
+IndexBuffer::~IndexBuffer() {
+	m_indexBuffer->Release();
+}
+
 void IndexBuffer::Bind() const {
 	GetContext()->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 }

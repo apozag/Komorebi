@@ -5,6 +5,7 @@
 class BlendState : public Bindable{
 public:
 	BlendState(bool enable);
+	~BlendState();
 	void Bind()const override;
 	void Unbind()const override;
 private:

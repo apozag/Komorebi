@@ -39,7 +39,7 @@ void Drawable::Insert(Node* node, const Transform& worldTransform) {
 	GetRenderer()->SubmitDrawable(this, &worldTransform, m_passes);
 }
 
-void Drawable::Draw( ) const {
+void Drawable::Draw(DirectX::XMMATRIX&& modelMatrix) const {
 	for (Bindable* bind : m_binds) {
 		bind->Update ();
 	}
@@ -47,6 +47,8 @@ void Drawable::Draw( ) const {
 	for (Bindable* bind : m_binds) {
 		bind->Bind ();
 	}
+
+	m_modelCbuffer->SetBuffer({ modelMatrix });
 	
 	GetGraphics()->DrawIndexed(m_indexCount);
 

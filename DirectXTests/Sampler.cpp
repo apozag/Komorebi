@@ -20,6 +20,9 @@ Sampler::Sampler( D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE mode, int slot
 
 	GFX_THROW_INFO( GetDevice ()->CreateSamplerState(&desc, &m_sampler));
 }
+Sampler::~Sampler() {
+	m_sampler->Release();
+}
 
 void Sampler::Bind( ) const {
 	GetContext ()->PSSetSamplers(m_slot, 1, m_sampler.GetAddressOf());

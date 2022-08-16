@@ -125,6 +125,16 @@ RenderTarget::RenderTarget( int width, int height, DXGI_FORMAT format, int count
 	m_srv.push_back(dssrv);
 }
 
+RenderTarget::~RenderTarget() {
+	for (wrl::ComPtr<ID3D11RenderTargetView> rtv : m_rtv) {
+		rtv->Release();
+	}
+	for (wrl::ComPtr<ID3D11ShaderResourceView> srv : m_srv) {
+		srv->Release();
+	}
+	m_dsv->Release();
+}
+
 void RenderTarget::Bind( ) const {
 
 	if (locked) return;

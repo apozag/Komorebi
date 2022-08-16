@@ -35,6 +35,10 @@ Texture2D::Texture2D( std::string path, unsigned int slot): m_slot(slot) {
 	GFX_THROW_INFO(GetDevice ()->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf()));
 }
 
+Texture2D::~Texture2D() {
+	m_srv->Release();
+}
+
 void Texture2D::Bind( ) const {
 	GetContext ()->PSSetShaderResources(m_slot, 1u, m_srv.GetAddressOf());
 }

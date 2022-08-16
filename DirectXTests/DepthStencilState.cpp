@@ -52,6 +52,10 @@ DepthStencilState::DepthStencilState(int dsst, int refVal) : m_refVal(refVal) {
 	GFX_THROW_INFO(GetDevice()->CreateDepthStencilState(&dsDesc, m_pDSState.GetAddressOf()));
 }
 
+DepthStencilState::~DepthStencilState() {
+	m_pDSState->Release();
+}
+
 void DepthStencilState::Bind() const {
 	GetContext()->OMSetDepthStencilState(m_pDSState.Get(), m_refVal);
 }

@@ -12,6 +12,7 @@ public:
 	};
 public:
 	DepthStencilState(int dsst, int refVal=0);
+	~DepthStencilState();
 	void Update(){}
 	void Bind()const override;
 	void Unbind()const override {}

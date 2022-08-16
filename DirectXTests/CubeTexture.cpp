@@ -38,6 +38,10 @@ CubeTexture::CubeTexture(std::string path, unsigned int slot) : m_slot(slot) {
 
 }
 
+CubeTexture::~CubeTexture() {
+	m_srv->Release();
+}
+
 void CubeTexture::Bind() const {
 	GetContext()->PSSetShaderResources(m_slot, 1, m_srv.GetAddressOf());
 }

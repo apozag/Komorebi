@@ -17,6 +17,10 @@ Rasterizer::Rasterizer( bool cullFront, bool wireframe) {
 	GetDevice ()->CreateRasterizerState(&desc, &m_rasterizer);
 }
 
+Rasterizer::~Rasterizer() {
+	m_rasterizer->Release();
+}
+
 void Rasterizer::Bind( ) const {
 	GetContext ()->RSSetState(m_rasterizer.Get());
 }

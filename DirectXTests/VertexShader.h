@@ -5,6 +5,7 @@
 class VertexShader : public Bindable {
 public:
 	VertexShader(const char* filename);
+	~VertexShader();
 	void Bind()const override;
 	void Unbind()const override;
 	void Update();
