@@ -13,6 +13,8 @@
 #include "CubeTexture.h"
 #include "Rasterizer.h"
 #include "ModelLoader.h"
+#include "TagManager.h"
+#include "Rotate.h"
 
 // Scripts
 #include "CameraMovement.h"
@@ -32,6 +34,9 @@ int CALLBACK WinMain(
 		// RTs
 		RenderTarget* drt = Engine::GetDefaultRendertarget();
 
+		// Tags
+		TagManager::GetInstance()->RegisterTag("UI");
+
 		// Cameras
 		Camera* camera = new Camera(1.0472f, 1, 0.1, 500, drt, false);
 		CameraMovement* cameraMovement = new CameraMovement();
@@ -41,6 +46,7 @@ int CALLBACK WinMain(
 				DirectX::XMMatrixTranslationFromVector({ 0, 20, 100 })
 			)
 		));
+		camera->m_tagMask = ~TagManager::GetInstance()->TagToBitmask("UI");
 
 		// Lights
 		DirectionalLight* dirLight = new DirectionalLight(DirectX::SimpleMath::Vector3(1, 1, 1));
@@ -55,7 +61,8 @@ int CALLBACK WinMain(
 		Pass* defaultPass = new Pass("SkinnedVertex.cso", "SkinnedPixel.cso", PASSLAYER_OPAQUE, true);
 		Pass* shadowPass = new Pass("ShadowVertex.cso", "ShadowPixel.cso", PASSLAYER_OPAQUE);
 		Pass* aabbPass = new Pass("cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
-
+		Pass* skyboxPass = new Pass("skyboxVertex.cso", "skyboxPixel.cso", PASSLAYER_SKYBOX);
+		//Pass* postProcessPass = new Pass("fullScreenVertex.cso", "filterPixel.cso", PASSLAYER_SCREEN);
 
 		DepthStencilState* dsState = new DepthStencilState(
 			DepthStencilState::DepthStencilAccess::DEPTH_READ |
@@ -69,28 +76,32 @@ int CALLBACK WinMain(
 		aabbPass->AddBindable(new Rasterizer(true, true));
 		aabbPass->AddBindable(dsState);
 
-		Pass* skyboxPass = new Pass("skyboxVertex.cso", "skyboxPixel.cso", PASSLAYER_SKYBOX);
 		skyboxPass->AddBindable(new DepthStencilState(DepthStencilState::DepthStencilAccess::DEPTH_READ));
 		skyboxPass->AddBindable(new CubeTexture("assets/skybox", 0));
 
+		//postProcessPass->AddBindable(new DepthStencilState(0));
+
 		//Models
-		Node* modelWrapperNode = scene->AddNode(nullptr, Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
+		Node* modelWrapperNode = scene->AddNode(new Rotate(), Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
 
 		Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);;
 		model->AddPass(defaultPass);
-
+		
 		Mesh* floor = ModelLoader::GenerateQuad(scene, scene->AddNode(nullptr, Transform(
-			DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) * DirectX::XMMatrixRotationX(3.14f * 0.5f)
+			/*DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) **/ DirectX::XMMatrixRotationX(3.14f * 0.5f)
 		)));
 		floor->AddPass(shadowPass);
 
 		Mesh* skybox = ModelLoader::GenerateCube(scene, nullptr);
 		skybox->AddPass(skyboxPass);
-
+		skybox->m_tagMask = TagManager::GetInstance()->TagToBitmask("Skybox");
+		
 		Drawable::BVHData bvhData = model->GetBVHData();
 		Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max, scene, modelWrapperNode);
 		AABB->AddPass(aabbPass);
-
+		
+		//Mesh* fullScreenQuad = ModelLoader::GenerateQuad(scene, nullptr);
+		//fullScreenQuad->AddPass(postProcessPass);
 
 		Engine::m_activeScene = scene;
 		return Engine::Start();

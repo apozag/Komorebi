@@ -30,8 +30,6 @@ int Engine::Start()
 
 	Graphics& gfx = *m_window->gfx;
 
-	//m_activeScene->LoadScene ;
-
 	while (true) {
 
 		if (const auto ecode = Window::ProcessMessages()) {

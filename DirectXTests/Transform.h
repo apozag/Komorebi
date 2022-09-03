@@ -14,11 +14,11 @@ public:
 	Transform(DirectX::XMMATRIX matrix) {
 		m_matrix = matrix;
 	}
-	DirectX::XMMATRIX GetMatrix() const {
+	const DirectX::XMMATRIX&  GetMatrix() const {
 		return m_matrix;
 	}
 
-	DirectX::XMMATRIX GetInverseMatrix() {
+	const DirectX::XMMATRIX& GetInverseMatrix() {
 		if (m_invMatDirty) {
 			m_invMatrix = DirectX::XMMatrixInverse(nullptr, m_matrix);
 			m_invMatDirty = false;
@@ -26,30 +26,30 @@ public:
 		return m_invMatrix;
 	}
 
-	DirectX::XMMATRIX GetInverseMatrixUnsafe() const {
+	const DirectX::XMMATRIX& GetInverseMatrixUnsafe() const {
 		return m_invMatrix;
 	}
 
-	DirectX::SimpleMath::Vector3 GetPosition(){
+	const DirectX::SimpleMath::Vector3& GetPosition(){
 		if (m_decomposeDirty) decompose();
 		return m_position;
 	}
-	DirectX::SimpleMath::Vector3 GetScale() {
+	const DirectX::SimpleMath::Vector3& GetScale() {
 		if (m_decomposeDirty) decompose();
 		return m_scale;
 	}
-	DirectX::SimpleMath::Quaternion GetRotation() {
+	const DirectX::SimpleMath::Quaternion& GetRotation() {
 		if (m_decomposeDirty) decompose();
 		return m_rotation;
 	}
 
-	DirectX::SimpleMath::Vector3 GetPositionUnsafe() const {
+	const DirectX::SimpleMath::Vector3&  GetPositionUnsafe() const {
 		return m_position;
 	}
-	DirectX::SimpleMath::Vector3 GetScaleUnsafe() const{
+	const DirectX::SimpleMath::Vector3& GetScaleUnsafe() const{
 		return m_scale;
 	}
-	DirectX::SimpleMath::Quaternion GetRotationUnsafe() const{
+	const DirectX::SimpleMath::Quaternion& GetRotationUnsafe() const{
 		return m_rotation;
 	}
 

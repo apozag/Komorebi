@@ -11,12 +11,13 @@
 #include "RenderTarget.h"
 
 std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj);
+void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b);
 bool cullAABB(std::vector<DirectX::XMFLOAT4>&& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform);
 
 void Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, std::vector<Pass*> passes) {
 	for (Pass* pass : passes) {
 		//Opaque:			29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
-		//Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx						
+		//Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx
 		m_jobs.push_back(Job{
 			0,
 			drawable,
@@ -37,7 +38,7 @@ void Renderer::SubmitSpotlight(const SpotLight* spotlight, const Transform* worl
 	m_spotLightData.color[m_spotLightData.count] = { c.x, c.y, c.z };
 	m_spotLightData.dir[m_spotLightData.count] = { f.x, f.y, f.z };
 	m_spotLightData.pos[m_spotLightData.count] = { p.x, p.y, p.z,};
-	m_spotLightData.count++;				  
+	m_spotLightData.count++;
 }
 
 void Renderer::SubmitDirectionalLight(const DirectionalLight* dirlight, const Transform* worldTransform)
@@ -126,34 +127,49 @@ void Renderer::Render( ) {
 
 		// Update job sorting keys for this camera. 
 		// Some parts are independent from the camera, but oh well.
-		for (int i = 0; i < m_jobs.size(); i++) {
+		for (int i = 0; i < m_jobs.size(); i++) {		
 
-			m_jobs[i].key = uint64_t(m_jobs[i].pass->layer) << 32;
+			Job& job = m_jobs[i];
 
-			bool isTransparent = m_jobs[i].pass->layer == PASSLAYER_TRANSPARENT;
+			// ignored tag?
+			bool ignore = camView.camera->m_tagMask && job.drawable->m_tagMask;
 
-			int shifts = isTransparent ? 0 : 16;
-			m_jobs[i].key |= uint64_t(m_jobs[i].pass->layer) << shifts;
-
-			// depth
-			shifts =  isTransparent? 16 : 0;
-			m_jobs[i].key &= ~(uint64_t(0xFFFF) << shifts);
-			float depth = camView.transform->PointToLocalUnsafe(m_jobs[i].transform->GetPositionUnsafe()).Length();
-			float normalizedDepth = (depth - camView.camera->m_near) / (camView.camera->m_far - camView.camera->m_near);
-			uint64_t depthKeyComponent = (isTransparent? 1.0f-normalizedDepth : normalizedDepth) * 0xFFFF;
-			m_jobs[i].key |= depthKeyComponent << shifts;
+			// skybox passes are exempt from culling
+			bool isSkybox = job.pass->layer != PASSLAYER_SKYBOX;
 
 			// frustum culling			
-			bool cull = m_jobs[i].pass->layer != PASSLAYER_SKYBOX && 
-				cullAABB(
-					getFrustumPlanes(camView.transform->GetInverseMatrixUnsafe() * camView.camera->getProj()),
-					m_jobs[i].drawable->GetBVHData(), 
-					m_jobs[i].transform
-				);
-			m_jobs[i].key &= ~(uint64_t(1) << 34);
-			m_jobs[i].key |= uint64_t(cull) << 34;
+			bool frustumCull = cullAABB(
+				getFrustumPlanes(camView.transform->GetInverseMatrixUnsafe() * camView.camera->getProj()),
+				job.drawable->GetBVHData(),
+				job.transform
+			);
+
+			bool cull = ignore || (isSkybox && frustumCull);
+
+			job.key &= ~(uint64_t(1) << 34);
+			job.key |= uint64_t(cull) << 34;
 
 			jobsToExecute -= cull;
+
+			if (!cull) {
+
+				// Pass layer
+				job.key = uint64_t(job.pass->layer) << 32;
+
+				bool isTransparent = job.pass->layer == PASSLAYER_TRANSPARENT;
+
+				// Pass index (avoid innecessary binds)
+				int shifts = isTransparent ? 0 : 16;
+				job.key |= uint64_t(job.pass->GetIdx()) << shifts;
+
+				// depth
+				shifts = isTransparent ? 16 : 0;
+				job.key &= ~(uint64_t(0xFFFF) << shifts);
+				float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
+				float normalizedDepth = (depth - camView.camera->m_near) / (camView.camera->m_far - camView.camera->m_near);
+				uint64_t depthKeyComponent = (isTransparent ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
+				job.key |= depthKeyComponent << shifts;
+			}					
 			
 		}
 
@@ -177,11 +193,11 @@ void Renderer::Render( ) {
 
 			lastPass = job.pass;
 		}
-		/*
+		
 		std::ostringstream os_;
 		os_ << "setPass: " << bindCount << " DrawCalls: " << jobsToExecute << "\n";
 		OutputDebugString( os_.str().c_str());
-		*/
+		
 		camView.camera->Unbind ();
 	}
 	m_jobs.clear();
@@ -193,13 +209,16 @@ void Renderer::Render( ) {
 }
 
 bool cullAABB(std::vector<DirectX::XMFLOAT4>&& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform) {
+
+	Drawable::BVHData updatedBvh;
+	UpdateAABB(bvhData, *worldTransform, updatedBvh);
 	for (int planeID = 0; planeID < 6; ++planeID)
 	{
 		DirectX::XMVECTOR planeNormal{ frustumPlanes[planeID].x, frustumPlanes[planeID].y, frustumPlanes[planeID].z, 0.0f };
 		float planeConstant = frustumPlanes[planeID].w;
 
-		DirectX::SimpleMath::Vector3 worldMin = worldTransform->PointToWorld(bvhData.min);
-		DirectX::SimpleMath::Vector3 worldMax = worldTransform->PointToWorld(bvhData.max);
+		DirectX::SimpleMath::Vector3 worldMin = updatedBvh.min + worldTransform->GetPositionUnsafe();
+		DirectX::SimpleMath::Vector3 worldMax = updatedBvh.max + worldTransform->GetPositionUnsafe();
 
 		// Check each axis (x,y,z) to get the AABB vertex furthest away from the direction the plane is facing (plane normal)
 		DirectX::XMFLOAT3 axisVert;
@@ -294,4 +313,34 @@ std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj)
 	}
 
 	return tempFrustumPlane;
+}
+
+// Transform AABB a by the matrix m and translation t,
+// find maximum extents, and store result into AABB b.
+void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b)
+{
+	const float* amin = (const float*)&a.min;
+	const float* amax = (const float*)&a.max;
+	float* bmin = (float*)&b.min;
+	float* bmax = (float*)&b.max;
+	float* t = (float*)&transform.GetPositionUnsafe();
+	const DirectX::XMMATRIX& m = transform.GetMatrix();
+	// For all three axes
+	for (int i = 0; i < 3; i++) {
+		// Start by adding in translation
+		bmin[i] = bmax[i] = t[i];
+		// Form extent by summing smaller and larger terms respectively
+		for (int j = 0; j < 3; j++) {
+			float e = m(j,i) * amin[j];
+			float f = m(j,i) * amax[j];
+			if (e < f) {
+				bmin[i] += e;
+				bmax[i] += f;
+			}
+			else {
+				bmin[i] += f;
+				bmax[i] += e;
+			}
+		}
+	}
 }

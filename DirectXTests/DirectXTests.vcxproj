@@ -168,6 +168,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="BindableSlotsInfo.h" />
+    <ClInclude Include="BitmaskUtils.h" />
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Bone.h" />
     <ClInclude Include="Camera.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="SkinnedVertexBuffer.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="TagManager.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
@@ -228,6 +230,7 @@
     <ClCompile Include="dxerr.cpp" />
     <ClCompile Include="DxgiInfoManager.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ImageManager.cpp" />
@@ -252,6 +255,7 @@
     <ClCompile Include="SkinnedMesh.cpp" />
     <ClCompile Include="SkinnedVertexBuffer.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="TagManager.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />

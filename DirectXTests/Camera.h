@@ -32,4 +32,5 @@ public:
 
 public:
 	int m_priority;
+	uint32_t m_tagMask = 0xFFFFFFFF;
 };
