@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Bindable.h"
+#include "StateBindable.h"
 
-class BlendState : public Bindable{
+class BlendState : public StateBindable{
 public:
 	BlendState(bool enable);
 	~BlendState();

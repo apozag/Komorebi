@@ -6,7 +6,7 @@ namespace wrl = Microsoft::WRL;
 std::unordered_map<int, int> boundShaderResources;
 int idCount;
 
-RenderTarget::RenderTarget( IDXGISwapChain* swapChain) : m_slot(0), m_id(idCount++){
+RenderTarget::RenderTarget( IDXGISwapChain* swapChain) {
 	INFOMAN;
 
 	// Get back buffer
@@ -46,7 +46,7 @@ RenderTarget::RenderTarget( IDXGISwapChain* swapChain) : m_slot(0), m_id(idCount
 
 }
 
-RenderTarget::RenderTarget( int width, int height, DXGI_FORMAT format, int count, int slot) : m_slot(slot), m_id(idCount++), m_width(width), m_height(height){
+RenderTarget::RenderTarget( int width, int height, DXGI_FORMAT format, int count, int slot) : m_width(width), m_height(height){
 	INFOMAN;	
 
 	// Depth-Stencil Texture
@@ -71,15 +71,6 @@ RenderTarget::RenderTarget( int width, int height, DXGI_FORMAT format, int count
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Texture2D.MipSlice = 0u;
 	GFX_THROW_INFO(GetDevice ()->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, m_dsv.GetAddressOf()));
-
-	// Depth Shader Resource View
-	wrl::ComPtr<ID3D11ShaderResourceView> dssrv;
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;//DXGI_FORMAT_D24_UNORM_S8_UINT;
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MostDetailedMip = 0;
-	srvDesc.Texture2D.MipLevels = 1;
-	GFX_THROW_INFO(GetDevice ()->CreateShaderResourceView(pDepthStencil.Get(), &srvDesc, dssrv.GetAddressOf()));
 
 	// Texture description
 	D3D11_TEXTURE2D_DESC texDesc = {};
@@ -110,84 +101,48 @@ RenderTarget::RenderTarget( int width, int height, DXGI_FORMAT format, int count
 
 		m_rtv.push_back(rtv);
 
-		// Shader Resource View
-		wrl::ComPtr<ID3D11ShaderResourceView> srv;
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Format = format;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = 1;
-		GetDevice ()->CreateShaderResourceView(pTexture.Get(), &srvDesc, srv.GetAddressOf());		
-
-		m_srv.push_back(srv);
+		m_textures.push_back(new Texture2D(pTexture, format, slot + i));
 	}
-
-	m_srv.push_back(dssrv);
+	m_textures.push_back(new Texture2D(pDepthStencil, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, slot + count));
 }
 
 RenderTarget::~RenderTarget() {
 	for (wrl::ComPtr<ID3D11RenderTargetView> rtv : m_rtv) {
 		rtv->Release();
 	}
-	for (wrl::ComPtr<ID3D11ShaderResourceView> srv : m_srv) {
-		srv->Release();
+	for (Texture2D* texture : m_textures) {
+		delete(texture);
 	}
 	m_dsv->Release();
 }
 
 void RenderTarget::Bind( ) const {
 
-	if (locked) return;
 
-	if (isShaderResource) {
-		GetContext ()->PSSetShaderResources(m_slot, m_srv.size(), m_srv[0].GetAddressOf());
-		boundShaderResources[m_slot] = m_id;
+	//ID3D11RenderTargetView* const * srv = (m_rtv.size() ? m_rtv[0].GetAddressOf() : nullptr);
+	if (m_rtv.size()) {
+		GetContext ()->OMSetRenderTargets(m_rtv.size(), m_rtv[0].GetAddressOf(), m_dsv.Get());
 	}
 	else {
-		//ID3D11RenderTargetView* const * srv = (m_rtv.size() ? m_rtv[0].GetAddressOf() : nullptr);
-		if (m_rtv.size()) {
-			GetContext ()->OMSetRenderTargets(m_rtv.size(), m_rtv[0].GetAddressOf(), m_dsv.Get());
-		}
-		else {
-			GetContext ()->OMSetRenderTargets(m_rtv.size(), nullptr, m_dsv.Get());
-		}
+		GetContext ()->OMSetRenderTargets(0, nullptr, m_dsv.Get());
 	}
 }
+
 void RenderTarget::Unbind( ) const {
-
-	if (locked) return;
-
-	if (isShaderResource) {
-		/*
-		std::vector<ID3D11ShaderResourceView*> nullViews(m_srv.size(), nullptr);
-		GetContext ()->PSSetShaderResources(m_slot, m_srv.size(), nullViews.data());
-		boundShaderResources[m_slot] = -1;
-		*/
-	}
 	
-	else {
-		if (m_rtv.size()) 
-		{
-			std::vector<ID3D11RenderTargetView*> nullViews(m_rtv.size(), nullptr);
-			GetContext ()->OMSetRenderTargets(m_rtv.size(), nullViews.data(), nullptr);
-		}
-		else 
-		{
-			ID3D11RenderTargetView* nullviews[1] = { nullptr };
-			GetContext ()->OMSetRenderTargets(1, nullviews, nullptr);
-		}
-
-		if (boundShaderResources.count(m_slot) &&
-			boundShaderResources[m_slot] == m_id) 
-		{
-			GetContext ()->PSSetShaderResources(m_slot, m_srv.size(), m_srv[0].GetAddressOf());
-		}
-	}	
+	if (m_rtv.size()) 
+	{
+		std::vector<ID3D11RenderTargetView*> nullViews(m_rtv.size(), nullptr);
+		GetContext ()->OMSetRenderTargets(m_rtv.size(), nullViews.data(), nullptr);
+	}
+	else 
+	{
+		ID3D11RenderTargetView* nullviews[1] = { nullptr };
+		GetContext ()->OMSetRenderTargets(1, nullviews, nullptr);
+	}
 }
 
 void RenderTarget::Clear( float r, float g, float b) {
-
-	if (locked) return;
 
 	INFOMAN_NOHR;
 	const float color[] = { r, g, b, 1.0f };
@@ -195,19 +150,4 @@ void RenderTarget::Clear( float r, float g, float b) {
 		GFX_THROW_INFO_ONLY(GetContext ()->ClearRenderTargetView(rtv.Get(), color));
 	}
 	GFX_THROW_INFO_ONLY(GetContext ()->ClearDepthStencilView(m_dsv.Get(), D3D11_CLEAR_STENCIL | D3D11_CLEAR_DEPTH, 1.0f, 0u));
-}
-
-void RenderTarget::SetAsShaderResource() {
-	isShaderResource = true;
-}
-
-void RenderTarget::SetAsRenderTarget() {
-	isShaderResource = false;
-}
-
-void RenderTarget::Lock() {
-	locked = true;
-}
-void RenderTarget::Unlock() {
-	locked = false;
 }

@@ -1,7 +1,7 @@
 #include "Sampler.h"
 #include "GraphicsThrowMacros.h"
 
-Sampler::Sampler( D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE mode, int slot) : m_slot(slot){
+Sampler::Sampler( D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE mode, int slot) : ResourceBindable(slot){
 	INFOMAN;
 
 	D3D11_SAMPLER_DESC desc = {};

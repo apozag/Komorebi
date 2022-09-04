@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Bindable.h"
+#include "ResourceBindable.h"
 #include "GraphicsThrowMacros.h"
 
 template<typename T>
-class ConstantBuffer : public Bindable {
+class ConstantBuffer : public ResourceBindable {
 public:
-	ConstantBuffer(unsigned int slot): m_dynamic(true), m_slot(slot) {
+	ConstantBuffer(unsigned int slot): m_dynamic(true), ResourceBindable(slot) {
 
 		INFOMAN;
 
@@ -79,7 +79,6 @@ public:
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
 	T m_cbuffer;
-	unsigned int m_slot;
 	bool m_dynamic;
 };
 

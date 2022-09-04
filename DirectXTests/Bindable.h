@@ -6,7 +6,6 @@ class Bindable {
 public:
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;
-	virtual void Update() {};
 	virtual ~Bindable() = default;
 protected:
 	static ID3D11Device* GetDevice();

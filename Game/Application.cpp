@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "Scene.h"
 #include "Pass.h"
+#include "Material.h"
 #include "Model.h"
 #include "RenderTarget.h"
 #include "Light.h"
@@ -37,6 +38,15 @@ int CALLBACK WinMain(
 		// Tags
 		TagManager::GetInstance()->RegisterTag("UI");
 
+		// Lights
+		DirectionalLight* dirLight = new DirectionalLight(DirectX::SimpleMath::Vector3(1, 1, 1));
+		Node* lightNode = scene->AddNode(dirLight, Transform(
+			DirectX::XMMatrixMultiply(
+				DirectX::XMMatrixRotationRollPitchYawFromVector({ 3.14 * 0.25, 0, 0 }),
+				DirectX::XMMatrixTranslationFromVector({ 0, 100, -100 })
+			)
+		), nullptr);
+
 		// Cameras
 		Camera* camera = new Camera(1.0472f, 1, 0.1, 500, drt, false);
 		CameraMovement* cameraMovement = new CameraMovement();
@@ -48,21 +58,11 @@ int CALLBACK WinMain(
 		));
 		camera->m_tagMask = ~TagManager::GetInstance()->TagToBitmask("UI");
 
-		// Lights
-		DirectionalLight* dirLight = new DirectionalLight(DirectX::SimpleMath::Vector3(1, 1, 1));
-		Node* lightNode = scene->AddNode(dirLight, Transform(
-			DirectX::XMMatrixMultiply(
-				DirectX::XMMatrixRotationRollPitchYawFromVector({ 3.14 * 0.25, 0, 0 }),
-				DirectX::XMMatrixTranslationFromVector({ 0, 30, 0 })
-			)
-		), cameraNode);
-
 		// Passes
 		Pass* defaultPass = new Pass("SkinnedVertex.cso", "SkinnedPixel.cso", PASSLAYER_OPAQUE, true);
 		Pass* shadowPass = new Pass("ShadowVertex.cso", "ShadowPixel.cso", PASSLAYER_OPAQUE);
 		Pass* aabbPass = new Pass("cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
 		Pass* skyboxPass = new Pass("skyboxVertex.cso", "skyboxPixel.cso", PASSLAYER_SKYBOX);
-		//Pass* postProcessPass = new Pass("fullScreenVertex.cso", "filterPixel.cso", PASSLAYER_SCREEN);
 
 		DepthStencilState* dsState = new DepthStencilState(
 			DepthStencilState::DepthStencilAccess::DEPTH_READ |
@@ -77,28 +77,41 @@ int CALLBACK WinMain(
 		aabbPass->AddBindable(dsState);
 
 		skyboxPass->AddBindable(new DepthStencilState(DepthStencilState::DepthStencilAccess::DEPTH_READ));
-		skyboxPass->AddBindable(new CubeTexture("assets/skybox", 0));
 
-		//postProcessPass->AddBindable(new DepthStencilState(0));
+
+		// Materials
+		Material* skinnedMat = new Material();
+		skinnedMat->AddPass(defaultPass);
+		skinnedMat->AddPass(aabbPass);
+
+		Material* skyboxMat = new Material();
+		skyboxMat->AddPass(skyboxPass);
+		skyboxMat->AddBindable(new CubeTexture("assets/skybox", 0));
+
+		Material* shadowMat = new Material();
+		shadowMat->AddPass(shadowPass);
+
+		Material* aabbMat = new Material();
+		aabbMat->AddPass(aabbPass);
 
 		//Models
-		Node* modelWrapperNode = scene->AddNode(new Rotate(), Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
+		Node* modelWrapperNode = scene->AddNode(nullptr, Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
 
 		Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);;
-		model->AddPass(defaultPass);
+		model->SetMaterial(skinnedMat);
 		
 		Mesh* floor = ModelLoader::GenerateQuad(scene, scene->AddNode(nullptr, Transform(
-			/*DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) **/ DirectX::XMMatrixRotationX(3.14f * 0.5f)
+			DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) * DirectX::XMMatrixRotationX(3.14f * 0.5f)
 		)));
-		floor->AddPass(shadowPass);
+		floor->SetMaterial(shadowMat);
 
 		Mesh* skybox = ModelLoader::GenerateCube(scene, nullptr);
-		skybox->AddPass(skyboxPass);
+		skybox->SetMaterial(skyboxMat);
 		skybox->m_tagMask = TagManager::GetInstance()->TagToBitmask("Skybox");
 		
 		Drawable::BVHData bvhData = model->GetBVHData();
 		Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max, scene, modelWrapperNode);
-		AABB->AddPass(aabbPass);
+		AABB->SetMaterial(aabbMat);
 		
 		//Mesh* fullScreenQuad = ModelLoader::GenerateQuad(scene, nullptr);
 		//fullScreenQuad->AddPass(postProcessPass);

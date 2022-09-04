@@ -19,8 +19,8 @@ class DirectionalLight;
 class PointLight;
 class Camera;
 class Transform;
-class RenderTarget;
-
+class Texture2D;
+class Material;
 
 #define MAX_DIRLIGHTS   5
 #define MAX_SPOTLIGHTS  5
@@ -33,6 +33,7 @@ private:
 		const Drawable* drawable;
 		const Transform* transform;
 		Pass* pass;
+		Material* material;
 	};
 
 	struct CameraView {
@@ -68,7 +69,7 @@ public:
 		m_lightTransformCbuff(VertexConstantBuffer<LightTransformData> ( VCBUFF_LIGHTTRANSFORM_SLOT)),
 		m_shadowMapSampler ( D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, TEX2D_SHADOWMAP_SLOT)
 	{}
-	void SubmitDrawable(const Drawable* drawable, const Transform* transform, std::vector<Pass*> passes);
+	void SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material);
 	void SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform);
 	void SubmitDirectionalLight(const DirectionalLight* spotlight, const Transform* worldTransform);
 	void SubmitPointLight(const PointLight* spotlight, const Transform* worldTransform);
@@ -93,6 +94,6 @@ private:
 	LightTransformData m_lightTransformData;
 	VertexConstantBuffer<LightTransformData> m_lightTransformCbuff;
 
-	std::vector<RenderTarget*> m_shadowMaps;
+	std::vector<Texture2D*> m_shadowMaps;
 	Sampler m_shadowMapSampler;
 };

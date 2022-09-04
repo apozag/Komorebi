@@ -2,9 +2,9 @@
 
 #include <string>
 #include "Graphics.h"
-#include "Bindable.h"
+#include "ResourceBindable.h"
 
-class CubeTexture : public Bindable{
+class CubeTexture : public ResourceBindable{
 public:
 	CubeTexture(std::string path, unsigned int slot);
 	~CubeTexture();

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Bindable.h"
+#include "StateBindable.h"
 
-class Viewport : public Bindable{
+class Viewport : public StateBindable{
 public:
 	Viewport(int x, int y, int w, int h);
 	void Bind()const override;

@@ -13,7 +13,7 @@ public:
 	void Insert(Node* node, const Transform& worldTransform) override;
 	DirectX::SimpleMath::Vector3 GetColor() const { return color; }
 	const Camera* GetCamera() const { return m_camera; }
-	RenderTarget* GetShadowMap() const { return m_rt; }
+	Texture2D* GetShadowMap() const { return m_rt->GetTextures2D()[0]; }
 private:
 	DirectX::SimpleMath::Vector3 color;
 	Camera* m_camera;

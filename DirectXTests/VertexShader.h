@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Bindable.h"
+#include "StateBindable.h"
 
-class VertexShader : public Bindable {
+class VertexShader : public StateBindable {
 public:
 	VertexShader(const char* filename);
 	~VertexShader();

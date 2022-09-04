@@ -1,7 +1,7 @@
 #include "CubeTexture.h"
 #include "ImageManager.h"
 
-CubeTexture::CubeTexture(std::string path, unsigned int slot) : m_slot(slot) {
+CubeTexture::CubeTexture(std::string path, unsigned int slot) : ResourceBindable(slot) {
 	std::vector<Image> images(6);
 	D3D11_SUBRESOURCE_DATA sd[6];
 	for (int i = 0; i < 6; i++) {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Bindable.h"
+#include "StateBindable.h"
 
-class Rasterizer : public Bindable{
+class Rasterizer : public StateBindable{
 public:
 	Rasterizer(bool cullFront = false, bool wireframe = false);
 	~Rasterizer();

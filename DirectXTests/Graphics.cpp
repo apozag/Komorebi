@@ -196,7 +196,6 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 void Graphics::Init()
 {
 	m_target = new RenderTarget(m_swapChain);
-	m_target->SetAsRenderTarget();
 
 	m_viewport = new Viewport(0,0, m_viewportWidth, m_viewportHeight);
 

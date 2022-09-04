@@ -33,16 +33,11 @@ Pass::Pass( const char* vsFilename, const char* psFilename, unsigned int layer, 
 	}
 	AddBindable(new PixelShader ( psFilename));
 	AddBindable(new Rasterizer ());
-	AddBindable(new Sampler ( D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0));
+	//AddBindable(new Sampler ( D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0));
 	m_slot = static_idx++;
 }
-void Pass::AddBindable(Bindable* bind){
+void Pass::AddBindable(StateBindable* bind){
 	m_binds.push_back(bind);
-}
-void Pass::Update( ) {
-	for (Bindable* bind : m_binds) {
-		bind->Update ();
-	}
 }
 
 void Pass::Bind( ) {

@@ -26,16 +26,12 @@ void Camera::Bind( const Transform* worldTransform) const {
 		});
 	m_cameraTransformCB->Update ();
 	m_cameraTransformCB->Bind ();
-	m_rt->SetAsRenderTarget();	
 	m_rt->Bind ();
 	m_rt->Clear ( 0,0,0);
-	m_rt->Lock();
 }
 
 void Camera::Unbind( ) const {
-	m_rt->Unlock();
 	m_rt->Unbind ();
-	m_rt->SetAsShaderResource();
 }
 
 DirectX::XMMATRIX Camera::getProj() const {

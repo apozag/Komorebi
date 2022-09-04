@@ -29,6 +29,3 @@ void IndexBuffer::Bind() const {
 }
 void IndexBuffer::Unbind() const {
 }
-void IndexBuffer::Update() {
-
-}

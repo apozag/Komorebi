@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
-#include "Bindable.h"
+#include "StateBindable.h"
 #include "Drawable.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -16,15 +16,14 @@ class Pass {
 public:
 	Pass( const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned = false);
 	~Pass() {};
-	void AddBindable(Bindable* bind);
-	void Update( );
+	void AddBindable(StateBindable* bind);
 	void Bind( );
 	void Unbind( );
 	unsigned char GetIdx() { return m_slot; }
 public:
 	const unsigned int layer;	
 private:
-	std::vector<Bindable*> m_binds;
+	std::vector<StateBindable*> m_binds;
 	static unsigned char static_idx;
 	unsigned char m_slot;
 };

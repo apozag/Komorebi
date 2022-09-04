@@ -17,8 +17,3 @@ void InputLayout::Bind() const {
 
 void InputLayout::Unbind() const {
 }
-
-void InputLayout::Update()
-{
-
-}

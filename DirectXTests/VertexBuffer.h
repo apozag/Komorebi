@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Bindable.h"
+#include "ResourceBindable.h"
 #include "Defines.h"
 
-class VertexBuffer : public Bindable{
+class VertexBuffer : public ResourceBindable{
 public:
 	VertexBuffer(POD::Vertex* vertices, unsigned int size, unsigned int stride, unsigned int offset);
 	~VertexBuffer();

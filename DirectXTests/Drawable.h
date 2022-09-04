@@ -5,8 +5,9 @@
 
 class Graphics;
 class Pass;
-class Bindable;
+class ResourceBindable;
 class IndexBuffer;
+class Material;
 
 template<typename T>
 class VertexConstantBuffer;
@@ -26,10 +27,9 @@ public:
 	Drawable();
 	Drawable(const Drawable& drawable);
 	Drawable* Clone();
-	void AddBindable(Bindable* bind);
+	void AddBindable(ResourceBindable* bind);
 	void AddIndexBuffer(IndexBuffer* ib);
-	void AddPass(Pass* pass);
-	std::vector<Pass*> GetPasses() const { return m_passes; }
+	void SetMaterial(Material* material) { m_material = material; }
 	const BVHData& GetBVHData() const { return m_bvhData; }
 	
 	void Insert(Node* node, const Transform& worldTransform) override;
@@ -39,8 +39,8 @@ public:
 protected:
 	BVHData m_bvhData;
 private:
-	std::vector<Pass*> m_passes;
-	std::vector<Bindable*> m_binds;
+	Material* m_material;
+	std::vector<ResourceBindable*> m_binds;
 	unsigned int m_indexCount;
 
 	VertexConstantBuffer<ModelMatrixData>* m_modelCbuffer;

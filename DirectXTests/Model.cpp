@@ -37,9 +37,9 @@ const Drawable::BVHData& Model::GetBVHData() const {
     return m_bvh;
 }
 
-void Model::AddPass(Pass* pass){
+void Model::SetMaterial(Material* material){
     for (int i = 0; i < m_drawables.size(); i++)
-        m_drawables[i]->AddPass(pass);
+        m_drawables[i]->SetMaterial(material);
 }
 
 void Model::Insert(Node* node, const Transform& worldTransform) {

@@ -8,21 +8,38 @@
 #include "Renderer.h"
 #include "Light.h"
 #include "Camera.h"
-#include "RenderTarget.h"
+#include "Texture2D.h"
+#include "Material.h"
 
 std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj);
 void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b);
-bool cullAABB(std::vector<DirectX::XMFLOAT4>&& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform);
+bool cullAABB(const std::vector<DirectX::XMFLOAT4>& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform);
 
-void Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, std::vector<Pass*> passes) {
-	for (Pass* pass : passes) {
+void Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material) {
+	for (Pass* pass : material->GetPasses()) {
 		//Opaque:			29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
 		//Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx
+
+		bool isTransparent = pass->layer == PASSLAYER_TRANSPARENT;
+
+		// Pass layer
+		uint64_t key = uint64_t(pass->layer) << 32;
+
+		// Material (resource binds)
+		unsigned int idx = material->GetIdx();
+		unsigned int shifts = 8 + 16 * isTransparent;
+		key |= ((uint64_t)idx) << shifts;
+
+		// Pass index (state binds)
+		shifts = !isTransparent * 16;
+		key |= uint64_t(pass->GetIdx()) << shifts;
+
 		m_jobs.push_back(Job{
-			0,
+			key,
 			drawable,
 			transform,
-			pass
+			pass,
+			material
 		});
 	}
 }
@@ -85,7 +102,7 @@ bool compareJob(const Renderer::Job& j1, const Renderer::Job& j2) {
 	return j1.key < j2.key; 
 }
 bool compareCamera(const Renderer::CameraView& c1, const Renderer::CameraView& c2) {
-	return c1.camera->m_priority < c2.camera->m_priority;
+	return c1.camera->m_priority > c2.camera->m_priority;
 }
 
 void Renderer::Render( ) {
@@ -108,62 +125,51 @@ void Renderer::Render( ) {
 	m_lightTransformCbuff.Update ();
 	m_lightTransformCbuff.Bind ();
 
-	// Shadowmap shader resources bound at the begginning. 
-	// When bound as render target, they will be bound back as srv when rendering is done.
-	for (RenderTarget* rt : m_shadowMaps) {
-		rt->Bind ();
-	}
-	m_shadowMapSampler.Bind ();
-
 	// Cameras sorted by priority. Specially important for shadow mapping.
 	std::sort(m_cameras.begin(), m_cameras.end(), compareCamera);
 
-	for (CameraView camView : m_cameras) {		
+	for (int i = 0; i < m_cameras.size(); i++) {
+		CameraView& camView = m_cameras[i];
 
 		// Bind camera
 		camView.camera->Bind ( camView.transform);		
 
 		int jobsToExecute = m_jobs.size();
 
+		// Get frustum planes for culling
+		const std::vector<DirectX::XMFLOAT4>& planes = getFrustumPlanes(camView.transform->GetInverseMatrixUnsafe() * camView.camera->getProj());
+
+		// Time to bind shadowmaps?
+		if (i == m_shadowMaps.size() && i > 0) {
+			for (Texture2D* rt : m_shadowMaps) {
+				rt->Bind();
+			}
+			m_shadowMapSampler.Bind();
+		}
+
 		// Update job sorting keys for this camera. 
-		// Some parts are independent from the camera, but oh well.
 		for (int i = 0; i < m_jobs.size(); i++) {		
 
 			Job& job = m_jobs[i];
 
-			// ignored tag?
-			bool ignore = camView.camera->m_tagMask && job.drawable->m_tagMask;
+			// Ignored tag?
+			bool ignore = camView.camera->m_tagMask & job.drawable->m_tagMask;
 
-			// skybox passes are exempt from culling
-			bool isSkybox = job.pass->layer != PASSLAYER_SKYBOX;
+			// Skybox passes are exempt from culling
+			bool isSkybox = job.pass->layer != PASSLAYER_SKYBOX; 
 
-			// frustum culling			
-			bool frustumCull = cullAABB(
-				getFrustumPlanes(camView.transform->GetInverseMatrixUnsafe() * camView.camera->getProj()),
-				job.drawable->GetBVHData(),
-				job.transform
-			);
-
-			bool cull = ignore || (isSkybox && frustumCull);
+			// Frustum culling
+			bool cull = ignore || (isSkybox && cullAABB(planes, job.drawable->GetBVHData(), job.transform));
 
 			job.key &= ~(uint64_t(1) << 34);
 			job.key |= uint64_t(cull) << 34;
 
 			jobsToExecute -= cull;
 
+			// Depth
 			if (!cull) {
-
-				// Pass layer
-				job.key = uint64_t(job.pass->layer) << 32;
-
 				bool isTransparent = job.pass->layer == PASSLAYER_TRANSPARENT;
-
-				// Pass index (avoid innecessary binds)
-				int shifts = isTransparent ? 0 : 16;
-				job.key |= uint64_t(job.pass->GetIdx()) << shifts;
-
-				// depth
-				shifts = isTransparent ? 16 : 0;
+				unsigned int shifts = isTransparent * 16;
 				job.key &= ~(uint64_t(0xFFFF) << shifts);
 				float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
 				float normalizedDepth = (depth - camView.camera->m_near) / (camView.camera->m_far - camView.camera->m_near);
@@ -173,33 +179,47 @@ void Renderer::Render( ) {
 			
 		}
 
-		// Jobs sorted in an attempt to minimize state changes
+		// Sort jobs based on its key
 		std::sort(m_jobs.begin(), m_jobs.end(), compareJob);
 
 		// Dispatch jobs
-		int bindCount = 0;
+		int stateBindCount = 0;
+		int resourceBindCount = 0;
 		Pass* lastPass = nullptr;
+		Material* lastMat = nullptr;
 		for (int i = 0; i < jobsToExecute; i++) {
 
 			Job job = m_jobs[i];
 
-			Pass* nextPass = i < jobsToExecute - 1 ? m_jobs[i+1].pass : nullptr;			
+			Pass* nextPass = i < jobsToExecute - 1 ? m_jobs[i+1].pass : nullptr;
+			Material* nextMat = i < jobsToExecute - 1 ? m_jobs[i+1].material : nullptr;
 
-			if (lastPass != job.pass) { job.pass->Bind (); bindCount++; };
+			if (lastPass != job.pass) { job.pass->Bind (); stateBindCount++; };
+			if (lastMat != job.material) { job.material->Bind (); resourceBindCount++; };
 
 			job.drawable->Draw (DirectX::XMMatrixTranspose(job.transform->GetMatrix()));
 
 			if (nextPass != job.pass) job.pass->Unbind();
+			if (nextMat != job.material) job.material->Unbind();
 
 			lastPass = job.pass;
+			lastMat = job.material;
 		}
 		
 		std::ostringstream os_;
-		os_ << "setPass: " << bindCount << " DrawCalls: " << jobsToExecute << "\n";
+		os_ << "setPass: " << stateBindCount << 
+			  " setMat: " << resourceBindCount << 
+			  " DrawCalls: " << jobsToExecute << "\n";
 		OutputDebugString( os_.str().c_str());
 		
 		camView.camera->Unbind ();
 	}
+
+	for (Texture2D* rt : m_shadowMaps) {
+		rt->Unbind();
+	}
+	//m_shadowMapSampler.Unbind();
+
 	m_jobs.clear();
 	m_cameras.clear();
 	m_shadowMaps.clear();
@@ -208,7 +228,7 @@ void Renderer::Render( ) {
 	m_spotLightData.count = 0;
 }
 
-bool cullAABB(std::vector<DirectX::XMFLOAT4>&& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform) {
+bool cullAABB(const std::vector<DirectX::XMFLOAT4>& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform) {
 
 	Drawable::BVHData updatedBvh;
 	UpdateAABB(bvhData, *worldTransform, updatedBvh);

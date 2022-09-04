@@ -194,6 +194,15 @@
     <ClInclude Include="BitmaskUtils.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="StateBindable.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceBindable.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -323,6 +332,9 @@
       <Filter>Archivos de origen\Entities</Filter>
     </ClCompile>
     <ClCompile Include="TagManager.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

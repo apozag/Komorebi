@@ -189,6 +189,7 @@
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelLoader.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="ResourceBindable.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Script.h" />
@@ -207,6 +209,7 @@
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkinnedMesh.h" />
     <ClInclude Include="SkinnedVertexBuffer.h" />
+    <ClInclude Include="StateBindable.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TagManager.h" />
     <ClInclude Include="Texture2D.h" />
@@ -238,6 +241,7 @@
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />

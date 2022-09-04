@@ -4,7 +4,7 @@
 
 namespace wrl = Microsoft::WRL;
 
-Texture2D::Texture2D( std::string path, unsigned int slot): m_slot(slot) {
+Texture2D::Texture2D( std::string path, unsigned int slot): ResourceBindable(slot) {
 	INFOMAN;
 
 	Image img = ImageManager::loadImage(path);
@@ -33,6 +33,17 @@ Texture2D::Texture2D( std::string path, unsigned int slot): m_slot(slot) {
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	GFX_THROW_INFO(GetDevice ()->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf()));
+}
+
+Texture2D::Texture2D(wrl::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot) : ResourceBindable(slot){
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = 1;
+
+	GetDevice()->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf());
 }
 
 Texture2D::~Texture2D() {

@@ -183,7 +183,7 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
     Node* sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
     
     if(nodeIdx > 0) boneNodes[nodeIdx] = sceneNode;
-
+    /*
     Pass* aabbPass = new Pass ( "cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
     aabbPass->AddBindable(new Rasterizer ( true, true));
     aabbPass->AddBindable(new DepthStencilState (
@@ -191,7 +191,7 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
     ));
 
     ModelLoader::GenerateCube ( sceneGraph, sceneNode)->AddPass(aabbPass);
-        
+      */  
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
         processNodeBones ( node->mChildren[i], scene, sceneGraph, sceneNode, model);

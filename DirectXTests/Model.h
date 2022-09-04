@@ -10,7 +10,7 @@ class Animation;
 class Model : public Entity{
 public:
 	Model( );
-	void AddPass(Pass* pass);
+	void SetMaterial(Material* material);
 	void AddDrawable(Drawable* mesh);
 	const Drawable::BVHData& GetBVHData() const;
 	void Insert(Node* node, const Transform& worldTransform) override;

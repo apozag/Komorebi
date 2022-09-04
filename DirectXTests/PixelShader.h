@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Bindable.h"
+#include "StateBindable.h"
 
-class PixelShader : public Bindable{
+class PixelShader : public StateBindable{
 public:
 	PixelShader(const char* filename);
 	~PixelShader();

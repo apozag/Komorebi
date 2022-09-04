@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Bindable.h"
+#include "StateBindable.h"
 
-class DepthStencilState : public Bindable {
+class DepthStencilState : public StateBindable {
 public:
 	enum DepthStencilAccess {
 		DEPTH_WRITE = 0x1,
@@ -13,7 +13,6 @@ public:
 public:
 	DepthStencilState(int dsst, int refVal=0);
 	~DepthStencilState();
-	void Update(){}
 	void Bind()const override;
 	void Unbind()const override {}
 private:

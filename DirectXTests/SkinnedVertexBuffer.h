@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Bindable.h"
+#include "ResourceBindable.h"
 #include "Defines.h"
 
-class SkinnedVertexBuffer : public Bindable {
+class SkinnedVertexBuffer : public ResourceBindable {
 public:
 	SkinnedVertexBuffer(POD::SkinnedVertex* vertices, unsigned int size, unsigned int stride, unsigned int offset);
 	~SkinnedVertexBuffer();
