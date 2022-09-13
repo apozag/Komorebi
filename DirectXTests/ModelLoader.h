@@ -7,9 +7,6 @@
 #include <assimp/postprocess.h>
 
 #include "Defines.h"
-#include "ConstantBuffer.h"
-#include "Drawable.h"
-#include "Mesh.h"
 
 class Graphics;
 class Camera;
@@ -18,6 +15,7 @@ class Pass;
 class Scene;
 class Skeleton;
 class Model;
+class Mesh;
 class Animation;
 class Node;
 

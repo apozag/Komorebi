@@ -13,7 +13,7 @@ Camera::Camera( float fov, float aspectratio, float nearZ, float farZ, RenderTar
 	else {
 		m_proj = DirectX::XMMatrixPerspectiveFovLH(fov, aspectratio, nearZ, 1000);
 	}
-	m_cameraTransformCB = new VertexConstantBuffer<CameraTransformCB> ( VCBUFF_CAMERATRANSFORM_SLOT);
+	m_cameraTransformCB = new ReflectedVertexConstantBuffer<CameraTransformCB> ( VCBUFF_CAMERATRANSFORM_SLOT);
 }
 
 void Camera::Bind( const Transform* worldTransform) const {

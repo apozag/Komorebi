@@ -6,6 +6,9 @@
 VertexShader::VertexShader( const char* filename) {
 	INFOMAN;
 	GFX_THROW_INFO(D3DReadFileToBlob(WideStringUtility::charToLPWSTR(filename).c_str(), &m_bytecodeBlob));
+
+	GFX_THROW_INFO(D3DReflect(m_bytecodeBlob->GetBufferPointer(), m_bytecodeBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)m_reflection.GetAddressOf()));
+
 	GFX_THROW_INFO(GetDevice ()->CreateVertexShader(m_bytecodeBlob->GetBufferPointer(), m_bytecodeBlob->GetBufferSize(), nullptr, m_vertexShader.GetAddressOf()));
 }
 

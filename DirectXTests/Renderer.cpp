@@ -4,6 +4,7 @@
 
 #define _XM_NO_INTRINSICS_
 
+#include "Drawable.h"
 #include "Pass.h"
 #include "Renderer.h"
 #include "Light.h"

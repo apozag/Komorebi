@@ -194,14 +194,14 @@
     <ClInclude Include="BitmaskUtils.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="StateBindable.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="ResourceBindable.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,6 +336,9 @@
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

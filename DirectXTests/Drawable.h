@@ -38,8 +38,8 @@ public:
 
 protected:
 	BVHData m_bvhData;
-private:
 	Material* m_material;
+private:
 	std::vector<ResourceBindable*> m_binds;
 	unsigned int m_indexCount;
 
