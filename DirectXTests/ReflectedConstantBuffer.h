@@ -19,36 +19,6 @@ public:
 public:
 
 	ReflectedConstantBuffer(std::vector<ConstantBufferVariable> variables, unsigned int slot);
-	/*
-	ConstantBuffer(unsigned int slot, bool m_dynamic, const T& buffer) : m_dynamic(m_dynamic), ResourceBindable(slot){
-		INFOMAN;
-
-		D3D11_BUFFER_DESC cbd = {};
-		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		if (m_dynamic) {
-			cbd.Usage = D3D11_USAGE_DYNAMIC;
-			cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		}
-		else {
-			cbd.Usage = D3D11_USAGE_IMMUTABLE;
-			cbd.CPUAccessFlags = 0;
-		}
-		cbd.MiscFlags = 0u;
-		cbd.ByteWidth = sizeof(T);
-		cbd.StructureByteStride = 0;
-
-		D3D11_SUBRESOURCE_DATA sd = {};
-		sd.pSysMem = &buffer;
-		sd.SysMemPitch = 0;
-		sd.SysMemSlicePitch = 0;
-
-		GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, &sd, m_constantBuffer.GetAddressOf()));
-	}
-
-	ConstantBuffer(unsigned int slot, T& buffer) : ConstantBuffer(slot) {
-		SetBuffer(buffer);
-	}
-	*/
 
 	~ReflectedConstantBuffer() {
 		m_constantBuffer->Release();
@@ -67,7 +37,7 @@ private:
 	bool SetVariable(D3D_SHADER_VARIABLE_CLASS varClass, const char* name, void* data, size_t size);
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
-	char* m_buffer;
+	float* m_buffer;
 	std::vector<ConstantBufferVariable> m_variables;
 	size_t m_size;
 	bool m_dynamic;

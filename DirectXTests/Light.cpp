@@ -7,7 +7,7 @@ DirectionalLight::DirectionalLight( DirectX::SimpleMath::Vector3 color) :
 {
 	m_rt = new RenderTarget ( 1024, 1024, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, TEX2D_SHADOWMAP_SLOT);
 	m_camera = new Camera ( 1.0472f, 1, 0.1, 1000, m_rt, true);
-	m_camera->m_priority = -1;
+	m_camera->m_priority = -100;
 }
 
 SpotLight::SpotLight( DirectX::SimpleMath::Vector3 color, float phi, float theta) :

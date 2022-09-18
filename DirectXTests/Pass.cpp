@@ -4,6 +4,7 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "InputLayout.h"
+#include "Rasterizer.h"
 
 unsigned char Pass::static_idx = 0;
 
@@ -34,8 +35,7 @@ Pass::Pass( const char* vsFilename, const char* psFilename, unsigned int layer, 
 	}
 	m_pixelShader = new PixelShader(psFilename);
 	AddBindable(m_pixelShader);
-	//AddBindable(new Rasterizer ());
-	//AddBindable(new Sampler ( D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0));
+	AddBindable(new Rasterizer ());
 	m_slot = static_idx++;
 }
 void Pass::AddBindable(StateBindable* bind){

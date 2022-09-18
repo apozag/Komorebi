@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="CameraMovement.cpp" />
+    <ClCompile Include="ChangeColor.cpp" />
     <ClCompile Include="Rotate.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
+    <ClInclude Include="ChangeColor.h" />
     <ClInclude Include="Rotate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

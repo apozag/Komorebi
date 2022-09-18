@@ -337,7 +337,7 @@
     <ClCompile Include="Material.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="ConstantBuffer.cpp">
+    <ClCompile Include="ReflectedConstantBuffer.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
   </ItemGroup>

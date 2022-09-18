@@ -1,16 +1,21 @@
 #include "Material.h"
-#include "ConstantBuffer.h"
+#include "ReflectedConstantBuffer.h"
 #include "ResourceBindable.h"
 #include "Pass.h"
 #include "PixelShader.h"
 #include "VertexShader.h"
+#include "BindableSlotsInfo.h"
+#include "Sampler.h"
 
 unsigned int Material::static_idx = 0;
 
-Material::Material() : m_idx (static_idx++){}
+Material::Material() : m_idx (static_idx++){
+	//AddBindable(new Sampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0));
+}
 
 void Material::Bind() {
-	for (ResourceBindable* bind : m_binds) {
+	for (ResourceBindable* bind : m_binds) {	
+		bind->Update();
 		bind->Bind();
 	}
 }
@@ -55,7 +60,9 @@ void Material::AddPass(Pass* pass) {
 				}
 			}
 
-			std::vector<ConstantBuffer::ConstantBufferVariable> variables;
+			if (register_index < VCBUFF_FREE_SLOT) continue;
+
+			std::vector<ReflectedConstantBuffer::ConstantBufferVariable> variables;
 			for (unsigned int j = 0; j < bdesc.Variables; ++j)
 			{
 				ID3D11ShaderReflectionVariable* variable = buffer->GetVariableByIndex(j);
@@ -69,7 +76,7 @@ void Material::AddPass(Pass* pass) {
 
 				variables.push_back({ vdesc, tdesc });
 			}
-			VertexConstantBuffer* cbuff = new VertexConstantBuffer(variables, register_index);
+			ReflectedVertexConstantBuffer* cbuff = new ReflectedVertexConstantBuffer(variables, register_index);
 			m_cbuffers.push_back(cbuff);
 			m_binds.push_back(cbuff);
 		}
@@ -103,7 +110,9 @@ void Material::AddPass(Pass* pass) {
 				}
 			}
 
-			std::vector<ConstantBuffer::ConstantBufferVariable> variables;
+			if (register_index < PCBUFF_FREE_SLOT) continue;
+
+			std::vector<ReflectedConstantBuffer::ConstantBufferVariable> variables;
 			for (unsigned int j = 0; j < bdesc.Variables; ++j)
 			{
 				ID3D11ShaderReflectionVariable* variable = buffer->GetVariableByIndex(j);
@@ -117,7 +126,7 @@ void Material::AddPass(Pass* pass) {
 
 				variables.push_back({ vdesc, tdesc });
 			}
-			PixelConstantBuffer* cbuff = new PixelConstantBuffer(variables, register_index);
+			ReflectedPixelConstantBuffer* cbuff = new ReflectedPixelConstantBuffer(variables, register_index);
 			m_cbuffers.push_back(cbuff);
 			m_binds.push_back(cbuff);
 		}
@@ -128,19 +137,19 @@ void Material::AddPass(Pass* pass) {
 }
 
 bool Material::SetFloat(const char* name, float value) {
-	for (ConstantBuffer* cbuff : m_cbuffers) {
+	for (ReflectedConstantBuffer* cbuff : m_cbuffers) {
 		if(cbuff->SetFloat(name, value)) return true;
 	}
 	return false;
 }
 bool Material::SetVector4(const char* name, float* data) {
-	for (ConstantBuffer* cbuff : m_cbuffers) {
+	for (ReflectedConstantBuffer* cbuff : m_cbuffers) {
 		if (cbuff->SetVector4(name, data)) return true;
 	}
 	return false;
 }
 bool Material::SetMat4(const char* name, float* data) {
-	for (ConstantBuffer* cbuff : m_cbuffers) {
+	for (ReflectedConstantBuffer* cbuff : m_cbuffers) {
 		if (cbuff->SetMat4(name, data)) return true;
 	}
 	return false;

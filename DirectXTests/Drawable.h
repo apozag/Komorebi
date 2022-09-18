@@ -29,16 +29,16 @@ public:
 	Drawable* Clone();
 	void AddBindable(ResourceBindable* bind);
 	void AddIndexBuffer(IndexBuffer* ib);
-	void SetMaterial(Material* material) { m_material = material; }
 	const BVHData& GetBVHData() const { return m_bvhData; }
 	
 	void Insert(Node* node, const Transform& worldTransform) override;
 
 	virtual void Draw(DirectX::XMMATRIX&& modelMatrix) const;
 
+public:
+	Material* m_material;
 protected:
 	BVHData m_bvhData;
-	Material* m_material;
 private:
 	std::vector<ResourceBindable*> m_binds;
 	unsigned int m_indexCount;

@@ -5,6 +5,7 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
+
 #include "ModelLoader.h"
 #include "Texture2D.h"
 #include "Mesh.h"
@@ -18,8 +19,10 @@
 #include "DepthStencilState.h"
 #include "Model.h"
 #include "Animation.h"
+#include "Material.h"
 
 std::string ModelLoader::directory;
+std::vector<Material*> ModelLoader::materials;
 std::vector<Node*> ModelLoader::boneNodes;
 std::vector<std::string> ModelLoader::boneNames;
 std::vector<DirectX::XMMATRIX> ModelLoader::boneOffsets;
@@ -42,6 +45,8 @@ Model* ModelLoader::LoadModel( std::string path, Scene* sceneGraph, Node* sceneG
         return nullptr;
     }
 
+    processMaterials(scene);
+
     Model* model = new Model ();
     Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
     directory = path.substr(0, path.find_last_of('/')+1);
@@ -55,13 +60,14 @@ Model* ModelLoader::LoadModel( std::string path, Scene* sceneGraph, Node* sceneG
         model->m_animation = processAnimation(scene);
     }
 
+    materials.clear();
     boneNames.clear();
     boneOffsets.clear();
     boneNodes.clear();
     return model;
 }
 
-Mesh* ModelLoader::GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices, Scene* sceneGraph, Node* sceneGraphParent) {
+Mesh* ModelLoader::GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices) {
     POD::Vector3 min = vertices[0].pos, max = vertices[0].pos;
     for (int i = 1; i < vertices.size(); i++) {
         min.x = std::min(min.x, vertices[i].pos.x);
@@ -73,11 +79,10 @@ Mesh* ModelLoader::GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<
         max.z = std::max(max.z, vertices[i].pos.z);
     }
     Mesh* m = new Mesh ( vertices, indices, { {min.x, min.y, min.z}, {max.x, max.y, max.z} });
-    sceneGraph->AddNode(m, Transform(), sceneGraphParent);
     return m;
 }
 
-Mesh* ModelLoader::GenerateQuad( Scene* sceneGraph, Node* sceneGraphParent, float scale) {
+Mesh* ModelLoader::GenerateQuad(float scale) {
     std::vector<POD::Vertex> vertices {
         {{-1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {0, 0}},
         {{ 1.0f*scale,  1.0f*scale, 0.5f*scale}, {0, 0, -1}, {0, 1, 0}, {1, 0}},
@@ -90,10 +95,10 @@ Mesh* ModelLoader::GenerateQuad( Scene* sceneGraph, Node* sceneGraphParent, floa
         0, 2, 3
     };
 
-    return GenerateMesh ( vertices, indices, sceneGraph, sceneGraphParent);
+    return GenerateMesh ( vertices, indices);
 }
 
-Mesh* ModelLoader::GenerateCube( Scene* sceneGraph, Node* sceneGraphParent, float scale) {
+Mesh* ModelLoader::GenerateCube(float scale) {
     std::vector<POD::Vertex> vertices{
         {{-1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
         {{ 1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
@@ -115,10 +120,10 @@ Mesh* ModelLoader::GenerateCube( Scene* sceneGraph, Node* sceneGraphParent, floa
         7, 6, 2,    2, 3, 7
     };
 
-    return GenerateMesh ( vertices, indices, sceneGraph, sceneGraphParent);
+    return GenerateMesh ( vertices, indices);
 } 
 
-Mesh* ModelLoader::GenerateAABB( DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max, Scene* sceneGraph, Node* sceneGraphParent) {
+Mesh* ModelLoader::GenerateAABB( DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max) {
     std::vector<POD::Vertex> vertices{
         {{min.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
         {{max.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
@@ -140,7 +145,7 @@ Mesh* ModelLoader::GenerateAABB( DirectX::SimpleMath::Vector3 min, DirectX::Simp
         7, 6, 2,    2, 3, 7
     };
 
-    return GenerateMesh ( vertices, indices, sceneGraph, sceneGraphParent);
+    return GenerateMesh ( vertices, indices);
 }
 
 void ModelLoader::processNode( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model)
@@ -191,10 +196,47 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
     ));
 
     ModelLoader::GenerateCube ( sceneGraph, sceneNode)->AddPass(aabbPass);
-      */  
+    */  
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
         processNodeBones ( node->mChildren[i], scene, sceneGraph, sceneNode, model);
+    }
+}
+
+void ModelLoader::processMaterials(const aiScene* scene) {
+
+    std::unordered_map<const char*, Texture2D*> pathTextures;
+    /*
+    // Load textures
+    for (int i = 0; i < scene->mNumTextures; i++) {
+        aiTexture* texture = scene->mTextures[i];
+        const char* path = texture->mFilename.C_Str();
+        pathTextures.insert(std::pair<const char*, Texture2D*>(path, new Texture2D(path, 0)));
+    }
+    */
+    for(int i = 0; i < scene->mNumMaterials; i++) {
+        aiMaterial* material = scene->mMaterials[i];
+        Material* mat = new Material();
+        std::vector<aiTextureType> types = {
+            aiTextureType_DIFFUSE, // t0
+            aiTextureType_HEIGHT, // t1
+            aiTextureType_SPECULAR // t2      
+        };
+        for (int i = 0; i < types.size(); i++) {
+            if (material->GetTextureCount(types[i]) == 0) continue;
+            aiString str;
+            material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), str);
+            if (const aiTexture* texture = scene->GetEmbeddedTexture(str.C_Str())) {
+                //returned pointer is not null, read texture from memory
+                mat->AddBindable(new Texture2D((char*)texture->pcData, texture->mWidth, texture->mHeight, i));
+            }
+            else {
+                //regular file, check if it exists and read it
+                mat->AddBindable(new Texture2D(directory + str.C_Str(), i));
+            }
+
+        }
+        materials.push_back(mat);
     }
 }
 
@@ -265,24 +307,7 @@ Mesh* ModelLoader::processMesh( aiMesh* mesh, const aiScene* scene, Scene* scene
             indices[i*3u + j] = face.mIndices[j];
     }
     Mesh* m = new Mesh ( vertices, indices, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
-
-    // material
-    /*
-    if (mesh->mMaterialIndex >= 0) {
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        std::vector<aiTextureType> types = {
-            aiTextureType_DIFFUSE, // t0
-            aiTextureType_HEIGHT, // t1
-            //aiTextureType_SPECULAR // t2      
-        };
-        for (int i = 0; i < types.size(); i++) {
-            if (material->GetTextureCount(types[i]) == 0) continue;
-            aiString str;
-            material->GetTexture(types[i], 0, &str);
-            m->AddBindable(new Texture2D ( this->directory + str.C_Str(), i));
-        }
-    }
-    */
+    m->m_material = materials[mesh->mMaterialIndex];
     sceneGraph->AddNode(m, Transform(), sceneGraphParent);
 
     return m;
@@ -371,27 +396,11 @@ SkinnedMesh* ModelLoader::processSkinnedMesh( aiMesh* mesh, const aiScene* scene
             boneFreeSlots[weight.mVertexId]++;
         }
     }
+
     free(boneFreeSlots);
 
     SkinnedMesh* m = new SkinnedMesh ( vertices, indices, model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
-
-    // material
-    /*
-    if (mesh->mMaterialIndex >= 0) {
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        std::vector<aiTextureType> types = {
-            aiTextureType_DIFFUSE, // t0
-            aiTextureType_HEIGHT, // t1
-            aiTextureType_SPECULAR // t2      
-        };
-        for (int i = 0; i < types.size(); i++) {
-            if (material->GetTextureCount(types[i]) == 0) continue;
-            aiString str;
-            material->GetTexture(types[i], 0, &str);
-            m->AddBindable(new Texture2D ( this->directory + str.C_Str(), i));
-        }
-    }
-    */
+    m->m_material = materials[mesh->mMaterialIndex];    
     sceneGraph->AddNode(m, Transform(), sceneGraphParent);
 
     return m;

@@ -8,6 +8,7 @@
 #include "Pass.h"
 #include "Material.h"
 #include "Model.h"
+#include "Mesh.h"
 #include "RenderTarget.h"
 #include "Light.h"
 #include "DepthStencilState.h"
@@ -16,6 +17,8 @@
 #include "ModelLoader.h"
 #include "TagManager.h"
 #include "Rotate.h"
+#include "ChangeColor.h"
+#include "BindableSlotsInfo.h"
 
 // Scripts
 #include "CameraMovement.h"
@@ -49,6 +52,7 @@ int CALLBACK WinMain(
 
 		// Cameras
 		Camera* camera = new Camera(1.0472f, 1, 0.1, 500, drt, false);
+		//camera->m_priority = 0;
 		CameraMovement* cameraMovement = new CameraMovement();
 		Node* cameraNode = scene->AddNode({ camera, cameraMovement }, Transform(
 			DirectX::XMMatrixMultiply(
@@ -82,11 +86,10 @@ int CALLBACK WinMain(
 		// Materials
 		Material* skinnedMat = new Material();
 		skinnedMat->AddPass(defaultPass);
-		skinnedMat->AddPass(aabbPass);
 
 		Material* skyboxMat = new Material();
 		skyboxMat->AddPass(skyboxPass);
-		skyboxMat->AddBindable(new CubeTexture("assets/skybox", 0));
+		skyboxMat->AddBindable(new CubeTexture("assets/skybox", TEX2D_FREE_SLOT));
 
 		Material* shadowMat = new Material();
 		shadowMat->AddPass(shadowPass);
@@ -97,21 +100,27 @@ int CALLBACK WinMain(
 		//Models
 		Node* modelWrapperNode = scene->AddNode(nullptr, Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
 
-		Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);;
-		model->SetMaterial(skinnedMat);
-		
-		Mesh* floor = ModelLoader::GenerateQuad(scene, scene->AddNode(nullptr, Transform(
-			DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) * DirectX::XMMatrixRotationX(3.14f * 0.5f)
-		)));
-		floor->SetMaterial(shadowMat);
+		//Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);
+		//Model* model = ModelLoader::LoadModel("assets/osborne/source/osborne1.fbx", scene, modelWrapperNode);;
+		Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.obj", scene, modelWrapperNode);;
 
-		Mesh* skybox = ModelLoader::GenerateCube(scene, nullptr);
-		skybox->SetMaterial(skyboxMat);
+		model->AddPass(shadowPass);
+
+		Mesh* floor = ModelLoader::GenerateQuad();
+		floor->m_material = shadowMat;
+		Node* floorNode = scene->AddNode({ floor , new ChangeColor() }, Transform(
+			DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) * DirectX::XMMatrixRotationX(3.14f * 0.5f)
+		));
+
+		Mesh* skybox = ModelLoader::GenerateCube();
+		skybox->m_material = skyboxMat;
 		skybox->m_tagMask = TagManager::GetInstance()->TagToBitmask("Skybox");
-		
+		scene->AddNode(skybox, Transform());
+
 		Drawable::BVHData bvhData = model->GetBVHData();
-		Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max, scene, modelWrapperNode);
-		AABB->SetMaterial(aabbMat);
+		Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max);
+		AABB->m_material = aabbMat;
+		scene->AddNode(skybox, Transform());
 		
 		//Mesh* fullScreenQuad = ModelLoader::GenerateQuad(scene, nullptr);
 		//fullScreenQuad->AddPass(postProcessPass);

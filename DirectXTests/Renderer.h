@@ -22,10 +22,6 @@ class Transform;
 class Texture2D;
 class Material;
 
-#define MAX_DIRLIGHTS   5
-#define MAX_SPOTLIGHTS  5
-#define MAX_POINTLIGHTS 5
-
 class Renderer {
 private:
 	struct Job {

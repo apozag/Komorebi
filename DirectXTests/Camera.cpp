@@ -6,14 +6,14 @@
 #include "Renderer.h"
 #include "RenderTarget.h"
 
-Camera::Camera( float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic) : m_near(nearZ), m_far(farZ), m_rt(rt){
+Camera::Camera( float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic) : m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0){
 	if (orthographic) {
 		m_proj = DirectX::XMMatrixOrthographicLH(100, 100, nearZ, farZ);
 	}
 	else {
 		m_proj = DirectX::XMMatrixPerspectiveFovLH(fov, aspectratio, nearZ, 1000);
 	}
-	m_cameraTransformCB = new ReflectedVertexConstantBuffer<CameraTransformCB> ( VCBUFF_CAMERATRANSFORM_SLOT);
+	m_cameraTransformCB = new VertexConstantBuffer<CameraTransformCB> ( VCBUFF_CAMERATRANSFORM_SLOT);	
 }
 
 void Camera::Bind( const Transform* worldTransform) const {

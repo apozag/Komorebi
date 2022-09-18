@@ -28,6 +28,5 @@ private:
 private:
 	Node* m_mainCamera;
 	Node m_transformHierarchy;
-	//std::vector<Node> m_nodes;
 };
 

@@ -131,10 +131,10 @@ Graphics::Graphics(HWND hWnd, int width, int height) : m_viewportWidth(width), m
 	sdesc.SampleDesc.Count = 1;
 	sdesc.SampleDesc.Quality = 0;
 	sdesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	sdesc.BufferCount = 1;
+	sdesc.BufferCount = 2;
 	sdesc.OutputWindow = hWnd;
 	sdesc.Windowed = TRUE;
-	sdesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	sdesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	sdesc.Flags = 0;
 
 	UINT swapCreateFlags = 0u;

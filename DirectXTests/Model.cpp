@@ -7,6 +7,7 @@
 #include "Model.h"
 #include "Skeleton.h"
 #include "Animation.h"
+#include "Material.h"
 
 Model::Model() {
     m_skeleton = new Skeleton ();    
@@ -37,9 +38,9 @@ const Drawable::BVHData& Model::GetBVHData() const {
     return m_bvh;
 }
 
-void Model::SetMaterial(Material* material){
+void Model::AddPass(Pass* pass) {
     for (int i = 0; i < m_drawables.size(); i++)
-        m_drawables[i]->SetMaterial(material);
+        m_drawables[i]->m_material->AddPass(pass);
 }
 
 void Model::Insert(Node* node, const Transform& worldTransform) {

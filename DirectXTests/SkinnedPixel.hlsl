@@ -9,12 +9,16 @@ cbuffer DirLights : register(b0) {
 struct VSout
 {
 	float4 pos : SV_Position;
+	float2 uv : TEXCOORD;
 	float4 lightSpacePos : LIGHTPOS;
 	float3 normal : NORMAL;
 };
 
-SamplerState shadowMapSampler : register(s5);
-Texture2D shadowMap : register(t5);
+SamplerState shadowMapSampler : register(s0);
+Texture2D shadowMap : register(t0);
+
+//SamplerState albedoSampler : register(s5);
+//Texture2D albedoTex : register(t5);
 
 float calcShadow(float4 lightViewPosition) {
 	// perform perspective divide
@@ -36,7 +40,7 @@ float calcShadow(float4 lightViewPosition) {
 float4 main(VSout i) : SV_Target
 {
 
-	float3 albedo = float3(1,0,0);
+	float3 albedo = float3(1,0,0);//albedoTex.Sample(albedoSampler, i.uv);
 
 	float3 c = float3(0,0,0);
 

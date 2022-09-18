@@ -2,24 +2,28 @@
 
 
 cbuffer DirLights : register(b0) {
-	float4 color[MAX_DIRLIGHTS];
-	float4 dir[MAX_DIRLIGHTS];
+	float4 lightColor[MAX_DIRLIGHTS];
+	float4 lightDir[MAX_DIRLIGHTS];
 	uint count;
 };
+
+cbuffer Color : register(b6) {
+	float4 color;
+}
 
 struct VSout
 {
 	float4 pos : SV_Position;
+	float2 uv : TEXCOORD;
 	float4 lightSpacePos : LIGHTPOS;
 	float4 worldPos : WORLDPOS;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 bitangent : BITANGENT;
-	float2 uv : TEXCOORD0;
 };
 
-SamplerState shadowMapSampler : register(s5);
-Texture2D shadowMap : register(t5);
+SamplerState shadowMapSampler : register(s0);
+Texture2D shadowMap : register(t0);
 
 float3 calcShadow(float4 lightViewPosition) {
 	// perform perspective divide
@@ -40,13 +44,13 @@ float3 calcShadow(float4 lightViewPosition) {
 
 float4 main(VSout i) : SV_Target
 {
-	
-	float3 albedo = float3(1,1,1);
+
+	float3 albedo = color.rgb;// float3(1,1,1);
 
 	float3 c = float3(0,0,0);
 
 	//diffuse
-	c += max(0, dot(i.normal, -dir[0])) * color[0] * albedo * calcShadow(i.lightSpacePos);
+	c += max(0, dot(i.normal, -lightDir[0])) * lightColor[0] * albedo * calcShadow(i.lightSpacePos);
 
 	//ambient
 	c += albedo * 0.3;

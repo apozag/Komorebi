@@ -1,12 +1,12 @@
 struct VSout
 {
 	float4 pos : SV_Position;
+	float2 uv : TEXCOORD;
 	float4 lightSpacePos : LIGHTPOS;
 	float4 worldPos : WORLDPOS;
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 bitangent : BITANGENT;
-	float2 uv : TEXCOORD0;
 };
 
 cbuffer CameraTransform : register(b0)
@@ -23,10 +23,6 @@ cbuffer Modeltransform : register(b1) {
 cbuffer LightTransform : register(b3) {
 	matrix lightViewProj[5];
 }
-
-//cbuffer LightTransform : register(b7) {
-//	matrix lightViewProj;
-//}
 
 VSout main(float3 v : Position, float3 n : NORMAL, float3 t : TANGENT, float2 uv : TexCoord)
 {

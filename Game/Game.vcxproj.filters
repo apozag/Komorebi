@@ -33,12 +33,18 @@
     <ClCompile Include="Rotate.cpp">
       <Filter>Archivos de origen\Scripts</Filter>
     </ClCompile>
+    <ClCompile Include="ChangeColor.cpp">
+      <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraMovement.h">
       <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="Rotate.h">
+      <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangeColor.h">
       <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
   </ItemGroup>

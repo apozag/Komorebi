@@ -3,7 +3,7 @@
 
 class Pass;
 class ResourceBindable;
-class ConstantBuffer;
+class ReflectedConstantBuffer;
 class PixelShader;
 class VertexShader;
 
@@ -25,7 +25,7 @@ public:
 
 private:
 	std::vector<ResourceBindable*> m_binds;
-	std::vector<ConstantBuffer*> m_cbuffers;
+	std::vector<ReflectedConstantBuffer*> m_cbuffers;
 	std::vector<Pass*> m_passes;
 	unsigned int m_idx;
 	static unsigned int static_idx;

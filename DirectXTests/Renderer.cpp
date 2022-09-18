@@ -103,7 +103,7 @@ bool compareJob(const Renderer::Job& j1, const Renderer::Job& j2) {
 	return j1.key < j2.key; 
 }
 bool compareCamera(const Renderer::CameraView& c1, const Renderer::CameraView& c2) {
-	return c1.camera->m_priority > c2.camera->m_priority;
+	return (c1.camera->m_priority < c2.camera->m_priority);
 }
 
 void Renderer::Render( ) {
@@ -206,13 +206,13 @@ void Renderer::Render( ) {
 			lastPass = job.pass;
 			lastMat = job.material;
 		}
-		
+		/*
 		std::ostringstream os_;
 		os_ << "setPass: " << stateBindCount << 
 			  " setMat: " << resourceBindCount << 
 			  " DrawCalls: " << jobsToExecute << "\n";
 		OutputDebugString( os_.str().c_str());
-		
+		*/
 		camView.camera->Unbind ();
 	}
 

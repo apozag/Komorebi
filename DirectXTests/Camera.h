@@ -20,17 +20,14 @@ public:
 	void Bind(const Transform* worldTransform) const;
 	void Unbind( ) const;
 	DirectX::XMMATRIX getProj() const;
-
-	float m_near, m_far;
-
-	DirectX::XMMATRIX m_proj;
-
-	VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
-	RenderTarget* m_rt;
-
 	void Insert(Node* node, const Transform& worldTransform) override;
 
 public:
 	int m_priority;
 	uint32_t m_tagMask = 0xFFFFFFFF;
+	const float m_near, m_far;
+	DirectX::XMMATRIX m_proj;
+	VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
+	RenderTarget* m_rt;
+
 };
