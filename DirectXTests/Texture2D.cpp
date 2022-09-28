@@ -35,7 +35,7 @@ Texture2D::Texture2D( std::string path, unsigned int slot): ResourceBindable(slo
 	GFX_THROW_INFO(GetDevice ()->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf()));
 }
 
-Texture2D::Texture2D(char* data, unsigned int width, unsigned int height, unsigned int slot) {
+Texture2D::Texture2D(unsigned char* data, unsigned int width, unsigned int height, unsigned int slot) : ResourceBindable(slot) {
 	INFOMAN;
 
 	D3D11_SUBRESOURCE_DATA sdata = {};

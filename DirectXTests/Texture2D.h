@@ -7,7 +7,7 @@
 class Texture2D : public ResourceBindable {
 public:
 	Texture2D(std::string path, unsigned int slot);
-	Texture2D(char* data, unsigned int width, unsigned int height, unsigned int slot);
+	Texture2D(unsigned char* data, unsigned int width, unsigned int height, unsigned int slot);
 	Texture2D(Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot);
 	~Texture2D();
 	void Bind()const override;

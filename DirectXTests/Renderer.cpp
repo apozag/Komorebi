@@ -157,10 +157,10 @@ void Renderer::Render( ) {
 			bool ignore = camView.camera->m_tagMask & job.drawable->m_tagMask;
 
 			// Skybox passes are exempt from culling
-			bool isSkybox = job.pass->layer != PASSLAYER_SKYBOX; 
+			bool isSkybox = job.pass->layer == PASSLAYER_SKYBOX; 
 
 			// Frustum culling
-			bool cull = ignore || (isSkybox && cullAABB(planes, job.drawable->GetBVHData(), job.transform));
+			bool cull = ignore || (!isSkybox && cullAABB(planes, job.drawable->GetBVHData(), job.transform));
 
 			job.key &= ~(uint64_t(1) << 34);
 			job.key |= uint64_t(cull) << 34;
@@ -206,13 +206,13 @@ void Renderer::Render( ) {
 			lastPass = job.pass;
 			lastMat = job.material;
 		}
-		/*
+		
 		std::ostringstream os_;
 		os_ << "setPass: " << stateBindCount << 
 			  " setMat: " << resourceBindCount << 
 			  " DrawCalls: " << jobsToExecute << "\n";
 		OutputDebugString( os_.str().c_str());
-		*/
+		
 		camView.camera->Unbind ();
 	}
 

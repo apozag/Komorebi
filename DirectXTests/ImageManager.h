@@ -17,6 +17,7 @@ struct Image {
 class ImageManager {
 public:
 	static Image loadImage(std::string path);
+	static Image decodeFromMemory(unsigned char* data, int size);
 private:
 	static std::map<std::string, Image> loadedImages;
 };

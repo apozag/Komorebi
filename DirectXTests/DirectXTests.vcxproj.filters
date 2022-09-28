@@ -407,5 +407,8 @@
     <FxCompile Include="ShadowPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
+    <FxCompile Include="TexturedModelPixel.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

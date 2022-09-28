@@ -65,6 +65,7 @@ int CALLBACK WinMain(
 		// Passes
 		Pass* defaultPass = new Pass("SkinnedVertex.cso", "SkinnedPixel.cso", PASSLAYER_OPAQUE, true);
 		Pass* shadowPass = new Pass("ShadowVertex.cso", "ShadowPixel.cso", PASSLAYER_OPAQUE);
+		Pass* modelPass = new Pass("ShadowVertex.cso", "TexturedModelPixel.cso", PASSLAYER_OPAQUE);
 		Pass* aabbPass = new Pass("cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
 		Pass* skyboxPass = new Pass("skyboxVertex.cso", "skyboxPixel.cso", PASSLAYER_SKYBOX);
 
@@ -81,6 +82,8 @@ int CALLBACK WinMain(
 		aabbPass->AddBindable(dsState);
 
 		skyboxPass->AddBindable(new DepthStencilState(DepthStencilState::DepthStencilAccess::DEPTH_READ));
+
+		modelPass->AddBindable(dsState);
 
 
 		// Materials
@@ -101,14 +104,14 @@ int CALLBACK WinMain(
 		Node* modelWrapperNode = scene->AddNode(nullptr, Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
 
 		//Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);
-		//Model* model = ModelLoader::LoadModel("assets/osborne/source/osborne1.fbx", scene, modelWrapperNode);;
-		Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.obj", scene, modelWrapperNode);;
+		//Model* model = ModelLoader::LoadModel("assets/ybot.fbx", scene, nullptr);;
+		Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.fbx", scene, modelWrapperNode);
 
-		model->AddPass(shadowPass);
+		model->AddPass(modelPass);
 
 		Mesh* floor = ModelLoader::GenerateQuad();
 		floor->m_material = shadowMat;
-		Node* floorNode = scene->AddNode({ floor , new ChangeColor() }, Transform(
+		Node* floorNode = scene->AddNode({ floor  }, Transform(
 			DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) * DirectX::XMMatrixRotationX(3.14f * 0.5f)
 		));
 
@@ -120,7 +123,7 @@ int CALLBACK WinMain(
 		Drawable::BVHData bvhData = model->GetBVHData();
 		Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max);
 		AABB->m_material = aabbMat;
-		scene->AddNode(skybox, Transform());
+		scene->AddNode(AABB, Transform());
 		
 		//Mesh* fullScreenQuad = ModelLoader::GenerateQuad(scene, nullptr);
 		//fullScreenQuad->AddPass(postProcessPass);

@@ -8,6 +8,7 @@
 
 #include "ModelLoader.h"
 #include "Texture2D.h"
+#include "Sampler.h"
 #include "Mesh.h"
 #include "SkinnedMesh.h"
 #include "Node.h"
@@ -20,6 +21,8 @@
 #include "Model.h"
 #include "Animation.h"
 #include "Material.h"
+#include "BindableSlotsInfo.h"
+#include "ImageManager.h"
 
 std::string ModelLoader::directory;
 std::vector<Material*> ModelLoader::materials;
@@ -45,18 +48,19 @@ Model* ModelLoader::LoadModel( std::string path, Scene* sceneGraph, Node* sceneG
         return nullptr;
     }
 
+    directory = path.substr(0, path.find_last_of('/') + 1);
+
     processMaterials(scene);
 
     Model* model = new Model ();
     Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
-    directory = path.substr(0, path.find_last_of('/')+1);
     processNode ( scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
 
     boneNodes.resize(boneNames.size());
 
     processNodeBones ( scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
-    if (scene->HasAnimations()) {
-        model->m_hasAnimation = true;
+
+    if (model->m_hasAnimation = scene->HasAnimations()) {
         model->m_animation = processAnimation(scene);
     }
 
@@ -205,15 +209,6 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
 
 void ModelLoader::processMaterials(const aiScene* scene) {
 
-    std::unordered_map<const char*, Texture2D*> pathTextures;
-    /*
-    // Load textures
-    for (int i = 0; i < scene->mNumTextures; i++) {
-        aiTexture* texture = scene->mTextures[i];
-        const char* path = texture->mFilename.C_Str();
-        pathTextures.insert(std::pair<const char*, Texture2D*>(path, new Texture2D(path, 0)));
-    }
-    */
     for(int i = 0; i < scene->mNumMaterials; i++) {
         aiMaterial* material = scene->mMaterials[i];
         Material* mat = new Material();
@@ -222,20 +217,28 @@ void ModelLoader::processMaterials(const aiScene* scene) {
             aiTextureType_HEIGHT, // t1
             aiTextureType_SPECULAR // t2      
         };
-        for (int i = 0; i < types.size(); i++) {
-            if (material->GetTextureCount(types[i]) == 0) continue;
+        for (int j = 0; j < types.size(); j++) {
+            if (material->GetTextureCount(types[j]) == 0) continue;
             aiString str;
             material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), str);
             if (const aiTexture* texture = scene->GetEmbeddedTexture(str.C_Str())) {
                 //returned pointer is not null, read texture from memory
-                mat->AddBindable(new Texture2D((char*)texture->pcData, texture->mWidth, texture->mHeight, i));
+                if (texture->mHeight == 0) {
+                    // Compressed image data, we need to decode it
+                    Image img = ImageManager::decodeFromMemory((unsigned char*)texture->pcData, texture->mWidth);
+                    mat->AddBindable(new Texture2D(img.data, img.width,img.height, TEX2D_FREE_SLOT + j));
+                }
+                else {
+                    mat->AddBindable(new Texture2D((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, TEX2D_FREE_SLOT + j));
+                }
             }
             else {
                 //regular file, check if it exists and read it
-                mat->AddBindable(new Texture2D(directory + str.C_Str(), i));
+                mat->AddBindable(new Texture2D(directory + str.C_Str(), TEX2D_FREE_SLOT + j));
             }
 
         }
+        mat->AddBindable(new Sampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, TEX2D_FREE_SLOT));
         materials.push_back(mat);
     }
 }

@@ -7,9 +7,9 @@ cbuffer DirLights : register(b0) {
 	uint count;
 };
 
-cbuffer Color : register(b6) {
+/*cbuffer Color : register(b6) {
 	float4 color;
-}
+}*/
 
 struct VSout
 {
@@ -45,7 +45,7 @@ float3 calcShadow(float4 lightViewPosition) {
 float4 main(VSout i) : SV_Target
 {
 
-	float3 albedo = color.rgb;// float3(1,1,1);
+	float3 albedo = float3(1,1,1);
 
 	float3 c = float3(0,0,0);
 
