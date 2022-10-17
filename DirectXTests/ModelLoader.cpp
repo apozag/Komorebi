@@ -38,6 +38,9 @@ DirectX::XMMATRIX aiMatrix4x4ToXMMATRIX(aiMatrix4x4 matrix) {
         matrix.a4, matrix.b4, matrix.c4, matrix.d4
     );
 }
+
+int boneCount = 0;
+
 Model* ModelLoader::LoadModel( std::string path, Scene* sceneGraph, Node* sceneGraphParent) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
@@ -189,18 +192,18 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
         }
     }
 
-    Node* sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
+    Node* sceneNode = nullptr;
     
-    if(nodeIdx > 0) boneNodes[nodeIdx] = sceneNode;
-    /*
-    Pass* aabbPass = new Pass ( "cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
-    aabbPass->AddBindable(new Rasterizer ( true, true));
-    aabbPass->AddBindable(new DepthStencilState (
-        DepthStencilState::DepthStencilAccess::DEPTH_WRITE
-    ));
+    if (nodeIdx >= 0) {
 
-    ModelLoader::GenerateCube ( sceneGraph, sceneNode)->AddPass(aabbPass);
-    */  
+        sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
+        boneNodes[nodeIdx] = sceneNode;
+        boneCount++;
+    }
+    else {
+        sceneNode = sceneGraphParent;
+    }
+
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
         processNodeBones ( node->mChildren[i], scene, sceneGraph, sceneNode, model);
@@ -226,14 +229,15 @@ void ModelLoader::processMaterials(const aiScene* scene) {
                 if (texture->mHeight == 0) {
                     // Compressed image data, we need to decode it
                     Image img = ImageManager::decodeFromMemory((unsigned char*)texture->pcData, texture->mWidth);
-                    mat->AddBindable(new Texture2D(img.data, img.width,img.height, TEX2D_FREE_SLOT + j));
+                    mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, TEX2D_FREE_SLOT + j));
+                    mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, TEX2D_FREE_SLOT + j));
                 }
                 else {
-                    mat->AddBindable(new Texture2D((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, TEX2D_FREE_SLOT + j));
+                    mat->AddBindable(new Texture2D((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, TEX2D_FREE_SLOT + j));
                 }
             }
             else {
-                //regular file, check if it exists and read it
+                //regular file, read it from disk
                 mat->AddBindable(new Texture2D(directory + str.C_Str(), TEX2D_FREE_SLOT + j));
             }
 
@@ -389,12 +393,20 @@ SkinnedMesh* ModelLoader::processSkinnedMesh( aiMesh* mesh, const aiScene* scene
 
     for (unsigned int i = 0; i < mesh->mNumBones; i++) {
         aiBone* bone = mesh->mBones[i];
-        boneNames.push_back(bone->mName.C_Str());
-        boneOffsets.push_back(aiMatrix4x4ToXMMATRIX(bone->mOffsetMatrix));
+        std::string boneName = bone->mName.C_Str();
+        // Search bone by name, add if not present
+        int bone_idx;
+        for (bone_idx = 0; bone_idx < boneNames.size(); bone_idx++) {
+            if (boneNames[bone_idx] == boneName) break;
+        }
+        if (bone_idx == boneNames.size()) {
+            boneNames.push_back(boneName);
+            boneOffsets.push_back(aiMatrix4x4ToXMMATRIX(bone->mOffsetMatrix));
+        }
         for (unsigned int j = 0; j < bone->mNumWeights; j++) {
             const aiVertexWeight& weight = bone->mWeights[j];
             int slot = boneFreeSlots[weight.mVertexId];
-            vertices[weight.mVertexId].boneIdx[slot] = i;
+            vertices[weight.mVertexId].boneIdx[slot] = bone_idx;
             vertices[weight.mVertexId].weight[slot] = weight.mWeight;
             boneFreeSlots[weight.mVertexId]++;
         }
@@ -404,7 +416,19 @@ SkinnedMesh* ModelLoader::processSkinnedMesh( aiMesh* mesh, const aiScene* scene
 
     SkinnedMesh* m = new SkinnedMesh ( vertices, indices, model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
     m->m_material = materials[mesh->mMaterialIndex];    
-    sceneGraph->AddNode(m, Transform(), sceneGraphParent);
+    Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent);
+
+    Pass* aabbPass = new Pass("cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
+    aabbPass->AddBindable(new Rasterizer(true, true));
+    aabbPass->AddBindable(new DepthStencilState(
+        DepthStencilState::DepthStencilAccess::DEPTH_WRITE
+    ));
+    Material* mat = new Material();
+    mat->AddPass(aabbPass);
+    Mesh* cube = ModelLoader::GenerateAABB(m->GetBVHData().min, m->GetBVHData().max);
+    cube->m_material = mat;
+    sceneGraph->AddNode(cube, Transform(), meshNode);
+
 
     return m;
 }

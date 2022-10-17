@@ -9,7 +9,7 @@
 
 class Graphics;
 
-#define MAX_BONES 100
+#define MAX_BONES 200
 
 struct BoneCBuffData {
 	DirectX::XMMATRIX transforms[MAX_BONES];

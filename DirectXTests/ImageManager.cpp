@@ -7,6 +7,19 @@
 
 std::map<std::string, Image> ImageManager::loadedImages;
 
+unsigned char* RGBtoRGBA(unsigned char* data, int width, int height) {
+	unsigned char* newData = (unsigned char*)malloc(width * height * 4);
+	int old_i = 0;
+	int new_i = 0;
+	for (int i = 0; i < width * height; i++) {
+		newData[new_i++] = data[old_i++];
+		newData[new_i++] = data[old_i++];
+		newData[new_i++] = data[old_i++];
+		newData[new_i++] = 0xFF;
+	}
+	return newData;
+}
+
 Image ImageManager::decodeFromMemory(unsigned char* data, int size) {
 	Image img = {};
 	try {
@@ -23,7 +36,13 @@ Image ImageManager::decodeFromMemory(unsigned char* data, int size) {
 			img.format = DXGI_FORMAT_R8G8_UNORM;
 			break;
 		case 3:
+		{
+			unsigned char* rgbData = img.data;
+			img.data = RGBtoRGBA(img.data, img.width, img.height);
+			free(rgbData);
 			img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			img.channels = 4;
+		}
 			break;
 		case 4:
 			img.format = DXGI_FORMAT_R8G8B8A8_UNORM;

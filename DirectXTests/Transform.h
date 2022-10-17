@@ -132,6 +132,21 @@ public:
 		m_dirty = true;
 	}
 
+	void RotateQuaternion(DirectX::SimpleMath::Quaternion rotation) {
+		m_matrix = m_matrix * DirectX::XMMatrixRotationQuaternion(rotation);
+		m_decomposeDirty = true;
+		m_invMatDirty = true;
+		m_dirty = true;
+	}
+
+	void RotateQuaternionLocal(DirectX::SimpleMath::Vector3 quaternion) {
+		m_matrix = DirectX::XMMatrixRotationQuaternion(quaternion) * m_matrix;
+		m_decomposeDirty = true;
+		m_invMatDirty = true;
+		m_dirty = true;
+	}
+
+
 private:
 
 	void update() {

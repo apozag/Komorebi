@@ -8,7 +8,7 @@
 
 Camera::Camera( float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic) : m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0){
 	if (orthographic) {
-		m_proj = DirectX::XMMatrixOrthographicLH(100, 100, nearZ, farZ);
+		m_proj = DirectX::XMMatrixOrthographicLH(500, 500, nearZ, farZ);
 	}
 	else {
 		m_proj = DirectX::XMMatrixPerspectiveFovLH(fov, aspectratio, nearZ, 1000);

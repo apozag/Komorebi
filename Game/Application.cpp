@@ -46,7 +46,7 @@ int CALLBACK WinMain(
 		Node* lightNode = scene->AddNode(dirLight, Transform(
 			DirectX::XMMatrixMultiply(
 				DirectX::XMMatrixRotationRollPitchYawFromVector({ 3.14 * 0.25, 0, 0 }),
-				DirectX::XMMatrixTranslationFromVector({ 0, 100, -100 })
+				DirectX::XMMatrixTranslationFromVector({ 0, 300, -300 })
 			)
 		), nullptr);
 
@@ -101,26 +101,31 @@ int CALLBACK WinMain(
 		aabbMat->AddPass(aabbPass);
 
 		//Models
-		Node* modelWrapperNode = scene->AddNode(nullptr, Transform(DirectX::XMMatrixScaling(0.1, 0.1, 0.1)));
+		Node* modelWrapperNode = scene->AddNode(nullptr, Transform( DirectX::XMMatrixRotationY(3.14f)));
 
 		//Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);
-		//Model* model = ModelLoader::LoadModel("assets/ybot.fbx", scene, nullptr);;
-		Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.fbx", scene, modelWrapperNode);
+		//Model* model = ModelLoader::LoadModel("assets/moneco.fbx", scene, nullptr);;
+		//Model* model = ModelLoader::LoadModel("assets/Jump.fbx", scene, nullptr);;
+		//Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.fbx", scene, modelWrapperNode);
+		//Model* model = ModelLoader::LoadModel("assets/girl.fbx", scene, modelWrapperNode);
+		//Model* model = ModelLoader::LoadModel("assets/scan_model.fbx", scene, modelWrapperNode);
+		Model* model = ModelLoader::LoadModel("assets/demon.fbx", scene, modelWrapperNode);
 
-		model->AddPass(modelPass);
+		model->AddPass(defaultPass);
 
 		Mesh* floor = ModelLoader::GenerateQuad();
 		floor->m_material = shadowMat;
 		Node* floorNode = scene->AddNode({ floor  }, Transform(
-			DirectX::XMMatrixScalingFromVector({ 100, 100, 1 }) * DirectX::XMMatrixRotationX(3.14f * 0.5f)
+			DirectX::XMMatrixScalingFromVector({ 1000, 1000, 1 }) * DirectX::XMMatrixRotationX(3.14f * 0.5f)
 		));
 
 		Mesh* skybox = ModelLoader::GenerateCube();
 		skybox->m_material = skyboxMat;
 		skybox->m_tagMask = TagManager::GetInstance()->TagToBitmask("Skybox");
 		scene->AddNode(skybox, Transform());
-
+		
 		Drawable::BVHData bvhData = model->GetBVHData();
+		cameraNode->localTransform.SetPosition(bvhData.max);
 		Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max);
 		AABB->m_material = aabbMat;
 		scene->AddNode(AABB, Transform());

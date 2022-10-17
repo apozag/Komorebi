@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include <d3d11.h>
 
 Animation::Keyframe findKeyframe(const std::vector<Animation::Keyframe>& keyframes, double timeMillis) {
 	for (int i = 0; i < keyframes.size(); i++) {
@@ -28,12 +29,15 @@ Animation::Animation(unsigned int numKeyframes, unsigned int keyframesPerSecond,
 	m_channels = channels;
 }
 
-void Animation::Update() {
+void Animation::Update() {	
 	float timeMillis = std::fmod(m_timer.Peek(), m_durationMilliseconds);
 	for (Channel channel : m_channels) {
 		Keyframe keyframe = findKeyframe(channel.keyframes, timeMillis);
-		channel.node->localTransform.SetPosition(keyframe.pos);
-		channel.node->localTransform.SetRotation(keyframe.rot);
-		channel.node->localTransform.SetScale(keyframe.scale);
-	}
+		channel.node->localTransform.SetPosition(DirectX::SimpleMath::Vector3(0,0,0));
+		channel.node->localTransform.SetRotation(DirectX::SimpleMath::Quaternion::Identity);
+		channel.node->localTransform.SetScale(DirectX::SimpleMath::Vector3(1,1,1));
+
+		channel.node->localTransform.RotateQuaternion(keyframe.rot);
+		channel.node->localTransform.Translate(keyframe.pos);
+	}	
 }
