@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <ctime>
 
 #define _XM_NO_INTRINSICS_
 
@@ -10,21 +11,63 @@
 #include "Light.h"
 #include "Camera.h"
 #include "Texture2D.h"
+#include "Texture3D.h"
 #include "Material.h"
 
 std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj);
 void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b);
 bool cullAABB(const std::vector<DirectX::XMFLOAT4>& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform);
 
+Renderer::Renderer() :
+	m_dirLightsCbuff(PixelConstantBuffer<DirLightData>(PCBUFF_DIRLIGHT_SLOT)),
+	m_pointLightsCbuff(PixelConstantBuffer<PointLightData>(PCBUFF_POINTLIGHT_SLOT)),
+	m_spotLightsCbuff(PixelConstantBuffer<SpotLightData>(PCBUFF_SPOTLIGHT_SLOT)),
+	m_lightTransformCbuff(VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT)),
+	m_shadowInfoCbuff(PixelConstantBuffer<ShadowInfoData>(PCBUFF_SHADOW_SLOT)),
+	m_shadowMapSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, SRV_SHADOWMAP_SLOT),
+	m_PCFFiltersSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, SRV_PCF_SLOT)
+{
+	// Initialize PCF filter random values
+	int windowSize = 32;
+	int filterSize = 5;
+	int bufferSize = windowSize * windowSize * filterSize * filterSize * 2 * sizeof(float);
+	float* randBuffer = (float*)malloc(bufferSize);
+	std::srand(std::time(nullptr));
+	int idx = 0;
+	for (int i = 0; i < windowSize * windowSize; i++) {
+		for (int u = 0; u < filterSize; u++) {
+			for (int v = 0; v < filterSize; v++) {
+				randBuffer[idx++] = float(u) - int(filterSize*0.5) + ((float)std::rand() / RAND_MAX);
+				randBuffer[idx++] = float(v) - int(filterSize*0.5) + ((float)std::rand() / RAND_MAX);				
+			}
+		}
+	}
+
+	m_PCFFilters = new Texture3D((unsigned char*)randBuffer, 
+		filterSize * filterSize, 
+		windowSize, 
+		windowSize, 
+		DXGI_FORMAT_R32G32_FLOAT, 8, SRV_PCF_SLOT);
+
+	m_shadowInfoCbuff.SetBuffer(ShadowInfoData{
+		1024.f,				// Shadowmap size
+		1.0f/1024,			// 1/Shadowmap Size
+		(float)windowSize,	
+		(float)filterSize,	
+		1.0f/filterSize		
+	});
+	m_shadowInfoCbuff.Update();
+}
+
 void Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material) {
 	for (Pass* pass : material->GetPasses()) {
 		//Opaque:			29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
 		//Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx
 
-		bool isTransparent = pass->layer == PASSLAYER_TRANSPARENT;
+		bool isTransparent = pass->m_layer == PASSLAYER_TRANSPARENT;
 
 		// Pass layer
-		uint64_t key = uint64_t(pass->layer) << 32;
+		uint64_t key = uint64_t(pass->m_layer) << 32;
 
 		// Material (resource binds)
 		unsigned int idx = material->GetIdx();
@@ -146,6 +189,9 @@ void Renderer::Render( ) {
 				rt->Bind();
 			}
 			m_shadowMapSampler.Bind();
+			m_PCFFilters->Bind();
+			m_PCFFiltersSampler.Bind();
+			m_shadowInfoCbuff.Bind();
 		}
 
 		// Update job sorting keys for this camera. 
@@ -157,7 +203,7 @@ void Renderer::Render( ) {
 			bool ignore = camView.camera->m_tagMask & job.drawable->m_tagMask;
 
 			// Skybox passes are exempt from culling
-			bool isSkybox = job.pass->layer == PASSLAYER_SKYBOX; 
+			bool isSkybox = job.pass->m_layer == PASSLAYER_SKYBOX; 
 
 			// Frustum culling
 			bool cull = ignore || (!isSkybox && cullAABB(planes, job.drawable->GetBVHData(), job.transform));
@@ -169,7 +215,7 @@ void Renderer::Render( ) {
 
 			// Depth
 			if (!cull) {
-				bool isTransparent = job.pass->layer == PASSLAYER_TRANSPARENT;
+				bool isTransparent = job.pass->m_layer == PASSLAYER_TRANSPARENT;
 				unsigned int shifts = isTransparent * 16;
 				job.key &= ~(uint64_t(0xFFFF) << shifts);
 				float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
@@ -206,13 +252,13 @@ void Renderer::Render( ) {
 			lastPass = job.pass;
 			lastMat = job.material;
 		}
-		
+		/*
 		std::ostringstream os_;
 		os_ << "setPass: " << stateBindCount << 
 			  " setMat: " << resourceBindCount << 
 			  " DrawCalls: " << jobsToExecute << "\n";
 		OutputDebugString( os_.str().c_str());
-		
+		*/
 		camView.camera->Unbind ();
 	}
 

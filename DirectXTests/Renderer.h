@@ -20,6 +20,7 @@ class PointLight;
 class Camera;
 class Transform;
 class Texture2D;
+class Texture3D;
 class Material;
 
 class Renderer {
@@ -56,15 +57,17 @@ private:
 	struct alignas(16) LightTransformData {
 		DirectX::XMMATRIX viewProj[MAX_DIRLIGHTS];
 	};
+	struct alignas(16) ShadowInfoData {
+		float shadowmapSize;
+		float shadowmapTexelSize;
+		float pcfWindowSize;
+		float pcfFilterSize;
+		float pcfFilterSizeInv;
+		int a, b, c;
+	};
 
 public:
-	Renderer( ) :
-		m_dirLightsCbuff(PixelConstantBuffer<DirLightData> ( PCBUFF_DIRLIGHT_SLOT)),
-		m_pointLightsCbuff(PixelConstantBuffer<PointLightData> ( PCBUFF_POINTLIGHT_SLOT)),
-		m_spotLightsCbuff(PixelConstantBuffer<SpotLightData> ( PCBUFF_SPOTLIGHT_SLOT)),
-		m_lightTransformCbuff(VertexConstantBuffer<LightTransformData> ( VCBUFF_LIGHTTRANSFORM_SLOT)),
-		m_shadowMapSampler ( D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, TEX2D_SHADOWMAP_SLOT)
-	{}
+	Renderer();
 	void SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material);
 	void SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform);
 	void SubmitDirectionalLight(const DirectionalLight* spotlight, const Transform* worldTransform);
@@ -85,11 +88,14 @@ private:
 	SpotLightData m_spotLightData;
 	PixelConstantBuffer<DirLightData> m_dirLightsCbuff;
 	PixelConstantBuffer<PointLightData> m_pointLightsCbuff;
-	PixelConstantBuffer<SpotLightData> m_spotLightsCbuff;
+	PixelConstantBuffer<SpotLightData> m_spotLightsCbuff;	
 
 	LightTransformData m_lightTransformData;
 	VertexConstantBuffer<LightTransformData> m_lightTransformCbuff;
 
 	std::vector<Texture2D*> m_shadowMaps;
 	Sampler m_shadowMapSampler;
+	Sampler m_PCFFiltersSampler;
+	Texture3D* m_PCFFilters;
+	PixelConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
 };

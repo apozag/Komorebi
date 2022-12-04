@@ -14,7 +14,8 @@ class StateBindable;
 
 class Pass {
 public:
-	Pass( const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned = false);
+	Pass( VertexShader* vs, PixelShader* ps, unsigned int m_layer, bool skinned = false);
+	Pass(const char* vsFilename, const char* psFilename, unsigned int m_layer, bool skinned = false);
 	~Pass() {};
 	void AddBindable(StateBindable* bind);
 	void Bind( );
@@ -23,7 +24,7 @@ public:
 	const PixelShader const* GetPixelShader() const { return m_pixelShader; }
 	const VertexShader const* GetVertexShader() const { return m_vertexShader; }
 public:
-	const unsigned int layer;	
+	const unsigned int m_layer;	
 private:
 	PixelShader* m_pixelShader;
 	VertexShader* m_vertexShader;

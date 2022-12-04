@@ -1,13 +1,13 @@
 #include "CameraMovement.h"
 #include "Node.h"
 
-void CameraMovement::Start(Node* node) {
+void CameraMovement::Run(Node* node) {
 
 }
 
 void CameraMovement::Update(Node* node) {
 
-	Transform& cameraTransform = node->localTransform;
+	Transform& cameraTransform = node->m_localTransform;
 
 	float dt = Engine::GetDeltaTime();
 

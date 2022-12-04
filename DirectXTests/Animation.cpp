@@ -33,11 +33,11 @@ void Animation::Update() {
 	float timeMillis = std::fmod(m_timer.Peek(), m_durationMilliseconds);
 	for (Channel channel : m_channels) {
 		Keyframe keyframe = findKeyframe(channel.keyframes, timeMillis);
-		channel.node->localTransform.SetPosition(DirectX::SimpleMath::Vector3(0,0,0));
-		channel.node->localTransform.SetRotation(DirectX::SimpleMath::Quaternion::Identity);
-		channel.node->localTransform.SetScale(DirectX::SimpleMath::Vector3(1,1,1));
+		channel.node->m_localTransform.SetPosition(DirectX::SimpleMath::Vector3(0,0,0));
+		channel.node->m_localTransform.SetRotation(DirectX::SimpleMath::Quaternion::Identity);
+		channel.node->m_localTransform.SetScale(DirectX::SimpleMath::Vector3(1,1,1));
 
-		channel.node->localTransform.RotateQuaternion(keyframe.rot);
-		channel.node->localTransform.Translate(keyframe.pos);
+		channel.node->m_localTransform.RotateQuaternion(keyframe.rot);
+		channel.node->m_localTransform.Translate(keyframe.pos);
 	}	
 }

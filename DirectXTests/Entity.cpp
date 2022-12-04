@@ -1,7 +1,8 @@
 #include "Entity.h"
-#include "TagManager.h"
-/*
-void Entity::SetTag(const char* tag) {
-	m_tagMask = TagManager::GetInstance()->RegisterTag(tag);
-}
-*/
+
+REFLECT_STRUCT_BEGIN(Entity)
+REFLECT_STRUCT_MEMBER(m_tagMask)
+REFLECT_STRUCT_END()
+
+IMPLEMENT_REFLECTION_PRIMITIVE(uint32_t, uint32_t)
+IMPLEMENT_REFLECTION_PRIMITIVE(Entity*, EntityPtr)

@@ -3,30 +3,35 @@
 #include <vector>
 #include "Transform.h"
 #include "Entity.h"
+#include "Reflection.h"
 
 class Scene;
 
 class Node {
 	friend class Scene;
 public:
-	std::vector<Entity*> entities;
-	Transform localTransform;
-	std::vector<Node*> children;
-	Node* parent;
+	std::vector<Entity*> m_entities;
+	Transform m_localTransform;
+	std::vector<Node*> m_children;
+	Node* m_parent;
 
 	template<class T>
 	inline T* GetEntity();
 
+	REFLECT()
+
 private:
-	Transform globalTransform;
+	Transform m_globalTransform;
 };
 
 template<class T>
 T* Node::GetEntity() {
 	T* e = nullptr;
-	for (Entity* entity : entities) {
+	for (Entity* entity : m_entities) {
 		e = dynamic_cast<T*>(entity);
 		if (e) return e;
 	}
 	return e;
 }
+
+DECLARE_REFLECTION_PRIMITIVE(Node*)

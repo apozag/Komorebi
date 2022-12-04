@@ -8,7 +8,7 @@ void  ScriptDispatcher::SubmitScript(Script* script, Node* node) {
 
 void ScriptDispatcher::DispatchScripts() {
 	for (ScriptJob job : m_startJobs) {
-		job.script->Start(job.node);
+		job.script->Run(job.node);
 		job.script->m_initialized = true;
 	}
 	for (ScriptJob job : m_updateJobs)

@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include "SimpleMath.h"
+#include "Reflection.h"
 
 class Node;
 
@@ -146,7 +147,6 @@ public:
 		m_dirty = true;
 	}
 
-
 private:
 
 	void update() {
@@ -186,3 +186,7 @@ private:
 };
 
 Transform operator*(Transform leftTransform, Transform rightTransform);
+std::ostream& operator<<(std::ostream& os, Transform transform);
+
+
+DECLARE_REFLECTION_PRIMITIVE(Transform)

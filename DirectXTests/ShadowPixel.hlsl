@@ -23,28 +23,36 @@ struct VSout
 };
 
 SamplerState shadowMapSampler : register(s0);
+SamplerState pcfSampler : register(s5);
 Texture2D shadowMap : register(t0);
+Texture3D pcfTex : register(t5);
 
-float3 calcShadow(float4 lightViewPosition) {
+float2 calcShadow(float4 lightViewPosition) {
 	// perform perspective divide
 	// transform to [0,1] range
 	float3 projCoords = lightViewPosition.xyz;
-	projCoords.x =  lightViewPosition.x / lightViewPosition.w *0.5 + 0.5f;
-	projCoords.y = -lightViewPosition.y / lightViewPosition.w *0.5 + 0.5f;
-	projCoords.z =  lightViewPosition.z / lightViewPosition.w;
-
-	float currentDepth = projCoords.z > 1.0 ? 0.0 : projCoords.z;
-
-	float closestDepth = shadowMap.Sample(shadowMapSampler, projCoords.xy).r;
-
+	projCoords.x = lightViewPosition.x / lightViewPosition.w * 0.5 + 0.5f;
+	projCoords.y = -lightViewPosition.y / lightViewPosition.w * 0.5 + 0.5f;
+	projCoords.z = lightViewPosition.z / lightViewPosition.w;
+	float wrapped_u = ((projCoords.x * 1024) % 32) / 32;
+	float wrapped_v = ((projCoords.y * 1024) % 32) / 32;
+	float sum = 0;
 	float bias = 0.005;
-
-	return closestDepth > (currentDepth-bias) ? 1.0 : 0.0;
+	float currentDepth = projCoords.z > 1.0 ? 0.0 : projCoords.z;
+	//return pcfTex.Sample(pcfSampler, float3(wrapped_u, wrapped_u, wrapped_v)).rg;
+	
+	for (int i = 0; i < 25; i++) {
+		float2 offset = pcfTex.Sample(shadowMapSampler, float3(float(i) / 25, wrapped_u/500, wrapped_v/500)).rg / 1024;
+		sum += shadowMap.Sample(shadowMapSampler, projCoords.xy + offset).r > (currentDepth - bias) ? 1.0 : 0.0;
+	}
+	return sum / 25;	
 }
 
 float4 main(VSout i) : SV_Target
 {
 
+	return float4(calcShadow(i.lightSpacePos), 0, 1);
+/*
 	float3 albedo = float3(1,1,1);
 
 	float3 c = float3(0,0,0);
@@ -56,4 +64,5 @@ float4 main(VSout i) : SV_Target
 	c += albedo * 0.3;
 	
 	return float4(c, 1);
+	*/
 };

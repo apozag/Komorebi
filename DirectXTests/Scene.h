@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Node.h"
+#include "Reflection.h"
 
 class Graphics;
 class Renderer;
@@ -16,13 +17,19 @@ public:
 
 	void Traverse();
 
-	Node* AddNode(Entity* entity, const Transform& transform, Node* parent = nullptr);
-	Node* AddNode(std::vector<Entity*> entities, const Transform& transform, Node* parent = nullptr);
+	Node* AddNode(Entity* entity, const Transform& transform, Node* m_parent = nullptr);
+	Node* AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent = nullptr);
 
 	Node* GetMainCameraNode() { return m_mainCamera; }
 
 	Node* GetRootNode() { return &m_transformHierarchy; }
+
+	void Serialize(const char* filename);
+
+	REFLECT()
+
 private:
+
 	void TraverseNode(Node* node, bool dirty);
 
 private:

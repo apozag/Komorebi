@@ -33,11 +33,23 @@
     <Filter Include="Archivos de origen\Animation">
       <UniqueIdentifier>{0743faf6-848e-4d2e-bf84-acc39c7fff02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ShaderIncludes">
+      <UniqueIdentifier>{b00cc767-ccb2-40cd-98dd-dee1a0b62bf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Render">
+      <UniqueIdentifier>{db8deaed-0195-4390-9ec1-e9094eb384cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Render">
+      <UniqueIdentifier>{1704e536-7df9-4e3d-9c19-63f06a180ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Reflection">
+      <UniqueIdentifier>{4334b0ad-a987-4d75-9513-a1f1d6b0b84b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Reflection">
+      <UniqueIdentifier>{3fc197d4-1b52-4329-af39-b58540a7ef45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Graphics.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="ImageManager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -45,12 +57,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="WindowsThrowMacros.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsThrowMacros.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="DxgiInfoManager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="WideStringUtility.h">
@@ -113,14 +119,8 @@
     <ClInclude Include="CubeTexture.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Pass.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="DepthStencilState.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Archivos de encabezado</Filter>
@@ -167,9 +167,6 @@
     <ClInclude Include="PoolAllocator.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="BindableSlotsInfo.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="SkinnedMesh.h">
       <Filter>Archivos de encabezado\Entities</Filter>
     </ClInclude>
@@ -200,8 +197,38 @@
     <ClInclude Include="ResourceBindable.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
+    <ClInclude Include="Texture3D.h">
+      <Filter>Archivos de encabezado\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="BindableSlotsInfo.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsThrowMacros.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="DxgiInfoManager.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcPass.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcMaterial.h">
+      <Filter>Archivos de encabezado\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Reflection.h">
+      <Filter>Archivos de encabezado\Reflection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,12 +239,6 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="DxgiInfoManager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
@@ -268,17 +289,11 @@
     <ClCompile Include="CubeTexture.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="Pass.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="ImageManager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="DepthStencilState.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Archivos de origen</Filter>
@@ -334,11 +349,38 @@
     <ClCompile Include="TagManager.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="ReflectedConstantBuffer.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture3D.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="DxgiInfoManager.cpp">
+      <Filter>Archivos de origen\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Archivos de origen\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass.cpp">
+      <Filter>Archivos de origen\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Archivos de origen\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Archivos de origen\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcPass.cpp">
+      <Filter>Archivos de origen\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcMaterial.cpp">
+      <Filter>Archivos de origen\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionPrimitives.cpp">
+      <Filter>Archivos de origen\Reflection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +392,15 @@
     </None>
     <None Include="DXTrace.inl">
       <Filter>DxErr</Filter>
+    </None>
+    <None Include="Lighting.hlsli">
+      <Filter>ShaderIncludes</Filter>
+    </None>
+    <None Include="Common.hlsli">
+      <Filter>ShaderIncludes</Filter>
+    </None>
+    <None Include="VertexCommon.hlsli">
+      <Filter>ShaderIncludes</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

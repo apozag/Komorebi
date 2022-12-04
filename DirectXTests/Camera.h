@@ -1,12 +1,13 @@
 #pragma once
 #include <wrl.h>
 #include <d3d11.h>
-#include "Graphics.h"
+#include <vector>
 #include "SimpleMath.h"
 #include "Entity.h"
-#include "ConstantBuffer.h"
 
-using namespace DirectX::SimpleMath;
+template<typename T>
+class VertexConstantBuffer;
+class PostProcMaterial;
 
 class Camera : public Entity{
 public:
@@ -30,4 +31,5 @@ public:
 	VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
 	RenderTarget* m_rt;
 
+	std::vector<PostProcMaterial*> m_postProcMaterials;
 };

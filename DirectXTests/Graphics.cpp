@@ -157,6 +157,27 @@ Graphics::Graphics(HWND hWnd, int width, int height) : m_viewportWidth(width), m
 		&m_device, 
 		nullptr, 
 		&m_context));
+
+	wrl::ComPtr<ID3D11Debug> pDebug;
+	hr = m_device.As(&pDebug);
+	if (SUCCEEDED(hr))
+	{
+		wrl::ComPtr<ID3D11InfoQueue> pInfoQueue;
+		hr = pDebug.As(&pInfoQueue);
+		if (SUCCEEDED(hr))
+		{
+			D3D11_MESSAGE_ID hide[] =
+			{
+				D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS,
+				D3D11_MESSAGE_ID_OMSETRENDERTARGETS_UNBINDDELETINGOBJECT
+			};
+			D3D11_INFO_QUEUE_FILTER filter;
+			memset(&filter, 0, sizeof(filter));
+			filter.DenyList.NumIDs = _countof(hide);
+			filter.DenyList.pIDList = hide;
+			pInfoQueue->AddStorageFilterEntries(&filter);
+		}
+	}
 }
 
 Graphics::~Graphics()
@@ -195,7 +216,7 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 
 void Graphics::Init()
 {
-	m_target = new RenderTarget(m_swapChain);
+	m_target = new RenderTarget(m_swapChain.Get());
 
 	m_viewport = new Viewport(0,0, m_viewportWidth, m_viewportHeight);
 

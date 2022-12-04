@@ -229,20 +229,20 @@ void ModelLoader::processMaterials(const aiScene* scene) {
                 if (texture->mHeight == 0) {
                     // Compressed image data, we need to decode it
                     Image img = ImageManager::decodeFromMemory((unsigned char*)texture->pcData, texture->mWidth);
-                    mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, TEX2D_FREE_SLOT + j));
-                    mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, TEX2D_FREE_SLOT + j));
+                    mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
+                    mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
                 }
                 else {
-                    mat->AddBindable(new Texture2D((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, TEX2D_FREE_SLOT + j));
+                    mat->AddBindable(new Texture2D((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
                 }
             }
             else {
                 //regular file, read it from disk
-                mat->AddBindable(new Texture2D(directory + str.C_Str(), TEX2D_FREE_SLOT + j));
+                mat->AddBindable(new Texture2D(directory + str.C_Str(), SRV_FREE_SLOT + j));
             }
 
         }
-        mat->AddBindable(new Sampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, TEX2D_FREE_SLOT));
+        mat->AddBindable(new Sampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
         materials.push_back(mat);
     }
 }
@@ -417,18 +417,6 @@ SkinnedMesh* ModelLoader::processSkinnedMesh( aiMesh* mesh, const aiScene* scene
     SkinnedMesh* m = new SkinnedMesh ( vertices, indices, model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
     m->m_material = materials[mesh->mMaterialIndex];    
     Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent);
-
-    Pass* aabbPass = new Pass("cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
-    aabbPass->AddBindable(new Rasterizer(true, true));
-    aabbPass->AddBindable(new DepthStencilState(
-        DepthStencilState::DepthStencilAccess::DEPTH_WRITE
-    ));
-    Material* mat = new Material();
-    mat->AddPass(aabbPass);
-    Mesh* cube = ModelLoader::GenerateAABB(m->GetBVHData().min, m->GetBVHData().max);
-    cube->m_material = mat;
-    sceneGraph->AddNode(cube, Transform(), meshNode);
-
 
     return m;
 }

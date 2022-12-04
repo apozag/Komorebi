@@ -8,8 +8,8 @@
 
 unsigned char Pass::static_idx = 0;
 
-Pass::Pass( const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : layer(layer) {
-	m_vertexShader = new VertexShader ( vsFilename);
+Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_layer(layer){
+	m_vertexShader = vs;
 	AddBindable(m_vertexShader);
 	if (skinned) {
 		const D3D11_INPUT_ELEMENT_DESC ied[] =
@@ -21,7 +21,7 @@ Pass::Pass( const char* vsFilename, const char* psFilename, unsigned int layer, 
 			{"BONES",	 0, DXGI_FORMAT_R32G32B32A32_UINT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"WEIGHTS",	 0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
-		AddBindable(new InputLayout ( ied, 6, *m_vertexShader));
+		AddBindable(new InputLayout(ied, 6, *m_vertexShader));
 	}
 	else {
 		const D3D11_INPUT_ELEMENT_DESC ied[] =
@@ -31,13 +31,17 @@ Pass::Pass( const char* vsFilename, const char* psFilename, unsigned int layer, 
 			{"TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,	 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
-		AddBindable(new InputLayout ( ied, 4, *m_vertexShader));
+		AddBindable(new InputLayout(ied, 4, *m_vertexShader));
 	}
-	m_pixelShader = new PixelShader(psFilename);
+	m_pixelShader = ps;
 	AddBindable(m_pixelShader);
-	AddBindable(new Rasterizer ());
+	AddBindable(new Rasterizer());
 	m_slot = static_idx++;
 }
+
+Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int m_layer, bool skinned) :
+	Pass(new VertexShader(vsFilename), new PixelShader(psFilename), m_layer, skinned) {};
+
 void Pass::AddBindable(StateBindable* bind){
 	m_binds.push_back(bind);
 }

@@ -1,0 +1,30 @@
+<Entities>
+    <Entity Type="CAMERA" sId="MainCamera">
+        <Priority>0</Priority>
+    </Entity>
+</Entities>
+
+<Scene>
+    <Node>
+        <LocalTransform>
+            <Position>
+                <x>0</x>
+                <y>100</y>
+                <z>0</z>
+            </Position>
+            <Rotation>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </Rotation>
+            <Scale>
+                <x>0</x>
+                <y>0</y>
+                <z>0</z>
+            </Scale>
+        </LocalTransform>
+        <Entities>
+            
+        </Entities>
+    </Node>
+</Scene>

@@ -14,7 +14,7 @@ public:
 	Engine() = delete;
 
 	static void Init(const char* windowTitle, int windowWidth, int windowHeight, float targetFrameRate);
-	static int Start();
+	static int Run();
 
 	static float GetDeltaTime() { return m_dt; }
 	static RenderTarget* GetDefaultRendertarget() { return m_window->gfx->GetDefaultRenderTarget(); }

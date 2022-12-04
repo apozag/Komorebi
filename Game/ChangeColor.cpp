@@ -3,7 +3,7 @@
 #include "Material.h"
 #include "Drawable.h"
 
-void ChangeColor::Start(Node* node) {
+void ChangeColor::Run(Node* node) {
 	Drawable* drawable = node->GetEntity<Drawable>();
 	m_material = drawable->m_material;
 }

@@ -58,9 +58,9 @@ public:
 	void DrawIndexed(unsigned int count) const;
 	RenderTarget* GetDefaultRenderTarget() { return m_target; }
 private:
-	ID3D11Device* m_device;
-	ID3D11DeviceContext* m_context;
-	IDXGISwapChain* m_swapChain;
+	Microsoft::WRL::ComPtr<ID3D11Device> m_device;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
 #endif

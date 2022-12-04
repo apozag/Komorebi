@@ -91,6 +91,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\dev\DirectXTK\Inc;D:\dev\assimp\include;D:\dev\assimp\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -130,6 +131,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\dev\DirectXTK\Inc;D:\dev\assimp\include;D:\dev\assimp\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -198,7 +200,10 @@
     <ClInclude Include="Pass.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PoolAllocator.h" />
+    <ClInclude Include="PostProcMaterial.h" />
+    <ClInclude Include="PostProcPass.h" />
     <ClInclude Include="Rasterizer.h" />
+    <ClInclude Include="Reflection.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="ResourceBindable.h" />
@@ -213,6 +218,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TagManager.h" />
     <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="Texture3D.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="VertexBuffer.h" />
@@ -227,6 +233,9 @@
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="PostProcMaterial.cpp" />
+    <ClCompile Include="PostProcPass.cpp" />
     <ClCompile Include="ReflectedConstantBuffer.cpp" />
     <ClCompile Include="CubeTexture.cpp" />
     <ClCompile Include="DepthStencilState.cpp" />
@@ -250,6 +259,7 @@
     <ClCompile Include="Pass.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
+    <ClCompile Include="ReflectionPrimitives.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Sampler.cpp" />
@@ -262,6 +272,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="TagManager.cpp" />
     <ClCompile Include="Texture2D.cpp" />
+    <ClCompile Include="Texture3D.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
@@ -270,9 +281,12 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Common.hlsli" />
     <None Include="DXGetErrorDescription.inl" />
     <None Include="DXGetErrorString.inl" />
     <None Include="DXTrace.inl" />
+    <None Include="Lighting.hlsli" />
+    <None Include="VertexCommon.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="composeDeferredPixel.hlsl">

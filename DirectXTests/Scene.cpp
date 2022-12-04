@@ -88,23 +88,23 @@ void Scene::LoadScene( ) {
 	*/
 }
 
-Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* parent) {
-	if (!parent) parent = &m_transformHierarchy;
+Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent) {
+	if (!m_parent) m_parent = &m_transformHierarchy;
 	Node* node = new Node();
-	node->entities = { entity };
-	node->parent = parent;
-	node->localTransform = transform;
-	parent->children.push_back(node);
+	node->m_entities = { entity };
+	node->m_parent = m_parent;
+	node->m_localTransform = transform;
+	m_parent->m_children.push_back(node);
 	return node;
 } 
 
-Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, Node* parent) {
-	if (!parent) parent = &m_transformHierarchy;
+Node* Scene::AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent) {
+	if (!m_parent) m_parent = &m_transformHierarchy;
 	Node* node = new Node();
-	node->entities = entities;
-	node->parent = parent;
-	node->localTransform = transform;
-	parent->children.push_back(node);
+	node->m_entities = m_entities;
+	node->m_parent = m_parent;
+	node->m_localTransform = transform;
+	m_parent->m_children.push_back(node);
 	return node;
 }
 
@@ -114,28 +114,36 @@ void Scene::Traverse() {
 
 void Scene::TraverseNode(Node* node, bool dirty) {
 
-	dirty |= node->localTransform.m_dirty;
+	dirty |= node->m_localTransform.m_dirty;
 
 	if (dirty) {
-		if (!node->parent) {
-			node->globalTransform = node->localTransform;
+		if (!node->m_parent) {
+			node->m_globalTransform = node->m_localTransform;
 		}
 		else {
-			node->globalTransform = node->localTransform * node->parent->globalTransform;
+			node->m_globalTransform = node->m_localTransform * node->m_parent->m_globalTransform;
 		}
-		node->localTransform.m_dirty = false;
+		node->m_localTransform.m_dirty = false;
 	}
 
-	for (Entity* entity : node->entities) {
+	for (Entity* entity : node->m_entities) {
 		if (entity) {
-			node->globalTransform.update();
-			entity->Insert(node, node->globalTransform);
+			node->m_globalTransform.update();
+			entity->Insert(node, node->m_globalTransform);
 		}
 	}
 
-	for (Node* child : node->children) {
+	for (Node* child : node->m_children) {
 		TraverseNode(child, dirty);
 	}
 }
+
+void Scene::Serialize(const char* filename) {
+	
+}
+
+REFLECT_STRUCT_BEGIN(Scene)
+REFLECT_STRUCT_MEMBER(m_transformHierarchy)
+REFLECT_STRUCT_END()
 
 

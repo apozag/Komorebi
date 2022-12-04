@@ -23,7 +23,7 @@ void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, fl
 	m_targetFramerate = targetFramerate;
 }
 
-int Engine::Start() 	
+int Engine::Run() 	
 {	
 	long long minFrameTime = 1000 / m_targetFramerate;
 	Timer timer;

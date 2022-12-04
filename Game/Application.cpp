@@ -1,5 +1,6 @@
 
 #define NOMINMAX
+#include <fstream>
 #include <exception>
 #include <Windows.h>
 #include "Exception.h"
@@ -27,8 +28,7 @@ int CALLBACK WinMain(
 	HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPSTR	  lpCmdLine,
-	int		  nCmdShow)
-{
+	int		  nCmdShow){
 	try {
 
 		Engine::Init("MyGame", 1024, 1024, 60);
@@ -55,19 +55,16 @@ int CALLBACK WinMain(
 		//camera->m_priority = 0;
 		CameraMovement* cameraMovement = new CameraMovement();
 		Node* cameraNode = scene->AddNode({ camera, cameraMovement }, Transform(
-			DirectX::XMMatrixMultiply(
-				DirectX::XMMatrixRotationRollPitchYawFromVector({ 0, 3.14, 0 }),
-				DirectX::XMMatrixTranslationFromVector({ 0, 20, 100 })
-			)
+			DirectX::XMMatrixTranslationFromVector({ 0, 100, 0 })
 		));
 		camera->m_tagMask = ~TagManager::GetInstance()->TagToBitmask("UI");
 
 		// Passes
-		Pass* defaultPass = new Pass("SkinnedVertex.cso", "SkinnedPixel.cso", PASSLAYER_OPAQUE, true);
-		Pass* shadowPass = new Pass("ShadowVertex.cso", "ShadowPixel.cso", PASSLAYER_OPAQUE);
-		Pass* modelPass = new Pass("ShadowVertex.cso", "TexturedModelPixel.cso", PASSLAYER_OPAQUE);
-		Pass* aabbPass = new Pass("cubeVertex.cso", "SolidPixel.cso", PASSLAYER_OPAQUE);
-		Pass* skyboxPass = new Pass("skyboxVertex.cso", "skyboxPixel.cso", PASSLAYER_SKYBOX);
+		Pass* defaultPass = new Pass("shaders/SkinnedVertex.cso", "shaders/SkinnedPixel.cso", PASSLAYER_OPAQUE, true);
+		Pass* shadowPass = new Pass("shaders/ShadowVertex.cso", "shaders/ShadowPixel.cso", PASSLAYER_OPAQUE);
+		Pass* modelPass = new Pass("shaders/ShadowVertex.cso", "shaders/TexturedModelPixel.cso", PASSLAYER_OPAQUE);
+		Pass* aabbPass = new Pass("shaders/cubeVertex.cso", "shaders/SolidPixel.cso", PASSLAYER_OPAQUE);
+		Pass* skyboxPass = new Pass("shaders/skyboxVertex.cso", "shaders/skyboxPixel.cso", PASSLAYER_SKYBOX);
 
 		DepthStencilState* dsState = new DepthStencilState(
 			DepthStencilState::DepthStencilAccess::DEPTH_READ |
@@ -92,7 +89,7 @@ int CALLBACK WinMain(
 
 		Material* skyboxMat = new Material();
 		skyboxMat->AddPass(skyboxPass);
-		skyboxMat->AddBindable(new CubeTexture("assets/skybox", TEX2D_FREE_SLOT));
+		skyboxMat->AddBindable(new CubeTexture("assets/skybox", SRV_FREE_SLOT));
 
 		Material* shadowMat = new Material();
 		shadowMat->AddPass(shadowPass);
@@ -101,17 +98,23 @@ int CALLBACK WinMain(
 		aabbMat->AddPass(aabbPass);
 
 		//Models
-		Node* modelWrapperNode = scene->AddNode(nullptr, Transform( DirectX::XMMatrixRotationY(3.14f)));
+		Node* modelWrapperNode = scene->AddNode(nullptr, Transform( 
+			DirectX::XMMatrixMultiply(
+				DirectX::XMMatrixRotationY(3.14f),
+				DirectX::XMMatrixTranslationFromVector({ 0, 0, -100 })
+			))
+		);
 
 		//Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/moneco.fbx", scene, nullptr);;
-		//Model* model = ModelLoader::LoadModel("assets/Jump.fbx", scene, nullptr);;
+		Model* model1 = ModelLoader::LoadModel("assets/Jump.fbx", scene, modelWrapperNode);;
 		//Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.fbx", scene, modelWrapperNode);
-		//Model* model = ModelLoader::LoadModel("assets/girl.fbx", scene, modelWrapperNode);
+		//Model* model = ModelLoader::LoadModel("assets/Female1.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/scan_model.fbx", scene, modelWrapperNode);
-		Model* model = ModelLoader::LoadModel("assets/demon.fbx", scene, modelWrapperNode);
+		Model* model = ModelLoader::LoadModel("assets/demon.fbx", scene, nullptr);
 
 		model->AddPass(defaultPass);
+		model1->AddPass(shadowPass);
 
 		Mesh* floor = ModelLoader::GenerateQuad();
 		floor->m_material = shadowMat;
@@ -125,7 +128,6 @@ int CALLBACK WinMain(
 		scene->AddNode(skybox, Transform());
 		
 		Drawable::BVHData bvhData = model->GetBVHData();
-		cameraNode->localTransform.SetPosition(bvhData.max);
 		Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max);
 		AABB->m_material = aabbMat;
 		scene->AddNode(AABB, Transform());
@@ -134,7 +136,10 @@ int CALLBACK WinMain(
 		//fullScreenQuad->AddPass(postProcessPass);
 
 		Engine::m_activeScene = scene;
-		return Engine::Start();
+
+		Scene::Reflection.dump(scene, 0);
+
+		return Engine::Run();
 	}
 	catch (const Exception& e) {
 		MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
