@@ -1,8 +1,6 @@
 #pragma once
 
-#include <d3d11.h>
-#include "SimpleMath.h"
-#include "Reflection.h"
+#include "MathWrappers.h"
 
 class Node;
 
@@ -147,6 +145,8 @@ public:
 		m_dirty = true;
 	}
 
+	REFLECT_BASE()
+
 private:
 
 	void update() {
@@ -173,12 +173,12 @@ private:
 		m_invMatDirty = true;
 	}
 
-	DirectX::XMMATRIX m_matrix;
-	DirectX::XMMATRIX m_invMatrix;
+	math::Vector3	m_position;
+	math::Quaternion m_rotation;
+	math::Vector3	m_scale;
 
-	DirectX::SimpleMath::Vector3	m_position;
-	DirectX::SimpleMath::Quaternion m_rotation;
-	DirectX::SimpleMath::Vector3	m_scale;
+	math::Matrix4 m_matrix;
+	math::Matrix4 m_invMatrix;
 
 	bool m_decomposeDirty = true;
 	bool m_invMatDirty = true;
@@ -187,6 +187,3 @@ private:
 
 Transform operator*(Transform leftTransform, Transform rightTransform);
 std::ostream& operator<<(std::ostream& os, Transform transform);
-
-
-DECLARE_REFLECTION_PRIMITIVE(Transform)

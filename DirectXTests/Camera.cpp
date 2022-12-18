@@ -6,14 +6,15 @@
 #include "Renderer.h"
 #include "RenderTarget.h"
 
-Camera::Camera( float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic) : m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0){
-	if (orthographic) {
-		m_proj = DirectX::XMMatrixOrthographicLH(500, 500, nearZ, farZ);
+void Camera::Setup() {
+	if (m_orthographic) {
+		m_proj = DirectX::XMMatrixOrthographicLH(500, 500, m_near, m_far);
 	}
 	else {
-		m_proj = DirectX::XMMatrixPerspectiveFovLH(fov, aspectratio, nearZ, 1000);
+		m_proj = DirectX::XMMatrixPerspectiveFovLH(m_fov, m_aspectratio, m_near, 1000);
 	}
-	m_cameraTransformCB = new VertexConstantBuffer<CameraTransformCB> ( VCBUFF_CAMERATRANSFORM_SLOT);	
+	m_cameraTransformCB = new VertexConstantBuffer<CameraTransformCB>(VCBUFF_CAMERATRANSFORM_SLOT);
+	if(!m_rt) m_rt = GetRenderer()->GetRenderTarget(m_RTId);
 }
 
 void Camera::Bind( const Transform* worldTransform) const {
@@ -42,3 +43,14 @@ void Camera::Insert(Node* node, const Transform& worldTransform)
 {
 	GetRenderer()->SubmitCamera(this, &worldTransform);
 }
+
+REFLECT_STRUCT_BEGIN(Camera, Entity)
+REFLECT_STRUCT_MEMBER(m_fov)
+REFLECT_STRUCT_MEMBER(m_aspectratio)
+REFLECT_STRUCT_MEMBER(m_near)
+REFLECT_STRUCT_MEMBER(m_far)
+REFLECT_STRUCT_MEMBER(m_RTId)
+REFLECT_STRUCT_MEMBER(m_orthographic)
+REFLECT_STRUCT_MEMBER(m_tagMask)
+REFLECT_STRUCT_MEMBER(m_priority)
+REFLECT_STRUCT_END()

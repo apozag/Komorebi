@@ -4,12 +4,18 @@
 
 #include "StateBindable.h"
 #include "Texture2D.h"
+#include "Reflection.h"
 
 class RenderTarget : public StateBindable{
 public:
 	RenderTarget(IDXGISwapChain* m_swapChain);
-	RenderTarget( int width, int height, DXGI_FORMAT format, int count, int slot);
+	RenderTarget(unsigned int width, unsigned int height, DXGI_FORMAT format, unsigned int count, unsigned int slot) :
+		m_width(width), m_height(height),	m_format(format),	m_count(count), m_slot(slot)
+	{};
+	RenderTarget() {};
 	~RenderTarget();
+
+	virtual void Setup() override;
 
 	void Bind()const override;
 	void Unbind()const override;
@@ -23,10 +29,18 @@ public:
 
 	const std::vector<Texture2D*>& GetTextures2D() { return m_textures; }
 
+	REFLECT_BASE()
+
 private:
 	std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> m_rtv;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_dsv;
 	std::vector<Texture2D*> m_textures;
 
+/////////////////////////////////////////////////////
+// Serializable
+/////////////////////////////////////////////////////
+private:
 	unsigned int m_width, m_height;
+	DXGI_FORMAT m_format;
+	unsigned int m_count, m_slot;
 };

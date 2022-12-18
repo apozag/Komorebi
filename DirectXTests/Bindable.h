@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Graphics.h"
+#include "GameObject.h"
 
-class Bindable {
+class Bindable : public GameObject{
 public:
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;

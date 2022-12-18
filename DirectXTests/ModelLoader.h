@@ -26,6 +26,7 @@ class ModelLoader {
 public:
 	ModelLoader() = delete;
 	static Model* LoadModel( std::string filename, Scene* sceneGraph, Node* sceneGraphParent);
+	static void* LoadModel( std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
 	static Mesh* GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices);
 	static Mesh* GenerateQuad(float scale = 1);
 	static Mesh* GenerateCube(float scale = 1);

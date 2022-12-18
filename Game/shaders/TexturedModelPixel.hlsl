@@ -7,7 +7,7 @@ cbuffer DirLights : register(b0) {
 };
 
 cbuffer Color : register(b6) {
-	float4 color;
+	float4 m_color;
 }
 
 struct VSout

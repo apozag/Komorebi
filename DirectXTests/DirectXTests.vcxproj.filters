@@ -48,6 +48,12 @@
     <Filter Include="Archivos de origen\Reflection">
       <UniqueIdentifier>{3fc197d4-1b52-4329-af39-b58540a7ef45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Math">
+      <UniqueIdentifier>{ce462da0-e4b4-40ca-9962-5614d93aa9d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Math">
+      <UniqueIdentifier>{f0f6f4e0-7e7e-4073-b0d7-9d53088352e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageManager.h">
@@ -230,6 +236,15 @@
     <ClInclude Include="Reflection.h">
       <Filter>Archivos de encabezado\Reflection</Filter>
     </ClInclude>
+    <ClInclude Include="SceneLoader.h">
+      <Filter>Archivos de encabezado\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="MathWrappers.h">
+      <Filter>Archivos de encabezado\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -382,6 +397,12 @@
     <ClCompile Include="ReflectionPrimitives.cpp">
       <Filter>Archivos de origen\Reflection</Filter>
     </ClCompile>
+    <ClCompile Include="SceneLoader.cpp">
+      <Filter>Archivos de origen\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="MathWrappers.cpp">
+      <Filter>Archivos de origen\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorString.inl">
@@ -402,6 +423,7 @@
     <None Include="VertexCommon.hlsli">
       <Filter>ShaderIncludes</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="vertex.hlsl">

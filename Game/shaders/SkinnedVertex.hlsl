@@ -4,7 +4,7 @@ struct VSout
 	float2 uv : TEXCOORD;
 	float4 lightSpacePos : LIGHTPOS;
 	float3 normal : NORMAL;
-	float3 color : COLOR;
+	float3 m_color : COLOR;
 };
 
 cbuffer CameraTransform : register(b0)
@@ -52,7 +52,7 @@ VSout main(float3 v		: Position,
 	vso.pos = mul(worldPos, viewproj);
 	vso.lightSpacePos = mul(worldPos, lightViewProj[0]);
 	vso.normal = normalize(mul(float4(n, 0.0), BoneTransform)).xyz;
-	vso.color = boneIdx / 50;
+	vso.m_color = boneIdx / 50;
 	vso.uv = uv;
 	return vso;
 }

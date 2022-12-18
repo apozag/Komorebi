@@ -41,37 +41,41 @@ DirectX::XMMATRIX aiMatrix4x4ToXMMATRIX(aiMatrix4x4 matrix) {
 
 int boneCount = 0;
 
+void* ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
+  Assimp::Importer importer;
+  const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+
+  if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+  {
+    std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+    return nullptr;
+  }
+
+  directory = filename.substr(0, filename.find_last_of('/') + 1);
+
+  processMaterials(scene);
+
+  Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
+  processNode(scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
+
+  boneNodes.resize(boneNames.size());
+
+  processNodeBones(scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
+
+  if (model->m_hasAnimation = scene->HasAnimations()) {
+    model->m_animation = processAnimation(scene);
+  }
+
+  materials.clear();
+  boneNames.clear();
+  boneOffsets.clear();
+  boneNodes.clear();
+}
+
 Model* ModelLoader::LoadModel( std::string path, Scene* sceneGraph, Node* sceneGraphParent) {
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
-
-    if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
-        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-        return nullptr;
-    }
-
-    directory = path.substr(0, path.find_last_of('/') + 1);
-
-    processMaterials(scene);
-
-    Model* model = new Model ();
-    Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
-    processNode ( scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
-
-    boneNodes.resize(boneNames.size());
-
-    processNodeBones ( scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
-
-    if (model->m_hasAnimation = scene->HasAnimations()) {
-        model->m_animation = processAnimation(scene);
-    }
-
-    materials.clear();
-    boneNames.clear();
-    boneOffsets.clear();
-    boneNodes.clear();
-    return model;
+  Model* model = new Model();
+  LoadModel(path, sceneGraph, sceneGraphParent, model);
+  return model;
 }
 
 Mesh* ModelLoader::GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices) {
@@ -186,7 +190,7 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
     int nodeIdx = -1;
     for (int i = 0; i < boneNames.size(); i++) {
         if (boneNames[i] == nodeName) {
-            entity = new Bone(model->m_skeleton, i, boneOffsets[i]);
+            entity = new Bone(&model->m_skeleton, i, boneOffsets[i]);
             nodeIdx = i;
             break;
         }
@@ -414,7 +418,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh( aiMesh* mesh, const aiScene* scene
 
     free(boneFreeSlots);
 
-    SkinnedMesh* m = new SkinnedMesh ( vertices, indices, model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
+    SkinnedMesh* m = new SkinnedMesh ( vertices, indices, &model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
     m->m_material = materials[mesh->mMaterialIndex];    
     Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent);
 

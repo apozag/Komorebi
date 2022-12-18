@@ -18,7 +18,7 @@ public:
 	template<class T>
 	inline T* GetEntity();
 
-	REFLECT()
+	REFLECT_BASE()
 
 private:
 	Transform m_globalTransform;
@@ -33,5 +33,3 @@ T* Node::GetEntity() {
 	}
 	return e;
 }
-
-DECLARE_REFLECTION_PRIMITIVE(Node*)

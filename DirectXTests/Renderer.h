@@ -39,19 +39,19 @@ private:
 	};
 
 	struct alignas(16) DirLightData {
-		POD::Vector4 color[MAX_DIRLIGHTS];
+		POD::Vector4 m_color[MAX_DIRLIGHTS];
 		POD::Vector4 dir[MAX_DIRLIGHTS];
 		unsigned int count;
 	};
 	struct alignas(16) PointLightData {
 		POD::Vector3 pos[MAX_POINTLIGHTS];
-		POD::Vector3 color[MAX_POINTLIGHTS];
+		POD::Vector3 m_color[MAX_POINTLIGHTS];
 		unsigned int count;
 	};
 	struct alignas(16) SpotLightData {
 		POD::Vector3 pos[MAX_SPOTLIGHTS];
 		POD::Vector3 dir[MAX_SPOTLIGHTS];
-		POD::Vector3 color[MAX_SPOTLIGHTS];
+		POD::Vector3 m_color[MAX_SPOTLIGHTS];
 		unsigned int count;
 	};
 	struct alignas(16) LightTransformData {
@@ -74,6 +74,8 @@ public:
 	void SubmitPointLight(const PointLight* spotlight, const Transform* worldTransform);
 	void SubmitCamera(const Camera* camera, const Transform* worldTransform);
 	void Render( );
+
+	RenderTarget* GetRenderTarget(unsigned int idx) { return m_renderTargets[idx]; }
 
 	friend bool compareJob(const Job& j1, const Job& j2);
 	friend bool compareCamera(const CameraView& c1, const CameraView& c2);
@@ -98,4 +100,6 @@ private:
 	Sampler m_PCFFiltersSampler;
 	Texture3D* m_PCFFilters;
 	PixelConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
+
+	std::vector<RenderTarget*> m_renderTargets;
 };

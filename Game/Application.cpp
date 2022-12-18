@@ -1,5 +1,7 @@
 
 #define NOMINMAX
+#include <iostream>
+#include <stdio.h>
 #include <fstream>
 #include <exception>
 #include <Windows.h>
@@ -52,7 +54,6 @@ int CALLBACK WinMain(
 
 		// Cameras
 		Camera* camera = new Camera(1.0472f, 1, 0.1, 500, drt, false);
-		//camera->m_priority = 0;
 		CameraMovement* cameraMovement = new CameraMovement();
 		Node* cameraNode = scene->AddNode({ camera, cameraMovement }, Transform(
 			DirectX::XMMatrixTranslationFromVector({ 0, 100, 0 })
@@ -107,11 +108,11 @@ int CALLBACK WinMain(
 
 		//Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/moneco.fbx", scene, nullptr);;
-		Model* model1 = ModelLoader::LoadModel("assets/Jump.fbx", scene, modelWrapperNode);;
+		Model* model1 = new Model("assets/Jump.fbx", scene, modelWrapperNode);;
 		//Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/Female1.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/scan_model.fbx", scene, modelWrapperNode);
-		Model* model = ModelLoader::LoadModel("assets/demon.fbx", scene, nullptr);
+		Model* model = new Model ("assets/demon.fbx", scene, nullptr);
 
 		model->AddPass(defaultPass);
 		model1->AddPass(shadowPass);
@@ -137,7 +138,16 @@ int CALLBACK WinMain(
 
 		Engine::m_activeScene = scene;
 
-		Scene::Reflection.dump(scene, 0);
+		using namespace rapidxml;
+		rapidxml::xml_document<> doc;
+		rapidxml::xml_node<>* rootNode = doc.allocate_node(rapidxml::node_type::node_element, "Scene");
+		doc.append_node(rootNode);
+		Scene::Reflection.serialize(scene, rootNode, &doc);
+
+		std::ofstream myfile;
+		myfile.open("example.txt");
+		myfile << doc;
+		myfile.close();
 
 		return Engine::Run();
 	}

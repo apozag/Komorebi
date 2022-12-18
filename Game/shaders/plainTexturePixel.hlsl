@@ -3,7 +3,7 @@
 
 cbuffer DirLights : register(b0) {
 	uint count;
-	float4 color[MAX_DIRLIGHTS];
+	float4 m_color[MAX_DIRLIGHTS];
 	float4 dir[MAX_DIRLIGHTS];
 };
 
@@ -26,7 +26,7 @@ float4 main(VSout i) : SV_Target
 	float3 c = float3(0,0,0);
 
 	// diffuse
-	c += max(0, dot(i.normal, -dir[0])) * color[0] * albedo;
+	c += max(0, dot(i.normal, -dir[0])) * m_color[0] * albedo;
 
 	//ambient
 	c += albedo * 0.3;

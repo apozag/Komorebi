@@ -96,7 +96,7 @@ void Renderer::SubmitSpotlight(const SpotLight* spotlight, const Transform* worl
 	const DirectX::SimpleMath::Vector3& f = worldTransform->GetForward();
 	const DirectX::SimpleMath::Vector3& p = worldTransform->GetPositionUnsafe();
 
-	m_spotLightData.color[m_spotLightData.count] = { c.x, c.y, c.z };
+	m_spotLightData.m_color[m_spotLightData.count] = { c.x, c.y, c.z };
 	m_spotLightData.dir[m_spotLightData.count] = { f.x, f.y, f.z };
 	m_spotLightData.pos[m_spotLightData.count] = { p.x, p.y, p.z,};
 	m_spotLightData.count++;
@@ -109,7 +109,7 @@ void Renderer::SubmitDirectionalLight(const DirectionalLight* dirlight, const Tr
 	const DirectX::SimpleMath::Vector3& c = dirlight->GetColor();
 	const DirectX::SimpleMath::Vector3& f = -worldTransform->GetForward();
 
-	m_dirLightData.color[m_dirLightData.count] = { c.x, c.y, c.z};
+	m_dirLightData.m_color[m_dirLightData.count] = { c.x, c.y, c.z};
 	m_dirLightData.dir[m_dirLightData.count] = { f.x, f.y, f.z};
 
 	m_lightTransformData.viewProj[m_dirLightData.count] = DirectX::XMMatrixTranspose(
@@ -133,7 +133,7 @@ void Renderer::SubmitPointLight(const PointLight* pointlight, const Transform* w
 	const DirectX::SimpleMath::Vector3& c = pointlight->GetColor();
 	const DirectX::SimpleMath::Vector3& f = worldTransform->GetForward();
 
-	m_pointLightData.color[m_pointLightData.count] = { c.x, c.y, c.z };
+	m_pointLightData.m_color[m_pointLightData.count] = { c.x, c.y, c.z };
 	m_pointLightData.pos[m_pointLightData.count] = { f.x, f.y, f.z };
 	m_pointLightData.count++;
 }
@@ -219,7 +219,7 @@ void Renderer::Render( ) {
 				unsigned int shifts = isTransparent * 16;
 				job.key &= ~(uint64_t(0xFFFF) << shifts);
 				float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
-				float normalizedDepth = (depth - camView.camera->m_near) / (camView.camera->m_far - camView.camera->m_near);
+				float normalizedDepth = (depth - camView.camera->GetNear()) / (camView.camera->GetFar() - camView.camera->GetNear());
 				uint64_t depthKeyComponent = (isTransparent ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
 				job.key |= depthKeyComponent << shifts;
 			}					

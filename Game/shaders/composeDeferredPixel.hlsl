@@ -1,6 +1,6 @@
 cbuffer Light {
 	float4 dir;
-	float4 color;
+	float4 m_color;
 };
 
 struct vs_out {
@@ -23,7 +23,7 @@ float4 main(vs_out input) : SV_Target0
 	float4 c = albedo;
 
 	//diffuse
-	c *= max(0, dot(normal, -dir)) * color;
+	c *= max(0, dot(normal, -dir)) * m_color;
 
 	//ambient
 	c += albedo * 0.3;

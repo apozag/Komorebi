@@ -26,8 +26,6 @@ public:
 
 	void Serialize(const char* filename);
 
-	REFLECT()
-
 private:
 
 	void TraverseNode(Node* node, bool dirty);
