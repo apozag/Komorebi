@@ -22,6 +22,7 @@
 #include "Rotate.h"
 #include "ChangeColor.h"
 #include "BindableSlotsInfo.h"
+#include "SceneLoader.h"
 
 // Scripts
 #include "CameraMovement.h"
@@ -36,6 +37,8 @@ int CALLBACK WinMain(
 		Engine::Init("MyGame", 1024, 1024, 60);
 
 		Scene* scene = new Scene();
+
+		Engine::m_activeScene = scene;
 
 		// RTs
 		RenderTarget* drt = Engine::GetDefaultRendertarget();
@@ -108,11 +111,14 @@ int CALLBACK WinMain(
 
 		//Model* model = ModelLoader::LoadModel("assets/huesitos.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/moneco.fbx", scene, nullptr);;
-		Model* model1 = new Model("assets/Jump.fbx", scene, modelWrapperNode);;
+		Model* model1 = new Model("assets/Jump.fbx");;
 		//Model* model = ModelLoader::LoadModel("assets/nanosuit/nanosuit.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/Female1.fbx", scene, modelWrapperNode);
 		//Model* model = ModelLoader::LoadModel("assets/scan_model.fbx", scene, modelWrapperNode);
-		Model* model = new Model ("assets/demon.fbx", scene, nullptr);
+		Model* model = new Model ("assets/demon.fbx");
+
+		model->Setup();
+		model1->Setup();
 
 		model->AddPass(defaultPass);
 		model1->AddPass(shadowPass);
@@ -136,20 +142,9 @@ int CALLBACK WinMain(
 		//Mesh* fullScreenQuad = ModelLoader::GenerateQuad(scene, nullptr);
 		//fullScreenQuad->AddPass(postProcessPass);
 
-		Engine::m_activeScene = scene;
+		SceneLoader::SaveScene(scene, "sceneTest.txt");
 
-		using namespace rapidxml;
-		rapidxml::xml_document<> doc;
-		rapidxml::xml_node<>* rootNode = doc.allocate_node(rapidxml::node_type::node_element, "Scene");
-		doc.append_node(rootNode);
-		Scene::Reflection.serialize(scene, rootNode, &doc);
-
-		std::ofstream myfile;
-		myfile.open("example.txt");
-		myfile << doc;
-		myfile.close();
-
-		return Engine::Run();
+		return true;// Engine::Run();
 	}
 	catch (const Exception& e) {
 		MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);

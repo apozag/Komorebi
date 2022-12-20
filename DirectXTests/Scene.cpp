@@ -17,19 +17,19 @@
 void Scene::LoadScene( ) {
 }
 
-Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent) {
+Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent, bool serializable) {
 	if (!m_parent) m_parent = &m_transformHierarchy;
-	Node* node = new Node();
-	node->m_entities = { entity };
+	Node* node = new Node(serializable);
+	if(entity) node->m_entities = { entity };
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;
 	m_parent->m_children.push_back(node);
 	return node;
 } 
 
-Node* Scene::AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent) {
+Node* Scene::AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent, bool serializable) {
 	if (!m_parent) m_parent = &m_transformHierarchy;
-	Node* node = new Node();
+	Node* node = new Node(serializable);
 	node->m_entities = m_entities;
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;

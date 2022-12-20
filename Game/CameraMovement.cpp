@@ -51,3 +51,6 @@ void CameraMovement::Update(Node* node) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 1, 0) * -moveSpeed * dt);
 	}
 }
+
+REFLECT_STRUCT_BEGIN(CameraMovement, Script)
+REFLECT_STRUCT_END()

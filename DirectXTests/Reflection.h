@@ -68,7 +68,7 @@ namespace reflect {
   };
 
   //--------------------------------------------------------
-  // Type descriptors for user-defined structs/classes
+  // Type descriptor for user-defined structs/classes
   //--------------------------------------------------------
 
   struct TypeDescriptor_Struct : TypeDescriptor {
@@ -122,6 +122,38 @@ namespace reflect {
         xmlNode->append_node(newNode);
         member.type->serialize((char*)obj + member.offset, newNode, doc);
       }
+    };
+  };
+
+  //--------------------------------------------------------
+  // Type descriptor for pointer to struct/class
+  //--------------------------------------------------------
+
+  struct TypeDescriptor_Ptr : TypeDescriptor {
+
+    const TypeDescriptor_Struct* referencedType;
+
+    TypeDescriptor_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor{ nullptr, 0 }
+    {
+      init(this);
+    }
+    TypeDescriptor_Ptr(const char* name, size_t size) : TypeDescriptor{ nullptr, 0 }
+    {}
+    virtual void dump(const void* obj, std::ostream& os, int indentLevel) const override {
+      os << name << " {" << std::endl;
+      const void** ppObj = (const void**)obj;
+      referencedType->dump(&ppObj, os, indentLevel);
+      os << std::string(4 * indentLevel, ' ') << "}";
+    }
+
+    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
+      const void** ppObj = (const void**)obj;
+      referencedType->deserialize(&ppObj, xmlNode);
+    };
+
+    virtual void serialize(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* doc) const override {
+      const void** ppObj = (const void**)obj;
+      referencedType->serialize(&ppObj, xmlNode, doc);
     };
   };
 
@@ -208,6 +240,8 @@ namespace reflect {
 
 } // namespace reflect
 
+#define CAT(a, b) a ## b
+
 #define REFLECT_BASE()  \
   __REFLECT(const)
 
@@ -249,7 +283,7 @@ namespace reflect {
   }
 
 #define DECLARE_REFLECTION_PRIMITIVE(type) \
-template <> reflect::TypeDescriptor* reflect::getPrimitiveDescriptor<type>();
+  template <> reflect::TypeDescriptor* reflect::getPrimitiveDescriptor<type>();
 
 #define __IMPLEMENT_REFLECTION_PRIMITIVE_BEGIN(type, tag) \
   struct TypeDescriptor_ ## tag : reflect::TypeDescriptor {  \
@@ -269,27 +303,49 @@ template <> reflect::TypeDescriptor* reflect::getPrimitiveDescriptor<type>();
       os << #type <<"{\"" << *(const type*)obj << "\"}";    \
     } \
     virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override { \
-      *(type*)obj = std::stod(xmlNode->value()); \
+      *(type*)obj = (type) std::stod(xmlNode->value()); \
+    }  \
+    virtual void serialize(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* /* unused */) const override { \
+      std::string* str = new std::string(std::to_string(*(type*)obj));  \
+      SceneLoader::TrackString(str);  \
+      xmlNode->value(str->c_str());  \
+    }  \
+  __IMPLEMENT_REFLECTION_PRIMITIVE_END(type, tag)
+
+#define IMPLEMENT_REFLECTION_PRIMITIVE_INT(type, tag)	\
+  __IMPLEMENT_REFLECTION_PRIMITIVE_BEGIN(type, tag) \
+    virtual void dump(const void* obj, std::ostream& os, int /* unused */) const override {   \
+      os << #type <<"{\"" << *(const type*)obj << "\"}";    \
+    } \
+    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override { \
+      *(type*)obj = (type) (int) std::stod(xmlNode->value()); \
     };  \
     virtual void serialize(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* /* unused */) const override { \
       xmlNode->value(std::to_string(*(long double*)obj).c_str());  \
     };  \
   __IMPLEMENT_REFLECTION_PRIMITIVE_END(type, tag)
 
-__IMPLEMENT_REFLECTION_PRIMITIVE_BEGIN(std::string*, CStr)
-  virtual void dump(const void* obj, std::ostream& os, int /* unused */) const override {
-      os << "CStr {\"" << static_cast<const std::string*>(obj)->c_str() << "\"}";
-  } 
-  virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {    
-    static_cast<std::string*>(obj)->assign(xmlNode->value());
-  };  
-  virtual void serialize(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* /* unused */) const override {
-    xmlNode->value(static_cast<const std::string*>(obj)->c_str());
-  };  
-__IMPLEMENT_REFLECTION_PRIMITIVE_END(std::string, CStr)
+
+#define DECLARE_RELFECTION_POINTER(type)  \
+  DECLARE_REFLECTION_PRIMITIVE(type)
+
+#define IMPLEMENT_REFLECTION_POINTER(type, refType) \
+  void CAT(initReflection_ ## refType, _Ptr)(reflect::TypeDescriptor_Ptr* typeDesc) { \
+  typeDesc->name = #type; \
+  typeDesc->size = sizeof(type); \
+  typeDesc->referencedType = &refType::GetReflection(); \
+  } \
+  template <> \
+  reflect::TypeDescriptor* reflect::getPrimitiveDescriptor<type>() {  \
+    static  TypeDescriptor_Ptr typeDesc{CAT(initReflection_ ## refType, _Ptr)};  \
+    return &typeDesc; \
+  }
+
 
 DECLARE_REFLECTION_PRIMITIVE(int)
 DECLARE_REFLECTION_PRIMITIVE(unsigned int)
 DECLARE_REFLECTION_PRIMITIVE(uint64_t)
 DECLARE_REFLECTION_PRIMITIVE(float)
 DECLARE_REFLECTION_PRIMITIVE(double)
+DECLARE_REFLECTION_PRIMITIVE(bool)
+DECLARE_REFLECTION_PRIMITIVE(std::string)

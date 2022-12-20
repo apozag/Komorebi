@@ -20,6 +20,8 @@ public:
 
   static void RegisterTypeDesc(reflect::TypeDescriptor* typeDesc);
 
+  static void TrackString(std::string* string);
+
   static Scene* LoadScene(const char* filename);
 
   static void SaveScene(Scene* scene, const char* filename);
@@ -33,9 +35,15 @@ private:
   static reflect::TypeDescriptor* GetTypeDesc(std::string name);
 
   typedef std::unordered_map<std::string, reflect::TypeDescriptor*> TypeDict;
+  typedef std::vector<std::string*> StrVector;
 
   static TypeDict& GetTypeDict() {
     static TypeDict typeDict;
     return typeDict;
+  };
+
+  static StrVector& GetStrVector() {
+    static StrVector strVector;
+    return strVector;
   };
 };

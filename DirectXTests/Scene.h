@@ -17,8 +17,8 @@ public:
 
 	void Traverse();
 
-	Node* AddNode(Entity* entity, const Transform& transform, Node* m_parent = nullptr);
-	Node* AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent = nullptr);
+	Node* AddNode(Entity* entity, const Transform& transform, Node* m_parent = nullptr, bool serializable = true);
+	Node* AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent = nullptr, bool serializable = true);
 
 	Node* GetMainCameraNode() { return m_mainCamera; }
 

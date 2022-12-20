@@ -159,6 +159,8 @@ void RenderTarget::Clear( float r, float g, float b) {
 	GFX_THROW_INFO_ONLY(GetContext ()->ClearDepthStencilView(m_dsv.Get(), D3D11_CLEAR_STENCIL | D3D11_CLEAR_DEPTH, 1.0f, 0u));
 }
 
+IMPLEMENT_REFLECTION_PRIMITIVE(DXGI_FORMAT, DXGI_FORMAT)
+
 REFLECT_STRUCT_BASE_BEGIN(RenderTarget)
 REFLECT_STRUCT_MEMBER(m_width)
 REFLECT_STRUCT_MEMBER(m_height)

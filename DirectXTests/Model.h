@@ -10,9 +10,12 @@ class Animation;
 
 class Model : public Entity {
 public:
-  Model();
-  Model(const char* filename, Scene* scene, Node* parent = nullptr);
-  //void SetMaterial(Material* material);
+  Model() {}
+  Model(const char* filename) 
+    : m_filename(filename)
+  {}
+
+  virtual void Setup() override;
   void AddPass(Pass* pass);
   void AddDrawable(Drawable* mesh);
   const Drawable::BVHData& GetBVHData() const;

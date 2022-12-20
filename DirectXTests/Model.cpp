@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "Engine.h"
+#include "Scene.h"
 #include "Mesh.h"
 #include "SkinnedMesh.h"
 #include "Model.h"
@@ -10,12 +12,8 @@
 #include "Material.h"
 #include "ModelLoader.h"
 
-Model::Model() {
-  //m_skeleton = new Skeleton();
-}
-
-Model::Model(const char* filename, Scene* scene, Node* parent) {
-  ModelLoader::LoadModel(filename, scene, parent, this);
+void Model::Setup() {
+  ModelLoader::LoadModel(m_filename, Engine::m_activeScene, Engine::m_activeScene->GetRootNode(), this);
 }
 
 void Model::AddDrawable(Drawable* drawable) {

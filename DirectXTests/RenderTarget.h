@@ -44,3 +44,5 @@ private:
 	DXGI_FORMAT m_format;
 	unsigned int m_count, m_slot;
 };
+
+DECLARE_REFLECTION_PRIMITIVE(DXGI_FORMAT, DXGI_FORMAT)

@@ -19,6 +19,10 @@ void SceneLoader::RegisterTypeDesc(TypeDescriptor* typeDesc) {
   GetTypeDict().insert({ typeDesc->name, typeDesc });
 }
 
+ void SceneLoader::TrackString(std::string* string) {
+  GetStrVector().push_back(string);
+}
+
 TypeDescriptor* SceneLoader::GetTypeDesc(std::string name) {
   return GetTypeDict()[name];
 }
@@ -47,10 +51,15 @@ void SceneLoader::SaveScene(Scene* scene, const char* filename) {
   myfile.open(filename);
   myfile << doc;
   myfile.close();
+
+  for (std::string* strPtr : GetStrVector()) {
+    delete strPtr;
+  }
+  GetStrVector().clear();
 }
 
 void SceneLoader::ParseNode(xml_node<>* elemNode, Node* parent) {
-  Node* node = new Node();
+  Node* node = new Node(true);
   node->m_parent = parent;
   parent->m_children.push_back(node);
   
@@ -91,16 +100,20 @@ void SceneLoader::SerializeNode(rapidxml::xml_node<>* elemNode, rapidxml::xml_do
   xml_node<>* entities_elem = doc->allocate_node(node_type::node_element, entitiesNodeName);
   elemNode->append_node(entities_elem);
   for (Entity* entity : node->m_entities) {
-    xml_node<>* entity_elem = doc->allocate_node(node_type::node_element, entitiesNodeName);
+    const TypeDescriptor& typeDesc = entity->GetReflectionDerived();
+    xml_node<>* entity_elem = doc->allocate_node(node_type::node_element, typeDesc.name);
     entities_elem->append_node(entity_elem);
-    entity->GetReflection().serialize(entity, entity_elem, doc);
+    typeDesc.serialize(entity, entity_elem, doc);
   }
 
   xml_node<>* children_elem = doc->allocate_node(node_type::node_element, childrenNodeName);
   elemNode->append_node(children_elem);
   for (Node* child : node->m_children) {
+    if (!child->IsSerializable()) {
+      continue;
+    }
     xml_node<>* child_elem = doc->allocate_node(node_type::node_element, nodeTypeName);
-    entities_elem->append_node(child_elem);
+    children_elem->append_node(child_elem);
     SerializeNode(child_elem, doc, child);
   }
 }
