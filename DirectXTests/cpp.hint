@@ -1,4 +1,0 @@
-// Los archivos de sugerencia ayudan al IDE de Visual Studio a interpretar los identificadores de Visual C++
-// por ejemplo, los nombres de funciones y macros.
-// Para obtener más información, consulte https://go.microsoft.com/fwlink/?linkid=865984
-#define REFLECT() friend struct reflect::DefaultResolver; virtual const reflect::TypeDescriptor_Struct& GetReflection() override{ static reflect::TypeDescriptor_Struct Reflection{type::initReflection}; return Reflection; } static void initReflection(reflect::TypeDescriptor_Struct*);

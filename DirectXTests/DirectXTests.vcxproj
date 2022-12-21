@@ -287,7 +287,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli" />
-    <None Include="cpp.hint" />
     <None Include="DXGetErrorDescription.inl" />
     <None Include="DXGetErrorString.inl" />
     <None Include="DXTrace.inl" />

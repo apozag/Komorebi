@@ -20,6 +20,8 @@ public:
 
   static void RegisterTypeDesc(reflect::TypeDescriptor* typeDesc);
 
+  static const reflect::TypeDescriptor* GetTypeDesc(std::string name);
+
   static void TrackString(std::string* string);
 
   static Scene* LoadScene(const char* filename);
@@ -31,8 +33,6 @@ private:
   static void ParseNode(rapidxml::xml_node<>* elemNode, Node* parent);
 
   static void SerializeNode(rapidxml::xml_node<>* elemNode, rapidxml::xml_document<>* doc, Node* node);
-
-  static reflect::TypeDescriptor* GetTypeDesc(std::string name);
 
   typedef std::unordered_map<std::string, reflect::TypeDescriptor*> TypeDict;
   typedef std::vector<std::string*> StrVector;

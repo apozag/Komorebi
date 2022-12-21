@@ -131,7 +131,7 @@ namespace reflect {
 
   struct TypeDescriptor_Ptr : TypeDescriptor {
 
-    const TypeDescriptor_Struct* referencedType;
+    const reflect::TypeDescriptor_Struct& (*refTypeGetReflection)();
 
     TypeDescriptor_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor{ nullptr, 0 }
     {
@@ -142,18 +142,18 @@ namespace reflect {
     virtual void dump(const void* obj, std::ostream& os, int indentLevel) const override {
       os << name << " {" << std::endl;
       const void** ppObj = (const void**)obj;
-      referencedType->dump(&ppObj, os, indentLevel);
+      refTypeGetReflection().dump(&ppObj, os, indentLevel);
       os << std::string(4 * indentLevel, ' ') << "}";
     }
 
     virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
-      const void** ppObj = (const void**)obj;
-      referencedType->deserialize(&ppObj, xmlNode);
+      void** ppObj = (void**)obj;
+      refTypeGetReflection().deserialize(*ppObj, xmlNode);
     };
 
     virtual void serialize(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* doc) const override {
       const void** ppObj = (const void**)obj;
-      referencedType->serialize(&ppObj, xmlNode, doc);
+      refTypeGetReflection().serialize(*ppObj, xmlNode, doc);
     };
   };
 
@@ -178,7 +178,7 @@ namespace reflect {
       };
       getItem = [](const void* vecPtr, size_t index) -> const void* {
         const auto& vec = *(const std::vector<ItemType>*) vecPtr;
-        return &vec[index];
+        return &(vec[index]);
       };
       resize = [](void* vecPtr, size_t size){
         auto vec = (std::vector<ItemType>*) vecPtr;
@@ -221,7 +221,7 @@ namespace reflect {
       typedef rapidxml::xml_node<>* nodePtr;
       size_t size = getSize(obj);
       for (int i = 0; i < size; i++) {
-        nodePtr newNode = doc->allocate_node(rapidxml::node_type::node_element, "Item");
+        nodePtr newNode = doc->allocate_node(rapidxml::node_type::node_element, itemType->name);
         xmlNode->append_node(newNode);
         itemType->serialize(getItem(obj, i), newNode, doc);
       }
@@ -333,7 +333,7 @@ namespace reflect {
   void CAT(initReflection_ ## refType, _Ptr)(reflect::TypeDescriptor_Ptr* typeDesc) { \
   typeDesc->name = #type; \
   typeDesc->size = sizeof(type); \
-  typeDesc->referencedType = &refType::GetReflection(); \
+  typeDesc->refTypeGetReflection = refType::GetReflection; \
   } \
   template <> \
   reflect::TypeDescriptor* reflect::getPrimitiveDescriptor<type>() {  \

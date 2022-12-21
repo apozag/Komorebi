@@ -23,7 +23,7 @@ void SceneLoader::RegisterTypeDesc(TypeDescriptor* typeDesc) {
   GetStrVector().push_back(string);
 }
 
-TypeDescriptor* SceneLoader::GetTypeDesc(std::string name) {
+const TypeDescriptor* SceneLoader::GetTypeDesc(std::string name) {
   return GetTypeDict()[name];
 }
 
@@ -45,7 +45,8 @@ Scene* SceneLoader::LoadScene(const char* filename) {
 
 void SceneLoader::SaveScene(Scene* scene, const char* filename) {
   xml_document<> doc;
-  SerializeNode(&doc, &doc, scene->GetRootNode());
+  //SerializeNode(&doc, &doc, scene->GetRootNode());
+  Node::GetReflection().serialize(scene->GetRootNode(), &doc, &doc);
 
   std::ofstream myfile;
   myfile.open(filename);
@@ -72,7 +73,7 @@ void SceneLoader::ParseNode(xml_node<>* elemNode, Node* parent) {
   if (entitiesElem) {
     xml_node<>* entityElem = entitiesElem->first_node();
     while (entityElem) {
-      TypeDescriptor* pTypeDesc = GetTypeDesc(entityElem->name());
+      const TypeDescriptor* pTypeDesc = GetTypeDesc(entityElem->name());
       void* obj = malloc(pTypeDesc->size);
       pTypeDesc->deserialize(obj, entityElem);
       node->m_entities.push_back(static_cast<Entity*>(obj));

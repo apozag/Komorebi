@@ -24,6 +24,8 @@
 #include "BindableSlotsInfo.h"
 #include "SceneLoader.h"
 
+#include "Timer.h"
+
 // Scripts
 #include "CameraMovement.h"
 
