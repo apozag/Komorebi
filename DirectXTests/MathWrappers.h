@@ -2,7 +2,7 @@
 
 #include <d3d11.h>
 #include "SimpleMath.h"
-#include "Reflection.h"
+#include "ReflectionMacros.h"
 
 namespace math {
   class Vector3 : public DirectX::SimpleMath::Vector3 {

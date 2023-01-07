@@ -233,7 +233,7 @@
     <ClInclude Include="PostProcMaterial.h">
       <Filter>Archivos de encabezado\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Reflection.h">
+    <ClInclude Include="ReflectionMacros.h">
       <Filter>Archivos de encabezado\Reflection</Filter>
     </ClInclude>
     <ClInclude Include="SceneLoader.h">
@@ -244,6 +244,12 @@
     </ClInclude>
     <ClInclude Include="MathWrappers.h">
       <Filter>Archivos de encabezado\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectionHelper.h">
+      <Filter>Archivos de encabezado\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDescriptors.h">
+      <Filter>Archivos de encabezado\Reflection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -402,6 +408,12 @@
     </ClCompile>
     <ClCompile Include="MathWrappers.cpp">
       <Filter>Archivos de origen\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionHelper.cpp">
+      <Filter>Archivos de origen\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeDescriptors.cpp">
+      <Filter>Archivos de origen\Reflection</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@
 
 #include "StateBindable.h"
 #include "Texture2D.h"
-#include "Reflection.h"
+#include "ReflectionMacros.h"
 
 class RenderTarget : public StateBindable{
 public:

@@ -4,7 +4,7 @@
 #include <vector>
 #include "SimpleMath.h"
 #include "Entity.h"
-#include "Reflection.h"
+#include "ReflectionMacros.h"
 
 template<typename T>
 class VertexConstantBuffer;

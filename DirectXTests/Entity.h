@@ -4,7 +4,7 @@
 #include "Engine.h"
 #include "Window.h"
 #include "GameObject.h"
-#include "Reflection.h"
+#include "ReflectionMacros.h"
 
 class Renderer;
 class ScriptDispatcher;

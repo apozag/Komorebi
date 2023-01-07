@@ -204,7 +204,8 @@
     <ClInclude Include="PostProcMaterial.h" />
     <ClInclude Include="PostProcPass.h" />
     <ClInclude Include="Rasterizer.h" />
-    <ClInclude Include="Reflection.h" />
+    <ClInclude Include="ReflectionMacros.h" />
+    <ClInclude Include="ReflectionHelper.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="ResourceBindable.h" />
@@ -224,6 +225,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="MathWrappers.h" />
+    <ClInclude Include="TypeDescriptors.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Viewport.h" />
@@ -263,6 +265,7 @@
     <ClCompile Include="Pass.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
+    <ClCompile Include="ReflectionHelper.cpp" />
     <ClCompile Include="ReflectionPrimitives.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
@@ -280,6 +283,7 @@
     <ClCompile Include="Texture3D.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TypeDescriptors.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Viewport.cpp" />
