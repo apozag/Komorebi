@@ -7,7 +7,7 @@
 #include "CubeTexture.h"
 #include "ConstantBuffer.h"
 #include "RenderTarget.h"
-#include "Rasterizer.h"
+#include "RasterizerState.h"
 #include "BlendState.h"
 #include "Model.h"
 #include "ModelLoader.h"
@@ -17,9 +17,9 @@
 void Scene::LoadScene( ) {
 }
 
-Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent, bool serializable) {
+Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent) {
 	if (!m_parent) m_parent = &m_transformHierarchy;
-	Node* node = new Node(serializable);
+	Node* node = new Node();
 	if(entity) node->m_entities = { entity };
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;
@@ -27,9 +27,9 @@ Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent,
 	return node;
 } 
 
-Node* Scene::AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent, bool serializable) {
+Node* Scene::AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent) {
 	if (!m_parent) m_parent = &m_transformHierarchy;
-	Node* node = new Node(serializable);
+	Node* node = new Node();
 	node->m_entities = m_entities;
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;

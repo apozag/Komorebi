@@ -1,15 +1,20 @@
 #pragma once
 #include <vector>
 
+#include "GameObject.h"
+#include "ReflectionMacros.h"
+
 class Pass;
 class ResourceBindable;
 class ReflectedConstantBuffer;
 class PixelShader;
 class VertexShader;
 
-class Material {
+class Material : public GameObject {
 public:
-	Material();
+	Material() : m_idx(static_idx++) {}
+
+	void Setup() override;
 
 	void Bind();
 	void Unbind();
@@ -23,10 +28,23 @@ public:
 	bool SetVector4(const char* name, float* data);
 	bool SetMat4(const char* name, float* data);
 
+	REFLECT_BASE()
+
 private:
-	std::vector<ResourceBindable*> m_binds;
+
+	void ProcessPass(Pass* pass);
+
 	std::vector<ReflectedConstantBuffer*> m_cbuffers;
-	std::vector<Pass*> m_passes;
-	unsigned int m_idx;
+	const unsigned int m_idx;
 	static unsigned int static_idx;
+
+	//////////////////
+	// Serializable
+	//////////////////
+
+	std::vector<Pass*> m_passes;
+	std::vector<ResourceBindable*> m_binds;
+
 };
+
+DECLARE_REFLECTION_POINTER(Material)

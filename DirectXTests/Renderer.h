@@ -9,7 +9,7 @@
 #include "BindableSlotsInfo.h"
 #include "Defines.h"
 #include "ConstantBuffer.h"
-#include "Sampler.h"
+#include "SamplerState.h"
 
 class Graphics;
 class Drawable;
@@ -96,8 +96,8 @@ private:
 	VertexConstantBuffer<LightTransformData> m_lightTransformCbuff;
 
 	std::vector<Texture2D*> m_shadowMaps;
-	Sampler m_shadowMapSampler;
-	Sampler m_PCFFiltersSampler;
+	SamplerState m_shadowMapSampler;
+	SamplerState m_PCFFiltersSampler;
 	Texture3D* m_PCFFilters;
 	PixelConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
 

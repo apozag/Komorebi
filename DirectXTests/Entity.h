@@ -26,4 +26,4 @@ public:
 	uint32_t m_tagMask = 0;
 };
 
-DECLARE_RELFECTION_POINTER(Entity*)
+DECLARE_REFLECTION_POINTER(Entity)

@@ -27,30 +27,38 @@
   virtual const reflection::TypeDescriptor_Struct& GetReflectionDerived() X{  \
       return GetReflection();  \
   } \
-  static void initReflection(reflection::TypeDescriptor_Struct*);	
+  static void initReflection(reflection::TypeDescriptor_Struct*);	  \
+
+#define __REFLECT_STRUCT_BEGIN(type, parentTypeDescParam, lambdaContent) \
+  void type::initReflection(reflection::TypeDescriptor_Struct* typeDesc) { \
+    using T = type; \
+    typeDesc->name = #type; \
+    typeDesc->size = sizeof(T); \
+    typeDesc->parentTypeDesc = parentTypeDescParam; \
+    typeDesc->construct = [](void* obj){ lambdaContent };  \
+    typeDesc->setup = [](void* obj){ if (!std::is_abstract<type>()) (*(type*)obj).Setup(); };  \
+    typeDesc->members = {
 
 #define REFLECT_STRUCT_BASE_BEGIN(type) \
-  void type::initReflection(reflection::TypeDescriptor_Struct* typeDesc) { \
-    using T = type; \
-    typeDesc->name = #type; \
-    typeDesc->size = sizeof(T); \
-    typeDesc->members = {
+  __REFLECT_STRUCT_BEGIN(type, nullptr, new (obj) type();)
+
+#define REFLECT_STRUCT_BASE_VIRTUAL_BEGIN(type) \
+  __REFLECT_STRUCT_BEGIN(type, nullptr, )
+
+#define REFLECT_STRUCT_VIRTUAL_BEGIN(type, parentType) \
+  __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), )
 
 #define REFLECT_STRUCT_BEGIN(type, parentType) \
-  void type::initReflection(reflection::TypeDescriptor_Struct* typeDesc) { \
-    using T = type; \
-    typeDesc->name = #type; \
-    typeDesc->size = sizeof(T); \
-    typeDesc->parentTypeDesc = &parentType::GetReflection(); \
-    typeDesc->members = {
+  __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), new (obj) type();)
 
 #define REFLECT_STRUCT_MEMBER(name) \
       {#name, offsetof(T, name), reflection::TypeResolver<decltype(T::name)>::get()},
 
-#define REFLECT_STRUCT_END() \
+#define REFLECT_STRUCT_END(type) \
     }; \
     reflection::ReflectionHelper::RegisterTypeDesc(typeDesc);  \
-  }
+  } \
+  const reflection::TypeDescriptor_Struct& __typeDesc_ ## type = type::GetReflection();
 
 #define DECLARE_REFLECTION_PRIMITIVE(type) \
   namespace reflection {  \
@@ -84,17 +92,17 @@
   __IMPLEMENT_REFLECTION_PRIMITIVE_END(type, tag)
 
 
-#define DECLARE_RELFECTION_POINTER(type)  \
-  DECLARE_REFLECTION_PRIMITIVE(type)
+#define DECLARE_REFLECTION_POINTER(type)  \
+  DECLARE_REFLECTION_PRIMITIVE(type*)
 
-#define IMPLEMENT_REFLECTION_POINTER(type, refType) \
-  void CAT(initReflection_ ## refType, _Ptr)(reflection::TypeDescriptor_Ptr<refType>* typeDesc) { \
-  typeDesc->name = #type; \
-  typeDesc->size = sizeof(type); \
+#define IMPLEMENT_REFLECTION_POINTER(type) \
+  void CAT(initReflection_ ## type, _Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
+    typeDesc->name = #type "*"; \
+    typeDesc->size = sizeof(CAT(type, *)); \
   } \
   template <> \
-  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<type>() {  \
-    static  TypeDescriptor_Ptr<refType> typeDesc{CAT(initReflection_ ## refType, _Ptr)};  \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<type*>() {  \
+    static  TypeDescriptor_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Ptr)};  \
     return &typeDesc; \
   }
 

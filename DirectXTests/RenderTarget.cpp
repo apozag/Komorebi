@@ -7,6 +7,7 @@ std::unordered_map<int, int> boundShaderResources;
 int idCount;
 
 RenderTarget::RenderTarget( IDXGISwapChain* swapChain) {
+
 	INFOMAN;
 
 	// Get back buffer
@@ -43,9 +44,6 @@ RenderTarget::RenderTarget( IDXGISwapChain* swapChain) {
 
 	m_width = rtDesc.Width;
 	m_height = rtDesc.Height;
-
-	GameObject::Setup();
-
 }
 
 RenderTarget::~RenderTarget() {
@@ -60,9 +58,6 @@ RenderTarget::~RenderTarget() {
 
 void RenderTarget::Setup() {
 
-	if (IsInitialized())return;
-
-	GameObject::Setup();
 
 	INFOMAN;
 
@@ -161,9 +156,9 @@ void RenderTarget::Clear( float r, float g, float b) {
 
 IMPLEMENT_REFLECTION_PRIMITIVE(DXGI_FORMAT, DXGI_FORMAT)
 
-REFLECT_STRUCT_BASE_BEGIN(RenderTarget)
+REFLECT_STRUCT_BEGIN(RenderTarget, StateBindable)
 REFLECT_STRUCT_MEMBER(m_width)
 REFLECT_STRUCT_MEMBER(m_height)
 REFLECT_STRUCT_MEMBER(m_format)
 REFLECT_STRUCT_MEMBER(m_slot)
-REFLECT_STRUCT_END()
+REFLECT_STRUCT_END(RenderTarget)

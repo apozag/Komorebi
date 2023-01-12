@@ -10,6 +10,7 @@ class Graphics;
 
 class DirectionalLight : public Entity {
 public:
+  DirectionalLight() {};
   DirectionalLight(DirectX::SimpleMath::Vector3 m_color) : m_color(m_color) {};
 
   virtual void Setup() override;
@@ -27,6 +28,7 @@ private:
 
 class PointLight : public Entity {
 public:
+  PointLight() {};
   PointLight(DirectX::SimpleMath::Vector3 m_color) :
     m_color(m_color)
   {}
@@ -44,6 +46,7 @@ private:
 
 class SpotLight : public Entity {
 public:
+  SpotLight() {};
   SpotLight(DirectX::SimpleMath::Vector3 m_color, float m_phi, float m_theta) :
     m_color(m_color),
     m_phi(m_phi),

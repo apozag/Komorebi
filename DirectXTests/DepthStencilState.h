@@ -11,11 +11,25 @@ public:
 		STENCIL_READ = 0x8
 	};
 public:
-	DepthStencilState(int dsst, int refVal=0);
+
+	DepthStencilState() {}
+	DepthStencilState(int dsst, int refVal=0) : m_refVal(refVal), m_DSAccess(dsst) {}
 	~DepthStencilState();
+
+	void Setup() override;
+
 	void Bind()const override;
 	void Unbind()const override {}
+
+	REFLECT()
+
 private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> m_pDSState;
+
+	//////////////////
+	// Serializable
+	//////////////////
+
+	unsigned int m_DSAccess;
 	unsigned int m_refVal;
 };

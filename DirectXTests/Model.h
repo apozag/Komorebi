@@ -7,6 +7,7 @@
 class Mesh;
 class SkinnedMesh;
 class Animation;
+class ResourceBindable;
 
 class Model : public Entity {
 public:
@@ -17,6 +18,7 @@ public:
 
   virtual void Setup() override;
   void AddPass(Pass* pass);
+  void AddBindable(ResourceBindable* bind);
   void AddDrawable(Drawable* mesh);
   const Drawable::BVHData& GetBVHData() const;
   void Insert(Node* node, const Transform& worldTransform) override;

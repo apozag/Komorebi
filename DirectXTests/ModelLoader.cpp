@@ -8,7 +8,7 @@
 
 #include "ModelLoader.h"
 #include "Texture2D.h"
-#include "Sampler.h"
+#include "SamplerState.h"
 #include "Mesh.h"
 #include "SkinnedMesh.h"
 #include "Node.h"
@@ -16,7 +16,7 @@
 #include "Skeleton.h"
 #include "Bone.h"
 #include "Pass.h"
-#include "Rasterizer.h"
+#include "RasterizerState.h"
 #include "DepthStencilState.h"
 #include "Model.h"
 #include "Animation.h"
@@ -41,14 +41,24 @@ DirectX::XMMATRIX aiMatrix4x4ToXMMATRIX(aiMatrix4x4 matrix) {
 
 int boneCount = 0;
 
-void* ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
+void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
+
+  if (filename == "cube") {
+    Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
+    Mesh* mesh = GenerateCube();
+    mesh->m_material = new Material();
+    sceneGraph->AddNode(mesh, Transform(), modelNode);
+    model->AddDrawable(mesh);
+    return;
+  }
+
   Assimp::Importer importer;
   const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 
   if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
   {
     std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-    return nullptr;
+    return;
   }
 
   directory = filename.substr(0, filename.find_last_of('/') + 1);
@@ -74,7 +84,15 @@ void* ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scen
 
 Model* ModelLoader::LoadModel( std::string path, Scene* sceneGraph, Node* sceneGraphParent) {
   Model* model = new Model();
-  LoadModel(path, sceneGraph, sceneGraphParent, model);
+  if (path == "cube") {
+    Mesh* mesh = GenerateCube();
+    mesh->m_material = new Material();
+    sceneGraph->AddNode(mesh, Transform(), sceneGraphParent);
+    model->AddDrawable(mesh);    
+  }
+  else {
+    LoadModel(path, sceneGraph, sceneGraphParent, model);
+  }
   return model;
 }
 
@@ -164,7 +182,7 @@ void ModelLoader::processNode( aiNode* node, const aiScene* scene, Scene* sceneG
 
     Entity* entity = nullptr;
 
-    Node* sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, false);
+    Node* sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
 
     for(unsigned int i = 0; i < node->mNumMeshes; i++)
     {
@@ -200,7 +218,7 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
     
     if (nodeIdx >= 0) {
 
-        sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, false);
+        sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
         boneNodes[nodeIdx] = sceneNode;
         boneCount++;
     }
@@ -234,7 +252,6 @@ void ModelLoader::processMaterials(const aiScene* scene) {
                     // Compressed image data, we need to decode it
                     Image img = ImageManager::decodeFromMemory((unsigned char*)texture->pcData, texture->mWidth);
                     mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
-                    mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
                 }
                 else {
                     mat->AddBindable(new Texture2D((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
@@ -246,7 +263,7 @@ void ModelLoader::processMaterials(const aiScene* scene) {
             }
 
         }
-        mat->AddBindable(new Sampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
+        mat->AddBindable(new SamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
         materials.push_back(mat);
     }
 }
@@ -319,7 +336,7 @@ Mesh* ModelLoader::processMesh( aiMesh* mesh, const aiScene* scene, Scene* scene
     }
     Mesh* m = new Mesh ( vertices, indices, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
     m->m_material = materials[mesh->mMaterialIndex];
-    sceneGraph->AddNode(m, Transform(), sceneGraphParent, false);
+    sceneGraph->AddNode(m, Transform(), sceneGraphParent);
 
     return m;
 }
@@ -420,7 +437,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh( aiMesh* mesh, const aiScene* scene
 
     SkinnedMesh* m = new SkinnedMesh ( vertices, indices, &model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
     m->m_material = materials[mesh->mMaterialIndex];    
-    Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent, false);
+    Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent);
 
     return m;
 }

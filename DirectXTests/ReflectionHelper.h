@@ -9,6 +9,7 @@ namespace reflection {
 
   class ReflectionHelper {
   public:
+
     static void RegisterTypeDesc(TypeDescriptor* typeDesc);
 
     static const TypeDescriptor* GetTypeDesc(std::string name);
@@ -19,11 +20,12 @@ namespace reflection {
 
   private:
     ReflectionHelper();
-
+    
     typedef std::unordered_map<std::string, TypeDescriptor*> TypeDict;
     typedef std::vector<std::string*> StrVector;
 
     static TypeDict& GetTypeDict();
+
 
     static StrVector& GetStrVector();
   };

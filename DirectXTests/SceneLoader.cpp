@@ -4,6 +4,7 @@
 #include "rapidxml/rapidxml_ext.hpp"
 #include "rapidxml.hpp"
 
+#include "Engine.h"
 #include "SceneLoader.h"
 #include "ReflectionMacros.h"
 #include "Scene.h"
@@ -12,10 +13,13 @@ using namespace reflection;
 using namespace rapidxml;
 
 constexpr const char* nodeTypeName = "Node";
-constexpr const char* transformTypeName = "Transform";
-constexpr const char* entitiesNodeName = "Entities";
-constexpr const char* childrenNodeName = "Children";
 
+void LinkNodeChildrenRecursive(Node* node) {
+  for (Node* child : node->m_children) {
+    child->m_parent = node;
+    LinkNodeChildrenRecursive(child);
+  }
+}
 
 Scene* SceneLoader::LoadScene(const char* filename) {
   rapidxml::file<> xmlFile(filename);
@@ -24,7 +28,11 @@ Scene* SceneLoader::LoadScene(const char* filename) {
   const xml_node<>* nodeElem = doc.first_node(nodeTypeName);
 
   Scene* scene = new Scene();
+  Engine::m_activeScene = scene;
   Node::GetReflection().deserialize(scene->GetRootNode(), nodeElem);
+
+  LinkNodeChildrenRecursive(scene->GetRootNode());
+
   return scene;
 }
 

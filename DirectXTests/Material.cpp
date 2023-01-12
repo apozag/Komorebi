@@ -5,12 +5,14 @@
 #include "PixelShader.h"
 #include "VertexShader.h"
 #include "BindableSlotsInfo.h"
-#include "Sampler.h"
+#include "SamplerState.h"
 
 unsigned int Material::static_idx = 0;
 
-Material::Material() : m_idx (static_idx++){
-	//AddBindable(new Sampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_CLAMP, 0));
+void Material::Setup() {
+	for (Pass* pass : m_passes) {
+		ProcessPass(pass);
+	}
 }
 
 void Material::Bind() {
@@ -31,12 +33,16 @@ void Material::AddBindable(ResourceBindable* bindable) {
 }
  
 void Material::AddPass(Pass* pass) {
+	ProcessPass(pass);
+	m_passes.push_back(pass);
+}
 
+void Material::ProcessPass(Pass* pass) {
 	// Vertex Shader
 	{
 		const VertexShader* vs = pass->GetVertexShader();
 
-		ID3D11ShaderReflection* reflection = vs->GetReflection();
+		ID3D11ShaderReflection* reflection = vs->GetShaderReflection();
 
 		D3D11_SHADER_DESC desc = {};
 		reflection->GetDesc(&desc);
@@ -86,7 +92,7 @@ void Material::AddPass(Pass* pass) {
 	{
 		const PixelShader* ps = pass->GetPixelShader();
 
-		ID3D11ShaderReflection* reflection = ps->GetReflection();
+		ID3D11ShaderReflection* reflection = ps->GetShaderReflection();
 
 		D3D11_SHADER_DESC desc = {};
 		reflection->GetDesc(&desc);
@@ -131,9 +137,6 @@ void Material::AddPass(Pass* pass) {
 			m_binds.push_back(cbuff);
 		}
 	}
-
-	// Finally, store pass
-	m_passes.push_back(pass);
 }
 
 bool Material::SetFloat(const char* name, float value) {
@@ -154,3 +157,10 @@ bool Material::SetMat4(const char* name, float* data) {
 	}
 	return false;
 }
+
+REFLECT_STRUCT_BASE_BEGIN(Material)
+REFLECT_STRUCT_MEMBER(m_passes)
+REFLECT_STRUCT_MEMBER(m_binds)
+REFLECT_STRUCT_END(Material)
+
+IMPLEMENT_REFLECTION_POINTER(Material)

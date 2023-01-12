@@ -29,3 +29,6 @@ Mesh::Mesh(const Mesh& mesh) : Drawable((Drawable&)mesh){}
 Mesh* Mesh::Clone() {
     return new Mesh(*this);
 }
+
+REFLECT_STRUCT_BEGIN(Mesh, Drawable)
+REFLECT_STRUCT_END(Mesh)

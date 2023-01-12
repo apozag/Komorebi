@@ -15,3 +15,8 @@ DxgiInfoManager& Bindable::GetInfoManager()
 	throw std::logic_error("YouFuckedUp! (tried to access gfx.infoManager in Release config)");
 #endif
 }
+
+REFLECT_STRUCT_BASE_VIRTUAL_BEGIN(Bindable)
+REFLECT_STRUCT_END(Bindable)
+
+IMPLEMENT_REFLECTION_POINTER(Bindable)

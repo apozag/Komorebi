@@ -2,18 +2,16 @@
 
 #include <vector>
 #include "Transform.h"
-#include "Entity.h"
 #include "ReflectionMacros.h"
 
 class Scene;
+class Entity;
 
-class Node {
+class Node : public GameObject{
 	friend class Scene;
 public:
 
-	Node(bool serializable = true) : m_serializable(serializable) {}
-
-	bool IsSerializable() { return m_serializable; }
+	Node(){}
 
 	template<class T>
 	inline T* GetEntity();
@@ -27,7 +25,6 @@ public:
 
 private:
 	Transform m_globalTransform;
-	bool m_serializable = true;
 };
 
 template<class T>
@@ -40,4 +37,4 @@ T* Node::GetEntity() {
 	return nullptr;
 }
 
-DECLARE_RELFECTION_POINTER(Node*)
+DECLARE_REFLECTION_POINTER(Node)

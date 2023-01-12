@@ -24,7 +24,8 @@ public:
 	Camera(float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic = false)
 		: m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0)
 	{}
-	Camera() {};
+	Camera() = default;
+
 	void Setup() override;
 	void Bind(const Transform* worldTransform) const;
 	void Unbind( ) const;

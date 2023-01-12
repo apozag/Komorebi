@@ -7,6 +7,7 @@
 #include "RenderTarget.h"
 
 void Camera::Setup() {
+
 	if (m_orthographic) {
 		m_proj = DirectX::XMMatrixOrthographicLH(500, 500, m_near, m_far);
 	}
@@ -53,4 +54,4 @@ REFLECT_STRUCT_MEMBER(m_RTId)
 REFLECT_STRUCT_MEMBER(m_orthographic)
 REFLECT_STRUCT_MEMBER(m_tagMask)
 REFLECT_STRUCT_MEMBER(m_priority)
-REFLECT_STRUCT_END()
+REFLECT_STRUCT_END(Camera)

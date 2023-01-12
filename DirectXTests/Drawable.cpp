@@ -52,3 +52,15 @@ void Drawable::Draw(DirectX::XMMATRIX&& modelMatrix) const {
 		bind->Unbind ();
 	}
 }
+
+
+typedef Drawable::BVHData bvhDataType;
+REFLECT_STRUCT_BASE_BEGIN(bvhDataType)
+REFLECT_STRUCT_MEMBER(m_min)
+REFLECT_STRUCT_MEMBER(m_max)
+REFLECT_STRUCT_END(bvhDataType)
+
+REFLECT_STRUCT_BEGIN(Drawable, Entity)
+REFLECT_STRUCT_MEMBER(m_material)
+REFLECT_STRUCT_MEMBER(m_bvhData)
+REFLECT_STRUCT_END(Drawable)

@@ -53,4 +53,4 @@ void CameraMovement::Update(Node* node) {
 }
 
 REFLECT_STRUCT_BEGIN(CameraMovement, Script)
-REFLECT_STRUCT_END()
+REFLECT_STRUCT_END(CameraMovement)

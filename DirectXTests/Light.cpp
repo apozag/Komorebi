@@ -10,6 +10,7 @@ void DirectionalLight::Setup() {
 }
 
 void SpotLight::Setup() {
+
 	m_rt = new RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
 	m_camera = new Camera(1.0472f, 1, 0.1, 1000, m_rt, true);
@@ -55,14 +56,14 @@ void PointLight::Insert(Node* node, const Transform& worldTransform) {
 
 REFLECT_STRUCT_BEGIN(DirectionalLight, Entity)
 REFLECT_STRUCT_MEMBER(m_color)
-REFLECT_STRUCT_END()
+REFLECT_STRUCT_END(DirectionalLight)
 
 REFLECT_STRUCT_BEGIN(PointLight, Entity)
 REFLECT_STRUCT_MEMBER(m_color)
-REFLECT_STRUCT_END()
+REFLECT_STRUCT_END(PointLight)
 
 REFLECT_STRUCT_BEGIN(SpotLight, Entity)
 REFLECT_STRUCT_MEMBER(m_color)
 REFLECT_STRUCT_MEMBER(m_phi)
 REFLECT_STRUCT_MEMBER(m_theta)
-REFLECT_STRUCT_END()
+REFLECT_STRUCT_END(SpotLight)

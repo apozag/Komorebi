@@ -11,7 +11,7 @@ struct Image {
 	DXGI_FORMAT format;
 	int channels;
 	int width, height;
-	unsigned int getMemPitch(){ return channels * width; }
+	unsigned int getMemPitch() const { return channels * width; }
 };
 
 class ImageManager {

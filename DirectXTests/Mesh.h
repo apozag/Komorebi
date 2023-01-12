@@ -8,9 +8,10 @@
 
 class Mesh : public Drawable {
 public:
-    Mesh(std::vector<POD::Vertex>& vertices, std::vector<unsigned short>& indices, BVHData bvhData = BVHData());
+    Mesh() {}
+    Mesh(std::vector<POD::Vertex>& vertices, std::vector<unsigned short>& indices, BVHData bvhData = { {},{} });
     Mesh(const Mesh& drawable);
     Mesh* Clone();
 
-    //static Mesh s_quad;    
+    REFLECT()
 };

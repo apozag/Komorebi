@@ -1,11 +1,17 @@
 #include "CubeTexture.h"
 #include "ImageManager.h"
 
-CubeTexture::CubeTexture(std::string path, unsigned int slot) : ResourceBindable(slot) {
+CubeTexture::CubeTexture(std::string path, unsigned int slot) : ResourceBindable(slot), m_path(path) {}
+
+CubeTexture::~CubeTexture() {
+	m_srv->Release();
+}
+
+void CubeTexture::Setup() {
 	std::vector<Image> images(6);
 	D3D11_SUBRESOURCE_DATA sd[6];
 	for (int i = 0; i < 6; i++) {
-		images[i] = ImageManager::loadImage(path + "/" + std::to_string(i) + ".png");
+		images[i] = ImageManager::loadImage(m_path + "/" + std::to_string(i) + ".png");
 		sd[i].pSysMem = images[i].data;
 		sd[i].SysMemPitch = images[i].getMemPitch();
 		//sd[i].SysMemSlicePitch = 0;
@@ -35,11 +41,6 @@ CubeTexture::CubeTexture(std::string path, unsigned int slot) : ResourceBindable
 	srvDesc.TextureCube.MostDetailedMip = 0;
 
 	GetDevice()->CreateShaderResourceView(m_texture.Get(), &srvDesc, m_srv.GetAddressOf());
-
-}
-
-CubeTexture::~CubeTexture() {
-	m_srv->Release();
 }
 
 void CubeTexture::Bind() const {
@@ -53,3 +54,8 @@ void CubeTexture::Unbind() const {
 void CubeTexture::Update() {
 
 }
+
+REFLECT_STRUCT_BEGIN(CubeTexture, ResourceBindable)
+REFLECT_STRUCT_MEMBER(m_path)
+REFLECT_STRUCT_MEMBER(m_slot)
+REFLECT_STRUCT_END(CubeTexture)

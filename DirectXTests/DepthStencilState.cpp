@@ -1,32 +1,36 @@
 #include "DepthStencilState.h"
 #include "GraphicsThrowMacros.h"
 
-DepthStencilState::DepthStencilState(int dsst, int refVal) : m_refVal(refVal) {
+DepthStencilState::~DepthStencilState() {
+	m_pDSState->Release();
+}
+
+void DepthStencilState::Setup() {
 	INFOMAN;
 
 	// Depth-Stencil State
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
-	dsDesc.DepthEnable = dsst & (DepthStencilAccess::DEPTH_READ | DepthStencilAccess::DEPTH_WRITE);
+	dsDesc.DepthEnable = m_DSAccess & (DepthStencilAccess::DEPTH_READ | DepthStencilAccess::DEPTH_WRITE);
 
-	if (dsst & DepthStencilAccess::DEPTH_WRITE) {
+	if (m_DSAccess & DepthStencilAccess::DEPTH_WRITE) {
 		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	}
 	else {
 		dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	}
 
-	if (dsst & DepthStencilAccess::DEPTH_READ) {
+	if (m_DSAccess & DepthStencilAccess::DEPTH_READ) {
 		dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	}
 	else {
 		dsDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
 	}
 
-	dsDesc.StencilEnable = dsst & (DepthStencilAccess::STENCIL_READ | DepthStencilAccess::STENCIL_WRITE);
+	dsDesc.StencilEnable = m_DSAccess & (DepthStencilAccess::STENCIL_READ | DepthStencilAccess::STENCIL_WRITE);
 	dsDesc.StencilWriteMask = 0xFF;
 	dsDesc.StencilReadMask = 0xFF;
 
-	if (dsst & DepthStencilAccess::STENCIL_WRITE) {
+	if (m_DSAccess & DepthStencilAccess::STENCIL_WRITE) {
 		dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 		dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
 	}
@@ -35,7 +39,7 @@ DepthStencilState::DepthStencilState(int dsst, int refVal) : m_refVal(refVal) {
 		dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	}
 
-	if (dsst & DepthStencilAccess::STENCIL_READ) {
+	if (m_DSAccess & DepthStencilAccess::STENCIL_READ) {
 		dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
 		dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
 	}
@@ -52,10 +56,11 @@ DepthStencilState::DepthStencilState(int dsst, int refVal) : m_refVal(refVal) {
 	GFX_THROW_INFO(GetDevice()->CreateDepthStencilState(&dsDesc, m_pDSState.GetAddressOf()));
 }
 
-DepthStencilState::~DepthStencilState() {
-	m_pDSState->Release();
-}
-
 void DepthStencilState::Bind() const {
 	GetContext()->OMSetDepthStencilState(m_pDSState.Get(), m_refVal);
 }
+
+REFLECT_STRUCT_BEGIN(DepthStencilState, StateBindable)
+REFLECT_STRUCT_MEMBER(m_DSAccess)
+REFLECT_STRUCT_MEMBER(m_refVal)
+REFLECT_STRUCT_END(DepthStencilState)

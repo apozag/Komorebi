@@ -5,6 +5,7 @@
 #include <fstream>
 #include <exception>
 #include <Windows.h>
+
 #include "Exception.h"
 #include "Engine.h"
 #include "Scene.h"
@@ -16,7 +17,7 @@
 #include "Light.h"
 #include "DepthStencilState.h"
 #include "CubeTexture.h"
-#include "Rasterizer.h"
+#include "RasterizerState.h"
 #include "ModelLoader.h"
 #include "TagManager.h"
 #include "Rotate.h"
@@ -131,7 +132,7 @@ void SaveScene() {
 	scene->AddNode(skybox, Transform());
 
 	Drawable::BVHData bvhData = model->GetBVHData();
-	Mesh* AABB = ModelLoader::GenerateAABB(bvhData.min, bvhData.max);
+	Mesh* AABB = ModelLoader::GenerateAABB(bvhData.m_min, bvhData.m_max);
 	AABB->m_material = aabbMat;
 	scene->AddNode(AABB, Transform());
 
@@ -147,6 +148,15 @@ void SaveScene() {
 	));
 	camera->m_tagMask = ~TagManager::GetInstance()->TagToBitmask("UI");
 
+	Pass* skyboxPass = new Pass("shaders/skyboxVertex.cso", "shaders/skyboxPixel.cso", PASSLAYER_SKYBOX);
+	skyboxPass->Setup();
+
+	Model* skybox = new Model("cube");
+	skybox->Setup();
+	skybox->m_tagMask = TagManager::GetInstance()->TagToBitmask("Skybox");
+	skybox->AddPass(skyboxPass);
+	skybox->AddBindable(new CubeTexture("assets/skybox", SRV_FREE_SLOT));
+	
 	SceneLoader::SaveScene(scene, "sceneTest.txt");
 }
 
@@ -166,7 +176,7 @@ int CALLBACK WinMain(
 		//SaveScene();
 		LoadScene();
 
-		return 0;// Engine::Run();
+		return Engine::Run();
 	}
 	catch (const Exception& e) {
 		MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);

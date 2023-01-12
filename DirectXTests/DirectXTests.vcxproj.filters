@@ -101,13 +101,13 @@
     <ClInclude Include="PixelShader.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Rasterizer.h">
+    <ClInclude Include="RasterizerState.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="Sampler.h">
+    <ClInclude Include="SamplerState.h">
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">
@@ -286,13 +286,13 @@
     <ClCompile Include="PixelShader.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="Rasterizer.cpp">
+    <ClCompile Include="RasterizerState.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="Sampler.cpp">
+    <ClCompile Include="SamplerState.cpp">
       <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
     <ClCompile Include="Texture2D.cpp">
@@ -414,6 +414,12 @@
     </ClCompile>
     <ClCompile Include="TypeDescriptors.cpp">
       <Filter>Archivos de origen\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="StateBindable.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceBindable.cpp">
+      <Filter>Archivos de origen\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

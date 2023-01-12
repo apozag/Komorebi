@@ -19,9 +19,16 @@ private:
 		DirectX::XMMATRIX model;
 	};
 public:
-	struct BVHData {
-		DirectX::SimpleMath::Vector3 min;
-		DirectX::SimpleMath::Vector3 max;
+	struct BVHData : public GameObject{
+
+		BVHData() {}
+
+		BVHData(const math::Vector3& min, const math::Vector3& max) : m_min(min), m_max(max) {}
+
+		math::Vector3 m_min;
+		math::Vector3 m_max;
+
+		REFLECT_BASE()
 	};
 public:
 	Drawable();
@@ -34,6 +41,8 @@ public:
 	void Insert(Node* node, const Transform& worldTransform) override;
 
 	virtual void Draw(DirectX::XMMATRIX&& modelMatrix) const;
+
+	REFLECT()
 
 public:
 	Material* m_material;

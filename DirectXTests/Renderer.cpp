@@ -57,6 +57,8 @@ Renderer::Renderer() :
 		1.0f/filterSize		
 	});
 	m_shadowInfoCbuff.Update();
+
+	m_renderTargets.push_back(Engine::GetDefaultRendertarget());
 }
 
 void Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material) {
@@ -284,8 +286,8 @@ bool cullAABB(const std::vector<DirectX::XMFLOAT4>& frustumPlanes, const Drawabl
 		DirectX::XMVECTOR planeNormal{ frustumPlanes[planeID].x, frustumPlanes[planeID].y, frustumPlanes[planeID].z, 0.0f };
 		float planeConstant = frustumPlanes[planeID].w;
 
-		DirectX::SimpleMath::Vector3 worldMin = updatedBvh.min + worldTransform->GetPositionUnsafe();
-		DirectX::SimpleMath::Vector3 worldMax = updatedBvh.max + worldTransform->GetPositionUnsafe();
+		DirectX::SimpleMath::Vector3 worldMin = updatedBvh.m_min + worldTransform->GetPositionUnsafe();
+		DirectX::SimpleMath::Vector3 worldMax = updatedBvh.m_max + worldTransform->GetPositionUnsafe();
 
 		// Check each axis (x,y,z) to get the AABB vertex furthest away from the direction the plane is facing (plane normal)
 		DirectX::XMFLOAT3 axisVert;
@@ -386,10 +388,10 @@ std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj)
 // find maximum extents, and store result into AABB b.
 void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b)
 {
-	const float* amin = (const float*)&a.min;
-	const float* amax = (const float*)&a.max;
-	float* bmin = (float*)&b.min;
-	float* bmax = (float*)&b.max;
+	const float* amin = (const float*)&a.m_min;
+	const float* amax = (const float*)&a.m_max;
+	float* bmin = (float*)&b.m_min;
+	float* bmax = (float*)&b.m_max;
 	float* t = (float*)&transform.GetPositionUnsafe();
 	const DirectX::XMMATRIX& m = transform.GetMatrix();
 	// For all three axes

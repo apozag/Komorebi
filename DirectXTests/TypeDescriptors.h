@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 
+#include "rapidxml/rapidxml_ext.hpp"
+#include "rapidxml/rapidxml.hpp"
+
 #include "ReflectionHelper.h"
 
 namespace rapidxml {
@@ -58,7 +61,9 @@ namespace reflection {
     const char* name;
     size_t size;
 
-    TypeDescriptor(const char* name, size_t size) : name{ name }, size{ size }
+    void (*construct)(void*);
+
+    TypeDescriptor(const char* name, size_t size) : name{ name }, size{ size }, construct([](void* obj) {})
     {}
     virtual ~TypeDescriptor() {}
     virtual const std::string getFullName() const;
@@ -87,6 +92,8 @@ namespace reflection {
 
     const TypeDescriptor* parentTypeDesc;
 
+    void (*setup)(void*);
+
     TypeDescriptor_Struct(void (*init)(TypeDescriptor_Struct*)) : TypeDescriptor{ nullptr, 0 }
     {
       init(this);
@@ -97,6 +104,8 @@ namespace reflection {
     virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override;
 
     virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override;
+
+    int getFirstMemberIdx() const;
 
   protected:
     virtual void serializeMembers(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* doc) const override;
@@ -137,7 +146,9 @@ namespace reflection {
 
     virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
       void** ppObj = (void**)obj;
-      const TypeDescriptor* typeDesc = getReferenced<T>(obj);
+      char* name = xmlNode->name();
+      name[xmlNode->name_size()-1] = '\0';
+      const TypeDescriptor* typeDesc = ReflectionHelper::GetTypeDesc(name);
       *ppObj = malloc(typeDesc->size);
       typeDesc->deserialize(*ppObj, xmlNode);
     };
@@ -161,7 +172,7 @@ namespace reflection {
   struct TypeDescriptor_StdVector : TypeDescriptor {
     const TypeDescriptor* itemType;
     size_t(*getSize)(const void*);
-    const void* (*getItem)(const void*, size_t);
+    void* (*getItem)(const void*, size_t);
     void (*resize) (void*, size_t);
 
     template <typename ItemType>
@@ -175,13 +186,16 @@ namespace reflection {
           const auto& vec = *(const std::vector<ItemType>*) vecPtr;
           return vec.size();
         };
-        getItem = [](const void* vecPtr, size_t index) -> const void* {
-          const auto& vec = *(const std::vector<ItemType>*) vecPtr;
+        getItem = [](const void* vecPtr, size_t index) -> void* {
+          auto& vec = *(std::vector<ItemType>*) vecPtr;
           return &(vec[index]);
         };
         resize = [](void* vecPtr, size_t size) {
           auto vec = (std::vector<ItemType>*) vecPtr;
           vec->resize(size);
+        };
+        construct = [](void* obj) {
+          new(obj) std::vector<ItemType>();
         };
       }
 

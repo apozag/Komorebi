@@ -1,10 +1,11 @@
 #pragma once
 
 #include "MathWrappers.h"
+#include "GameObject.h"
 
 class Node;
 
-class Transform {
+class Transform : public GameObject{
 	friend class Scene;
 public:
 	Transform() {
@@ -13,6 +14,9 @@ public:
 	Transform(DirectX::XMMATRIX matrix) {
 		m_matrix = matrix;
 	}
+
+	void Setup() override;
+
 	const DirectX::XMMATRIX&  GetMatrix() const {
 		return m_matrix;
 	}
