@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core">
+      <UniqueIdentifier>{0187cf00-261b-4d38-982c-4105f7bdec11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core\Exceptions">
+      <UniqueIdentifier>{e3e9221d-8505-41a2-8601-da965d1c4540}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core\Math">
+      <UniqueIdentifier>{8a3e16b8-e840-4a80-afcd-bd9ef18ce833}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core\Reflection">
+      <UniqueIdentifier>{2584e4eb-a401-40f9-81df-2cdd5904b661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Core\Util">
+      <UniqueIdentifier>{336812b3-0d74-4246-8e83-c9809a435f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\3rd">
+      <UniqueIdentifier>{487d05a7-32a3-4604-949b-86c141cfb591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Animation">
+      <UniqueIdentifier>{f5e4434f-deb7-4a42-8693-78d8f571c9ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Entities">
+      <UniqueIdentifier>{b23cca62-3be4-4a66-8462-3ecafb62a3b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Input">
+      <UniqueIdentifier>{2704ff30-a896-4215-ae6e-8cdcc1753451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Graphics">
+      <UniqueIdentifier>{93f3f22a-2a9c-4f9e-afea-12703966f225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Graphics\Bindables">
+      <UniqueIdentifier>{a6ffdeed-7b67-4367-845c-d0a9ee7f7bcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Graphics\Bindables\State">
+      <UniqueIdentifier>{9ec9e351-8529-4010-9f2d-55be6849a814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Graphics\Bindables\Resource">
+      <UniqueIdentifier>{0810b929-e601-4c13-bbb8-93fe8282e9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Scene">
+      <UniqueIdentifier>{e80a1fd0-1f3c-412b-a24a-5571e587aa02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\3rd">
+      <UniqueIdentifier>{c22a4a0b-51e1-4c80-8c87-4f6c4eadc19f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Animation">
+      <UniqueIdentifier>{117ef966-cfe2-4e2b-a549-7792328bab7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core">
+      <UniqueIdentifier>{cfd9d202-b18e-4fb7-92ae-a1d6147a0860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Entities">
+      <UniqueIdentifier>{42c4f107-f318-4b50-9d06-204ec6cd0acc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Graphics">
+      <UniqueIdentifier>{db11d05d-889b-4f1f-bff8-2a160ec004b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Input">
+      <UniqueIdentifier>{d2ed8a66-b64c-4e54-a087-a8377a3b385e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Scene">
+      <UniqueIdentifier>{08c42e0c-0811-4347-95a8-0168e17404df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core\Exceptions">
+      <UniqueIdentifier>{9ab8c97f-9d95-44a2-8007-cc012cecb6cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core\Math">
+      <UniqueIdentifier>{90a5db1c-776b-4153-9d63-598d19b5ecdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core\Reflection">
+      <UniqueIdentifier>{8495e2f5-6080-444b-807d-d0583cad8d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core\Util">
+      <UniqueIdentifier>{9bf0fb94-bd18-4ea3-afcd-c2e5545e4afd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Graphics\Bindables">
+      <UniqueIdentifier>{6c47728d-21bc-490a-bbe9-045c97a31c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Graphics\Bindables\State">
+      <UniqueIdentifier>{f6176c9f-3b76-4d09-9534-bb39703450fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Graphics\Bindables\Resource">
+      <UniqueIdentifier>{415500f8-0ecc-432e-819b-26927cbe7a71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Samples">
+      <UniqueIdentifier>{18425cc4-1b8c-49cc-9e52-a71eed4d167f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Samples\Pixel">
+      <UniqueIdentifier>{8c5c53e6-10f2-40dd-8919-1c8a40bc733f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Samples\Vertex">
+      <UniqueIdentifier>{b905f2ff-a86b-4553-b7eb-f4c278309b96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Includes">
+      <UniqueIdentifier>{b00cc767-ccb2-40cd-98dd-dee1a0b62bf5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\3rd\dxerr\DXGetErrorDescription.inl">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </None>
+    <None Include="include\3rd\dxerr\DXGetErrorString.inl">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </None>
+    <None Include="include\3rd\dxerr\DXTrace.inl">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </None>
+    <None Include="assets\shaders\include\Common.hlsli">
+      <Filter>Shader Includes</Filter>
+    </None>
+    <None Include="assets\shaders\include\Lighting.hlsli">
+      <Filter>Shader Includes</Filter>
+    </None>
+    <None Include="assets\shaders\include\VertexCommon.hlsli">
+      <Filter>Shader Includes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="assets\shaders\samples\Vertex\composeVertex.hlsl">
+      <Filter>Shader Samples\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Vertex\cubeVertex.hlsl">
+      <Filter>Shader Samples\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Vertex\fragment.hlsl">
+      <Filter>Shader Samples\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Vertex\ShadowVertex.hlsl">
+      <Filter>Shader Samples\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Vertex\SkinnedVertex.hlsl">
+      <Filter>Shader Samples\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Vertex\skyboxVertex.hlsl">
+      <Filter>Shader Samples\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Vertex\vertex.hlsl">
+      <Filter>Shader Samples\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\blankPixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\composeDeferredPixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\composePixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\deferredPixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\DiffusePixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\plainTexturePixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\ShadowPixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\SkinnedPixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\skyboxPixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\SolidPixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\samples\Pixel\texturePixel.hlsl">
+      <Filter>Shader Samples\Pixel</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Core\Defines.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Engine.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\GameObject.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\ScriptDispatcher.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Window.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Exceptions\Exception.h">
+      <Filter>Archivos de encabezado\Core\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Exceptions\WindowsThrowMacros.h">
+      <Filter>Archivos de encabezado\Core\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Math\MathWrappers.h">
+      <Filter>Archivos de encabezado\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Math\Transform.h">
+      <Filter>Archivos de encabezado\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Reflection\ReflectionHelper.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Reflection\ReflectionMacros.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Reflection\TypeDescriptors.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Util\BitmaskUtils.h">
+      <Filter>Archivos de encabezado\Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Util\ImageManager.h">
+      <Filter>Archivos de encabezado\Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Util\TagManager.h">
+      <Filter>Archivos de encabezado\Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Util\WideStringUtility.h">
+      <Filter>Archivos de encabezado\Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Time\Timer.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Animation\Animation.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Animation\Skeleton.h">
+      <Filter>Archivos de encabezado\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Bone.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Camera.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Drawable.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Entity.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Light.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Mesh.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Model.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\Script.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Entities\SkinnedMesh.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input\Keyboard.h">
+      <Filter>Archivos de encabezado\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input\Mouse.h">
+      <Filter>Archivos de encabezado\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\BindableSlotsInfo.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\DxgiInfoManager.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Graphics.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\GraphicsThrowMacros.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Material.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Pass.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\PostProcMaterial.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\PostProcPass.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Renderer.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Bindable.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\BlendState.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\DepthStencilState.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\InputLayout.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\PixelShader.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\RasterizerState.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\SamplerState.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\StateBindable.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\VertexShader.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\Viewport.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\ConstantBuffer.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\CubeTexture.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\IndexBuffer.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\ReflectedConstantBuffer.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\RenderTarget.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\ResourceBindable.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\SkinnedVertexBuffer.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\Texture2D.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\Texture3D.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\VertexBuffer.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene\ModelLoader.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene\Node.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene\Scene.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scene\SceneLoader.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3rd\dxerr\dxerr.h">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3rd\rapidxml\rapidxml.hpp">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3rd\rapidxml\rapidxml_ext.hpp">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3rd\rapidxml\rapidxml_iterators.hpp">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3rd\rapidxml\rapidxml_print.hpp">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3rd\rapidxml\rapidxml_utils.hpp">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </ClInclude>
+    <ClInclude Include="include\3rd\std_image\stb_image.h">
+      <Filter>Archivos de encabezado\3rd</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
+      <Filter>Archivos de origen\3rd</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Animation\Animation.cpp">
+      <Filter>Archivos de origen\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Animation\Skeleton.cpp">
+      <Filter>Archivos de origen\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Engine.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\ImageManager.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\ScriptDispatcher.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Timer.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Window.cpp">
+      <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Exceptions\Exception.cpp">
+      <Filter>Archivos de origen\Core\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Math\MathWrappers.cpp">
+      <Filter>Archivos de origen\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Math\Transform.cpp">
+      <Filter>Archivos de origen\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Util\TagManager.cpp">
+      <Filter>Archivos de origen\Core\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Reflection\ReflectionHelper.cpp">
+      <Filter>Archivos de origen\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Reflection\ReflectionPrimitives.cpp">
+      <Filter>Archivos de origen\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Reflection\TypeDescriptors.cpp">
+      <Filter>Archivos de origen\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Bone.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Camera.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Drawable.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Entity.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Light.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Mesh.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Model.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\Script.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\SkinnedMesh.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\DxgiInfoManager.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Graphics.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Material.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Pass.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\PostProcMaterial.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\PostProcPass.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Renderer.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Bindable.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\CubeTexture.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\IndexBuffer.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\ReflectedConstantBuffer.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\RenderTarget.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\ResourceBindable.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\SkinnedVertexBuffer.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\Texture2D.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\Texture3D.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\VertexBuffer.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\BlendState.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\DepthStencilState.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\InputLayout.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\PixelShader.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\RasterizerState.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\SamplerState.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\StateBindable.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\VertexShader.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\Viewport.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Input\Keyboard.cpp">
+      <Filter>Archivos de origen\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Input\Mouse.cpp">
+      <Filter>Archivos de origen\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ModelLoader.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\Node.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\Scene.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\SceneLoader.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

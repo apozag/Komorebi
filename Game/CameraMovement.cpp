@@ -1,5 +1,5 @@
 #include "CameraMovement.h"
-#include "Node.h"
+#include "Scene/Node.h"
 
 void CameraMovement::Run(Node* node) {
 

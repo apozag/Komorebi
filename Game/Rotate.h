@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Script.h"
+#include "Entities/Script.h"
 
 class Rotate : public Script {
 	void Run(Node* node) override;

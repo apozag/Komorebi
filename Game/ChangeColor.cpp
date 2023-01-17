@@ -1,7 +1,7 @@
 #include "ChangeColor.h"
-#include "Node.h"
-#include "Material.h"
-#include "Drawable.h"
+#include "Scene/Node.h"
+#include "Graphics/Material.h"
+#include "Entities/Drawable.h"
 
 void ChangeColor::Run(Node* node) {
 	Drawable* drawable = node->GetEntity<Drawable>();
