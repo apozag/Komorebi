@@ -52,7 +52,7 @@
   __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), new (obj) type();)
 
 #define REFLECT_STRUCT_MEMBER(name) \
-      {#name, offsetof(T, name), reflection::TypeResolver<decltype(T::name)>::get()},
+      { #name, offsetof(T, name), reflection::TypeResolver<decltype(T::name)>::get()},
 
 #define REFLECT_STRUCT_END(type) \
     }; \
@@ -72,9 +72,9 @@
 #define __IMPLEMENT_REFLECTION_PRIMITIVE_END(type, tag) \
   };  \
   template <> \
-  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<type>() {    \
-    static  TypeDescriptor_ ## tag typeDesc;   \
-    return &typeDesc;   \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<type>() {  \
+    static  TypeDescriptor_ ## tag typeDesc;  \
+    return &typeDesc; \
   }
 
 #define IMPLEMENT_REFLECTION_PRIMITIVE(type, tag)	\
@@ -91,18 +91,48 @@
     }  \
   __IMPLEMENT_REFLECTION_PRIMITIVE_END(type, tag)
 
+#define DECLARE_REFLECTION_OWNED_POINTER(type)  \
+  DECLARE_REFLECTION_PRIMITIVE(reflection::Owned_Ptr_Wrapper<type>)
+
+#define DECLARE_REFLECTION_WEAK_POINTER(type)  \
+  DECLARE_REFLECTION_PRIMITIVE(reflection::Weak_Ptr_Wrapper<type>)
 
 #define DECLARE_REFLECTION_POINTER(type)  \
-  DECLARE_REFLECTION_PRIMITIVE(type*)
+  DECLARE_REFLECTION_OWNED_POINTER(type*) \
+  DECLARE_REFLECTION_WEAK_POINTER(type*) 
 
 #define IMPLEMENT_REFLECTION_POINTER(type) \
-  void CAT(initReflection_ ## type, _Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
-    typeDesc->name = #type "*"; \
+  void CAT(initReflection_ ## type, _Owned_Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
+    typeDesc->name = #type "_Owned_Ptr"; \
+    typeDesc->size = sizeof(CAT(type, *)); \
+  } \
+  void CAT(initReflection_ ## type, _Weak_Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
+    typeDesc->name = #type "_Ptr"; \
     typeDesc->size = sizeof(CAT(type, *)); \
   } \
   template <> \
-  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<type*>() {  \
-    static  TypeDescriptor_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Ptr)};  \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Owned_Ptr_Wrapper<type>>() {  \
+    static TypeDescriptor_Owned_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Owned_Ptr)};  \
+    return &typeDesc; \
+  } \
+  template <> \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Weak_Ptr_Wrapper<type>>() {  \
+    static TypeDescriptor_Weak_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Weak_Ptr)};  \
+    return &typeDesc; \
+  } \
+  template <> \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<reflection::Owned_Ptr_Wrapper<type>>>() { \
+    static TypeDescriptor_StdVector typeDesc{ (reflection::Owned_Ptr_Wrapper<type>*) nullptr };  \
+    return &typeDesc; \
+  } \
+  template <> \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<reflection::Weak_Ptr_Wrapper<type>>>() {  \
+    static TypeDescriptor_StdVector typeDesc{ (reflection::Weak_Ptr_Wrapper<type>*) nullptr };  \
+    return &typeDesc; \
+  } \
+  template <> \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<type*>>() {  \
+    static TypeDescriptor_StdVector typeDesc{ (reflection::Weak_Ptr_Wrapper<type>*) nullptr };  \
     return &typeDesc; \
   }
 

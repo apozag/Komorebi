@@ -12,14 +12,7 @@
 using namespace reflection;
 using namespace rapidxml;
 
-constexpr const char* nodeTypeName = "Node";
-
-void LinkNodeChildrenRecursive(Node* node) {
-  for (Node* child : node->m_children) {
-    child->m_parent = node;
-    LinkNodeChildrenRecursive(child);
-  }
-}
+constexpr const char* nodeTypeName = "Scene";
 
 Scene* SceneLoader::LoadScene(const char* filename) {
   rapidxml::file<> xmlFile(filename);
@@ -29,17 +22,16 @@ Scene* SceneLoader::LoadScene(const char* filename) {
 
   Scene* scene = new Scene();
   Engine::m_activeScene = scene;
-  Node::GetReflection().deserialize(scene->GetRootNode(), nodeElem);
+  Scene::GetReflection().deserialize(scene, nodeElem);
 
-  LinkNodeChildrenRecursive(scene->GetRootNode());
+  ReflectionHelper::ResolvePendingPointers();
 
   return scene;
 }
 
 void SceneLoader::SaveScene(Scene* scene, const char* filename) {
   xml_document<> doc;
-  Node::GetReflection().serialize(scene->GetRootNode(), nodeTypeName, &doc, &doc);
-
+  Scene::GetReflection().serialize(scene, nodeTypeName, &doc, &doc);
   std::ofstream myfile;
   myfile.open(filename);
   myfile << doc;

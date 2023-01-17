@@ -18,7 +18,7 @@ void Scene::LoadScene( ) {
 }
 
 Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent) {
-	if (!m_parent) m_parent = &m_transformHierarchy;
+	if (!m_parent) m_parent = m_transformHierarchy;
 	Node* node = new Node();
 	if(entity) node->m_entities = { entity };
 	node->m_parent = m_parent;
@@ -27,10 +27,12 @@ Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent)
 	return node;
 } 
 
-Node* Scene::AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent) {
-	if (!m_parent) m_parent = &m_transformHierarchy;
+Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, Node* m_parent) {
+	if (!m_parent) m_parent = m_transformHierarchy;
 	Node* node = new Node();
-	node->m_entities = m_entities;
+	for (Entity* pEntity : entities) {
+		node->m_entities.push_back(pEntity);
+	}
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;
 	m_parent->m_children.push_back(node);
@@ -38,7 +40,7 @@ Node* Scene::AddNode(std::vector<Entity*> m_entities, const Transform& transform
 }
 
 void Scene::Traverse() {
-	TraverseNode(&m_transformHierarchy, false);
+	TraverseNode(m_transformHierarchy, false);
 }
 
 void Scene::TraverseNode(Node* node, bool dirty) {
@@ -71,4 +73,6 @@ void Scene::Serialize(const char* filename) {
 	
 }
 
-
+REFLECT_STRUCT_BASE_BEGIN(Scene)
+REFLECT_STRUCT_MEMBER(m_transformHierarchy)
+REFLECT_STRUCT_END(Scene)

@@ -16,9 +16,9 @@ public:
 	template<class T>
 	inline T* GetEntity();
 
-	std::vector<Entity*> m_entities;
+	std::vector<OWNED_PTR(Entity)> m_entities;
 	Transform m_localTransform;
-	std::vector<Node*> m_children;
+	std::vector<OWNED_PTR(Node)> m_children;
 	Node* m_parent;
 
 	REFLECT_BASE()

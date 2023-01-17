@@ -21,7 +21,6 @@ protected:
 	const Graphics* GetGraphics() const { return Engine::m_window->gfx; }
 	const Window* GetWindow() const { return Engine::m_window; }
 
-	Node* m_node;
 public:
 	uint32_t m_tagMask = 0;
 };

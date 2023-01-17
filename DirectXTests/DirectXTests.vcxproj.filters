@@ -54,6 +54,12 @@
     <Filter Include="Archivos de origen\Math">
       <UniqueIdentifier>{f0f6f4e0-7e7e-4073-b0d7-9d53088352e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Input">
+      <UniqueIdentifier>{b6ec3622-2bfd-4743-9993-9bf25bfad86b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\3rd">
+      <UniqueIdentifier>{ccc958c1-6efc-4955-991f-7f65eb3e58f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageManager.h">
@@ -75,9 +81,6 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Defines.h">
@@ -129,12 +132,6 @@
       <Filter>Archivos de encabezado\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Keyboard.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Mouse.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
@@ -250,6 +247,15 @@
     </ClInclude>
     <ClInclude Include="TypeDescriptors.h">
       <Filter>Archivos de encabezado\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Archivos de encabezado\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Archivos de encabezado\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Archivos de encabezado\3rd</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
