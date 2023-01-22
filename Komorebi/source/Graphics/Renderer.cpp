@@ -221,9 +221,12 @@ void Renderer::Render( ) {
 				unsigned int shifts = isTransparent * 16;
 				job.key &= ~(uint64_t(0xFFFF) << shifts);
 				float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
-				float normalizedDepth = (depth - camView.camera->GetNear()) / (camView.camera->GetFar() - camView.camera->GetNear());
+				float farZ = camView.camera->GetFar();
+				float nearZ = camView.camera->GetNear();
+				float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
 				uint64_t depthKeyComponent = (isTransparent ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
 				job.key |= depthKeyComponent << shifts;
+				job.key |= 0;
 			}					
 			
 		}

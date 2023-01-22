@@ -43,8 +43,8 @@ void Drawable::Draw(DirectX::XMMATRIX&& modelMatrix) const {
 	for (ResourceBindable* bind : m_binds) {
 		bind->Bind ();
 	}
-
-	m_modelCbuffer->SetBuffer({ modelMatrix });
+	ModelMatrixData mmData = { modelMatrix };
+	m_modelCbuffer->SetBuffer(mmData);
 	
 	GetGraphics()->DrawIndexed(m_indexCount);
 

@@ -2,6 +2,8 @@
 
 #include <D3d11shader.h>
 
+#pragma comment(lib, "dxguid.lib")
+
 #include "Graphics/Bindables/State/StateBindable.h"
 
 //struct ID3D11ShaderReflection;

@@ -19,10 +19,10 @@ public:
 	};
 public:
 	Camera(float fov, float aspectratio, float nearZ, float farZ, unsigned int rtId, bool orthographic = false)
-		: m_near(nearZ), m_far(farZ), m_RTId(rtId), m_priority(0)
+		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_RTId(rtId), m_priority(0)
 	{}
 	Camera(float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic = false)
-		: m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0)
+		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0)
 	{}
 	Camera() = default;
 
@@ -32,8 +32,14 @@ public:
 	DirectX::XMMATRIX getProj() const;
 	void Insert(Node* node, const Transform& worldTransform) override;
 
-	float GetNear() const { return m_near; }
-	float GetFar() const { return m_far; }
+	float GetNear() const { 
+		float nearZ = m_near;
+		return nearZ; 
+	}
+	float GetFar() const {
+		float farZ = m_far;
+		return farZ; 
+	}
 	float GetFov() const { return m_fov; }
 	float GetAspect() const { return m_aspectratio; }
 	bool IsOrthographic() const { return m_orthographic; }

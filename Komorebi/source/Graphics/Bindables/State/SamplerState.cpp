@@ -7,7 +7,7 @@ SamplerState::~SamplerState() {
 
 void SamplerState::Setup() {
 
-	INFOMAN;
+	INFOMAN
 
 	D3D11_SAMPLER_DESC desc = {};
 	desc.Filter = m_filter;// D3D11_FILTER_MIN_MAG_MIP_LINEAR;

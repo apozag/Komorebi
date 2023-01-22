@@ -28,3 +28,5 @@ private:
 	std::string m_path;
 	unsigned int m_slot;
 };
+
+DECLARE_REFLECTION_POINTER(CubeTexture)

@@ -49,61 +49,61 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shaders\blankPixel.hlsl">
+    <FxCompile Include="assets\shaders\DiffusePixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\composeDeferredPixel.hlsl">
+    <FxCompile Include="assets\shaders\SkinnedPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\composePixel.hlsl">
+    <FxCompile Include="assets\shaders\SkinnedVertex.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\composeVertex.hlsl">
+    <FxCompile Include="assets\shaders\SolidPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\cubeVertex.hlsl">
+    <FxCompile Include="assets\shaders\TexturedModelPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\deferredPixel.hlsl">
+    <FxCompile Include="assets\shaders\composeDeferredPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\DiffusePixel.hlsl">
+    <FxCompile Include="assets\shaders\plainTexturePixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\fragment.hlsl">
+    <FxCompile Include="assets\shaders\texturePixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\plainTexturePixel.hlsl">
+    <FxCompile Include="assets\shaders\ShadowVertex.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\ShadowPixel.hlsl">
+    <FxCompile Include="assets\shaders\ShadowPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\ShadowVertex.hlsl">
+    <FxCompile Include="assets\shaders\cubeVertex.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\SkinnedPixel.hlsl">
+    <FxCompile Include="assets\shaders\skyboxVertex.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\SkinnedVertex.hlsl">
+    <FxCompile Include="assets\shaders\vertex.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\skyboxPixel.hlsl">
+    <FxCompile Include="assets\shaders\composeVertex.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\skyboxVertex.hlsl">
+    <FxCompile Include="assets\shaders\composePixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\SolidPixel.hlsl">
+    <FxCompile Include="assets\shaders\blankPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\TexturedModelPixel.hlsl">
+    <FxCompile Include="assets\shaders\fragment.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\texturePixel.hlsl">
+    <FxCompile Include="assets\shaders\skyboxPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
-    <FxCompile Include="shaders\vertex.hlsl">
+    <FxCompile Include="assets\shaders\deferredPixel.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
   </ItemGroup>

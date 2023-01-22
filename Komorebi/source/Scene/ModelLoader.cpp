@@ -24,12 +24,6 @@
 #include "Graphics/BindableSlotsInfo.h"
 #include "Core/Util/ImageManager.h"
 
-std::string ModelLoader::directory;
-std::vector<Material*> ModelLoader::materials;
-std::vector<Node*> ModelLoader::boneNodes;
-std::vector<std::string> ModelLoader::boneNames;
-std::vector<DirectX::XMMATRIX> ModelLoader::boneOffsets;
-
 DirectX::XMMATRIX aiMatrix4x4ToXMMATRIX(aiMatrix4x4 matrix) {
     return DirectX::XMMATRIX(        
         matrix.a1, matrix.b1, matrix.c1, matrix.d1,

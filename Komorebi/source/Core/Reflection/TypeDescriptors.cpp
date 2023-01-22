@@ -34,7 +34,7 @@ namespace reflection {
     // Actually deserialize members
     memberIdx = 0;
     while (child && memberIdx < members.size()) {
-      members[memberIdx].type->deserialize((char*)obj + members[memberIdx].offset, child);
+      members[memberIdx].type->deserialize(members[memberIdx].getAddress(obj), child);
       child = child->next_sibling();
       memberIdx++;
     }
@@ -56,7 +56,7 @@ namespace reflection {
       parentTypeDesc->serializeMembers(obj, xmlNode, doc);
     }
     for (const Member& member : members) {
-      member.type->serialize((char*)obj + member.offset, member.name, xmlNode, doc);
+      member.type->serialize(member.getAddress(obj), member.name, xmlNode, doc);
     }
   };
 

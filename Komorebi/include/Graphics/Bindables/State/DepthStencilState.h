@@ -33,3 +33,5 @@ private:
 	unsigned int m_DSAccess;
 	unsigned int m_refVal;
 };
+
+DECLARE_REFLECTION_POINTER(DepthStencilState)

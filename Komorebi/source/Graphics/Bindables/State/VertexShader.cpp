@@ -10,7 +10,7 @@ VertexShader::~VertexShader() {
 
 void VertexShader::Setup() {
 
-	INFOMAN;
+	INFOMAN
 	GFX_THROW_INFO(D3DReadFileToBlob(WideStringUtility::charToLPWSTR(m_filename.c_str()).c_str(), &m_bytecodeBlob));
 
 	GFX_THROW_INFO(D3DReflect(m_bytecodeBlob->GetBufferPointer(), m_bytecodeBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)m_reflection.GetAddressOf()));

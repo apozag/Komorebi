@@ -19,7 +19,7 @@ ReflectedConstantBuffer::ReflectedConstantBuffer(std::vector<ConstantBufferVaria
 	m_variables = variables;
 
 	// Create cbuffer object
-	INFOMAN;
+	INFOMAN
 
 	D3D11_BUFFER_DESC cbd = {};
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -44,7 +44,7 @@ bool ReflectedConstantBuffer::SetMat4(const char* name, float* data) {
 
 void ReflectedConstantBuffer::Update() {
 	if (!m_dynamic || !m_dirty) return;
-	INFOMAN;
+	INFOMAN
 	
 	D3D11_MAPPED_SUBRESOURCE msr;
 	GFX_THROW_INFO(GetContext()->Map(

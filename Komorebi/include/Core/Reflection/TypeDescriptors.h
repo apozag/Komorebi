@@ -7,6 +7,7 @@
 #include "3rd/rapidxml/rapidxml.hpp"
 
 #include "Core/Reflection/ReflectionHelper.h"
+#include "Core/AssetManager.h"
 
 namespace rapidxml {
   template<class Ch = char>
@@ -45,9 +46,15 @@ namespace reflection {
     Weak_Ptr_Wrapper() {}
     Weak_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
   };
+  template <typename T>
+  struct Asset_Ptr_Wrapper : public Ptr_Wrapper<T> {
+    Asset_Ptr_Wrapper() {}
+    Asset_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
+  };
 
 #define WEAK_PTR(TYPE) reflection::Weak_Ptr_Wrapper<TYPE>
 #define OWNED_PTR(TYPE) reflection::Owned_Ptr_Wrapper<TYPE>
+#define ASSET_PTR(TYPE) reflection::Asset_Ptr_Wrapper<TYPE>
 
   template <typename T>
   TypeDescriptor* getPrimitiveDescriptor();
@@ -108,8 +115,8 @@ namespace reflection {
   struct TypeDescriptor_Struct : public TypeDescriptor {
     struct Member {
       const char* name;
-      size_t offset;
       const TypeDescriptor* type;
+      void* (*getAddress)(const void*);
     };
 
     std::vector<Member> members;
@@ -231,7 +238,10 @@ namespace reflection {
         varName = name->c_str();
       }
 
-      rapidxml::xml_node<>* firstChild = xmlParent->first_node();
+      rapidxml::xml_node<>* firstChild = nullptr;
+      if (xmlParent->first_node()) {
+       firstChild = xmlParent->last_node();
+      }
 
       typeDesc->serialize(*ppObj, varName, xmlParent, doc);
 
@@ -274,6 +284,37 @@ namespace reflection {
       rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName);
       xmlParent->append_node(newNode);
       std::string* str = new std::string(std::to_string((unsigned int)*ppObj));
+      ReflectionHelper::TrackString(str);
+      newNode->value(str->c_str());
+    };
+  };
+
+  template <typename T>
+  struct TypeDescriptor_Asset_Ptr : public TypeDescriptor_Ptr<T> {
+
+    using TypeDescriptor_Ptr<T>::getReferencedType;
+
+    TypeDescriptor_Asset_Ptr(void (*init)(TypeDescriptor_Ptr<T>*)) : TypeDescriptor_Ptr<T>{ init }
+    {}
+    TypeDescriptor_Asset_Ptr(const char* name, size_t size) : TypeDescriptor{ nullptr, 0 }
+    {}
+
+    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
+      //*(void**)obj = AssetManager::GetInstance()->LoadAsset(xmlNode->name());
+    };
+
+    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override {
+      const void** ppObj = (const void**)obj;
+
+      const TypeDescriptor* typeDesc = (*ppObj) ? getReferencedType<T>(obj) : TypeResolver<T>::get();
+      if (!varName) {
+        std::string* name = new std::string(typeDesc->getFullName() + "*");
+        ReflectionHelper::TrackString(name);
+        varName = name->c_str();
+      }
+      rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName);
+      xmlParent->append_node(newNode);
+      std::string* str = new std::string();
       ReflectionHelper::TrackString(str);
       newNode->value(str->c_str());
     };
@@ -334,6 +375,15 @@ namespace reflection {
   public:
     static TypeDescriptor* get() {
       static TypeDescriptor_StdVector typeDesc{ (reflection::Weak_Ptr_Wrapper<T>*) nullptr };
+      return &typeDesc;
+    }
+  };
+
+  template <typename T>
+  class TypeResolver<std::vector<Owned_Ptr_Wrapper<T>>> {
+  public:
+    static TypeDescriptor* get() {
+      static TypeDescriptor_StdVector typeDesc{ (reflection::Owned_Ptr_Wrapper<T>*) nullptr };
       return &typeDesc;
     }
   };

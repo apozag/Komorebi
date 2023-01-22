@@ -147,16 +147,25 @@ void SaveScene() {
 	Node* cameraNode = scene->AddNode({ camera, cameraMovement }, Transform(
 		DirectX::XMMatrixTranslationFromVector({ 0, 100, 0 })
 	));
-	camera->m_tagMask = ~TagManager::GetInstance()->TagToBitmask("UI");
 
-	Pass* skyboxPass = new Pass("shaders/skyboxVertex.cso", "shaders/skyboxPixel.cso", PASSLAYER_SKYBOX);
-	skyboxPass->Setup();
+	Pass* skyboxPass = new Pass("assets/shaders/skyboxVertex.cso", "assets/shaders/skyboxPixel.cso", PASSLAYER_SKYBOX);
+	skyboxPass->AddBindable(new DepthStencilState(DepthStencilState::DepthStencilAccess::DEPTH_READ));
+
+	Pass* defaultPass = new Pass("assets/shaders/SkinnedVertex.cso", "assets/shaders/SkinnedPixel.cso", PASSLAYER_OPAQUE, true);
+	defaultPass->AddBindable(new DepthStencilState(
+		DepthStencilState::DepthStencilAccess::DEPTH_READ |
+		DepthStencilState::DepthStencilAccess::DEPTH_WRITE
+	));
 
 	Model* skybox = new Model("cube");
-	skybox->Setup();
 	skybox->m_tagMask = TagManager::GetInstance()->TagToBitmask("Skybox");
 	skybox->AddPass(skyboxPass);
-	skybox->AddBindable(new CubeTexture("assets/skybox", SRV_FREE_SLOT));
+	skybox->AddBindable(new CubeTexture("assets/images/skybox", SRV_FREE_SLOT));
+	scene->AddNode(skybox, Transform());
+
+	Model* model = new Model("assets/models/demon.fbx");
+	model->AddPass(defaultPass);
+	scene->AddNode(model, Transform());
 	
 	SceneLoader::SaveScene(scene, "sceneTest.txt");
 }
@@ -174,20 +183,20 @@ int CALLBACK WinMain(
 
 		Engine::Init("MyGame", 1024, 1024, 60);
 
-		SaveScene();
-		//LoadScene();
+		//SaveScene();
+		LoadScene();
 
-		//return Engine::Run();
-		return 0;
+		return Engine::Run();
+		//return 0;
 	}
 	catch (const Exception& e) {
-		MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
+		MessageBoxA(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
 	}
 	catch (const std::exception& e) {
-		MessageBox(nullptr, e.what(), "Generic Exception", MB_OK | MB_ICONEXCLAMATION);
+		MessageBoxA(nullptr, e.what(), "Generic Exception", MB_OK | MB_ICONEXCLAMATION);
 	}
 	catch (...) {
-		MessageBox(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
+		MessageBoxA(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
 
 	}
 	return -1;

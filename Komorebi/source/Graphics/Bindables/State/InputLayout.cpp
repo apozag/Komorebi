@@ -2,7 +2,7 @@
 #include "Graphics/GraphicsThrowMacros.h"
 
 InputLayout::InputLayout(const D3D11_INPUT_ELEMENT_DESC* ied, unsigned int numElements, const VertexShader& vs) {
-	INFOMAN;
+	INFOMAN
 	ID3DBlob* pBlob = vs.GetBytecode();
 	GFX_THROW_INFO(GetDevice()->CreateInputLayout(ied, numElements, pBlob->GetBufferPointer(), pBlob->GetBufferSize(), m_inputLayout.GetAddressOf()));
 }

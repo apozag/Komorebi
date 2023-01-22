@@ -14,7 +14,15 @@
 #include "Scene/ModelLoader.h"
 
 void Model::Setup() {
-  ModelLoader::LoadModel(m_filename, Engine::m_activeScene, Engine::m_activeScene->GetRootNode(), this);
+  ModelLoader::GetInstance()->LoadModel(m_filename, Engine::m_activeScene, Engine::m_activeScene->GetRootNode(), this);
+  for (int i = 0; i < m_drawables.size(); i++) {
+    for (Pass* pass : m_passes) {
+      m_drawables[i]->m_material->AddPass(pass);
+    }
+    for (ResourceBindable* bind : m_binds) {
+      m_drawables[i]->m_material->AddBindable(bind);
+    }
+  }
 }
 
 void Model::AddDrawable(Drawable* drawable) {
@@ -44,13 +52,11 @@ const Drawable::BVHData& Model::GetBVHData() const {
 }
 
 void Model::AddPass(Pass* pass) {
-  for (int i = 0; i < m_drawables.size(); i++)
-    m_drawables[i]->m_material->AddPass(pass);
+  m_passes.push_back(pass);
 }
 
 void Model::AddBindable(ResourceBindable* bind) {
-  for (int i = 0; i < m_drawables.size(); i++)
-    m_drawables[i]->m_material->AddBindable(bind);
+  m_binds.push_back(bind);
 }
 
 void Model::Insert(Node* node, const Transform& worldTransform) {
@@ -59,4 +65,6 @@ void Model::Insert(Node* node, const Transform& worldTransform) {
 
 REFLECT_STRUCT_BEGIN(Model, Entity)
 REFLECT_STRUCT_MEMBER(m_filename)
+REFLECT_STRUCT_MEMBER(m_passes)
+REFLECT_STRUCT_MEMBER(m_binds)
 REFLECT_STRUCT_END(Model)

@@ -123,6 +123,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\dev\DirectXTK\Inc;D:\dev\assimp\include;D:\dev\assimp\build\include;D:\dev\rapidxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/std:c++17</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -130,6 +132,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>DirectXTK.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\dev\DirectXTK\Bin\Desktop_2019\x64\Debug;D:\dev\assimp\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -166,6 +172,8 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\dev\DirectXTK\Inc;D:\dev\assimp\include;D:\dev\assimp\build\include;D:\dev\rapidxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/std:c++17</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,6 +181,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>DirectXTK.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\dev\DirectXTK\Bin\Desktop_2019\x64\Release;D:\dev\assimp\build\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="assets\shaders\include\Common.hlsli" />
@@ -374,6 +386,7 @@
     <ClInclude Include="include\3rd\std_image\stb_image.h" />
     <ClInclude Include="include\Animation\Animation.h" />
     <ClInclude Include="include\Animation\Skeleton.h" />
+    <ClInclude Include="include\Core\AssetManager.h" />
     <ClInclude Include="include\Core\Defines.h" />
     <ClInclude Include="include\Core\Engine.h" />
     <ClInclude Include="include\Core\Exceptions\Exception.h" />
@@ -385,6 +398,7 @@
     <ClInclude Include="include\Core\Reflection\ReflectionMacros.h" />
     <ClInclude Include="include\Core\Reflection\TypeDescriptors.h" />
     <ClInclude Include="include\Core\ScriptDispatcher.h" />
+    <ClInclude Include="include\Core\Singleton.h" />
     <ClInclude Include="include\Core\Time\Timer.h" />
     <ClInclude Include="include\Core\Util\BitmaskUtils.h" />
     <ClInclude Include="include\Core\Util\ImageManager.h" />
@@ -440,6 +454,7 @@
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp" />
     <ClCompile Include="source\Animation\Animation.cpp" />
     <ClCompile Include="source\Animation\Skeleton.cpp" />
+    <ClCompile Include="source\Core\AssetManager.cpp" />
     <ClCompile Include="source\Core\Engine.cpp" />
     <ClCompile Include="source\Core\Exceptions\Exception.cpp" />
     <ClCompile Include="source\Core\ImageManager.cpp" />

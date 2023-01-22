@@ -11,7 +11,7 @@ PixelShader::~PixelShader() {
 
 void PixelShader::Setup() {
 
-	INFOMAN;
+	INFOMAN
 
 	Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
 	GFX_THROW_INFO(D3DReadFileToBlob(WideStringUtility::charToLPWSTR(m_filename.c_str()).c_str(), &pBlob));

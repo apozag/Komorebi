@@ -5,7 +5,7 @@
 namespace wrl = Microsoft::WRL;
 
 VertexBuffer::VertexBuffer( POD::Vertex* data, unsigned int size, unsigned int stride, unsigned int offset){
-	INFOMAN;
+	INFOMAN
 
 	D3D11_BUFFER_DESC bd = {};
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;

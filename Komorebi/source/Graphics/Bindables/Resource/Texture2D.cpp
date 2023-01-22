@@ -46,7 +46,7 @@ void Texture2D::Unbind( ) const {
 }
 
 void Texture2D::CreateFromImage(const Image& image) {
-	INFOMAN;
+	INFOMAN
 
 	D3D11_SUBRESOURCE_DATA data = {};
 	data.pSysMem = image.data;

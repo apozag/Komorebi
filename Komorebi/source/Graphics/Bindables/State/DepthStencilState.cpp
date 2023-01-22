@@ -6,7 +6,7 @@ DepthStencilState::~DepthStencilState() {
 }
 
 void DepthStencilState::Setup() {
-	INFOMAN;
+	INFOMAN
 
 	// Depth-Stencil State
 	D3D11_DEPTH_STENCIL_DESC dsDesc;
@@ -64,3 +64,5 @@ REFLECT_STRUCT_BEGIN(DepthStencilState, StateBindable)
 REFLECT_STRUCT_MEMBER(m_DSAccess)
 REFLECT_STRUCT_MEMBER(m_refVal)
 REFLECT_STRUCT_END(DepthStencilState)
+
+IMPLEMENT_REFLECTION_POINTER(DepthStencilState)

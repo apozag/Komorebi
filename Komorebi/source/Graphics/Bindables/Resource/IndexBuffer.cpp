@@ -4,7 +4,7 @@
 namespace wrl = Microsoft::WRL;
 
 IndexBuffer::IndexBuffer(unsigned short* indices, unsigned int count) {
-	INFOMAN;
+	INFOMAN
 	D3D11_BUFFER_DESC ibd = {};
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;

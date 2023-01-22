@@ -36,9 +36,9 @@ public:
 public:
 	unsigned int m_layer;	
 private:
-	PixelShader* m_pixelShader;
-	VertexShader* m_vertexShader;
-	std::vector<StateBindable*> m_binds;
+	OWNED_PTR(PixelShader) m_pixelShader;
+	OWNED_PTR(VertexShader) m_vertexShader;
+	std::vector<OWNED_PTR(StateBindable)> m_binds;
 	bool m_skinned;
 	static unsigned char static_idx;
 	const unsigned char m_idx;

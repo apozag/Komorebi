@@ -5,6 +5,7 @@
 #include "Core/Defines.h"
 #include <DirectXMath.h>
 #include "SimpleMath.h"
+#include "Core/Singleton.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -22,26 +23,25 @@ class Animation;
 class Node;
 class Material;
 
-class ModelLoader {
+class ModelLoader : public Singleton<ModelLoader> {
 public:
-	ModelLoader() = delete;
-	static Model* LoadModel( std::string filename, Scene* sceneGraph, Node* sceneGraphParent);
-	static void LoadModel( std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
-	static Mesh* GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices);
-	static Mesh* GenerateQuad(float scale = 1);
-	static Mesh* GenerateCube(float scale = 1);
-	static Mesh* GenerateAABB( DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max);
+	Model* LoadModel( std::string filename, Scene* sceneGraph, Node* sceneGraphParent);
+	void LoadModel( std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
+	Mesh* GenerateMesh( std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices);
+	Mesh* GenerateQuad(float scale = 1);
+	Mesh* GenerateCube(float scale = 1);
+	Mesh* GenerateAABB( DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max);
 private:
-	static void processNode( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
-	static void processNodeBones( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
-	static void processMaterials(const aiScene* scene);
-	static Mesh* processMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent);
-	static Animation* processAnimation(const aiScene* scene);
-	static SkinnedMesh* processSkinnedMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);	
+	void processNode( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
+	void processNodeBones( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
+	void processMaterials(const aiScene* scene);
+	Mesh* processMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent);
+	Animation* processAnimation(const aiScene* scene);
+	SkinnedMesh* processSkinnedMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);	
 
-	static std::string directory;
-	static std::vector<Material*> materials;
-	static std::vector<Node*> boneNodes;
-	static std::vector<std::string> boneNames;
-	static std::vector<DirectX::XMMATRIX> boneOffsets;
+	std::string directory;
+	std::vector<Material*> materials;
+	std::vector<Node*> boneNodes;
+	std::vector<std::string> boneNames;
+	std::vector<DirectX::XMMATRIX> boneOffsets;
 };

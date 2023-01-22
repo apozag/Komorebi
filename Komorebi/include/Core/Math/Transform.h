@@ -10,9 +10,11 @@ class Transform : public GameObject{
 public:
 	Transform() {
 		m_matrix = DirectX::XMMatrixIdentity();
+		decompose();
 	}
 	Transform(DirectX::XMMATRIX matrix) {
 		m_matrix = matrix;
+		decompose();
 	}
 
 	void Setup() override;

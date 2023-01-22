@@ -52,7 +52,7 @@
   __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), new (obj) type();)
 
 #define REFLECT_STRUCT_MEMBER(name) \
-      { #name, offsetof(T, name), reflection::TypeResolver<decltype(T::name)>::get()},
+      { #name, reflection::TypeResolver<decltype(T::name)>::get(), [](const void* obj)->void*{return &((T*)obj)->name;}},
 
 #define REFLECT_STRUCT_END(type) \
     }; \
@@ -110,6 +110,10 @@
     typeDesc->name = #type "_Ptr"; \
     typeDesc->size = sizeof(CAT(type, *)); \
   } \
+  void CAT(initReflection_ ## type, _Asset_Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
+    typeDesc->name = #type "_Asset_Ptr"; \
+    typeDesc->size = sizeof(CAT(type, *)); \
+  } \
   template <> \
   reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Owned_Ptr_Wrapper<type>>() {  \
     static TypeDescriptor_Owned_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Owned_Ptr)};  \
@@ -118,6 +122,11 @@
   template <> \
   reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Weak_Ptr_Wrapper<type>>() {  \
     static TypeDescriptor_Weak_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Weak_Ptr)};  \
+    return &typeDesc; \
+  } \
+  template <> \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Asset_Ptr_Wrapper<type>>() {  \
+    static TypeDescriptor_Asset_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Asset_Ptr)};  \
     return &typeDesc; \
   } \
   template <> \
@@ -131,10 +140,16 @@
     return &typeDesc; \
   } \
   template <> \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<reflection::Asset_Ptr_Wrapper<type>>>() {  \
+    static TypeDescriptor_StdVector typeDesc{ (reflection::Asset_Ptr_Wrapper<type>*) nullptr };  \
+    return &typeDesc; \
+  } \
+  template <> \
   reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<type*>>() {  \
     static TypeDescriptor_StdVector typeDesc{ (reflection::Weak_Ptr_Wrapper<type>*) nullptr };  \
     return &typeDesc; \
   }
+  
 
 DECLARE_REFLECTION_PRIMITIVE(int)
 DECLARE_REFLECTION_PRIMITIVE(unsigned int)

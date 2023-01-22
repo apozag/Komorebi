@@ -8,14 +8,13 @@
 
 unsigned char Pass::static_idx = 0;
 
-Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {
-	m_vertexShader->Setup();
-	m_pixelShader->Setup();
-}
+Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
 
 Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : Pass(new VertexShader(vsFilename), new PixelShader(psFilename), layer, skinned) {}
 
 void Pass::Setup() {
+	m_vertexShader->Setup();
+	m_pixelShader->Setup();
 	if (m_skinned) {
 		const D3D11_INPUT_ELEMENT_DESC ied[] =
 		{

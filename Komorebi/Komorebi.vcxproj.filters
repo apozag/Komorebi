@@ -393,6 +393,12 @@
     <ClInclude Include="include\3rd\std_image\stb_image.h">
       <Filter>Archivos de encabezado\3rd</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\AssetManager.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Singleton.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -562,6 +568,9 @@
     </ClCompile>
     <ClCompile Include="source\Scene\SceneLoader.cpp">
       <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\AssetManager.cpp">
+      <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ int idCount;
 
 RenderTarget::RenderTarget( IDXGISwapChain* swapChain) {
 
-	INFOMAN;
+	INFOMAN
 
 	// Get back buffer
 	wrl::ComPtr<ID3D11RenderTargetView> rtv;
@@ -59,7 +59,7 @@ RenderTarget::~RenderTarget() {
 void RenderTarget::Setup() {
 
 
-	INFOMAN;
+	INFOMAN
 
 	// Depth-Stencil Texture
 	wrl::ComPtr<ID3D11Texture2D> pDepthStencil;
@@ -146,7 +146,7 @@ void RenderTarget::Unbind( ) const {
 
 void RenderTarget::Clear( float r, float g, float b) {
 
-	INFOMAN_NOHR;
+	INFOMAN_NOHR
 	const float m_color[] = { r, g, b, 1.0f };
 	for (wrl::ComPtr<ID3D11RenderTargetView> rtv : m_rtv) {
 		GFX_THROW_INFO_ONLY(GetContext ()->ClearRenderTargetView(rtv.Get(), m_color));

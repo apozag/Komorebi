@@ -9,7 +9,7 @@ class ConstantBuffer : public ResourceBindable {
 public:
 	ConstantBuffer(unsigned int slot) : m_dynamic(true), m_slot(slot) {
 
-		INFOMAN;
+		INFOMAN
 
 		D3D11_BUFFER_DESC cbd = {};
 		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -24,7 +24,7 @@ public:
 
 
 	ConstantBuffer(unsigned int slot, bool m_dynamic, const T& buffer) : m_dynamic(m_dynamic), m_slot(slot) {
-		INFOMAN;
+		INFOMAN
 
 		D3D11_BUFFER_DESC cbd = {};
 		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -61,7 +61,7 @@ public:
 
 	void Update() {
 		if (!m_dynamic) return;
-		INFOMAN;
+		INFOMAN
 		D3D11_MAPPED_SUBRESOURCE msr;
 		GFX_THROW_INFO(GetContext()->Map(
 			m_constantBuffer.Get(), 0u,

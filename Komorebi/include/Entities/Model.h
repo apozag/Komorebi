@@ -34,4 +34,6 @@ private:
 /// Serialized members
 private:
   std::string m_filename;
+  std::vector<OWNED_PTR(Pass)> m_passes;
+  std::vector<OWNED_PTR(ResourceBindable)> m_binds;
 };

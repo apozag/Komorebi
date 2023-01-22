@@ -6,7 +6,7 @@
 namespace wrl = Microsoft::WRL;
 
 Texture3D::Texture3D(unsigned char* data, unsigned int width, unsigned int height, unsigned int depth, DXGI_FORMAT format, unsigned int texelSize, unsigned int slot) : ResourceBindable(slot) {
-	INFOMAN;
+	INFOMAN
 
 	D3D11_SUBRESOURCE_DATA sdata = {};
 	sdata.pSysMem = data;
