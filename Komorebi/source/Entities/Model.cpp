@@ -16,6 +16,7 @@
 void Model::Setup() {
   ModelLoader::GetInstance()->LoadModel(m_filename, Engine::m_activeScene, Engine::m_activeScene->GetRootNode(), this);
   for (int i = 0; i < m_drawables.size(); i++) {
+    m_drawables[i]->Setup();
     for (Pass* pass : m_passes) {
       m_drawables[i]->m_material->AddPass(pass);
     }

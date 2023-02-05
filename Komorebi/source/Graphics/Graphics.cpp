@@ -5,6 +5,7 @@
 #include "3rd/dxerr/dxerr.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 #include "Graphics/Bindables/State/Viewport.h"
+#include "Core/WindowAttachment.h"
 
 namespace wrl = Microsoft::WRL;
 
@@ -231,4 +232,9 @@ void Graphics::Draw(unsigned int count) {
 }
 void Graphics::DrawIndexed(unsigned int count) const {
 	m_context->DrawIndexed((UINT)count, 0u, 0u);
+}
+
+void Graphics::Attach(WindowAttachment* attachment) {
+	attachment->m_context = m_context.Get();
+	attachment->m_device = m_device.Get();
 }

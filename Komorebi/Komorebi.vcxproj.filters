@@ -399,6 +399,9 @@
     <ClInclude Include="include\Core\Singleton.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\WindowAttachment.h">
+      <Filter>Archivos de encabezado\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">

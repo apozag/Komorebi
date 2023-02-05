@@ -202,7 +202,7 @@ void Renderer::Render( ) {
 			Job& job = m_jobs[i];
 
 			// Ignored tag?
-			bool ignore = camView.camera->m_tagMask & job.drawable->m_tagMask;
+			bool ignore = false;//camView.camera->m_tagMask & job.drawable->m_tagMask;
 
 			// Skybox passes are exempt from culling
 			bool isSkybox = job.pass->m_layer == PASSLAYER_SKYBOX; 
@@ -221,8 +221,8 @@ void Renderer::Render( ) {
 				unsigned int shifts = isTransparent * 16;
 				job.key &= ~(uint64_t(0xFFFF) << shifts);
 				float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
-				float farZ = camView.camera->GetFar();
-				float nearZ = camView.camera->GetNear();
+				float farZ = camView.camera->m_far;
+				float nearZ = camView.camera->m_near;
 				float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
 				uint64_t depthKeyComponent = (isTransparent ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
 				job.key |= depthKeyComponent << shifts;
@@ -249,7 +249,8 @@ void Renderer::Render( ) {
 			if (lastPass != job.pass) { job.pass->Bind (); stateBindCount++; };
 			if (lastMat != job.material) { job.material->Bind (); resourceBindCount++; };
 
-			job.drawable->Draw (DirectX::XMMatrixTranspose(job.transform->GetMatrix()));
+			const DirectX::XMMATRIX& modelMat = DirectX::XMMatrixTranspose(job.transform->GetMatrix());
+			job.drawable->Draw (modelMat);
 
 			if (nextPass != job.pass) job.pass->Unbind();
 			if (nextMat != job.material) job.material->Unbind();
@@ -257,13 +258,13 @@ void Renderer::Render( ) {
 			lastPass = job.pass;
 			lastMat = job.material;
 		}
-		/*
+		
 		std::ostringstream os_;
 		os_ << "setPass: " << stateBindCount << 
 			  " setMat: " << resourceBindCount << 
 			  " DrawCalls: " << jobsToExecute << "\n";
 		OutputDebugString( os_.str().c_str());
-		*/
+		
 		camView.camera->Unbind ();
 	}
 
@@ -391,10 +392,10 @@ std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj)
 // find maximum extents, and store result into AABB b.
 void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b)
 {
-	const float* amin = (const float*)&a.m_min;
-	const float* amax = (const float*)&a.m_max;
-	float* bmin = (float*)&b.m_min;
-	float* bmax = (float*)&b.m_max;
+	const float* amin = (const float*)&a.m_min.x;
+	const float* amax = (const float*)&a.m_max.x;
+	float* bmin = (float*)&b.m_min.x;
+	float* bmax = (float*)&b.m_max.x;
 	float* t = (float*)&transform.GetPositionUnsafe();
 	const DirectX::XMMATRIX& m = transform.GetMatrix();
 	// For all three axes

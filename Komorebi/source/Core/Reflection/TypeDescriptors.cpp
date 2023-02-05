@@ -16,7 +16,6 @@ namespace reflection {
   //--------------------------------------------------------
 
   void TypeDescriptor_Struct::deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const {
-    TypeDescriptor::deserialize(obj, xmlNode);
 
     if (parentTypeDesc) { 
       parentTypeDesc->deserialize(obj, xmlNode); 
@@ -46,7 +45,6 @@ namespace reflection {
 
     if (!varName) { varName = name; }
     rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName);
-    TypeDescriptor::serialize(obj, varName, newNode, doc);
     xmlParent->append_node(newNode);
     serializeMembers(obj, newNode, doc);
   };
@@ -75,7 +73,6 @@ namespace reflection {
   }
 
   void TypeDescriptor_StdVector::deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const {
-    TypeDescriptor::deserialize(obj, xmlNode);
 
     construct(obj);
 
@@ -102,7 +99,6 @@ namespace reflection {
       varName = name->c_str();
     }
     rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName);
-    TypeDescriptor::serialize(obj, varName, newNode, doc);
     xmlParent->append_node(newNode);
     size_t size = getSize(obj);
     for (int i = 0; i < size; i++) {

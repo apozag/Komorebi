@@ -14,11 +14,11 @@ void CameraMovement::Update(Node* node) {
 	const Window* window = GetWindow();
 
 	float rotateSpeed = 0.3f;
-	static float lastX = window->mouse.GetX();
-	static float lastY = window->mouse.GetX();
-	if (window->mouse.IsLeftPressed()) {
-		float x = window->mouse.GetX();
-		float y = window->mouse.GetY();
+	static float lastX = window->m_mouse.GetX();
+	static float lastY = window->m_mouse.GetX();
+	if (window->m_mouse.IsLeftPressed()) {
+		float x = window->m_mouse.GetX();
+		float y = window->m_mouse.GetY();
 		float rotateR = (y - lastY) * rotateSpeed * dt;
 		float rotateU = (x - lastX) * rotateSpeed * dt;
 
@@ -27,27 +27,27 @@ void CameraMovement::Update(Node* node) {
 		lastX = x;
 		lastY = y;
 	}
-	lastX = window->mouse.GetX();
-	lastY = window->mouse.GetY();
+	lastX = window->m_mouse.GetX();
+	lastY = window->m_mouse.GetY();
 
 	float moveSpeed = 30.0f;
 
-	if (window->keyboard.KeyIsPressed('W')) {
+	if (window->m_keyboard.KeyIsPressed('W')) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 0, 1) * moveSpeed * dt);
 	}
-	if (window->keyboard.KeyIsPressed('S')) {
+	if (window->m_keyboard.KeyIsPressed('S')) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 0, 1) * -moveSpeed * dt);
 	}
-	if (window->keyboard.KeyIsPressed('D')) {
+	if (window->m_keyboard.KeyIsPressed('D')) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(1, 0, 0) * moveSpeed * dt);
 	}
-	if (window->keyboard.KeyIsPressed('A')) {
+	if (window->m_keyboard.KeyIsPressed('A')) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(1, 0, 0) * -moveSpeed * dt);
 	}
-	if (window->keyboard.KeyIsPressed('E')) {
+	if (window->m_keyboard.KeyIsPressed('E')) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 1, 0) * moveSpeed * dt);
 	}
-	if (window->keyboard.KeyIsPressed('Q')) {
+	if (window->m_keyboard.KeyIsPressed('Q')) {
 		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 1, 0) * -moveSpeed * dt);
 	}
 }

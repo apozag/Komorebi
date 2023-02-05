@@ -9,6 +9,8 @@
 #include "Input/Mouse.h"
 #include "Graphics/Graphics.h"
 
+class WindowAttachment;
+
 class Window {
 public: 
 	class WindowException : public Exception
@@ -49,19 +51,23 @@ private:
 		HINSTANCE hInst;
 	};
 public:
-	Window(int width, int height, const char* name);
+	Window(int width, int height, const char* name) : m_width(width), m_height(height), m_name(name) {}
 	~Window();
 	Window(const Window& window) = delete;
+	void Init();
 	static std::optional<int> ProcessMessages();
+	void Attach(WindowAttachment* attachment);
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT mg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT mg, WPARAM wParam, LPARAM lParam);
 	LRESULT HandleMsg(HWND hWnd, UINT mg, WPARAM wParam, LPARAM lParam);
 public: 
-	Keyboard keyboard;
-	Mouse mouse;
-	Graphics* gfx;
+	Keyboard m_keyboard;
+	Mouse m_mouse;
+	Graphics* m_gfx;
 private: 
-	int width, height;
-	HWND hWnd;
+	std::vector<WindowAttachment*> m_attachments;
+	int m_width, m_height;
+	std::string m_name;
+	HWND m_hWnd;
 };

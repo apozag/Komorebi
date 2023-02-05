@@ -18,11 +18,11 @@ public:
 protected:
 	Renderer* GetRenderer() const { return Engine::m_renderer; }
 	ScriptDispatcher* GetScriptDispatcher() const { return &Engine::m_scriptDispatcher; }
-	const Graphics* GetGraphics() const { return Engine::m_window->gfx; }
+	const Graphics* GetGraphics() const { return Engine::m_window->m_gfx; }
 	const Window* GetWindow() const { return Engine::m_window; }
 
 public:
-	uint32_t m_tagMask = 0;
+	uint32_t m_tag = 0;
 };
 
 DECLARE_REFLECTION_POINTER(Entity)

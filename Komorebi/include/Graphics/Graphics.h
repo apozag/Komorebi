@@ -10,6 +10,7 @@
 class Bindable;
 class RenderTarget;
 class Viewport;
+class WindowAttachment;
 
 class Graphics {
 	friend class Bindable;	
@@ -56,15 +57,18 @@ public:
 	void Init();
 	void Draw(unsigned int count);
 	void DrawIndexed(unsigned int count) const;
-	RenderTarget* GetDefaultRenderTarget() { return m_target; }
+	RenderTarget* GetDefaultRenderTarget() { 
+		return m_target; 
+	}
+	void Attach(WindowAttachment* attachment);
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> m_device;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_context;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> m_swapChain;
-#ifndef NDEBUG
-	DxgiInfoManager infoManager;
-#endif
 	RenderTarget* m_target;
 	Viewport* m_viewport;
 	int m_viewportWidth, m_viewportHeight;
+#ifndef NDEBUG
+	DxgiInfoManager infoManager;
+#endif
 };

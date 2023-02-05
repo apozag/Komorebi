@@ -31,16 +31,19 @@ public:
 		REFLECT_BASE()
 	};
 public:
-	Drawable();
+	Drawable() {};
 	Drawable(const Drawable& drawable);
 	Drawable* Clone();
+
+	virtual void Setup() override;
+
 	void AddBindable(ResourceBindable* bind);
 	void AddIndexBuffer(IndexBuffer* ib);
 	const BVHData& GetBVHData() const { return m_bvhData; }
 	
 	void Insert(Node* node, const Transform& worldTransform) override;
 
-	virtual void Draw(DirectX::XMMATRIX&& modelMatrix) const;
+	virtual void Draw(const DirectX::XMMATRIX& modelMatrix) const;
 
 	REFLECT()
 

@@ -17,9 +17,9 @@ SkinnedMesh::SkinnedMesh(const SkinnedMesh& mesh) : Drawable((Drawable&)mesh), m
 SkinnedMesh* SkinnedMesh::Clone() {
     return new SkinnedMesh(*this);
 }
-void SkinnedMesh::Draw(DirectX::XMMATRIX&& modelMatrix) const {
+void SkinnedMesh::Draw(const DirectX::XMMATRIX& modelMatrix) const {
     if (m_skeleton->isDirty()) m_skeleton->Upload ();
     m_skeleton->Bind ();
-    Drawable::Draw(std::move(modelMatrix));
+    Drawable::Draw(modelMatrix);
 }
 

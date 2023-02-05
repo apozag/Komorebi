@@ -10,6 +10,8 @@ namespace reflection{
 namespace rapidxml {
   template<class Ch = char>
   class xml_node;
+  template<class Ch = char>
+  class xml_document;
 }
 
 class Scene;

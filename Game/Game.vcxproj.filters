@@ -22,6 +22,12 @@
     <Filter Include="Archivos de origen\Scripts">
       <UniqueIdentifier>{122e66d6-8498-45c8-be78-4caeb1baae42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de origen\GUI">
+      <UniqueIdentifier>{c6e804eb-ae90-4f23-a4fb-b866300eca1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\GUI">
+      <UniqueIdentifier>{5921dfe7-12ad-4824-b963-d5426c13691b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">

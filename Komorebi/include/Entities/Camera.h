@@ -47,6 +47,14 @@ public:
 	REFLECT()
 
 public:
+
+	float m_fov, m_aspectratio, m_near, m_far;
+	unsigned int m_RTId;
+	bool m_orthographic = false;
+public:
+	uint32_t m_tagMask = 0xFFFFFFFF;
+	int m_priority;
+
 	DirectX::XMMATRIX m_proj;
 	VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
 	RenderTarget* m_rt;
@@ -56,11 +64,5 @@ public:
 	/////////////////////////////////////////////////////
 	// Serializable
 	/////////////////////////////////////////////////////
-private:
-	float m_fov, m_aspectratio, m_near, m_far;
-	unsigned int m_RTId;
-	bool m_orthographic = false;
-public:
-	uint32_t m_tagMask = 0xFFFFFFFF;
-	int m_priority;
+//private:
 };

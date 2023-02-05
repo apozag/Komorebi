@@ -221,6 +221,7 @@ namespace reflection {
       const TypeDescriptor* typeDesc = ReflectionHelper::GetTypeDesc(name);
 
       *ppObj = malloc(typeDesc->size);
+      //memset(*ppObj, 0, typeDesc->size);
 
       ReflectionHelper::RegisterPtrId(*ppObj, ptrId, typeDesc->size);
 

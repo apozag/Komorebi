@@ -5,11 +5,6 @@
 
 #include "Entities/Drawable.h"
 
-Drawable::Drawable() {
-	m_modelCbuffer = new VertexConstantBuffer<ModelMatrixData>  ( VCBUFF_MODEL_SLOT);
-	AddBindable(m_modelCbuffer);
-}
-
 Drawable::Drawable(const Drawable& drawable) {
 	this->m_indexCount = drawable.m_indexCount;
 	this->m_binds = std::vector(drawable.m_binds);
@@ -20,6 +15,11 @@ Drawable::Drawable(const Drawable& drawable) {
 
 Drawable* Drawable::Clone() {
 	return new Drawable(*this);
+}
+
+void Drawable::Setup() {
+	m_modelCbuffer = new VertexConstantBuffer<ModelMatrixData>(VCBUFF_MODEL_SLOT);
+	AddBindable(m_modelCbuffer);
 }
 
 void Drawable::AddBindable(ResourceBindable* bindable) {
@@ -35,16 +35,17 @@ void Drawable::Insert(Node* node, const Transform& worldTransform) {
 	GetRenderer()->SubmitDrawable(this, &worldTransform, m_material);
 }
 
-void Drawable::Draw(DirectX::XMMATRIX&& modelMatrix) const {
+void Drawable::Draw(const DirectX::XMMATRIX& modelMatrix) const {
+
+	m_modelCbuffer->SetBuffer({ modelMatrix});
+
 	for (ResourceBindable* bind : m_binds) {
 		bind->Update ();
 	}
 
 	for (ResourceBindable* bind : m_binds) {
 		bind->Bind ();
-	}
-	ModelMatrixData mmData = { modelMatrix };
-	m_modelCbuffer->SetBuffer(mmData);
+	}	
 	
 	GetGraphics()->DrawIndexed(m_indexCount);
 

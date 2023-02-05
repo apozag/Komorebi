@@ -52,7 +52,7 @@
   __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), new (obj) type();)
 
 #define REFLECT_STRUCT_MEMBER(name) \
-      { #name, reflection::TypeResolver<decltype(T::name)>::get(), [](const void* obj)->void*{return &((T*)obj)->name;}},
+      { #name, reflection::TypeResolver<decltype(T::name)>::get(), [](const void* obj)->void*{return &(((T*)obj)->name);}},
 
 #define REFLECT_STRUCT_END(type) \
     }; \

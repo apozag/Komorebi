@@ -45,6 +45,10 @@ void Scene::Traverse() {
 
 void Scene::TraverseNode(Node* node, bool dirty) {
 
+	if (!node) {
+		return;
+	}
+
 	dirty |= node->m_localTransform.m_dirty;
 
 	if (dirty) {

@@ -158,7 +158,6 @@ void SaveScene() {
 	));
 
 	Model* skybox = new Model("cube");
-	skybox->m_tagMask = TagManager::GetInstance()->TagToBitmask("Skybox");
 	skybox->AddPass(skyboxPass);
 	skybox->AddBindable(new CubeTexture("assets/images/skybox", SRV_FREE_SLOT));
 	scene->AddNode(skybox, Transform());
@@ -166,12 +165,20 @@ void SaveScene() {
 	Model* model = new Model("assets/models/demon.fbx");
 	model->AddPass(defaultPass);
 	scene->AddNode(model, Transform());
+
+	DirectionalLight* dirLight = new DirectionalLight(DirectX::SimpleMath::Vector3(1, 1, 1));
+	scene->AddNode(dirLight, Transform(
+		DirectX::XMMatrixMultiply(
+			DirectX::XMMatrixRotationRollPitchYawFromVector({ 3.14 * 0.25, 0, 0 }),
+			DirectX::XMMatrixTranslationFromVector({ 0, 300, -300 })
+		)
+	), nullptr);
 	
 	SceneLoader::SaveScene(scene, "sceneTest.txt");
 }
 
 void LoadScene() {
-	Engine::m_activeScene = SceneLoader::LoadScene("sceneTest.txt");
+	Engine::m_activeScene = SceneLoader::LoadScene("assets/scenes/testScene.xml");
 }
 
 int CALLBACK WinMain(

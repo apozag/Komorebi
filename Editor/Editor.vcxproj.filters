@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="3rd">
+      <UniqueIdentifier>{2325abc5-211f-4440-8626-ef356fb0f229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd\imgui">
+      <UniqueIdentifier>{57dd2fdd-cc1c-46a4-b882-00dfd77c998e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\GUI">
+      <UniqueIdentifier>{f4bb944d-69a0-46fd-80c1-91930b36714c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\GUI">
+      <UniqueIdentifier>{8ec82d19-e665-4bc3-af70-3f828060da33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Behaviours">
+      <UniqueIdentifier>{9bdd8451-fc86-489e-9d8e-18bd1f98f362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Behaviours">
+      <UniqueIdentifier>{1a42c01d-4899-4933-8cca-75ded20c4d31}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\App.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui.cpp">
+      <Filter>3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_draw.cpp">
+      <Filter>3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_tables.cpp">
+      <Filter>3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\imgui_widgets.cpp">
+      <Filter>3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\GUI.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>3rd\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Behaviours\CameraMovement.cpp">
+      <Filter>Archivos de origen\Behaviours</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="3rd\imgui\imgui.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imconfig.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imgui_internal.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imstb_rectpack.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imstb_textedit.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\imstb_truetype.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\GUI.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\backends\imgui_impl_dx11.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\imgui\backends\imgui_impl_win32.h">
+      <Filter>3rd\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Behaviours\CameraMovement.h">
+      <Filter>Archivos de encabezado\Behaviours</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

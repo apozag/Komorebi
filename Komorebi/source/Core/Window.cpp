@@ -1,6 +1,8 @@
 #include "Core/Window.h"
 #include "Core/Exceptions/WindowsThrowMacros.h"
 
+#include "Core/WindowAttachment.h"
+
 // Window Exception Stuff
 std::string Window::WindowException::TranslateErrorCode(HRESULT hr) noexcept
 {
@@ -98,37 +100,8 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept {
 	return wndClass.hInst;
 }
 
-Window::Window(int width, int height, const char* name) {
-	RECT wr;
-	wr.left = 100;
-	wr.right = width + wr.left;
-	wr.top = 100;
-	wr.bottom = height + wr.top;
-
-	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))) {
-		throw WND_LAST_EXCEPT();
-	}
-
-	hWnd = CreateWindow(
-		WindowClass::GetName(),
-		name,
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT,width, height, 
-		nullptr, nullptr, WindowClass::GetInstance(), this
-
-	);
-
-	if (hWnd == nullptr) {
-		throw WND_LAST_EXCEPT();
-	}
-
-	gfx = new Graphics(hWnd, width, height);
-
-	ShowWindow(hWnd, SW_SHOWDEFAULT);
-}
-
 Window::~Window() {
-	DestroyWindow(hWnd);
+	DestroyWindow(m_hWnd);
 }
 
 std::optional<int> Window::ProcessMessages() {
@@ -147,6 +120,36 @@ std::optional<int> Window::ProcessMessages() {
 	return {};
 }
 
+void Window::Init() {
+	RECT wr;
+	wr.left = 100;
+	wr.right = m_width + wr.left;
+	wr.top = 100;
+	wr.bottom = m_height + wr.top;
+
+	if (FAILED(AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE))) {
+		throw WND_LAST_EXCEPT();
+	}
+
+	m_hWnd = CreateWindow(
+		WindowClass::GetName(),
+		m_name.c_str(),
+		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+		CW_USEDEFAULT, CW_USEDEFAULT, m_width, m_height,
+		nullptr, nullptr, WindowClass::GetInstance(), this
+
+	);
+
+	if (m_hWnd == nullptr) {
+		throw WND_LAST_EXCEPT();
+	}
+
+	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
+
+	m_gfx = new Graphics(m_hWnd, m_width, m_height);
+	m_gfx->Init();
+}
+
 LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (msg == WM_NCCREATE) {
 		const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
@@ -162,13 +165,20 @@ LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 	return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 }
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+
+	for (WindowAttachment* attachment : m_attachments) {
+		if (attachment->WndProc(hWnd, msg, wParam, lParam)) {
+			return true;
+		}
+	}
+
 	switch (msg) {
 	case WM_CLOSE:
 		PostQuitMessage(0);
 		return 0;
 
 	case WM_KILLFOCUS:
-		keyboard.ClearState();
+		m_keyboard.ClearState();
 		break;
 
 		/***KEYBOARD MESSAGES***/
@@ -176,15 +186,15 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_SYSKEYDOWN:
 		if(wParam == 27)
 			PostQuitMessage(0);
-		else if (!(lParam & 0x40000000) || keyboard.AutorepeatIsEnabled())
-			keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+		else if (!(lParam & 0x40000000) || m_keyboard.AutorepeatIsEnabled())
+			m_keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
 		break;
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
-		keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
+		m_keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 	case WM_CHAR:
-		keyboard.OnChar(static_cast<unsigned char>(wParam));
+		m_keyboard.OnChar(static_cast<unsigned char>(wParam));
 		break;
 		/* END KEYBOARD MESSAGES*/
 
@@ -192,43 +202,50 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_RBUTTONDOWN:
 	{
 		const POINTS p = MAKEPOINTS(lParam);
-		mouse.OnLeftPressed(p.x, p.y);
+		m_mouse.OnLeftPressed(p.x, p.y);
 		break;
 	}
 	case WM_RBUTTONUP:
 	{
 		const POINTS p = MAKEPOINTS(lParam);
-		mouse.OnRightReleased(p.x, p.y);
+		m_mouse.OnRightReleased(p.x, p.y);
 		break;
 	}
 	case WM_LBUTTONDOWN:
 	{
 		const POINTS p = MAKEPOINTS(lParam);
-		mouse.OnLeftPressed(p.x, p.y);
+		m_mouse.OnLeftPressed(p.x, p.y);
 		break;
 	}
 	case WM_LBUTTONUP:
 	{
 		const POINTS p = MAKEPOINTS(lParam);
-		mouse.OnLeftReleased(p.x, p.y);
+		m_mouse.OnLeftReleased(p.x, p.y);
 		break;
 	}
 	case WM_MOUSEWHEEL:
 	{
 		const POINTS p = MAKEPOINTS(lParam);
 		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
-			mouse.OnWheelUp(p.x, p.y);
+			m_mouse.OnWheelUp(p.x, p.y);
 		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
-			mouse.OnWheelDown(p.x, p.y);
+			m_mouse.OnWheelDown(p.x, p.y);
 		break;
 	}
 	case WM_MOUSEMOVE:
 	{
 		const POINTS p = MAKEPOINTS(lParam);
-		mouse.OnMouseMove(p.x, p.y);
+		m_mouse.OnMouseMove(p.x, p.y);
 		break;
 	}
 		/*END MOUSE MESSAGES*/
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+void Window::Attach(WindowAttachment* attachment) {
+	attachment->m_hwnd = m_hWnd;
+	m_gfx->Attach(attachment);
+	attachment->Setup();
+	m_attachments.push_back(attachment);
 }
