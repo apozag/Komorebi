@@ -3,10 +3,6 @@
 #include <string>
 #include <unordered_map>
 
-namespace reflection{
-  class TypeDescriptor;
-}
-
 namespace rapidxml {
   template<class Ch = char>
   class xml_node;

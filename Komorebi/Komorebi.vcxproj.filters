@@ -402,6 +402,9 @@
     <ClInclude Include="include\Core\WindowAttachment.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\Reflection\TypeVisitor.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -574,6 +577,9 @@
     </ClCompile>
     <ClCompile Include="source\Core\AssetManager.cpp">
       <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Core\Reflection\TypeVisitor.cpp">
+      <Filter>Archivos de origen\Core\Reflection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

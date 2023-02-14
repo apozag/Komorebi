@@ -2,6 +2,7 @@
 #include "3rd/rapidxml/rapidxml.hpp"
 
 #include "Core/Reflection/TypeDescriptors.h"
+#include "Core/Reflection//TypeVisitor.h"
 #include "Core/GameObject.h"
 
 namespace reflection {
@@ -11,10 +12,27 @@ namespace reflection {
   //--------------------------------------------------------
   const std::string TypeDescriptor::getFullName() const { return std::string(name); }
 
+  void TypeDescriptor::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
+  void TypeDescriptor_Struct::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
+  void TypeDescriptor_Owned_Ptr::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
+  void TypeDescriptor_Weak_Ptr::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
+  void TypeDescriptor_StdVector::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
+
+
   //--------------------------------------------------------
   // TypeDescriptor_Struct
   //--------------------------------------------------------
-
+  /*
   void TypeDescriptor_Struct::deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const {
 
     if (parentTypeDesc) { 
@@ -58,19 +76,11 @@ namespace reflection {
     }
   };
 
-  int TypeDescriptor_Struct::getFirstMemberIdx() const {
-    if (!parentTypeDesc) return 0;
-    return parentTypeDesc->getFirstMemberIdx() + parentTypeDesc->members.size();
-  }
-
   //--------------------------------------------------------
   // TypeDescriptor_StdVector
   //--------------------------------------------------------
 
-  const std::string TypeDescriptor_StdVector::getFullName() const {
-    static std::string fullName = std::string("std::vector<") + itemType->getFullName() + ">";
-    return fullName;
-  }
+
 
   void TypeDescriptor_StdVector::deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const {
 
@@ -105,5 +115,16 @@ namespace reflection {
       itemType->serialize(getItem(obj, i), nullptr, newNode, doc);
     }
   };
+  */
+
+  int TypeDescriptor_Struct::getFirstMemberIdx() const {
+    if (!parentTypeDesc) return 0;
+    return parentTypeDesc->getFirstMemberIdx() + parentTypeDesc->members.size();
+  }
+
+  const std::string TypeDescriptor_StdVector::getFullName() const {
+    static std::string fullName = std::string("std::vector<") + itemType->getFullName() + ">";
+    return fullName;
+  }
 
 } // namespace reflect

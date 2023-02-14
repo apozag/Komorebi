@@ -3,22 +3,20 @@
 #include <string>
 #include <vector>
 
-#include "3rd/rapidxml/rapidxml_ext.hpp"
-#include "3rd/rapidxml/rapidxml.hpp"
+//#include "Core/Reflection/ReflectionHelper.h"
 
-#include "Core/Reflection/ReflectionHelper.h"
-#include "Core/AssetManager.h"
-
-namespace rapidxml {
-  template<class Ch = char>
-  class xml_node;
-  template<class Ch = char>
-  class xml_document;
-}
+//namespace rapidxml {
+//  template<class Ch = char>
+//  class xml_node;
+//  template<class Ch = char>
+//  class xml_document;
+//}
 
 namespace reflection {
 
   struct TypeDescriptor;
+
+  class TypeVisitor;
 
   template <typename T>
   struct Ptr_Wrapper {
@@ -46,15 +44,9 @@ namespace reflection {
     Weak_Ptr_Wrapper() {}
     Weak_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
   };
-  template <typename T>
-  struct Asset_Ptr_Wrapper : public Ptr_Wrapper<T> {
-    Asset_Ptr_Wrapper() {}
-    Asset_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
-  };
 
 #define WEAK_PTR(TYPE) reflection::Weak_Ptr_Wrapper<TYPE>
 #define OWNED_PTR(TYPE) reflection::Owned_Ptr_Wrapper<TYPE>
-#define ASSET_PTR(TYPE) reflection::Asset_Ptr_Wrapper<TYPE>
 
   template <typename T>
   TypeDescriptor* getPrimitiveDescriptor();
@@ -77,6 +69,16 @@ namespace reflection {
       return getPrimitiveDescriptor<T>();
     }
 
+    template <typename T, typename std::enable_if<IsReflected<T>::value, int>::type = 0>
+    static const TypeDescriptor* getDynamic(const void* pObj) {
+      return &((T*)pObj)->GetReflectionDynamic();
+    }
+
+    template <typename T, typename std::enable_if<!IsReflected<T>::value, int>::type = 0>
+    static const TypeDescriptor* getDynamic(const void* /* unused */) {
+      return getPrimitiveDescriptor<T>();
+    }
+
     template <typename T, typename std::enable_if<!IsReflected<T>::value && std::is_pointer<T>::value, int>::type = 0>
     static const TypeDescriptor* get() {
       return getPrimitiveDescriptor<WEAK_PTR(std::remove_pointer<T>::type)>();
@@ -87,6 +89,9 @@ namespace reflection {
   struct TypeResolver {
     static const TypeDescriptor* get() {
       return DefaultResolver::get<T>();
+    }
+    static const TypeDescriptor* getDynamic(const void* pObj) {
+      return DefaultResolver::getDynamic<T>(pObj);
     }
   };
 
@@ -102,10 +107,12 @@ namespace reflection {
 
     TypeDescriptor(const char* name, size_t size) : name{ name }, size{ size }, construct([](void* obj) {})
     {}
-    virtual ~TypeDescriptor() {}
+    ~TypeDescriptor() {}
     virtual const std::string getFullName() const;
-    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const {}
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const {}
+    virtual void Accept(TypeVisitor* visitor) const;
+    virtual std::string GetValueStr(const void* obj) const = 0;
+   /* virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const {}
+    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const {}*/
   };
 
   //--------------------------------------------------------
@@ -132,14 +139,18 @@ namespace reflection {
     TypeDescriptor_Struct(const char* name, size_t size, const std::initializer_list<Member>& init) : TypeDescriptor{ nullptr, 0 }, members{ init }
     {}
 
-    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override;
+    virtual void Accept(TypeVisitor* visitor) const override;
 
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override;
+    /*virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override;
+
+    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override;*/
 
   protected:
-    void serializeMembers(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* doc) const;
+    //void serializeMembers(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* doc) const;
 
     int getFirstMemberIdx() const;
+  private:
+    std::string GetValueStr(const void* obj) const override { return {}; }
   };
 
   //--------------------------------------------------------
@@ -149,7 +160,6 @@ namespace reflection {
   constexpr const char* __PtrIdAttName = "PtrId";
   constexpr const char* __PtrTypeAttName = "Type";
 
-  template <typename T>
   struct TypeDescriptor_Ptr : public TypeDescriptor {
 
     TypeDescriptor_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor{ nullptr, 0 }
@@ -158,44 +168,22 @@ namespace reflection {
     }
     TypeDescriptor_Ptr(const char* name, size_t size) : TypeDescriptor{ nullptr, 0 }
     {}
+
+    const TypeDescriptor* (*getDynamicType)(const void*);
   private:
-    template <typename T> static char func(decltype(&T::GetReflectionDerived));
-    template <typename T> static int func(...);
-    template <typename T>
-    struct IsReflected {
-      enum { value = (sizeof(func<T>(nullptr)) == sizeof(char)) };
-    };
-  public:
-
-    template <typename T, typename std::enable_if<IsReflected<T>::value, int>::type = 0>
-    static const TypeDescriptor* getReferencedType(const void* obj) {
-      return &(*(T**)obj)->GetReflectionDerived();
-    }
-
-    template <typename T, typename std::enable_if<!IsReflected<T>::value, int>::type = 0>
-    static const TypeDescriptor* getReferencedType(const void* /* unused */) {
-      return getPrimitiveDescriptor<T>();
-    }
+    std::string GetValueStr(const void* obj) const override { return {}; }
   };
 
-  template <typename T>
-  struct TypeDescriptor_Owned_Ptr : public TypeDescriptor_Ptr<T> {
+  struct TypeDescriptor_Owned_Ptr : public TypeDescriptor_Ptr {
 
-    struct Ptr_Wrapper {
-      T* m_ptr;
-      Ptr_Wrapper(T* ptr) : m_ptr(ptr) {}
-      T* operator->() const {return m_ptr;}
-      operator T* () const { return m_ptr; }
-    };
-
-    using TypeDescriptor_Ptr<T>::getReferencedType;
-
-    TypeDescriptor_Owned_Ptr(void (*init)(TypeDescriptor_Ptr<T>*)) : TypeDescriptor_Ptr<T>{ init }
+    TypeDescriptor_Owned_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor_Ptr{ init }
     {}
-    TypeDescriptor_Owned_Ptr(const char* name, size_t size) : TypeDescriptor{ nullptr, 0 } 
+    TypeDescriptor_Owned_Ptr(const char* name, size_t size) : TypeDescriptor_Ptr{ nullptr, 0 }
     {}
 
-    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
+    virtual void Accept(TypeVisitor* visitor) const override;
+
+    /*virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
       void** ppObj = (void**)obj;
       char* name = nullptr;
       unsigned int ptrId = 0xFFFFFFFF;
@@ -231,7 +219,7 @@ namespace reflection {
     virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override {
       const void** ppObj = (const void**)obj;
 
-      const TypeDescriptor* typeDesc = (*ppObj) ? getReferencedType<T>(obj) : TypeResolver<T>::get();
+      const TypeDescriptor* typeDesc = getDynamicType(obj);
 
       if (!varName) {
         std::string* name = new std::string(typeDesc->getFullName() + "*");
@@ -257,26 +245,28 @@ namespace reflection {
       rapidxml::xml_attribute<>* typeAtt = doc->allocate_attribute(__PtrTypeAttName, typeName->c_str());
       newNode->append_attribute(typeAtt);
     }
+    */
+  private:
+    std::string GetValueStr(const void* obj) const override { return {}; }
   };
 
-  template <typename T>
-  struct TypeDescriptor_Weak_Ptr : public TypeDescriptor_Ptr<T> {
+  struct TypeDescriptor_Weak_Ptr : public TypeDescriptor_Ptr {
 
-    using TypeDescriptor_Ptr<T>::getReferencedType;
-
-    TypeDescriptor_Weak_Ptr(void (*init)(TypeDescriptor_Ptr<T>*)) : TypeDescriptor_Ptr<T>{ init }
+    TypeDescriptor_Weak_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor_Ptr{ init }
     {}
-    TypeDescriptor_Weak_Ptr(const char* name, size_t size) : TypeDescriptor{ nullptr, 0 }
+    TypeDescriptor_Weak_Ptr(const char* name, size_t size) : TypeDescriptor_Ptr{ nullptr, 0 }
     {}
 
+    virtual void Accept(TypeVisitor* visitor) const override;
+    /*
     virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
       ReflectionHelper::RegisterPendingPtr((void**)obj, (unsigned int)std::atoi(xmlNode->value()));
-    };
+    }
 
     virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override {
       const void** ppObj = (const void**)obj;
 
-      const TypeDescriptor* typeDesc = (*ppObj)? getReferencedType<T>(obj) : TypeResolver<T>::get();
+      const TypeDescriptor* typeDesc = getDynamicType(obj);;
       if (!varName) {
         std::string* name = new std::string(typeDesc->getFullName() + "*");
         ReflectionHelper::TrackString(name);
@@ -287,38 +277,10 @@ namespace reflection {
       std::string* str = new std::string(std::to_string((unsigned int)*ppObj));
       ReflectionHelper::TrackString(str);
       newNode->value(str->c_str());
-    };
-  };
-
-  template <typename T>
-  struct TypeDescriptor_Asset_Ptr : public TypeDescriptor_Ptr<T> {
-
-    using TypeDescriptor_Ptr<T>::getReferencedType;
-
-    TypeDescriptor_Asset_Ptr(void (*init)(TypeDescriptor_Ptr<T>*)) : TypeDescriptor_Ptr<T>{ init }
-    {}
-    TypeDescriptor_Asset_Ptr(const char* name, size_t size) : TypeDescriptor{ nullptr, 0 }
-    {}
-
-    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
-      //*(void**)obj = AssetManager::GetInstance()->LoadAsset(xmlNode->name());
-    };
-
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override {
-      const void** ppObj = (const void**)obj;
-
-      const TypeDescriptor* typeDesc = (*ppObj) ? getReferencedType<T>(obj) : TypeResolver<T>::get();
-      if (!varName) {
-        std::string* name = new std::string(typeDesc->getFullName() + "*");
-        ReflectionHelper::TrackString(name);
-        varName = name->c_str();
-      }
-      rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName);
-      xmlParent->append_node(newNode);
-      std::string* str = new std::string();
-      ReflectionHelper::TrackString(str);
-      newNode->value(str->c_str());
-    };
+    }
+    */
+  private:
+    std::string GetValueStr(const void* obj) const override { return {}; }
   };
 
   //--------------------------------------------------------
@@ -355,11 +317,15 @@ namespace reflection {
         };
       }
 
+    virtual void Accept(TypeVisitor* visitor) const override;
+
     virtual const std::string getFullName() const override;
 
-    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override;
+    /*virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override;
 
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override;
+    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override;*/
+  private:
+    std::string GetValueStr(const void* obj) const override { return {}; }
   };
 
   template <typename T>

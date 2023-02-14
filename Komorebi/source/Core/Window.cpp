@@ -170,6 +170,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		if (attachment->WndProc(hWnd, msg, wParam, lParam)) {
 			return true;
 		}
+		else if (attachment->IsBlocking()) {
+			return DefWindowProc(hWnd, msg, wParam, lParam);
+		}
 	}
 
 	switch (msg) {

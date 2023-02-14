@@ -10,7 +10,7 @@ ID3D11DeviceContext* Bindable::GetContext(){
 DxgiInfoManager& Bindable::GetInfoManager()
 {
 #ifndef NDEBUG
-	return Engine::m_window->gfx->infoManager;
+	return Engine::m_window->m_gfx->infoManager;
 #else
 	throw std::logic_error("YouFuckedUp! (tried to access gfx.infoManager in Release config)");
 #endif

@@ -4,6 +4,7 @@
 #include "3rd/rapidxml/rapidxml.hpp"
 
 #include "Core/Reflection/TypeDescriptors.h"
+#include "Core/Reflection/ReflectionHelper.h"
 
 template<class T>
 T* AssetManager::LoadAsset(const char* filename) {

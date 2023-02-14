@@ -95,7 +95,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
@@ -147,7 +147,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>include;D:\dev\DirectXTK\Inc;D:\dev\assimp\include;D:\dev\assimp\build\include;D:\dev\rapidxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -398,6 +398,7 @@
     <ClInclude Include="include\Animation\Animation.h" />
     <ClInclude Include="include\Animation\Skeleton.h" />
     <ClInclude Include="include\Core\AssetManager.h" />
+    <ClInclude Include="include\Core\Reflection\TypeVisitor.h" />
     <ClInclude Include="include\Core\WindowAttachment.h" />
     <ClInclude Include="include\Core\Defines.h" />
     <ClInclude Include="include\Core\Engine.h" />
@@ -463,6 +464,7 @@
     <ClInclude Include="include\Scene\SceneLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Core\Reflection\TypeVisitor.cpp" />
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp" />
     <ClCompile Include="source\Animation\Animation.cpp" />
     <ClCompile Include="source\Animation\Skeleton.cpp" />

@@ -5,9 +5,9 @@
 void DirectionalLight::Setup() {
 	m_rt = new RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
-	m_camera = new Camera(1.0472f, 1, 0.1, 1000, m_rt, true);
-	m_camera->Setup();
+	m_camera = new Camera(1.0472f, 1, 0.1, 1000, m_rt, true);	
 	m_camera->m_priority = -100;
+	m_camera->Setup();
 }
 
 void SpotLight::Setup() {
@@ -16,30 +16,16 @@ void SpotLight::Setup() {
 	m_rt->Setup();
 	m_camera = new Camera(1.0472f, 1, 0.1, 1000, m_rt, true);
 	m_camera->m_priority = -100;
+	m_camera->Setup();
 }
 
 void PointLight::Setup() {
-
-	m_rts[0] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
-	m_rts[1] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
-	m_rts[2] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
-	m_rts[3] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
-	m_rts[4] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
-	m_rts[5] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
-
-	m_rts[0].Setup();
-	m_rts[1].Setup();
-	m_rts[2].Setup();
-	m_rts[3].Setup();
-	m_rts[4].Setup();
-	m_rts[5].Setup();
-	
-	m_cameras[0] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[0]);
-	m_cameras[1] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[1]);
-	m_cameras[2] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[2]);
-	m_cameras[3] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[3]);
-	m_cameras[4] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[4]);
-	m_cameras[5] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[5]);
+	for (int i = 0; i < 6; i++) {
+		m_rts[i] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
+		m_rts[i].Setup();
+		m_cameras[i] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[i]);
+		m_cameras[i].Setup();
+	}
 }
 
 void DirectionalLight::Insert(Node* node, const Transform& worldTransform) {

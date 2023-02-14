@@ -7,6 +7,24 @@
 #include "Core/Engine.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 
+#include "Core/Reflection/TypeDescriptors.h"
+
+template<class T, typename Enable = void>
+void DisplayData(void* pObj, T* typeDesc);
+
+template<class T, typename Enable = void>
+void DisplayData(void* pObj, T* typeDesc) {
+
+}
+
+void DisplayVectorData(void* pObj, reflection::TypeDescriptor_Struct* typeDesc) {
+
+}
+
+void DisplayStructData(void* pObj, reflection::TypeDescriptor_Struct* typeDesc) {
+  
+}
+
 void Render(float /*dt*/) {
 
   Engine::GetDefaultRendertarget()->Bind();
@@ -38,6 +56,11 @@ void Render(float /*dt*/) {
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
   }
 
+}
+
+bool GUIAttachment::IsBlocking() {
+  ImGuiIO& io = ImGui::GetIO();
+  return io.WantCaptureKeyboard || io.WantCaptureMouse;
 }
 
 void GUIAttachment::Setup() {

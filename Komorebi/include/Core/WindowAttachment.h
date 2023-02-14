@@ -5,11 +5,12 @@
 struct ID3D11DeviceContext;
 struct ID3D11Device;
 
-//struct HWND__; typedef HWND__* HWND;
-
 class WindowAttachment {
   friend class Window;
   friend class Graphics;
+
+public:
+  virtual bool IsBlocking() { return false; }
 
 protected: 
   virtual void Setup() = 0;

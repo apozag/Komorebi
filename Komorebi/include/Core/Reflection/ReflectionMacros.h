@@ -24,7 +24,7 @@
     static reflection::TypeDescriptor_Struct Reflection{initReflection}; \
     return Reflection;  \
   } \
-  virtual const reflection::TypeDescriptor_Struct& GetReflectionDerived() X{  \
+  virtual const reflection::TypeDescriptor_Struct& GetReflectionDynamic() X{  \
       return GetReflection();  \
   } \
   static void initReflection(reflection::TypeDescriptor_Struct*);	  \
@@ -79,16 +79,9 @@
 
 #define IMPLEMENT_REFLECTION_PRIMITIVE(type, tag)	\
   __IMPLEMENT_REFLECTION_PRIMITIVE_BEGIN(type, tag) \
-    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override { \
-      *(type*)obj = (type) std::stod(xmlNode->value()); \
-    }  \
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override { \
-      rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName); \
-      xmlParent->append_node(newNode);  \
-      std::string* str = new std::string(std::to_string(*(type*)obj));  \
-      reflection::ReflectionHelper::TrackString(str);  \
-      newNode->value(str->c_str());  \
-    }  \
+    std::string GetValueStr(const void* obj) const override { \
+      return std::to_string(*(type*)obj); \
+    } \
   __IMPLEMENT_REFLECTION_PRIMITIVE_END(type, tag)
 
 #define DECLARE_REFLECTION_OWNED_POINTER(type)  \
@@ -102,31 +95,28 @@
   DECLARE_REFLECTION_WEAK_POINTER(type*) 
 
 #define IMPLEMENT_REFLECTION_POINTER(type) \
-  void CAT(initReflection_ ## type, _Owned_Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
+  void CAT(initReflection_ ## type, _Owned_Ptr)(reflection::TypeDescriptor_Ptr* typeDesc) { \
     typeDesc->name = #type "_Owned_Ptr"; \
     typeDesc->size = sizeof(CAT(type, *)); \
+    typeDesc->getDynamicType =  [](const void* pObj)->const reflection::TypeDescriptor*{  \
+      return pObj ? reflection::TypeResolver<type>::getDynamic(pObj) : reflection::TypeResolver<type>::get();  \
+    }; \
   } \
-  void CAT(initReflection_ ## type, _Weak_Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
+  void CAT(initReflection_ ## type, _Weak_Ptr)(reflection::TypeDescriptor_Ptr* typeDesc) { \
     typeDesc->name = #type "_Ptr"; \
     typeDesc->size = sizeof(CAT(type, *)); \
-  } \
-  void CAT(initReflection_ ## type, _Asset_Ptr)(reflection::TypeDescriptor_Ptr<type>* typeDesc) { \
-    typeDesc->name = #type "_Asset_Ptr"; \
-    typeDesc->size = sizeof(CAT(type, *)); \
+    typeDesc->getDynamicType =  [](const void* pObj)->const reflection::TypeDescriptor*{  \
+      return pObj ? reflection::TypeResolver<type>::getDynamic(pObj) : reflection::TypeResolver<type>::get();  \
+    }; \
   } \
   template <> \
   reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Owned_Ptr_Wrapper<type>>() {  \
-    static TypeDescriptor_Owned_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Owned_Ptr)};  \
+    static TypeDescriptor_Owned_Ptr typeDesc{CAT(initReflection_ ## type, _Owned_Ptr)};  \
     return &typeDesc; \
   } \
   template <> \
   reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Weak_Ptr_Wrapper<type>>() {  \
-    static TypeDescriptor_Weak_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Weak_Ptr)};  \
-    return &typeDesc; \
-  } \
-  template <> \
-  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<reflection::Asset_Ptr_Wrapper<type>>() {  \
-    static TypeDescriptor_Asset_Ptr<type> typeDesc{CAT(initReflection_ ## type, _Asset_Ptr)};  \
+    static TypeDescriptor_Weak_Ptr typeDesc{CAT(initReflection_ ## type, _Weak_Ptr)};  \
     return &typeDesc; \
   } \
   template <> \
@@ -137,11 +127,6 @@
   template <> \
   reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<reflection::Weak_Ptr_Wrapper<type>>>() {  \
     static TypeDescriptor_StdVector typeDesc{ (reflection::Weak_Ptr_Wrapper<type>*) nullptr };  \
-    return &typeDesc; \
-  } \
-  template <> \
-  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<reflection::Asset_Ptr_Wrapper<type>>>() {  \
-    static TypeDescriptor_StdVector typeDesc{ (reflection::Asset_Ptr_Wrapper<type>*) nullptr };  \
     return &typeDesc; \
   } \
   template <> \
@@ -158,3 +143,15 @@ DECLARE_REFLECTION_PRIMITIVE(float)
 DECLARE_REFLECTION_PRIMITIVE(double)
 DECLARE_REFLECTION_PRIMITIVE(bool)
 DECLARE_REFLECTION_PRIMITIVE(std::string)
+
+
+/* virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override { \
+      *(type*)obj = (type) std::stod(xmlNode->value()); \
+    }  \
+    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override { \
+      rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName); \
+      xmlParent->append_node(newNode);  \
+      std::string* str = new std::string(std::to_string(*(type*)obj));  \
+      reflection::ReflectionHelper::TrackString(str);  \
+      newNode->value(str->c_str());  \
+    }  \*/
