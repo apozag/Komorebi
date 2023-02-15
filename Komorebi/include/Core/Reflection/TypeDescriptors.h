@@ -3,15 +3,6 @@
 #include <string>
 #include <vector>
 
-//#include "Core/Reflection/ReflectionHelper.h"
-
-//namespace rapidxml {
-//  template<class Ch = char>
-//  class xml_node;
-//  template<class Ch = char>
-//  class xml_document;
-//}
-
 namespace reflection {
 
   struct TypeDescriptor;
@@ -111,8 +102,7 @@ namespace reflection {
     virtual const std::string getFullName() const;
     virtual void Accept(TypeVisitor* visitor) const;
     virtual std::string GetValueStr(const void* obj) const = 0;
-   /* virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const {}
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const {}*/
+    virtual void SetValueFromString(void* pObj, const char* valueCStr) const = 0;
   };
 
   //--------------------------------------------------------
@@ -141,16 +131,10 @@ namespace reflection {
 
     virtual void Accept(TypeVisitor* visitor) const override;
 
-    /*virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override;
-
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override;*/
-
-  protected:
-    //void serializeMembers(const void* obj, rapidxml::xml_node<>* xmlNode, rapidxml::xml_document<>* doc) const;
-
     int getFirstMemberIdx() const;
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
+    void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
 
   //--------------------------------------------------------
@@ -183,71 +167,9 @@ namespace reflection {
 
     virtual void Accept(TypeVisitor* visitor) const override;
 
-    /*virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
-      void** ppObj = (void**)obj;
-      char* name = nullptr;
-      unsigned int ptrId = 0xFFFFFFFF;
-
-      rapidxml::xml_attribute<>* att = xmlNode->first_attribute();
-      while (att) {
-        if (strcmp(att->name(), __PtrIdAttName) == 0) {
-          ptrId = (unsigned int)std::atoi(att->value());
-        }
-        else if (strcmp(att->name(), __PtrTypeAttName) == 0) {
-          name = att->value();
-        }
-        att = att->next_attribute();
-      }
-
-      if (!name) {
-        // TODO: [ERROR] Owned Pointer node must have a "Type" attribute
-      }
-      else if (ptrId == 0xFFFFFFFF) {
-        // TODO: [ERROR] Owned Pointer node must have a "PrtId" attribute
-      }
-
-      const TypeDescriptor* typeDesc = ReflectionHelper::GetTypeDesc(name);
-
-      *ppObj = malloc(typeDesc->size);
-      //memset(*ppObj, 0, typeDesc->size);
-
-      ReflectionHelper::RegisterPtrId(*ppObj, ptrId, typeDesc->size);
-
-      typeDesc->deserialize(*ppObj, xmlNode);
-    };
-
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override {
-      const void** ppObj = (const void**)obj;
-
-      const TypeDescriptor* typeDesc = getDynamicType(obj);
-
-      if (!varName) {
-        std::string* name = new std::string(typeDesc->getFullName() + "*");
-        ReflectionHelper::TrackString(name);
-        varName = name->c_str();
-      }
-
-      rapidxml::xml_node<>* firstChild = nullptr;
-      if (xmlParent->first_node()) {
-       firstChild = xmlParent->last_node();
-      }
-
-      typeDesc->serialize(*ppObj, varName, xmlParent, doc);
-
-      rapidxml::xml_node<>* newNode = firstChild ? firstChild->next_sibling() : xmlParent->first_node();
-      std::string* str = new std::string(std::to_string((unsigned int)*ppObj));
-      ReflectionHelper::TrackString(str);
-      rapidxml::xml_attribute<>* idAtt = doc->allocate_attribute(__PtrIdAttName, str->c_str());
-      newNode->append_attribute(idAtt);
-
-      std::string* typeName = new std::string(typeDesc->getFullName());
-      ReflectionHelper::TrackString(typeName);
-      rapidxml::xml_attribute<>* typeAtt = doc->allocate_attribute(__PtrTypeAttName, typeName->c_str());
-      newNode->append_attribute(typeAtt);
-    }
-    */
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
+    void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
 
   struct TypeDescriptor_Weak_Ptr : public TypeDescriptor_Ptr {
@@ -258,29 +180,10 @@ namespace reflection {
     {}
 
     virtual void Accept(TypeVisitor* visitor) const override;
-    /*
-    virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
-      ReflectionHelper::RegisterPendingPtr((void**)obj, (unsigned int)std::atoi(xmlNode->value()));
-    }
-
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override {
-      const void** ppObj = (const void**)obj;
-
-      const TypeDescriptor* typeDesc = getDynamicType(obj);;
-      if (!varName) {
-        std::string* name = new std::string(typeDesc->getFullName() + "*");
-        ReflectionHelper::TrackString(name);
-        varName = name->c_str();
-      }
-      rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName);
-      xmlParent->append_node(newNode);
-      std::string* str = new std::string(std::to_string((unsigned int)*ppObj));
-      ReflectionHelper::TrackString(str);
-      newNode->value(str->c_str());
-    }
-    */
+   
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
+    void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
 
   //--------------------------------------------------------
@@ -320,12 +223,10 @@ namespace reflection {
     virtual void Accept(TypeVisitor* visitor) const override;
 
     virtual const std::string getFullName() const override;
-
-    /*virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override;
-
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override;*/
+   
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
+    void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
 
   template <typename T>
@@ -354,5 +255,6 @@ namespace reflection {
       return &typeDesc;
     }
   };
+
 
 } // namespace reflect

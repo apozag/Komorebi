@@ -12,14 +12,9 @@ IMPLEMENT_REFLECTION_PRIMITIVE(bool, Bool)
 
 __IMPLEMENT_REFLECTION_PRIMITIVE_BEGIN(std::string*, CStr)
 std::string GetValueStr(const void* obj) const override{  
-    return *static_cast<const std::string*>(obj);
+  return *static_cast<const std::string*>(obj);
 } 
-//virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override {
-//  static_cast<std::string*>(obj)->assign(xmlNode->value());
-//};
-//virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override {
-//  rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName); \
-//  xmlParent->append_node(newNode);  \
-//  newNode->value(static_cast<const std::string*>(obj)->c_str());
-//};
+void SetValueFromString(void* pObj, const char* valueCStr) const override {
+  *(std::string*)pObj = valueCStr; 
+} 
 __IMPLEMENT_REFLECTION_PRIMITIVE_END(std::string, CStr)

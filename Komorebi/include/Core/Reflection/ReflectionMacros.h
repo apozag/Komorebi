@@ -82,6 +82,9 @@
     std::string GetValueStr(const void* obj) const override { \
       return std::to_string(*(type*)obj); \
     } \
+    void SetValueFromString(void* pObj, const char* valueCStr) const override { \
+      *(type*)pObj = (type)std::stod(valueCStr); \
+    } \
   __IMPLEMENT_REFLECTION_PRIMITIVE_END(type, tag)
 
 #define DECLARE_REFLECTION_OWNED_POINTER(type)  \
@@ -143,15 +146,3 @@ DECLARE_REFLECTION_PRIMITIVE(float)
 DECLARE_REFLECTION_PRIMITIVE(double)
 DECLARE_REFLECTION_PRIMITIVE(bool)
 DECLARE_REFLECTION_PRIMITIVE(std::string)
-
-
-/* virtual void deserialize(void* obj, const rapidxml::xml_node<>* xmlNode) const override { \
-      *(type*)obj = (type) std::stod(xmlNode->value()); \
-    }  \
-    virtual void serialize(const void* obj, const char* varName, rapidxml::xml_node<>* xmlParent, rapidxml::xml_document<>* doc) const override { \
-      rapidxml::xml_node<>* newNode = doc->allocate_node(rapidxml::node_type::node_element, varName); \
-      xmlParent->append_node(newNode);  \
-      std::string* str = new std::string(std::to_string(*(type*)obj));  \
-      reflection::ReflectionHelper::TrackString(str);  \
-      newNode->value(str->c_str());  \
-    }  \*/

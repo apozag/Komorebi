@@ -7,7 +7,8 @@
 #include "Core/Engine.h"
 #include "Scene/SceneLoader.h"
 #include "Core/Reflection/TypeDescriptors.h"
-#include "Core/Reflection/TypeVisitor.h"
+#include "Core/Reflection/SerializationTypeVisitor.h"
+#include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Scene/Scene.h"
 
 using namespace reflection;
@@ -23,7 +24,9 @@ Scene* SceneLoader::LoadScene(const char* filename) {
 
   Scene* scene = new Scene();
   Engine::m_activeScene = scene;
-  //Scene::GetReflection().deserialize(scene, nodeElem);
+
+  DeserializationTypeVisitor visitor(scene, nodeElem);
+  scene->GetReflection().Accept(&visitor);
 
   ReflectionHelper::ResolvePendingPointers();
 
@@ -32,11 +35,12 @@ Scene* SceneLoader::LoadScene(const char* filename) {
 
 void SceneLoader::SaveScene(Scene* scene, const char* filename) {
   xml_document<> doc;
+
   SerializationTypeVisitor visitor(scene, &doc);
-  const TypeDescriptor_Struct& type = scene->GetReflection();
-  type.Accept(&visitor);
+  scene->GetReflection().Accept(&visitor);
 
   ReflectionHelper::ResolvePendingPointers();
+
   std::ofstream myfile;
   myfile.open(filename);
   myfile << doc;

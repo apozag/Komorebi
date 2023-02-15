@@ -1,4 +1,4 @@
-#include "Core/Reflection/TypeVisitor.h"
+#include "Core/Reflection/SerializationTypeVisitor.h"
 #include "Core/Reflection/ReflectionHelper.h"
 #include "rapidxml.hpp"
 
