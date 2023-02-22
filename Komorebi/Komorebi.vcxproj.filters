@@ -405,6 +405,12 @@
     <ClInclude Include="include\Core\Reflection\TypeVisitor.h">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\Reflection\DeserializationTypeVisitor.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Reflection\SerializationTypeVisitor.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -578,8 +584,11 @@
     <ClCompile Include="source\Core\AssetManager.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="include\Core\Reflection\TypeVisitor.cpp">
-      <Filter>Archivos de origen\Core\Reflection</Filter>
+    <ClCompile Include="source\Core\Reflection\DeserializationTypeVisitor.cpp">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Core\Reflection\SerializationTypeVisitor.cpp">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

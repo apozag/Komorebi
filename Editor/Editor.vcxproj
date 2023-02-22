@@ -194,6 +194,7 @@
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\Behaviours\CameraMovement.cpp" />
     <ClCompile Include="src\GUI\GUI.cpp" />
+    <ClCompile Include="src\GUI\ImGuiTypeVisitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\imgui\backends\imgui_impl_dx11.h" />
@@ -206,6 +207,7 @@
     <ClInclude Include="3rd\imgui\imstb_truetype.h" />
     <ClInclude Include="include\Behaviours\CameraMovement.h" />
     <ClInclude Include="include\GUI\GUI.h" />
+    <ClInclude Include="include\GUI\ImGuiTypeVisitor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -103,6 +103,7 @@ namespace reflection {
     virtual void Accept(TypeVisitor* visitor) const;
     virtual std::string GetValueStr(const void* obj) const = 0;
     virtual void SetValueFromString(void* pObj, const char* valueCStr) const = 0;
+    virtual const TypeDescriptor* GetDynamic(const void* pObj) const { return this; }
   };
 
   //--------------------------------------------------------
@@ -132,6 +133,7 @@ namespace reflection {
     virtual void Accept(TypeVisitor* visitor) const override;
 
     int getFirstMemberIdx() const;
+    
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
     void SetValueFromString(void* pObj, const char* valueCStr) const override {}
@@ -154,6 +156,9 @@ namespace reflection {
     {}
 
     const TypeDescriptor* (*getDynamicType)(const void*);
+
+    virtual const TypeDescriptor* GetDynamic(const void*pObj) const override;
+
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
   };

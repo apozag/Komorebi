@@ -8,7 +8,9 @@
 
 class VertexShader : public StateBindable {
 public:
-	VertexShader() {}
+	VertexShader() {
+		int i = m_filename.size();
+	}
 	VertexShader(const char* filename) : m_filename(filename) {}
 	~VertexShader();
 

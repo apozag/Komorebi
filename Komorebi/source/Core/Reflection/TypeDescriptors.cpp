@@ -35,4 +35,9 @@ namespace reflection {
     return fullName;
   }
 
+  const TypeDescriptor* TypeDescriptor_Ptr::GetDynamic(const void* pObj) const {
+    void** ppObj = (void**)pObj;
+    return getDynamicType(*ppObj);
+  }
+
 } // namespace reflect

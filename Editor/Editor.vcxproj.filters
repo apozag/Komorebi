@@ -60,6 +60,9 @@
     <ClCompile Include="src\Behaviours\CameraMovement.cpp">
       <Filter>Archivos de origen\Behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\ImGuiTypeVisitor.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\imgui\imgui.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="include\Behaviours\CameraMovement.h">
       <Filter>Archivos de encabezado\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\ImGuiTypeVisitor.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

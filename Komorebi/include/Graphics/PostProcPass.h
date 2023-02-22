@@ -11,6 +11,4 @@ class PostProcPass : public Pass {
 public:
 	PostProcPass(const char* psFilename);
 	PostProcPass(PixelShader* ps);
-private:
-	static VertexShader s_vShader;
 };
