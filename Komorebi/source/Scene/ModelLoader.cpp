@@ -41,6 +41,12 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
     Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
     Mesh* mesh = GenerateCube();
     mesh->m_material = new Material();
+    for (Pass* pass : model->GetPasses()) {
+      mesh->m_material->AddPass(pass);
+    }
+    for (ResourceBindable* bind : model->GetBinds()) {
+      mesh->m_material->AddBindable(bind);
+    }
     sceneGraph->AddNode(mesh, Transform(), modelNode);
     model->AddDrawable(mesh);
     return;
@@ -58,6 +64,15 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
   directory = filename.substr(0, filename.find_last_of('/') + 1);
 
   processMaterials(scene);
+
+  for (Material* mat : materials) {
+    for (Pass* pass : model->GetPasses()) {
+      mat->AddPass(pass);
+    }
+    for (ResourceBindable* bind : model->GetBinds()) {
+      mat->AddBindable(bind);
+    }
+  }
 
   Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
   processNode(scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);

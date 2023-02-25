@@ -21,6 +21,8 @@ public:
   void AddBindable(ResourceBindable* bind);
   void AddDrawable(Drawable* mesh);
   const Drawable::BVHData& GetBVHData() const;
+  const std::vector<OWNED_PTR(Pass)>& GetPasses() const { return m_passes; }
+  const std::vector<OWNED_PTR(ResourceBindable)>& GetBinds() const { return m_binds; }
   void Insert(Node* node, const Transform& worldTransform) override;
   REFLECT()
 public:
