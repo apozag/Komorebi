@@ -4,23 +4,32 @@
 
 #include "imgui/imgui.h"
 
+#include "Scene/Node.h"
+
 using namespace reflection;
 
 void ImGuiTypeVisitor::Visit(const TypeDescriptor* type) {
   constexpr const size_t buffSize = 64;
   std::string stdStr = type->GetValueStr(m_pObj);
   char str[buffSize];
-  memcpy(str, stdStr.c_str(), std::min(buffSize, stdStr.size() + 1));
+  memcpy(str, stdStr.c_str(), stdStr.size()+1);
   if (ImGui::InputText((std::string("##") + std::to_string((size_t)m_pObj)).c_str(), (char*)&str, buffSize) && str[0] != '\0') {
     type->SetValueFromString(m_pObj, str);
   }
 }
 
-void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
+void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {  
   void* pObj = m_pObj;
   if (type->parentTypeDesc) {
     type->parentTypeDesc->Accept(this);
   }
+
+  if (strcmp(type->name, "Node") == 0) {
+    Node* pNode = (Node*)pObj;
+    ImGui::SameLine();
+    ImGui::Checkbox((std::string("##CB") + std::to_string((size_t)m_pObj)).c_str(), &pNode->m_enabled);
+  }
+
   for (const TypeDescriptor_Struct::Member& member : type->members) {
     if (ImGui::TreeNode(member.name)) {
       m_pObj = member.getAddress(pObj);
@@ -28,6 +37,8 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
       ImGui::TreePop();
     }
   }
+
+
 }
 
 void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {

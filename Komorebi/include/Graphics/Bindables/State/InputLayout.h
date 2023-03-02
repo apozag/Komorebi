@@ -9,6 +9,9 @@ public:
 	~InputLayout();
 	void Bind()const override;
 	void Unbind()const override;
+
+	REFLECT_HIDE()
+
 private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 };

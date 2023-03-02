@@ -7,7 +7,7 @@
 #include "Core/Window.h"
 #include "Entities/Script.h"
 #include "Core/ScriptDispatcher.h"
-
+#include "Core/Window.h"
 
 Renderer* Engine::m_renderer;
 Window* Engine::m_window;
@@ -17,6 +17,10 @@ std::vector<Engine::CallbackFunc> Engine::m_preRenderCallbacks;
 std::vector<Engine::CallbackFunc> Engine::m_postRenderCallbacks;
 float Engine::m_dt;
 float Engine::m_targetFramerate;
+
+RenderTarget* Engine::GetDefaultRendertarget() {
+	return m_window->m_gfx->GetDefaultRenderTarget();
+}
 
 void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, float targetFramerate) {
 	m_window = new Window(windowWidth, windowHeight, windowTitle);	

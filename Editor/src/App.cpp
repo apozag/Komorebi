@@ -8,6 +8,7 @@
 
 #include "Core/Exceptions/Exception.h"
 #include "Core/Engine.h"
+#include "Core/Window.h"
 #include "Scene/SceneLoader.h"
 #include "GUI/GUI.h"
 
@@ -20,9 +21,9 @@ int CALLBACK WinMain(
 
 		Engine::Init("MyGame", 1024, 1024, 60);
 
-		//GUIAttachment attachment;
+		GUIAttachment attachment;
 
-		//Engine::GetWindow()->Attach(&attachment);
+		Engine::GetWindow()->Attach(&attachment);
 
 		Engine::m_activeScene = SceneLoader::LoadScene("assets/scenes/testScene.xml");
 

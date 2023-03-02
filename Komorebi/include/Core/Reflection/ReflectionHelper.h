@@ -22,9 +22,9 @@ namespace reflection {
 
     static void ClearTrackedStrings();
 
-    static void RegisterPtrId(void* ptr, unsigned int id, size_t size);
+    static void RegisterPtrId(void* ptr, intptr_t id, size_t size);
 
-    static void RegisterPendingPtr(void** ptr, unsigned int id);
+    static void RegisterPendingPtr(void** ptr, intptr_t id);
 
     static void ResolvePendingPointers();
 

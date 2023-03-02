@@ -1,4 +1,5 @@
 #include "Rotate.h"
+#include "Core/Engine.h"
 #include "Scene/Node.h"
 
 void Rotate::Run(Node* node) {

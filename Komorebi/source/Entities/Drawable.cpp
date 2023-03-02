@@ -1,3 +1,5 @@
+#define NOMINMAX
+
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"

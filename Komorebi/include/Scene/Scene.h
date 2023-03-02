@@ -10,7 +10,6 @@ class Renderer;
 class Entity;
 
 class Scene : public GameObject{
-	friend class SceneLoader;
 public:
 	Scene() = default;
 	~Scene() = default;
@@ -22,8 +21,6 @@ public:
 
 	Node* AddNode(Entity* entity, const Transform& transform, Node* m_parent = nullptr);
 	Node* AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent = nullptr);
-
-	//Node* GetMainCameraNode() { return m_mainCamera; }
 
 	Node* GetRootNode() { return m_transformHierarchy; }
 

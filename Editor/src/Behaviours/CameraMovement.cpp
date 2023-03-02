@@ -1,7 +1,7 @@
 #include "Behaviours/CameraMovement.h"
+#include "Core/Engine.h"
+#include "Core/Window.h"
 #include "Scene/Node.h"
-
-//#include ""
 
 void CameraMovement::Run(Node* node) {
 
@@ -16,8 +16,8 @@ void CameraMovement::Update(Node* node) {
 	const Window* window = GetWindow();
 
 	float rotateSpeed = 0.3f;
-	static float lastX = window->m_mouse.GetX();
-	static float lastY = window->m_mouse.GetX();
+	static float lastX = (float)window->m_mouse.GetX();
+	static float lastY = (float)window->m_mouse.GetX();
 	if (window->m_mouse.IsLeftPressed()) {
 		float x = window->m_mouse.GetX();
 		float y = window->m_mouse.GetY();

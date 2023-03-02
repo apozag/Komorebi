@@ -20,7 +20,10 @@ void Scene::LoadScene( ) {
 Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent) {
 	if (!m_parent) m_parent = m_transformHierarchy;
 	Node* node = new Node();
-	if(entity) node->m_entities = { entity };
+	if (entity) {
+		node->m_entities = { entity };		
+		entity->m_node = node;
+	}
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;
 	m_parent->m_children.push_back(node);
@@ -32,6 +35,7 @@ Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, 
 	Node* node = new Node();
 	for (Entity* pEntity : entities) {
 		node->m_entities.push_back(pEntity);
+		pEntity->m_node = node;
 	}
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;
@@ -45,7 +49,7 @@ void Scene::Traverse() {
 
 void Scene::TraverseNode(Node* node, bool dirty) {
 
-	if (!node) {
+	if (!node || !node->m_enabled) {
 		return;
 	}
 

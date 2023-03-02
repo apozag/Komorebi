@@ -18,13 +18,15 @@ public:
 
 	std::vector<OWNED_PTR(Entity)> m_entities;
 	Transform m_localTransform;
-	std::vector<OWNED_PTR(Node)> m_children;
-	Node* m_parent;
+	std::vector<OWNED_PTR(Node)> m_children;	
+
+	bool m_enabled = true;
 
 	REFLECT_BASE()
 
 private:
 	Transform m_globalTransform;
+	Node* m_parent;
 };
 
 template<class T>

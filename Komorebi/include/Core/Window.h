@@ -1,15 +1,14 @@
 #pragma once
 
-#define NOMINMAX
 #include <Windows.h>
 #include <sstream>
 #include <optional>
 #include "Core/Exceptions/Exception.h"
 #include "Input/Keyboard.h"
 #include "Input/Mouse.h"
-#include "Graphics/Graphics.h"
 
 class WindowAttachment;
+class Graphics;
 
 class Window {
 public: 

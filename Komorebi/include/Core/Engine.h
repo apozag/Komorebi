@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Core/Window.h"
+#include <vector>
 
 class Scene;
 class Renderer;
 class ScriptDispatcher;
+class Window;
+class RenderTarget;
 
 class Engine {
 	friend class Bindable;
@@ -23,9 +25,7 @@ public:
 	static void AddPostRenderCallback(CallbackFunc func) { m_postRenderCallbacks.push_back(func); }
 
 	static float GetDeltaTime() { return m_dt; }
-	static RenderTarget* GetDefaultRendertarget() { 
-		return m_window->m_gfx->GetDefaultRenderTarget(); 
-	}
+	static RenderTarget* GetDefaultRendertarget();
 
 	static Window* GetWindow() { return m_window; }
 

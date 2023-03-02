@@ -1,4 +1,5 @@
 #include "Entities/Bone.h"
+#include "Core/Math/Transform.h"
 #include "Animation/Skeleton.h"
 
 void Bone::Insert(Node* node, const Transform& worldTransform) {

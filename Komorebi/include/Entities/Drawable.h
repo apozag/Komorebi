@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Entities/Entity.h"
+#include "Core/Math/MathWrappers.h"
 
 class Graphics;
 class Pass;

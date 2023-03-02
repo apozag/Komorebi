@@ -10,12 +10,12 @@ namespace reflection {
 
   struct PtrIdPair {
     void** pPtr;
-    unsigned int id;
+    intptr_t id;
   };
 
   struct ReflectionPtrInfo {
     void* ptr;
-    unsigned int id;
+    intptr_t id;
     size_t size;
   };
 
@@ -38,11 +38,11 @@ namespace reflection {
     GetStrVector().clear();
   }
 
-  void ReflectionHelper::RegisterPtrId(void* ptr, unsigned int id, size_t size) {
+  void ReflectionHelper::RegisterPtrId(void* ptr, intptr_t id, size_t size) {
     GetPtrInfoVector().push_back({ptr, id, size});
   }
 
-  void ReflectionHelper::RegisterPendingPtr(void** ptr, unsigned int id) {
+  void ReflectionHelper::RegisterPendingPtr(void** ptr, intptr_t id) {
     GetPendingPtrVector().push_back({ptr, id});
   }
 

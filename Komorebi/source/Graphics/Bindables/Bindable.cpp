@@ -1,5 +1,6 @@
 #include "Graphics/Bindables/Bindable.h"
 #include "Core/Engine.h"
+#include "Core/Window.h"
 
 ID3D11Device* Bindable::GetDevice() {
 	return Engine::m_window->m_gfx->m_device.Get();

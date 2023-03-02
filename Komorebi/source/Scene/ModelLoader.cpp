@@ -38,7 +38,6 @@ int boneCount = 0;
 void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
 
   if (filename == "cube") {
-    Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
     Mesh* mesh = GenerateCube();
     mesh->m_material = new Material();
     for (Pass* pass : model->GetPasses()) {
@@ -47,7 +46,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
     for (ResourceBindable* bind : model->GetBinds()) {
       mesh->m_material->AddBindable(bind);
     }
-    sceneGraph->AddNode(mesh, Transform(), modelNode);
+    sceneGraph->AddNode(mesh, Transform(), sceneGraphParent);
     model->AddDrawable(mesh);
     return;
   }
@@ -74,7 +73,6 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
     }
   }
 
-  Node* modelNode = sceneGraph->AddNode(model, Transform(), sceneGraphParent);
   processNode(scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
 
   boneNodes.resize(boneNames.size());
@@ -226,7 +224,6 @@ void ModelLoader::processNodeBones( aiNode* node, const aiScene* scene, Scene* s
     Node* sceneNode = nullptr;
     
     if (nodeIdx >= 0) {
-
         sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
         boneNodes[nodeIdx] = sceneNode;
         boneCount++;

@@ -12,22 +12,33 @@
 
 #define CAT(a, b) a ## b
 
-#define REFLECT_BASE()  \
-  __REFLECT(const)
-
-#define REFLECT()  \
-  __REFLECT(const override)
-
 #define __REFLECT(X)	\
   friend struct reflection::DefaultResolver;	\
   static const reflection::TypeDescriptor_Struct& GetReflection() { \
     static reflection::TypeDescriptor_Struct Reflection{initReflection}; \
     return Reflection;  \
   } \
-  virtual const reflection::TypeDescriptor_Struct& GetReflectionDynamic() X{  \
-      return GetReflection();  \
+  virtual const reflection::TypeDescriptor_Struct* GetReflectionDynamic() X{  \
+      return &GetReflection();  \
   } \
-  static void initReflection(reflection::TypeDescriptor_Struct*);	  \
+  static void initReflection(reflection::TypeDescriptor_Struct*);	
+
+#define REFLECT_BASE()  \
+  __REFLECT(const)
+
+#define REFLECT()  \
+  __REFLECT(const override)
+
+#define REFLECT_HIDE()  \
+    friend struct reflection::DefaultResolver;	\
+  static const reflection::TypeDescriptor_Ignored& GetReflection() { \
+    static reflection::TypeDescriptor_Ignored Reflection; \
+    return Reflection;  \
+  } \
+  virtual const reflection::TypeDescriptor_Struct* GetReflectionDynamic() const override{  \
+      return &GetReflection();  \
+  } \
+  static void initReflection(reflection::TypeDescriptor_Struct*);
 
 #define __REFLECT_STRUCT_BEGIN(type, parentTypeDescParam, lambdaContent) \
   void type::initReflection(reflection::TypeDescriptor_Struct* typeDesc) { \

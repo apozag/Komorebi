@@ -1,4 +1,5 @@
 #include "ChangeColor.h"
+#include "Core/Engine.h"
 #include "Scene/Node.h"
 #include "Graphics/Material.h"
 #include "Entities/Drawable.h"

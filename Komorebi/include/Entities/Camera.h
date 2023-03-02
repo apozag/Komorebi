@@ -9,6 +9,7 @@
 template<typename T>
 class VertexConstantBuffer;
 class PostProcMaterial;
+class RenderTarget;
 
 class Camera : public Entity{
 public:

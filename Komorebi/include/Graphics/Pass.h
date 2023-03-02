@@ -28,8 +28,8 @@ public:
 	void Bind( );
 	void Unbind( );
 	unsigned char GetIdx() const { return m_idx; }
-	const PixelShader const* GetPixelShader() const { return m_pixelShader; }
-	const VertexShader const* GetVertexShader() const { return m_vertexShader; }
+	PixelShader const* GetPixelShader() const { return m_pixelShader; }
+	VertexShader const* GetVertexShader() const { return m_vertexShader; }
 
 	REFLECT_BASE()
 

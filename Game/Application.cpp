@@ -58,6 +58,9 @@ void SaveScene() {
 		DepthStencilState::DepthStencilAccess::DEPTH_WRITE
 	));
 
+	skyboxPass->Setup();
+	defaultPass->Setup();
+
 	Model* skybox = new Model("cube");
 	skybox->AddPass(skyboxPass);
 	skybox->AddBindable(new CubeTexture("assets/images/skybox", SRV_FREE_SLOT));
@@ -91,10 +94,10 @@ int CALLBACK WinMain(
 
 		Engine::Init("MyGame", 1024, 1024, 60);
 
-		//SaveScene();
-		LoadScene();
+		SaveScene();
+		//LoadScene();
 
-		return Engine::Run();
+		//return Engine::Run();
 		return 0;
 	}
 	catch (const Exception& e) {

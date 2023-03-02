@@ -1,4 +1,7 @@
+#define NOMINMAX
+
 #include "Core/Window.h"
+#include "Graphics/Graphics.h"
 #include "Core/Exceptions/WindowsThrowMacros.h"
 
 #include "Core/WindowAttachment.h"

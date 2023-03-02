@@ -38,8 +38,8 @@ public:
 public:
 	bool IsRightPressed() const noexcept { return rightPressed; }
 	bool IsLeftPressed() const noexcept { return leftPressed; }
-	float GetX()const noexcept { return x; }
-	float GetY()const noexcept { return y; }
+	int GetX()const noexcept { return x; }
+	int GetY()const noexcept { return y; }
 	Event Read() noexcept;
 	bool IsEmpty() const noexcept { return buffer.empty(); }
 	void Flush() noexcept;

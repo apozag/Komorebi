@@ -1,11 +1,12 @@
 #include "Entities/Light.h"
 #include "Core/Math/Transform.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/Bindables/Resource/RenderTarget.h"
 
 void DirectionalLight::Setup() {
 	m_rt = new RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
-	m_camera = new Camera(1.0472f, 1, 0.1, 1000, m_rt, true);	
+	m_camera = new Camera(1.0472f, 1, 0.1f, 1000, m_rt, true);	
 	m_camera->m_priority = -100;
 	m_camera->Setup();
 }
@@ -14,7 +15,7 @@ void SpotLight::Setup() {
 
 	m_rt = new RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
-	m_camera = new Camera(1.0472f, 1, 0.1, 1000, m_rt, true);
+	m_camera = new Camera(1.0472f, 1, 0.1f, 1000, m_rt, true);
 	m_camera->m_priority = -100;
 	m_camera->Setup();
 }
@@ -23,7 +24,7 @@ void PointLight::Setup() {
 	for (int i = 0; i < 6; i++) {
 		m_rts[i] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
 		m_rts[i].Setup();
-		m_cameras[i] = Camera(1.0472f, 1, 0.1, 1000, &m_rts[i]);
+		m_cameras[i] = Camera(1.0472f, 1, 0.1f, 1000, &m_rts[i]);
 		m_cameras[i].Setup();
 	}
 }

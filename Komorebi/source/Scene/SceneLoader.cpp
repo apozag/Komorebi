@@ -25,10 +25,13 @@ Scene* SceneLoader::LoadScene(const char* filename) {
   Scene* scene = new Scene();
   Engine::m_activeScene = scene;
 
-  DeserializationTypeVisitor visitor(scene, nodeElem);
-  scene->GetReflection().Accept(&visitor);
+  DeserializationTypeVisitor deserializationVisitor(scene, nodeElem);
+  scene->GetReflection().Accept(&deserializationVisitor);
 
   ReflectionHelper::ResolvePendingPointers();
+
+  SetupTypeVisitor setupVisitor(scene);
+  scene->GetReflection().Accept(&setupVisitor);
 
   return scene;
 }

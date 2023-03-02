@@ -1,3 +1,5 @@
+#define NOMINMAX
+
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -5,6 +7,8 @@
 
 #define _XM_NO_INTRINSICS_
 
+#include "Core/Engine.h"
+#include "Core/Math/Transform.h"
 #include "Entities/Drawable.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Renderer.h"

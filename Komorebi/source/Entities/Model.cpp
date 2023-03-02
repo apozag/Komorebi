@@ -14,6 +14,10 @@
 #include "Scene/ModelLoader.h"
 
 void Model::Setup() {
+  ModelLoader::GetInstance()->LoadModel(m_filename, Engine::m_activeScene, m_node, this);
+  for (int i = 0; i < m_drawables.size(); i++) {
+    m_drawables[i]->Setup();
+  }
 }
 
 void Model::AddDrawable(Drawable* drawable) {
@@ -51,19 +55,6 @@ void Model::AddBindable(ResourceBindable* bind) {
 }
 
 void Model::Insert(Node* node, const Transform& worldTransform) {
-  if (m_drawables.size() == 0) {
-    ModelLoader::GetInstance()->LoadModel(m_filename, Engine::m_activeScene, node, this);
-    for (int i = 0; i < m_drawables.size(); i++) {
-      m_drawables[i]->Setup();
-      //for (Pass* pass : m_passes) {
-      //  m_drawables[i]->m_material->AddPass(pass);
-      //}
-      //for (ResourceBindable* bind : m_binds) {
-      //  m_drawables[i]->m_material->AddBindable(bind);
-      //}
-    }
-  }
-
   if (m_hasAnimation) m_animation->Update();
 }
 

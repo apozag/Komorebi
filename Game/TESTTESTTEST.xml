@@ -1,5 +1,5 @@
 <Scene>
-	<m_transformHierarchy PtrId="1146432576" Type="Node">
+	<m_transformHierarchy PtrId="3451392288" Type="Node">
 		<m_entities/>
 		<m_localTransform>
 			<m_position>
@@ -20,10 +20,11 @@
 			</m_scale>
 		</m_localTransform>
 		<m_children>
-			<Node* PtrId="1146433312" Type="Node">
+			<Node* PtrId="3451393040" Type="Node">
 				<m_entities>
-					<Camera* PtrId="1042417120" Type="Camera">
+					<Camera* PtrId="3451245216" Type="Camera">
 						<m_tag>0</m_tag>
+						<m_node>3451393040</m_node>
 						<m_fov>1.047200</m_fov>
 						<m_aspectratio>1.000000</m_aspectratio>
 						<m_near>0.100000</m_near>
@@ -32,10 +33,11 @@
 						<m_orthographic>0</m_orthographic>
 						<m_tagMask>4294967295</m_tagMask>
 						<m_priority>0</m_priority>
-						<CameraMovement* PtrId="1042773712" Type="CameraMovement">
-							<m_tag>0</m_tag>
-						</CameraMovement*>
 					</Camera*>
+					<CameraMovement* PtrId="3449998832" Type="CameraMovement">
+						<m_tag>0</m_tag>
+						<m_node>3451393040</m_node>
+					</CameraMovement*>
 				</m_entities>
 				<m_localTransform>
 					<m_position>
@@ -56,138 +58,141 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>1146432576</m_parent>
-				<Node* PtrId="1146435936" Type="Node">
-					<m_entities>
-						<Model* PtrId="1042863728" Type="Model">
-							<m_tag>0</m_tag>
-							<m_filename>cube</m_filename>
-							<m_passes>
-								<Pass* PtrId="1042353216" Type="Pass">
-									<m_layer>1</m_layer>
-									<m_pixelShader PtrId="1042356384" Type="PixelShader">
-										<m_filename>assets/shaders/skyboxPixel.cso</m_filename>
-									</m_pixelShader>
-									<m_vertexShader PtrId="1042358256" Type="VertexShader">
-										<m_filename>assets/shaders/skyboxVertex.cso</m_filename>
-									</m_vertexShader>
-									<m_binds>
-										<DepthStencilState* PtrId="1042771984" Type="DepthStencilState">
-											<m_DSAccess>2</m_DSAccess>
-											<m_refVal>0</m_refVal>
-										</DepthStencilState*>
-									</m_binds>
-									<m_skinned>0</m_skinned>
-								</Pass*>
-							</m_passes>
-							<m_binds>
-								<CubeTexture* PtrId="1042354944" Type="CubeTexture">
-									<m_path>assets/images/skybox</m_path>
-									<m_slot>0</m_slot>
-								</CubeTexture*>
-							</m_binds>
-						</Model*>
-					</m_entities>
-					<m_localTransform>
-						<m_position>
-							<x>0.000000</x>
-							<y>0.000000</y>
-							<z>0.000000</z>
-						</m_position>
-						<m_rotation>
-							<x>-0.000000</x>
-							<y>0.000000</y>
-							<z>-0.000000</z>
-							<w>1.000000</w>
-						</m_rotation>
-						<m_scale>
+				<m_parent>3451392288</m_parent>
+			</Node*>
+			<Node* PtrId="3555101536" Type="Node">
+				<m_entities>
+					<Model* PtrId="3555229360" Type="Model">
+						<m_tag>0</m_tag>
+						<m_node>3555101536</m_node>
+						<m_filename>cube</m_filename>
+						<m_passes>
+							<Pass* PtrId="3451318352" Type="Pass">
+								<m_layer>1</m_layer>
+								<m_pixelShader PtrId="3451312880" Type="PixelShader">
+									<m_filename>assets/shaders/skyboxPixel.cso</m_filename>
+								</m_pixelShader>
+								<m_vertexShader PtrId="3451319072" Type="VertexShader">
+									<m_filename>assets/shaders/skyboxVertex.cso</m_filename>
+								</m_vertexShader>
+								<m_binds>
+									<DepthStencilState* PtrId="3451275584" Type="DepthStencilState">
+										<m_DSAccess>2</m_DSAccess>
+										<m_refVal>0</m_refVal>
+									</DepthStencilState*>
+								</m_binds>
+								<m_skinned>0</m_skinned>
+							</Pass*>
+						</m_passes>
+						<m_binds>
+							<CubeTexture* PtrId="3451314896" Type="CubeTexture">
+								<m_path>assets/images/skybox</m_path>
+								<m_slot>0</m_slot>
+							</CubeTexture*>
+						</m_binds>
+					</Model*>
+				</m_entities>
+				<m_localTransform>
+					<m_position>
+						<x>0.000000</x>
+						<y>0.000000</y>
+						<z>0.000000</z>
+					</m_position>
+					<m_rotation>
+						<x>-0.000000</x>
+						<y>0.000000</y>
+						<z>-0.000000</z>
+						<w>1.000000</w>
+					</m_rotation>
+					<m_scale>
+						<x>1.000000</x>
+						<y>1.000000</y>
+						<z>1.000000</z>
+					</m_scale>
+				</m_localTransform>
+				<m_children/>
+				<m_parent>3451392288</m_parent>
+			</Node*>
+			<Node* PtrId="3555153056" Type="Node">
+				<m_entities>
+					<Model* PtrId="3555255360" Type="Model">
+						<m_tag>0</m_tag>
+						<m_node>3555153056</m_node>
+						<m_filename>assets/models/demon.fbx</m_filename>
+						<m_passes>
+							<Pass* PtrId="3451317344" Type="Pass">
+								<m_layer>0</m_layer>
+								<m_pixelShader PtrId="3451317632" Type="PixelShader">
+									<m_filename>assets/shaders/SkinnedPixel.cso</m_filename>
+								</m_pixelShader>
+								<m_vertexShader PtrId="3451319648" Type="VertexShader">
+									<m_filename>assets/shaders/SkinnedVertex.cso</m_filename>
+								</m_vertexShader>
+								<m_binds>
+									<DepthStencilState* PtrId="3451273568" Type="DepthStencilState">
+										<m_DSAccess>3</m_DSAccess>
+										<m_refVal>0</m_refVal>
+									</DepthStencilState*>
+								</m_binds>
+								<m_skinned>1</m_skinned>
+							</Pass*>
+						</m_passes>
+						<m_binds/>
+					</Model*>
+				</m_entities>
+				<m_localTransform>
+					<m_position>
+						<x>0.000000</x>
+						<y>0.000000</y>
+						<z>0.000000</z>
+					</m_position>
+					<m_rotation>
+						<x>-0.000000</x>
+						<y>0.000000</y>
+						<z>-0.000000</z>
+						<w>1.000000</w>
+					</m_rotation>
+					<m_scale>
+						<x>1.000000</x>
+						<y>1.000000</y>
+						<z>1.000000</z>
+					</m_scale>
+				</m_localTransform>
+				<m_children/>
+				<m_parent>3451392288</m_parent>
+			</Node*>
+			<Node* PtrId="3555153808" Type="Node">
+				<m_entities>
+					<DirectionalLight* PtrId="3451320224" Type="DirectionalLight">
+						<m_tag>0</m_tag>
+						<m_node>3555153808</m_node>
+						<m_color>
 							<x>1.000000</x>
 							<y>1.000000</y>
 							<z>1.000000</z>
-						</m_scale>
-					</m_localTransform>
-					<m_children/>
-					<m_parent>1146432576</m_parent>
-					<Node* PtrId="1146436672" Type="Node">
-						<m_entities>
-							<Model* PtrId="1040797536" Type="Model">
-								<m_tag>0</m_tag>
-								<m_filename>assets/models/demon.fbx</m_filename>
-								<m_passes>
-									<Pass* PtrId="1042357680" Type="Pass">
-										<m_layer>0</m_layer>
-										<m_pixelShader PtrId="1042351776" Type="PixelShader">
-											<m_filename>assets/shaders/SkinnedPixel.cso</m_filename>
-										</m_pixelShader>
-										<m_vertexShader PtrId="1042358112" Type="VertexShader">
-											<m_filename>assets/shaders/SkinnedVertex.cso</m_filename>
-										</m_vertexShader>
-										<m_binds>
-											<DepthStencilState* PtrId="1042771216" Type="DepthStencilState">
-												<m_DSAccess>3</m_DSAccess>
-												<m_refVal>0</m_refVal>
-											</DepthStencilState*>
-										</m_binds>
-										<m_skinned>1</m_skinned>
-									</Pass*>
-								</m_passes>
-								<m_binds/>
-							</Model*>
-						</m_entities>
-						<m_localTransform>
-							<m_position>
-								<x>0.000000</x>
-								<y>0.000000</y>
-								<z>0.000000</z>
-							</m_position>
-							<m_rotation>
-								<x>-0.000000</x>
-								<y>0.000000</y>
-								<z>-0.000000</z>
-								<w>1.000000</w>
-							</m_rotation>
-							<m_scale>
-								<x>1.000000</x>
-								<y>1.000000</y>
-								<z>1.000000</z>
-							</m_scale>
-						</m_localTransform>
-						<m_children/>
-						<m_parent>1146432576</m_parent>
-						<Node* PtrId="1040826416" Type="Node">
-							<m_entities>
-								<DirectionalLight* PtrId="1042355088" Type="DirectionalLight">
-									<m_tag>0</m_tag>
-									<m_color>
-										<x>1.000000</x>
-										<y>1.000000</y>
-										<z>1.000000</z>
-									</m_color>
-								</DirectionalLight*>
-							</m_entities>
-							<m_localTransform>
-								<m_position>
-									<x>0.000000</x>
-									<y>300.000000</y>
-									<z>-300.000000</z>
-								</m_position>
-								<m_rotation>
-									<x>0.382499</x>
-									<y>0.000000</y>
-									<z>-0.000000</z>
-									<w>0.923956</w>
-								</m_rotation>
-								<m_scale>
-									<x>1.000000</x>
-									<y>1.000000</y>
-									<z>1.000000</z>
-								</m_scale>
-							</m_localTransform>
-							<m_children/>
-							<m_parent>1146432576</m_parent>
-						</Node*>
-					</Node*>
-				</Node*>
+						</m_color>
+					</DirectionalLight*>
+				</m_entities>
+				<m_localTransform>
+					<m_position>
+						<x>0.000000</x>
+						<y>300.000000</y>
+						<z>-300.000000</z>
+					</m_position>
+					<m_rotation>
+						<x>0.382499</x>
+						<y>0.000000</y>
+						<z>-0.000000</z>
+						<w>0.923956</w>
+					</m_rotation>
+					<m_scale>
+						<x>1.000000</x>
+						<y>1.000000</y>
+						<z>1.000000</z>
+					</m_scale>
+				</m_localTransform>
+				<m_children/>
+				<m_parent>3451392288</m_parent>
 			</Node*>
 		</m_children>
 		<m_parent>0</m_parent>

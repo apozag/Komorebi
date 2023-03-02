@@ -62,7 +62,7 @@ namespace reflection {
 
     template <typename T, typename std::enable_if<IsReflected<T>::value, int>::type = 0>
     static const TypeDescriptor* getDynamic(const void* pObj) {
-      return &((T*)pObj)->GetReflectionDynamic();
+      return ((T*)pObj)->GetReflectionDynamic();
     }
 
     template <typename T, typename std::enable_if<!IsReflected<T>::value, int>::type = 0>
@@ -127,7 +127,7 @@ namespace reflection {
     {
       init(this);
     }
-    TypeDescriptor_Struct(const char* name, size_t size, const std::initializer_list<Member>& init) : TypeDescriptor{ nullptr, 0 }, members{ init }
+    TypeDescriptor_Struct(const char* name, size_t size) : TypeDescriptor{ name, size }
     {}
 
     virtual void Accept(TypeVisitor* visitor) const override;
@@ -232,6 +232,15 @@ namespace reflection {
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
     void SetValueFromString(void* pObj, const char* valueCStr) const override {}
+  };
+
+  class TypeDescriptor_Ignored : public TypeDescriptor_Struct {
+  public:
+    TypeDescriptor_Ignored() : TypeDescriptor_Struct("", (size_t)0) {}
+    ~TypeDescriptor_Ignored() {}
+    virtual void Accept(TypeVisitor* visitor) const override {}
+    virtual std::string GetValueStr(const void* obj) const override { return ""; }
+    virtual void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
 
   template <typename T>

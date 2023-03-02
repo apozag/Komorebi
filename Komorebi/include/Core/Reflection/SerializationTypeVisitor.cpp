@@ -29,12 +29,12 @@ namespace reflection {
     }
     rapidxml::xml_node<>* newNode = m_doc->allocate_node(rapidxml::node_type::node_element, m_varName);
     m_xmlParent->append_node(newNode);
-    m_xmlParent = newNode;
     size_t size = type->getSize(m_pObj);
     const void* pObj = m_pObj;
     for (int i = 0; i < size; i++) {
       m_pObj = type->getItem(pObj, i);
       m_varName = nullptr;
+      m_xmlParent = newNode;
       type->itemType->Accept(this);
     }
   }
@@ -74,6 +74,11 @@ namespace reflection {
     concreteType->Accept(this);
 
     rapidxml::xml_node<>* newNode = firstChild ? firstChild->next_sibling() : xmlParent->first_node();
+
+    if (!newNode) {
+      return;
+    }
+
     std::string* str = new std::string(std::to_string((unsigned int)*ppObj));
     ReflectionHelper::TrackString(str);
     rapidxml::xml_attribute<>* idAtt = m_doc->allocate_attribute(__PtrIdAttName, str->c_str());
@@ -96,7 +101,6 @@ namespace reflection {
       m_varName = member.name;
       m_xmlParent = xmlParent;
       member.type->Accept(this);
-      m_xmlParent = xmlParent;
     }
   }
 
