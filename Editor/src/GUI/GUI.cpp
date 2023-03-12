@@ -10,7 +10,69 @@
 #include "Core/Reflection/TypeDescriptors.h"
 #include "GUI/ImGuiTypeVisitor.h"
 
+#include "GUI/SceneGUIWindow.h"
+
 #include "Scene/Scene.h"
+
+#include "Scene/SceneLoader.h"
+
+void DrawRawEditor(){
+  ImGui::Begin("Raw Editor");
+
+  ImGuiTypeVisitor visitor(Engine::m_activeScene);
+  Engine::m_activeScene->GetReflection().Accept(&visitor);
+
+  ImGui::End();
+}
+
+void DrawSaveSceneMenu() {
+  static bool setup = false;
+  static constexpr size_t buffSize = 64;
+  static char buff[buffSize];
+  if (!setup) {
+    buff[0] = '\0';
+    setup = true;
+  }
+  ImGui::InputText("##SaveFileName", buff, buffSize);
+  ImGui::SameLine();
+  if (ImGui::Button("Save##SaveButton") && buff[0] != '\0') {
+    SceneLoader::SaveScene(Engine::m_activeScene, buff);
+  }
+  ImGui::EndMenu();
+}
+
+void DrawTopMenu() {
+  ImGui::BeginMainMenuBar();
+
+  // File Menu
+  if (ImGui::BeginMenu("File"))
+  {
+
+    // Save Scene
+    if (ImGui::BeginMenu("Save Scene"))
+    {
+      DrawSaveSceneMenu();
+    }
+
+    ImGui::EndMenu();
+  }
+
+  // Raw Editor
+  {
+    static bool enabled = false;
+    if (ImGui::Button("Raw Editor")) enabled = !enabled;
+    if (enabled) DrawRawEditor();
+  }
+
+  // Scene
+  {
+    static bool enabled = false;
+    if (ImGui::Button("Scene")) enabled = !enabled;
+    if (enabled) DrawSceneGUIWindow();
+  }
+
+  ImGui::EndMainMenuBar();
+}
 
 void Render(float /*dt*/) {
 
@@ -21,13 +83,7 @@ void Render(float /*dt*/) {
   ImGui::NewFrame();
 
   {
-    ImGui::Begin("Editor Window");
-
-    ImGuiTypeVisitor visitor(Engine::m_activeScene);
-    Engine::m_activeScene->GetReflection().Accept(&visitor);
-
-    ImGui::End();
-
+    DrawTopMenu();
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
   }

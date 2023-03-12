@@ -185,6 +185,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3rd\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="3rd\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="3rd\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="3rd\imgui\imgui.cpp" />
@@ -195,8 +196,10 @@
     <ClCompile Include="src\Behaviours\CameraMovement.cpp" />
     <ClCompile Include="src\GUI\GUI.cpp" />
     <ClCompile Include="src\GUI\ImGuiTypeVisitor.cpp" />
+    <ClCompile Include="src\GUI\SceneGUIWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="3rd\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="3rd\imgui\backends\imgui_impl_dx11.h" />
     <ClInclude Include="3rd\imgui\backends\imgui_impl_win32.h" />
     <ClInclude Include="3rd\imgui\imconfig.h" />
@@ -208,6 +211,7 @@
     <ClInclude Include="include\Behaviours\CameraMovement.h" />
     <ClInclude Include="include\GUI\GUI.h" />
     <ClInclude Include="include\GUI\ImGuiTypeVisitor.h" />
+    <ClInclude Include="include\GUI\SceneGUIWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

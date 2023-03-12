@@ -31,6 +31,9 @@
     <Filter Include="Archivos de encabezado\Behaviours">
       <UniqueIdentifier>{1a42c01d-4899-4933-8cca-75ded20c4d31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="3rd\ImGuizmo">
+      <UniqueIdentifier>{41535190-392c-403a-adaa-239e13356fa7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp">
@@ -61,6 +64,12 @@
       <Filter>Archivos de origen\Behaviours</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\ImGuiTypeVisitor.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="3rd\ImGuizmo\ImGuizmo.cpp">
+      <Filter>3rd\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\SceneGUIWindow.cpp">
       <Filter>Archivos de origen\GUI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -97,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="include\GUI\ImGuiTypeVisitor.h">
       <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\SceneGUIWindow.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="3rd\ImGuizmo\ImGuizmo.h">
+      <Filter>3rd\ImGuizmo</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

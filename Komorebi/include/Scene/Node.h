@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "Core/Math/Transform.h"
 #include "Core/Reflection/ReflectionMacros.h"
 
@@ -11,7 +12,7 @@ class Node : public GameObject{
 	friend class Scene;
 public:
 
-	Node(){}
+	Node() : m_name("Node"){}
 
 	template<class T>
 	inline T* GetEntity();
@@ -21,6 +22,8 @@ public:
 	std::vector<OWNED_PTR(Node)> m_children;	
 
 	bool m_enabled = true;
+
+	std::string m_name;
 
 	REFLECT_BASE()
 
