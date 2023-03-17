@@ -2,7 +2,7 @@
 #include "Graphics/GraphicsThrowMacros.h"
 
 SamplerState::~SamplerState() { 
-	m_sampler->Release();
+	//m_sampler->Release();
 }
 
 void SamplerState::Setup() {

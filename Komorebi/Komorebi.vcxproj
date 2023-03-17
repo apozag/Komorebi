@@ -398,9 +398,12 @@
     <ClInclude Include="include\Animation\Animation.h" />
     <ClInclude Include="include\Animation\Skeleton.h" />
     <ClInclude Include="include\Core\AssetManager.h" />
+    <ClInclude Include="include\Core\Memory\Allocator.h" />
     <ClInclude Include="include\Core\Reflection\DeserializationTypeVisitor.h" />
+    <ClInclude Include="include\Core\Reflection\ReflectionSettings.h" />
     <ClInclude Include="include\Core\Reflection\SerializationTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\TypeVisitor.h" />
+    <ClInclude Include="include\Core\Reflection\UnloadTypeVisitor.h" />
     <ClInclude Include="include\Core\WindowAttachment.h" />
     <ClInclude Include="include\Core\Defines.h" />
     <ClInclude Include="include\Core\Engine.h" />
@@ -460,13 +463,16 @@
     <ClInclude Include="include\Graphics\Renderer.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
+    <ClInclude Include="include\Scene\AuxNode.h" />
     <ClInclude Include="include\Scene\ModelLoader.h" />
     <ClInclude Include="include\Scene\Node.h" />
     <ClInclude Include="include\Scene\Scene.h" />
     <ClInclude Include="include\Scene\SceneLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Core\Reflection\ReflectionSettings.cpp" />
     <ClCompile Include="include\Core\Reflection\SerializationTypeVisitor.cpp" />
+    <ClCompile Include="include\Core\Reflection\UnloadTypeVisitor.cpp" />
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp" />
     <ClCompile Include="source\Animation\Animation.cpp" />
     <ClCompile Include="source\Animation\Skeleton.cpp" />

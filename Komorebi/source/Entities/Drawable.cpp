@@ -1,5 +1,6 @@
 #define NOMINMAX
 
+#include "Core/Memory/Allocator.h"
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"
@@ -16,12 +17,19 @@ Drawable::Drawable(const Drawable& drawable) {
 }
 
 Drawable* Drawable::Clone() {
-	return new Drawable(*this);
+	return memory::Factory::Create<Drawable>(*this);//new Drawable(*this);
 }
 
 void Drawable::Setup() {
-	m_modelCbuffer = new VertexConstantBuffer<ModelMatrixData>(VCBUFF_MODEL_SLOT);
+	m_modelCbuffer = memory::Factory::Create< VertexConstantBuffer<ModelMatrixData>>(VCBUFF_MODEL_SLOT);
 	AddBindable(m_modelCbuffer);
+}
+
+Drawable::~Drawable() {
+	//delete(m_modelCbuffer);
+	for (ResourceBindable* bind : m_binds) {
+		//delete(bind);
+	}
 }
 
 void Drawable::AddBindable(ResourceBindable* bindable) {

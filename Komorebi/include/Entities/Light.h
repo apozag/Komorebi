@@ -13,6 +13,8 @@ public:
   DirectionalLight() {};
   DirectionalLight(DirectX::SimpleMath::Vector3 m_color) : m_color(m_color) {};
 
+  ~DirectionalLight();
+
   virtual void Setup() override;
 
   void Insert(Node* node, const Transform& worldTransform) override;
@@ -33,6 +35,8 @@ public:
     m_color(m_color)
   {}
 
+  ~PointLight();
+
   virtual void Setup() override;
 
   void Insert(Node* node, const Transform& worldTransform) override;
@@ -52,6 +56,8 @@ public:
     m_phi(m_phi),
     m_theta(m_theta)
   {}
+
+  ~SpotLight();
 
   virtual void Setup() override;
 

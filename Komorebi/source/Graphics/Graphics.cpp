@@ -3,6 +3,7 @@
 #include <d3dcompiler.h>
 #include "Graphics/GraphicsThrowMacros.h"
 #include "3rd/dxerr/dxerr.h"
+#include "Core/Memory/Allocator.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 #include "Graphics/Bindables/State/Viewport.h"
 #include "Core/WindowAttachment.h"
@@ -183,12 +184,12 @@ Graphics::Graphics(HWND hWnd, int width, int height) : m_viewportWidth(width), m
 
 Graphics::~Graphics()
 {
-	if (m_device)
+	/*if (m_device)
 		m_device->Release();
 	if (m_swapChain)
 		m_swapChain->Release();
 	if (m_context)
-		m_context->Release();
+		m_context->Release();*/
 }
 
 void Graphics::SwapBuffers()
@@ -217,11 +218,11 @@ void Graphics::ClearBuffer(float r, float g, float b) noexcept
 
 void Graphics::Init()
 {
-	m_target = new RenderTarget(m_swapChain.Get());
+	m_target = memory::Factory::Create<RenderTarget>(m_swapChain.Get());
 
-	m_viewport = new Viewport(0,0, m_viewportWidth, m_viewportHeight);
+	m_viewport = memory::Factory::Create<Viewport>(0,0, m_viewportWidth, m_viewportHeight);
 
-	//m_target->Bind();
+	m_target->Bind();
 	m_viewport->Bind();
 
 	m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

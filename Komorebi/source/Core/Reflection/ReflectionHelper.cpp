@@ -63,6 +63,12 @@ namespace reflection {
     }
   }
 
+  void ReflectionHelper::ClearAll() {
+    ClearTrackedStrings();
+    GetPtrInfoVector().clear();
+    GetPendingPtrVector().clear();
+  }
+
   TypeDict& ReflectionHelper::GetTypeDict() {
     static TypeDict typeDict;
     return typeDict;
@@ -82,4 +88,5 @@ namespace reflection {
     static PtrIdVector ptrVector;
     return ptrVector;
   }
+
 }

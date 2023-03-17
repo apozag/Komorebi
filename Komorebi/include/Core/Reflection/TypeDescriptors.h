@@ -95,6 +95,7 @@ namespace reflection {
     size_t size;
 
     void (*construct)(void*);
+    void* (*create)();
 
     TypeDescriptor(const char* name, size_t size) : name{ name }, size{ size }, construct([](void* obj) {})
     {}
@@ -238,7 +239,7 @@ namespace reflection {
   public:
     TypeDescriptor_Ignored() : TypeDescriptor_Struct("", (size_t)0) {}
     ~TypeDescriptor_Ignored() {}
-    virtual void Accept(TypeVisitor* visitor) const override {}
+    virtual void Accept(TypeVisitor* visitor) const override;
     virtual std::string GetValueStr(const void* obj) const override { return ""; }
     virtual void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };

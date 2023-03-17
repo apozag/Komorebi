@@ -1,5 +1,6 @@
 #include "Graphics/BindableSlotsInfo.h"
 
+#include "Core/Memory/Allocator.h"
 #include "Entities/Camera.h"
 #include "Core/Math/Transform.h"
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"
@@ -14,7 +15,7 @@ void Camera::Setup() {
 	else {
 		m_proj = DirectX::XMMatrixPerspectiveFovLH(m_fov, m_aspectratio, m_near, 1000);
 	}
-	m_cameraTransformCB = new VertexConstantBuffer<CameraTransformCB>(VCBUFF_CAMERATRANSFORM_SLOT);
+	m_cameraTransformCB = memory::Factory::Create<VertexConstantBuffer<CameraTransformCB>>(VCBUFF_CAMERATRANSFORM_SLOT);
 	if(!m_rt) m_rt = GetRenderer()->GetRenderTarget(m_RTId);
 }
 
@@ -30,6 +31,10 @@ void Camera::Bind( const Transform* worldTransform) const {
 	m_cameraTransformCB->Bind ();
 	m_rt->Bind ();
 	m_rt->Clear ( 0,0,0);
+}
+
+Camera::~Camera() {
+	//delete(m_cameraTransformCB);
 }
 
 void Camera::Unbind( ) const {

@@ -17,6 +17,7 @@ class SceneLoader {
 public:
 
   static Scene* LoadScene(const char* filename);
+  static void UnloadScene(Scene* scene);
 
   static void SaveScene(Scene* scene, const char* filename);
 };

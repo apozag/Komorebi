@@ -21,7 +21,7 @@ IndexBuffer::IndexBuffer(unsigned short* indices, unsigned int count) {
 }
 
 IndexBuffer::~IndexBuffer() {
-	m_indexBuffer->Release();
+	//m_indexBuffer->Release();
 }
 
 void IndexBuffer::Bind() const {

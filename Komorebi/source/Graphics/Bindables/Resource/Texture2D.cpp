@@ -28,7 +28,7 @@ Texture2D::Texture2D(wrl::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, 
 }
 
 Texture2D::~Texture2D() {
-	m_srv->Release();
+	//m_srv->Release();
 }
 
 void Texture2D::Setup() {

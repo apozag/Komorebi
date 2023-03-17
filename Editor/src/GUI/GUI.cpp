@@ -5,6 +5,7 @@
 #include "imgui/backends/imgui_impl_dx11.h"
 
 #include "Core/Engine.h"
+#include "Core/Memory/Allocator.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 
 #include "Core/Reflection/TypeDescriptors.h"
@@ -13,7 +14,6 @@
 #include "GUI/SceneGUIWindow.h"
 
 #include "Scene/Scene.h"
-
 #include "Scene/SceneLoader.h"
 
 void DrawRawEditor(){
@@ -41,6 +41,23 @@ void DrawSaveSceneMenu() {
   ImGui::EndMenu();
 }
 
+void DrawLoadSceneMenu() {
+  static bool setup = false;
+  static constexpr size_t buffSize = 64;
+  static char buff[buffSize];
+  if (!setup) {
+    buff[0] = '\0';
+    setup = true;
+  }
+  ImGui::InputText("##LoadFileName", buff, buffSize);
+  ImGui::SameLine();
+  if (ImGui::Button("Load##LoadButton") && buff[0] != '\0') {
+    SceneLoader::UnloadScene(Engine::m_activeScene);
+    Engine::m_activeScene = SceneLoader::LoadScene(buff);
+  }
+  ImGui::EndMenu();
+}
+
 void DrawTopMenu() {
   ImGui::BeginMainMenuBar();
 
@@ -52,6 +69,11 @@ void DrawTopMenu() {
     if (ImGui::BeginMenu("Save Scene"))
     {
       DrawSaveSceneMenu();
+    }
+    // Load Scene
+    if (ImGui::BeginMenu("Load Scene"))
+    {
+      DrawLoadSceneMenu();
     }
 
     ImGui::EndMenu();

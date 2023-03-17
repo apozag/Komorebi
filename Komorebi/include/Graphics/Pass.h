@@ -20,7 +20,7 @@ public:
 	Pass() : m_layer(PASSLAYER_OPAQUE), m_idx(static_idx++) {}
 	Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned = false);
 	Pass(const char* vsFilename, const char* psFilename, unsigned int m_layer, bool skinned = false);
-	~Pass() {};
+	~Pass();
 
 	void Setup() override;
 

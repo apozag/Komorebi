@@ -53,7 +53,7 @@ public:
 	}
 
 	~ConstantBuffer() {
-		m_constantBuffer->Release();
+		//m_constantBuffer->Release();
 	}
 
 	virtual void Bind() const override = 0;

@@ -4,8 +4,8 @@
 #include "Graphics/GraphicsThrowMacros.h"
 
 VertexShader::~VertexShader() {
-	m_vertexShader->Release();
-	m_bytecodeBlob->Release();
+	//m_vertexShader->Release();
+	//m_bytecodeBlob->Release();
 }
 
 void VertexShader::Setup() {

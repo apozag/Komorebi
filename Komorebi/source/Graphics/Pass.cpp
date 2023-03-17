@@ -1,5 +1,6 @@
 #include "Graphics/Pass.h"
 
+#include "Core\Memory\Allocator.h"
 #include "Graphics/Bindables/State/StateBindable.h"
 #include "Graphics/Bindables/State/VertexShader.h"
 #include "Graphics/Bindables/State/PixelShader.h"
@@ -10,7 +11,7 @@ unsigned char Pass::static_idx = 0;
 
 Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
 
-Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : Pass(new VertexShader(vsFilename), new PixelShader(psFilename), layer, skinned) {}
+Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : Pass(memory::Factory::Create<VertexShader>(vsFilename), memory::Factory::Create<PixelShader>(psFilename), layer, skinned) {}
 
 void Pass::Setup() {
 	m_vertexShader->Setup();
@@ -25,7 +26,7 @@ void Pass::Setup() {
 			{"BONES",	 0, DXGI_FORMAT_R32G32B32A32_UINT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"WEIGHTS",	 0, DXGI_FORMAT_R32G32B32A32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
-		AddBindable(new InputLayout(ied, 6, *m_vertexShader));
+		AddBindable(memory::Factory::Create<InputLayout>(ied, 6, *m_vertexShader));
 	}
 	else {
 		const D3D11_INPUT_ELEMENT_DESC ied[] =
@@ -35,9 +36,16 @@ void Pass::Setup() {
 			{"TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,	 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
-		AddBindable(new InputLayout(ied, 4, *m_vertexShader));
+		AddBindable(memory::Factory::Create<InputLayout>(ied, 4, *m_vertexShader));
 	}
-	//AddBindable(new RasterizerState());
+}
+
+Pass::~Pass() {
+	/*delete(m_pixelShader);
+	delete(m_vertexShader);
+	for (StateBindable* bind : m_binds) {
+		delete(bind);
+	}*/
 }
 
 void Pass::AddBindable(StateBindable* bind){

@@ -34,7 +34,7 @@ Texture3D::Texture3D(unsigned char* data, unsigned int width, unsigned int heigh
 }
 
 Texture3D::~Texture3D() {
-	m_srv->Release();
+	//m_srv->Release();
 }
 
 void Texture3D::Bind() const {

@@ -1,7 +1,7 @@
 #include "Graphics/Bindables/State/BlendState.h"
 
 BlendState::~BlendState() {
-	m_blendState->Release();
+	//m_blendState->Release();
 }
 
 void BlendState::Setup() {

@@ -5,8 +5,8 @@
 #include "Graphics/GraphicsThrowMacros.h"
 
 PixelShader::~PixelShader() {
-	m_pixelShader->Release();
-	m_reflection->Release();
+	//m_pixelShader->Release();
+	//m_reflection->Release();
 }
 
 void PixelShader::Setup() {

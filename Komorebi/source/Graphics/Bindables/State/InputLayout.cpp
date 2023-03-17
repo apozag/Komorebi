@@ -8,7 +8,7 @@ InputLayout::InputLayout(const D3D11_INPUT_ELEMENT_DESC* ied, unsigned int numEl
 }
 
 InputLayout::~InputLayout() {
-	m_inputLayout->Release();
+	//m_inputLayout->Release();
 }
 
 void InputLayout::Bind() const {

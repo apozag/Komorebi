@@ -1,5 +1,6 @@
 
 #define NOMINMAX
+
 #include <iostream>
 
 #include <Windows.h>
@@ -27,7 +28,11 @@ int CALLBACK WinMain(
 
 		Engine::m_activeScene = SceneLoader::LoadScene("assets/scenes/testScene.xml");
 
-		return Engine::Run();
+		int result = Engine::Run();
+
+		_CrtDumpMemoryLeaks();
+
+		return result;
 	}
 	catch (const Exception& e) {
 		MessageBoxA(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
@@ -39,6 +44,9 @@ int CALLBACK WinMain(
 		MessageBoxA(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
 
 	}
+
+	_CrtDumpMemoryLeaks();
+
 	return -1;
 }
 

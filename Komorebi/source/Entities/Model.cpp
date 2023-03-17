@@ -20,6 +20,10 @@ void Model::Setup() {
   }
 }
 
+Model::~Model() {
+  //delete(m_animation);
+}
+
 void Model::AddDrawable(Drawable* drawable) {
 
   //Update BVH data

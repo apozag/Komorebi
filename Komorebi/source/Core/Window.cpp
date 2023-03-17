@@ -169,12 +169,13 @@ LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 }
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
+	bool blocked = false;
+
 	for (WindowAttachment* attachment : m_attachments) {
-		if (attachment->WndProc(hWnd, msg, wParam, lParam)) {
-			return true;
-		}
-		else if (attachment->IsBlocking()) {
+		attachment->WndProc(hWnd, msg, wParam, lParam);
+		if (attachment->IsBlocking()) {
 			return DefWindowProc(hWnd, msg, wParam, lParam);
+			blocked = true;
 		}
 	}
 
@@ -186,66 +187,71 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	case WM_KILLFOCUS:
 		m_keyboard.ClearState();
 		break;
+	}
 
-		/***KEYBOARD MESSAGES***/
-	case WM_KEYDOWN:
-	case WM_SYSKEYDOWN:
-		if(wParam == 27)
-			PostQuitMessage(0);
-		else if (!(lParam & 0x40000000) || m_keyboard.AutorepeatIsEnabled())
-			m_keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
-		break;
-	case WM_KEYUP:
-	case WM_SYSKEYUP:
-		m_keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
-		break;
-	case WM_CHAR:
-		m_keyboard.OnChar(static_cast<unsigned char>(wParam));
-		break;
-		/* END KEYBOARD MESSAGES*/
+	if (!blocked) {
+		switch (msg) {
+			/***KEYBOARD MESSAGES***/
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+			if (wParam == 27)
+				PostQuitMessage(0);
+			else if (!(lParam & 0x40000000) || m_keyboard.AutorepeatIsEnabled())
+				m_keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+			break;
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			m_keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
+			break;
+		case WM_CHAR:
+			m_keyboard.OnChar(static_cast<unsigned char>(wParam));
+			break;
+			/* END KEYBOARD MESSAGES*/
 
-		/*MOUSE MESSAGES*/
-	case WM_RBUTTONDOWN:
-	{
-		const POINTS p = MAKEPOINTS(lParam);
-		m_mouse.OnLeftPressed(p.x, p.y);
-		break;
-	}
-	case WM_RBUTTONUP:
-	{
-		const POINTS p = MAKEPOINTS(lParam);
-		m_mouse.OnRightReleased(p.x, p.y);
-		break;
-	}
-	case WM_LBUTTONDOWN:
-	{
-		const POINTS p = MAKEPOINTS(lParam);
-		m_mouse.OnLeftPressed(p.x, p.y);
-		break;
-	}
-	case WM_LBUTTONUP:
-	{
-		const POINTS p = MAKEPOINTS(lParam);
-		m_mouse.OnLeftReleased(p.x, p.y);
-		break;
-	}
-	case WM_MOUSEWHEEL:
-	{
-		const POINTS p = MAKEPOINTS(lParam);
-		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
-			m_mouse.OnWheelUp(p.x, p.y);
-		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
-			m_mouse.OnWheelDown(p.x, p.y);
-		break;
-	}
-	case WM_MOUSEMOVE:
-	{
-		const POINTS p = MAKEPOINTS(lParam);
-		m_mouse.OnMouseMove(p.x, p.y);
-		break;
-	}
+			/*MOUSE MESSAGES*/
+		case WM_RBUTTONDOWN:
+		{
+			const POINTS p = MAKEPOINTS(lParam);
+			m_mouse.OnLeftPressed(p.x, p.y);
+			break;
+		}
+		case WM_RBUTTONUP:
+		{
+			const POINTS p = MAKEPOINTS(lParam);
+			m_mouse.OnRightReleased(p.x, p.y);
+			break;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			const POINTS p = MAKEPOINTS(lParam);
+			m_mouse.OnLeftPressed(p.x, p.y);
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			const POINTS p = MAKEPOINTS(lParam);
+			m_mouse.OnLeftReleased(p.x, p.y);
+			break;
+		}
+		case WM_MOUSEWHEEL:
+		{
+			const POINTS p = MAKEPOINTS(lParam);
+			if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
+				m_mouse.OnWheelUp(p.x, p.y);
+			else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
+				m_mouse.OnWheelDown(p.x, p.y);
+			break;
+		}
+		case WM_MOUSEMOVE:
+		{
+			const POINTS p = MAKEPOINTS(lParam);
+			m_mouse.OnMouseMove(p.x, p.y);
+			break;
+		}
 		/*END MOUSE MESSAGES*/
+		}
 	}
+
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 

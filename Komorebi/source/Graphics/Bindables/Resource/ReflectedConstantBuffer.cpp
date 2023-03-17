@@ -26,7 +26,7 @@ ReflectedConstantBuffer::ReflectedConstantBuffer(std::vector<ConstantBufferVaria
 	cbd.Usage = D3D11_USAGE_DYNAMIC;
 	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	cbd.MiscFlags = 0u;
-	cbd.ByteWidth = m_size;
+	cbd.ByteWidth = (unsigned int) m_size;
 	cbd.StructureByteStride = 0;
 
 	GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, NULL, m_constantBuffer.GetAddressOf()));

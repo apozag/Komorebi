@@ -28,6 +28,8 @@ namespace reflection {
 
     static void ResolvePendingPointers();
 
+    static void ClearAll();
+
   private:
     ReflectionHelper();
     

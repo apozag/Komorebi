@@ -1,21 +1,22 @@
 #include "Entities/Light.h"
+#include "Core/Memory/Allocator.h"
 #include "Core/Math/Transform.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 
 void DirectionalLight::Setup() {
-	m_rt = new RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
+	m_rt = memory::Factory::Create<RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
-	m_camera = new Camera(1.0472f, 1, 0.1f, 1000, m_rt, true);	
+	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, m_rt, true);
 	m_camera->m_priority = -100;
 	m_camera->Setup();
 }
 
 void SpotLight::Setup() {
 
-	m_rt = new RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
+	m_rt = memory::Factory::Create<RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
-	m_camera = new Camera(1.0472f, 1, 0.1f, 1000, m_rt, true);
+	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, m_rt, true);
 	m_camera->m_priority = -100;
 	m_camera->Setup();
 }
@@ -27,6 +28,19 @@ void PointLight::Setup() {
 		m_cameras[i] = Camera(1.0472f, 1, 0.1f, 1000, &m_rts[i]);
 		m_cameras[i].Setup();
 	}
+}
+
+DirectionalLight::~DirectionalLight() {
+	//delete(m_rt);
+	//delete(m_camera);
+}
+
+SpotLight::~SpotLight() {
+	//delete(m_rt);
+	//delete(m_camera);
+}
+
+PointLight::~PointLight() {
 }
 
 void DirectionalLight::Insert(Node* node, const Transform& worldTransform) {

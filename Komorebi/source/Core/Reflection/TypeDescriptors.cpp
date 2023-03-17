@@ -3,6 +3,7 @@
 
 #include "Core/Reflection/TypeDescriptors.h"
 #include "Core/Reflection//TypeVisitor.h"
+#include "Core/Reflection/ReflectionSettings.h"
 #include "Core/GameObject.h"
 
 namespace reflection {
@@ -23,6 +24,11 @@ namespace reflection {
   }
   void TypeDescriptor_StdVector::Accept(TypeVisitor* visitor) const {
     visitor->Visit(this);
+  }
+  void TypeDescriptor_Ignored::Accept(TypeVisitor* visitor) const {
+    if (__internal::forceVisitIgnored) {
+      visitor->Visit(this);
+    }
   }
   
   int TypeDescriptor_Struct::getFirstMemberIdx() const {

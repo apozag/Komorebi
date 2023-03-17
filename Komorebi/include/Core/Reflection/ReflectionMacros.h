@@ -10,6 +10,8 @@
 #include "Core/Reflection/TypeDescriptors.h"
 #include "Core/Reflection/ReflectionHelper.h"
 
+#include "Core/Memory/Allocator.h"
+
 #define CAT(a, b) a ## b
 
 #define __REFLECT(X)	\
@@ -40,27 +42,28 @@
   } \
   static void initReflection(reflection::TypeDescriptor_Struct*);
 
-#define __REFLECT_STRUCT_BEGIN(type, parentTypeDescParam, lambdaContent) \
+#define __REFLECT_STRUCT_BEGIN(type, parentTypeDescParam, CONSTRUCT_EXP, CREATE_EXP) \
   void type::initReflection(reflection::TypeDescriptor_Struct* typeDesc) { \
     using T = type; \
     typeDesc->name = #type; \
     typeDesc->size = sizeof(T); \
     typeDesc->parentTypeDesc = parentTypeDescParam; \
-    typeDesc->construct = [](void* obj){ lambdaContent };  \
+    typeDesc->construct = [](void* obj){ CONSTRUCT_EXP };  \
+    typeDesc->create = []()->void*{ CREATE_EXP };  \
     typeDesc->setup = [](void* obj){ if (!std::is_abstract<type>()) (*(type*)obj).Setup(); };  \
     typeDesc->members = {
 
 #define REFLECT_STRUCT_BASE_BEGIN(type) \
-  __REFLECT_STRUCT_BEGIN(type, nullptr, new (obj) type();)
+  __REFLECT_STRUCT_BEGIN(type, nullptr, new (obj) type();, return (void*)memory::Factory::Create<type>();)
 
 #define REFLECT_STRUCT_BASE_VIRTUAL_BEGIN(type) \
-  __REFLECT_STRUCT_BEGIN(type, nullptr, )
+  __REFLECT_STRUCT_BEGIN(type, nullptr, , return nullptr;)
 
 #define REFLECT_STRUCT_VIRTUAL_BEGIN(type, parentType) \
-  __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), )
+  __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), , return nullptr;)
 
 #define REFLECT_STRUCT_BEGIN(type, parentType) \
-  __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), new (obj) type();)
+  __REFLECT_STRUCT_BEGIN(type, &parentType::GetReflection(), new (obj) type();, return (void*)memory::Factory::Create<type>();)
 
 #define REFLECT_STRUCT_MEMBER(name) \
       { #name, reflection::TypeResolver<decltype(T::name)>::get(), [](const void* obj)->void*{return &(((T*)obj)->name);}},

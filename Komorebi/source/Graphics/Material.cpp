@@ -1,4 +1,5 @@
 #include "Graphics/Material.h"
+#include "Core/Memory/Allocator.h"
 #include "Graphics/Bindables/Resource/ReflectedConstantBuffer.h"
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Pass.h"
@@ -13,6 +14,18 @@ void Material::Setup() {
 	for (Pass* pass : m_passes) {
 		ProcessPass(pass);
 	}
+}
+
+Material::~Material() {
+	/*for (ReflectedConstantBuffer* cb : m_cbuffers) {
+		delete(cb);
+	}
+	for (Pass* pass : m_passes) {
+		delete(pass);
+	}
+	for (ResourceBindable* bind : m_binds) {
+		delete(bind);
+	}*/
 }
 
 void Material::Bind() {
@@ -82,7 +95,7 @@ void Material::ProcessPass(Pass* pass) {
 
 				variables.push_back({ vdesc, tdesc });
 			}
-			ReflectedVertexConstantBuffer* cbuff = new ReflectedVertexConstantBuffer(variables, register_index);
+			ReflectedVertexConstantBuffer* cbuff = memory::Factory::Create<ReflectedVertexConstantBuffer>(variables, register_index);
 			m_cbuffers.push_back(cbuff);
 			m_binds.push_back(cbuff);
 		}
@@ -132,7 +145,7 @@ void Material::ProcessPass(Pass* pass) {
 
 				variables.push_back({ vdesc, tdesc });
 			}
-			ReflectedPixelConstantBuffer* cbuff = new ReflectedPixelConstantBuffer(variables, register_index);
+			ReflectedPixelConstantBuffer* cbuff = memory::Factory::Create<ReflectedPixelConstantBuffer>(variables, register_index);
 			m_cbuffers.push_back(cbuff);
 			m_binds.push_back(cbuff);
 		}

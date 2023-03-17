@@ -25,7 +25,7 @@ VertexBuffer::VertexBuffer( POD::Vertex* data, unsigned int size, unsigned int s
 }
 
 VertexBuffer::~VertexBuffer() {
-	m_vertexBuffer->Release();
+	//m_vertexBuffer->Release();
 }
 
 void VertexBuffer::Bind( ) const {

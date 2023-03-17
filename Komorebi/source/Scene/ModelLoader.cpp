@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Core/Memory/Allocator.h"
 #include "Scene/ModelLoader.h"
 #include "Graphics/Bindables/Resource/Texture2D.h"
 #include "Graphics/Bindables/State/RasterizerState.h"
@@ -39,14 +40,14 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 
   if (filename == "cube") {
     Mesh* mesh = GenerateCube();
-    mesh->m_material = new Material();
+    mesh->m_material = memory::Factory::Create<Material>();
     for (Pass* pass : model->GetPasses()) {
       mesh->m_material->AddPass(pass);
     }
     for (ResourceBindable* bind : model->GetBinds()) {
       mesh->m_material->AddBindable(bind);
     }
-    sceneGraph->AddNode(mesh, Transform(), sceneGraphParent);
+    sceneGraph->AddNode(mesh, Transform(), sceneGraphParent, true);
     model->AddDrawable(mesh);
     return;
   }
@@ -90,11 +91,11 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 }
 
 Model* ModelLoader::LoadModel(std::string path, Scene* sceneGraph, Node* sceneGraphParent) {
-  Model* model = new Model();
+  Model* model = memory::Factory::Create<Model>();
   if (path == "cube") {
     Mesh* mesh = GenerateCube();
-    mesh->m_material = new Material();
-    sceneGraph->AddNode(mesh, Transform(), sceneGraphParent);
+    mesh->m_material = memory::Factory::Create<Material>();
+    sceneGraph->AddNode(mesh, Transform(), sceneGraphParent, true);
     model->AddDrawable(mesh);
   }
   else {
@@ -105,7 +106,7 @@ Model* ModelLoader::LoadModel(std::string path, Scene* sceneGraph, Node* sceneGr
 
 Mesh* ModelLoader::GenerateMesh(std::vector<POD::Vertex> vertices, std::vector<unsigned short> indices) {
   POD::Vector3 min = vertices[0].pos, max = vertices[0].pos;
-  for (int i = 1; i < vertices.size(); i++) {
+  for (unsigned int i = 1; i < vertices.size(); i++) {
     min.x = std::min(min.x, vertices[i].pos.x);
     min.y = std::min(min.y, vertices[i].pos.y);
     min.z = std::min(min.z, vertices[i].pos.z);
@@ -114,7 +115,8 @@ Mesh* ModelLoader::GenerateMesh(std::vector<POD::Vertex> vertices, std::vector<u
     max.y = std::max(max.y, vertices[i].pos.y);
     max.z = std::max(max.z, vertices[i].pos.z);
   }
-  Mesh* m = new Mesh(vertices, indices, { {min.x, min.y, min.z}, {max.x, max.y, max.z} });
+  Drawable::BVHData bvhData{ {min.x, min.y, min.z}, {max.x, max.y, max.z} };
+  Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, bvhData);
   return m;
 }
 
@@ -188,7 +190,7 @@ void ModelLoader::processNode(aiNode* node, const aiScene* scene, Scene* sceneGr
 {
   Node* sceneNode = sceneGraphParent;
   if (node->mNumMeshes > 0) {
-    sceneNode = sceneGraph->AddNode(nullptr, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
+    sceneNode = sceneGraph->AddNode(nullptr, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, true);
   }
 
   for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -215,7 +217,7 @@ void ModelLoader::processNodeBones(aiNode* node, const aiScene* scene, Scene* sc
   int nodeIdx = -1;
   for (int i = 0; i < boneNames.size(); i++) {
     if (boneNames[i] == nodeName) {
-      entity = new Bone(&model->m_skeleton, i, boneOffsets[i]);
+      entity = memory::Factory::Create<Bone>(&model->m_skeleton, i, boneOffsets[i]);
       nodeIdx = i;
       break;
     }
@@ -224,7 +226,7 @@ void ModelLoader::processNodeBones(aiNode* node, const aiScene* scene, Scene* sc
   Node* sceneNode = nullptr;
 
   if (nodeIdx >= 0) {
-    sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent);
+    sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, true);
     boneNodes[nodeIdx] = sceneNode;
     boneCount++;
   }
@@ -240,9 +242,9 @@ void ModelLoader::processNodeBones(aiNode* node, const aiScene* scene, Scene* sc
 
 void ModelLoader::processMaterials(const aiScene* scene) {
 
-  for (int i = 0; i < scene->mNumMaterials; i++) {
+  for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
     aiMaterial* material = scene->mMaterials[i];
-    Material* mat = new Material();
+    Material* mat = memory::Factory::Create<Material>();
     std::vector<aiTextureType> types = {
         aiTextureType_DIFFUSE, // t0
         aiTextureType_HEIGHT, // t1
@@ -256,20 +258,20 @@ void ModelLoader::processMaterials(const aiScene* scene) {
         //returned pointer is not null, read texture from memory
         if (texture->mHeight == 0) {
           // Compressed image data, we need to decode it
-          Image img = ImageManager::decodeFromMemory((unsigned char*)texture->pcData, texture->mWidth);
-          mat->AddBindable(new Texture2D(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
+          Image img = ImageManager::decodeFromMemory(texture->mFilename.C_Str(), (unsigned char*)texture->pcData, texture->mWidth);
+          mat->AddBindable(memory::Factory::Create < Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
         }
         else {
-          mat->AddBindable(new Texture2D((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
+          mat->AddBindable(memory::Factory::Create < Texture2D>((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
         }
       }
       else {
         //regular file, read it from disk
-        mat->AddBindable(new Texture2D(directory + str.C_Str(), SRV_FREE_SLOT + j));
+        mat->AddBindable(memory::Factory::Create < Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j));
       }
 
     }
-    mat->AddBindable(new SamplerState(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
+    mat->AddBindable(memory::Factory::Create<SamplerState>(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
     materials.push_back(mat);
   }
 }
@@ -340,9 +342,9 @@ Mesh* ModelLoader::processMesh(aiMesh* mesh, const aiScene* scene, Scene* sceneG
     for (unsigned int j = 0; j < face.mNumIndices; j++)
       indices[i * 3u + j] = face.mIndices[j];
   }
-  Mesh* m = new Mesh(vertices, indices, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
+  Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
   m->m_material = materials[mesh->mMaterialIndex];
-  sceneGraph->AddNode(m, Transform(), sceneGraphParent);
+  sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
 
   return m;
 }
@@ -441,9 +443,9 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(aiMesh* mesh, const aiScene* scene,
 
   free(boneFreeSlots);
 
-  SkinnedMesh* m = new SkinnedMesh(vertices, indices, &model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
+  SkinnedMesh* m = memory::Factory::Create<SkinnedMesh>(vertices, indices, &model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
   m->m_material = materials[mesh->mMaterialIndex];
-  Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent);
+  Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
 
   return m;
 }
@@ -473,7 +475,7 @@ Animation* ModelLoader::processAnimation(const aiScene* scene) {
     if (boneNode == nullptr) continue;
 
     std::vector<Animation::Keyframe> keyframes(channel->mNumPositionKeys);
-    for (int j = 0; j < channel->mNumPositionKeys; j++) {
+    for (unsigned int j = 0; j < channel->mNumPositionKeys; j++) {
       const aiVectorKey& pos = channel->mPositionKeys[j];
       const aiQuatKey& rot = channel->mRotationKeys[j];
       const aiVectorKey& scale = channel->mScalingKeys[j];
@@ -493,5 +495,5 @@ Animation* ModelLoader::processAnimation(const aiScene* scene) {
 
   }
 
-  return new Animation(durationTicks, ticksPerSecond, std::move(channels));
+  return memory::Factory::Create<Animation>(durationTicks, ticksPerSecond, std::move(channels));
 }

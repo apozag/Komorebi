@@ -18,7 +18,7 @@ public:
 		Node* node;
 	};
 public:
-	Animation(unsigned int numKeyframes, unsigned int keyframesPerSecond, std::vector<Channel>&& channels);
+	Animation(unsigned int numKeyframes, double keyframesPerSecond, std::vector<Channel>&& channels);
 	
 	void Update();
 private:

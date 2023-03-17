@@ -14,6 +14,8 @@ class Material : public GameObject {
 public:
 	Material() : m_idx(static_idx++) {}
 
+	~Material();
+
 	void Setup() override;
 
 	void Bind();

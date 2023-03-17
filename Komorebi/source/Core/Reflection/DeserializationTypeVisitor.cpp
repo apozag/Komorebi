@@ -14,7 +14,7 @@ namespace reflection {
     if (type->parentTypeDesc) {
       type->parentTypeDesc->Accept(this);
     }
-    type->construct(pObj);
+    //type->construct(pObj);
     rapidxml::xml_node<>* child = xmlNode->first_node();
     int startMemberIdx = type->getFirstMemberIdx();
     int memberIdx = 0;
@@ -25,13 +25,16 @@ namespace reflection {
       memberIdx++;
     }
     // Actually deserialize members
-    memberIdx = 0;
-    while (child && memberIdx < type->members.size()) {
-      m_pObj = type->members[memberIdx].getAddress(pObj);
-      m_xmlNode = child;
-      type->members[memberIdx].type->Accept(this);
+    while (child) {
+      for (const TypeDescriptor_Struct::Member& member : type->members) {
+        if (strcmp(member.name, child->name()) == 0) {
+          m_pObj = member.getAddress(pObj);
+          m_xmlNode = child;
+          member.type->Accept(this);
+          break;
+        }
+      }
       child = child->next_sibling();
-      memberIdx++;
     }
   }
 
@@ -91,7 +94,8 @@ namespace reflection {
 
     const TypeDescriptor* typeDesc = ReflectionHelper::GetTypeDesc(name);
 
-    *ppObj = malloc(typeDesc->size);
+    //*ppObj = malloc(typeDesc->size);
+    *ppObj = typeDesc->create();
 
     ReflectionHelper::RegisterPtrId(*ppObj, ptrId, typeDesc->size);
 

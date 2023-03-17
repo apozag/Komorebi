@@ -2,7 +2,7 @@
 #include "Graphics/GraphicsThrowMacros.h"
 
 DepthStencilState::~DepthStencilState() {
-	m_pDSState->Release();
+	//m_pDSState->Release();
 }
 
 void DepthStencilState::Setup() {

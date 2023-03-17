@@ -9,6 +9,7 @@
 
 #include "Core/Engine.h"
 #include "Core/Math/Transform.h"
+#include "Core/Memory/Allocator.h"
 #include "Entities/Drawable.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Renderer.h"
@@ -47,7 +48,7 @@ Renderer::Renderer() :
 		}
 	}
 
-	m_PCFFilters = new Texture3D((unsigned char*)randBuffer, 
+	m_PCFFilters = memory::Factory::Create<Texture3D>((unsigned char*)randBuffer,
 		filterSize * filterSize, 
 		windowSize, 
 		windowSize, 
@@ -184,7 +185,7 @@ void Renderer::Render( ) {
 		// Bind camera
 		camView.camera->Bind ( camView.transform);		
 
-		int jobsToExecute = m_jobs.size();
+		unsigned int jobsToExecute = m_jobs.size();
 
 		// Get frustum planes for culling
 		const std::vector<DirectX::XMFLOAT4>& planes = getFrustumPlanes(camView.transform->GetInverseMatrixUnsafe() * camView.camera->getProj());
@@ -275,7 +276,6 @@ void Renderer::Render( ) {
 	for (Texture2D* rt : m_shadowMaps) {
 		rt->Unbind();
 	}
-	//m_shadowMapSampler.Unbind();
 
 	m_jobs.clear();
 	m_cameras.clear();

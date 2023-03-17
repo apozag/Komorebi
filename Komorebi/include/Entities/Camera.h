@@ -26,6 +26,7 @@ public:
 		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0)
 	{}
 	Camera() = default;
+	~Camera();
 
 	void Setup() override;
 	void Bind(const Transform* worldTransform) const;

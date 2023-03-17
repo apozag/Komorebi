@@ -34,6 +34,9 @@ public:
 public:
 	Drawable() {};
 	Drawable(const Drawable& drawable);
+
+	~Drawable();
+
 	Drawable* Clone();
 
 	virtual void Setup() override;

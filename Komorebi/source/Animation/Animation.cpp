@@ -21,7 +21,7 @@ Animation::Keyframe findKeyframe(const std::vector<Animation::Keyframe>& keyfram
 	return keyframes[keyframes.size()-1];
 }
 
-Animation::Animation(unsigned int numKeyframes, unsigned int keyframesPerSecond, std::vector<Channel>&& channels) :
+Animation::Animation(unsigned int numKeyframes, double keyframesPerSecond, std::vector<Channel>&& channels) :
 	m_numKeyframes(numKeyframes),
 	m_keyframesPerSecond(keyframesPerSecond)
 {
@@ -31,8 +31,8 @@ Animation::Animation(unsigned int numKeyframes, unsigned int keyframesPerSecond,
 
 void Animation::Update() {	
 	float timeMillis = std::fmod(m_timer.Peek(), m_durationMilliseconds);
-	for (Channel channel : m_channels) {
-		Keyframe keyframe = findKeyframe(channel.keyframes, timeMillis);
+	for (Channel& channel : m_channels) {
+		const Keyframe& keyframe = findKeyframe(channel.keyframes, timeMillis);
 		channel.node->m_localTransform.SetPosition(DirectX::SimpleMath::Vector3(0,0,0));
 		channel.node->m_localTransform.SetRotation(DirectX::SimpleMath::Quaternion::Identity);
 		channel.node->m_localTransform.SetScale(DirectX::SimpleMath::Vector3(1,1,1));

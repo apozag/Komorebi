@@ -1,6 +1,9 @@
 #define NOMINMAX
 
+#include "Core/Memory/Allocator.h"
 #include "Scene/Scene.h"
+#include "Scene/Node.h"
+#include "Scene/AuxNode.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Bindables/State/DepthStencilState.h"
@@ -17,9 +20,9 @@
 void Scene::LoadScene( ) {
 }
 
-Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent) {
+Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent, bool auxNode) {
 	if (!m_parent) m_parent = m_transformHierarchy;
-	Node* node = new Node();
+	Node* node = auxNode? memory::Factory::Create<AuxNode>() : memory::Factory::Create<Node>();
 	if (entity) {
 		node->m_entities = { entity };		
 		entity->m_node = node;
@@ -30,9 +33,9 @@ Node* Scene::AddNode(Entity* entity, const Transform& transform, Node* m_parent)
 	return node;
 } 
 
-Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, Node* m_parent) {
+Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, Node* m_parent, bool auxNode) {
 	if (!m_parent) m_parent = m_transformHierarchy;
-	Node* node = new Node();
+	Node* node = memory::Factory::Create<Node>();
 	for (Entity* pEntity : entities) {
 		node->m_entities.push_back(pEntity);
 		pEntity->m_node = node;

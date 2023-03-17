@@ -15,6 +15,7 @@ public:
   Model(const char* filename) 
     : m_filename(filename)
   {}
+  ~Model();
 
   virtual void Setup() override;
   void AddPass(Pass* pass);

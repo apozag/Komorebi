@@ -105,6 +105,12 @@
     <Filter Include="Shader Includes">
       <UniqueIdentifier>{b00cc767-ccb2-40cd-98dd-dee1a0b62bf5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Core\Memory">
+      <UniqueIdentifier>{66087e23-6dcd-4de8-a630-45382385dd21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Core\Memory">
+      <UniqueIdentifier>{2a5c3ba3-b37d-4f51-9fab-832cc49e4a92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\3rd\dxerr\DXGetErrorDescription.inl">
@@ -411,6 +417,18 @@
     <ClInclude Include="include\Core\Reflection\SerializationTypeVisitor.h">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClInclude>
+    <ClInclude Include="include\Scene\AuxNode.h">
+      <Filter>Archivos de encabezado\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Reflection\UnloadTypeVisitor.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Reflection\ReflectionSettings.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Memory\Allocator.h">
+      <Filter>Archivos de encabezado\Core\Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -588,6 +606,12 @@
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClCompile>
     <ClCompile Include="include\Core\Reflection\SerializationTypeVisitor.cpp">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Core\Reflection\UnloadTypeVisitor.cpp">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Core\Reflection\ReflectionSettings.cpp">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClCompile>
   </ItemGroup>

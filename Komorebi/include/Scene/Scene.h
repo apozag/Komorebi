@@ -19,8 +19,8 @@ public:
 
 	void Setup() {}
 
-	Node* AddNode(Entity* entity, const Transform& transform, Node* m_parent = nullptr);
-	Node* AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent = nullptr);
+	Node* AddNode(Entity* entity, const Transform& transform, Node* m_parent = nullptr, bool auxNode = false);
+	Node* AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent = nullptr, bool auxNode = false);
 
 	Node* GetRootNode() { return m_transformHierarchy; }
 

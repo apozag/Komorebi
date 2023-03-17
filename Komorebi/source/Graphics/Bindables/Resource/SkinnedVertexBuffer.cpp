@@ -25,7 +25,7 @@ SkinnedVertexBuffer::SkinnedVertexBuffer( POD::SkinnedVertex* data, unsigned int
 }
 
 SkinnedVertexBuffer::~SkinnedVertexBuffer() {
-	m_vertexBuffer->Release();
+	//m_vertexBuffer->Release();
 }
 
 void SkinnedVertexBuffer::Bind( ) const {

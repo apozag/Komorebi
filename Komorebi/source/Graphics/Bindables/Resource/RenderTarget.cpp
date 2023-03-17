@@ -1,4 +1,5 @@
 #include "Graphics/Bindables/Resource/RenderTarget.h"
+#include "Core\Memory\Allocator.h"
 #include "Graphics/GraphicsThrowMacros.h"
 
 namespace wrl = Microsoft::WRL;
@@ -47,13 +48,13 @@ RenderTarget::RenderTarget( IDXGISwapChain* swapChain) {
 }
 
 RenderTarget::~RenderTarget() {
-	for (wrl::ComPtr<ID3D11RenderTargetView> rtv : m_rtv) {
+	/*for (wrl::ComPtr<ID3D11RenderTargetView> rtv : m_rtv) {
 		rtv->Release();
 	}
 	for (Texture2D* texture : m_textures) {
 		delete(texture);
 	}
-	m_dsv->Release();
+	m_dsv->Release();*/
 }
 
 void RenderTarget::Setup() {
@@ -113,9 +114,9 @@ void RenderTarget::Setup() {
 
 		m_rtv.push_back(rtv);
 
-		m_textures.push_back(new Texture2D(pTexture, m_format, m_slot + i));
+		m_textures.push_back(memory::Factory::Create<Texture2D>(pTexture, m_format, m_slot + i));
 	}
-	m_textures.push_back(new Texture2D(pDepthStencil, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, m_slot + m_count));
+	m_textures.push_back(memory::Factory::Create<Texture2D>(pDepthStencil, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, m_slot + m_count));
 }
 
 void RenderTarget::Bind( ) const {

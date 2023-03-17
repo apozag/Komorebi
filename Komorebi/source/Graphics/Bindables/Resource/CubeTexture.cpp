@@ -4,7 +4,7 @@
 CubeTexture::CubeTexture(std::string path, unsigned int slot) : ResourceBindable(slot), m_path(path) {}
 
 CubeTexture::~CubeTexture() {
-	m_srv->Release();
+	//m_srv->Release();
 }
 
 void CubeTexture::Setup() {

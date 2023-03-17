@@ -3,7 +3,7 @@
 #define DEPTH_BIAS_D32_FLOAT(d) (d/(1/pow(2,23)))
 
 RasterizerState::~RasterizerState() {
-	m_rasterizer->Release();
+	//m_rasterizer->Release();
 }
 
 void RasterizerState::Setup() {

@@ -1,6 +1,7 @@
 #include <thread>
 
 #include "Core/Engine.h"
+#include "Core/Memory/Allocator.h"
 #include "Core/Time/Timer.h"
 #include "Graphics/Renderer.h"
 #include "Scene/Scene.h"
@@ -27,6 +28,7 @@ void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, fl
 	m_window->Init();
 	m_renderer = new Renderer();
 	m_targetFramerate = targetFramerate;
+	memory::Factory::SetMarker();
 }
 
 int Engine::Run() 	

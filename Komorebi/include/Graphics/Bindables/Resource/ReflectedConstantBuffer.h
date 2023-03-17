@@ -21,7 +21,8 @@ public:
 	ReflectedConstantBuffer(std::vector<ConstantBufferVariable> variables, unsigned int slot);
 
 	~ReflectedConstantBuffer() {
-		m_constantBuffer->Release();
+		//m_constantBuffer->Release();
+		free(m_buffer);
 	}
 
 	virtual void Bind() const override = 0;
