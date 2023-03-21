@@ -18,6 +18,7 @@ public:
   ~Model();
 
   virtual void Setup() override;
+  virtual void Reconfigure() override;
   void AddPass(Pass* pass);
   void AddBindable(ResourceBindable* bind);
   void AddDrawable(Drawable* mesh);

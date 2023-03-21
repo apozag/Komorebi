@@ -1,4 +1,5 @@
 #include "Entities/Light.h"
+#include "Scene/Scene.h"
 #include "Core/Memory/Allocator.h"
 #include "Core/Math/Transform.h"
 #include "Graphics/Renderer.h"
@@ -23,7 +24,7 @@ void SpotLight::Setup() {
 
 void PointLight::Setup() {
 	for (int i = 0; i < 6; i++) {
-		m_rts[i] = RenderTarget(512, 512, DXGI_FORMAT_A8_UNORM, 0, 2);
+		m_rts[i] = RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 		m_rts[i].Setup();
 		m_cameras[i] = Camera(1.0472f, 1, 0.1f, 1000, &m_rts[i]);
 		m_cameras[i].Setup();
@@ -69,3 +70,7 @@ REFLECT_STRUCT_MEMBER(m_color)
 REFLECT_STRUCT_MEMBER(m_phi)
 REFLECT_STRUCT_MEMBER(m_theta)
 REFLECT_STRUCT_END(SpotLight)
+
+REGISTER_ENTITY(DirectionalLight)
+REGISTER_ENTITY(PointLight)
+REGISTER_ENTITY(SpotLight)

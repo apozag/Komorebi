@@ -17,6 +17,8 @@
 #include "Entities/Camera.h"
 #include "Entities/Light.h"
 
+std::vector<Scene::EntityAddFunc> Scene::s_entityTypes; 
+
 void Scene::LoadScene( ) {
 }
 
@@ -44,6 +46,25 @@ Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, 
 	node->m_localTransform = transform;
 	m_parent->m_children.push_back(node);
 	return node;
+}
+
+Entity* Scene::AddEntity(Node* node, const char* typeName) {
+	for (Scene::EntityAddFunc& enttFunc : s_entityTypes) {
+		if (strcmp(enttFunc.m_name.c_str(),  typeName) == 0) {			
+			return enttFunc.addEntity(node);
+		}
+	}
+	// TODO: [ERROR] No entity "typeName" found
+
+	return nullptr;
+}
+
+std::vector<std::string> Scene::GetEntityNames() {
+	std::vector<std::string> names;
+	for (EntityAddFunc& enttFunc : s_entityTypes) {
+		names.push_back(enttFunc.m_name);
+	}
+	return names;
 }
 
 void Scene::Traverse() {

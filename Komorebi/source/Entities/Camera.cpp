@@ -2,6 +2,7 @@
 
 #include "Core/Memory/Allocator.h"
 #include "Entities/Camera.h"
+#include "Scene\Scene.h"
 #include "Core/Math/Transform.h"
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"
 #include "Graphics/Renderer.h"
@@ -60,3 +61,5 @@ REFLECT_STRUCT_MEMBER(m_orthographic)
 REFLECT_STRUCT_MEMBER(m_tagMask)
 REFLECT_STRUCT_MEMBER(m_priority)
 REFLECT_STRUCT_END(Camera)
+
+REGISTER_ENTITY(Camera)

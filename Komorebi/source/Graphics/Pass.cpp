@@ -11,9 +11,12 @@ unsigned char Pass::static_idx = 0;
 
 Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
 
-Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : Pass(memory::Factory::Create<VertexShader>(vsFilename), memory::Factory::Create<PixelShader>(psFilename), layer, skinned) {}
+//Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : Pass(memory::Factory::Create<VertexShader>(vsFilename), memory::Factory::Create<PixelShader>(psFilename), layer, skinned) {}
+Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : m_VSFilename(vsFilename), m_PSFilename(psFilename), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
 
 void Pass::Setup() {
+	m_vertexShader = memory::Factory::Create<VertexShader>(m_VSFilename.c_str());
+	m_pixelShader = memory::Factory::Create<PixelShader>(m_PSFilename.c_str());
 	m_vertexShader->Setup();
 	m_pixelShader->Setup();
 	if (m_skinned) {
@@ -69,8 +72,8 @@ void Pass::Unbind( ) {
 
 REFLECT_STRUCT_BASE_BEGIN(Pass)
 REFLECT_STRUCT_MEMBER(m_layer)
-REFLECT_STRUCT_MEMBER(m_pixelShader)
-REFLECT_STRUCT_MEMBER(m_vertexShader)
+REFLECT_STRUCT_MEMBER(m_PSFilename)
+REFLECT_STRUCT_MEMBER(m_VSFilename)
 REFLECT_STRUCT_MEMBER(m_binds)
 REFLECT_STRUCT_MEMBER(m_skinned)
 REFLECT_STRUCT_END(Pass)

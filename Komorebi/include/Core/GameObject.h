@@ -2,8 +2,8 @@
 
 class GameObject {
 public:
-  virtual void Setup() { m_initialized = true; };
-  bool IsInitialized() { return m_initialized; }
+  virtual void Setup() {};
+  virtual void Reconfigure() {};
 private:
   bool m_initialized = false;
 };

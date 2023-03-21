@@ -52,7 +52,7 @@ void DrawLoadSceneMenu() {
   ImGui::InputText("##LoadFileName", buff, buffSize);
   ImGui::SameLine();
   if (ImGui::Button("Load##LoadButton") && buff[0] != '\0') {
-    SceneLoader::UnloadScene(Engine::m_activeScene);
+    memory::Factory::FreeToMarker();
     Engine::m_activeScene = SceneLoader::LoadScene(buff);
   }
   ImGui::EndMenu();
@@ -127,6 +127,8 @@ void GUIAttachment::Setup() {
   ImGui_ImplDX11_Init(m_device, m_context);
 
   Engine::AddPostRenderCallback(Render);
+
+  SetupSceneGUIWindow();
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

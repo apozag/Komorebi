@@ -399,6 +399,7 @@
     <ClInclude Include="include\Animation\Skeleton.h" />
     <ClInclude Include="include\Core\AssetManager.h" />
     <ClInclude Include="include\Core\Memory\Allocator.h" />
+    <ClInclude Include="include\Core\Reflection\CopyTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\DeserializationTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\ReflectionSettings.h" />
     <ClInclude Include="include\Core\Reflection\SerializationTypeVisitor.h" />
@@ -470,6 +471,7 @@
     <ClInclude Include="include\Scene\SceneLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Core\Reflection\CopyTypeVisitor.cpp" />
     <ClCompile Include="include\Core\Reflection\ReflectionSettings.cpp" />
     <ClCompile Include="include\Core\Reflection\SerializationTypeVisitor.cpp" />
     <ClCompile Include="include\Core\Reflection\UnloadTypeVisitor.cpp" />

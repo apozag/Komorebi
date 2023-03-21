@@ -45,7 +45,7 @@ Scene* SceneLoader::LoadScene(const char* filename) {
 }
 
 void SceneLoader::UnloadScene(Scene* scene) {
-  reflection::UnloadTypeVisitor visitor(scene);
+  //reflection::UnloadTypeVisitor visitor(scene);
   //reflection::__internal::forceVisitIgnored = true;
   //scene->GetReflection().Accept(&visitor);
   //reflection::__internal::forceVisitIgnored = false;

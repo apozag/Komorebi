@@ -12,4 +12,5 @@ public:
   void Visit(const reflection::TypeDescriptor_Owned_Ptr* type);
 private:
   void* m_pObj;
+  bool m_dirty = false;
 };

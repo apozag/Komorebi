@@ -11,7 +11,7 @@ namespace reflection {
 
   template <typename T>
   struct Ptr_Wrapper {
-    T* m_ptr;
+    T* m_ptr = nullptr;
 
     T* operator->() const { return m_ptr; }
     operator T* () const { return m_ptr; }
@@ -108,7 +108,7 @@ namespace reflection {
   };
 
   //--------------------------------------------------------
-  // Type descriptor for user-defined structs/classes
+  // Type descriptor for user-defined structs/classes (Must derive from GameObject)
   //--------------------------------------------------------
 
   struct TypeDescriptor_Struct : public TypeDescriptor {
@@ -123,6 +123,7 @@ namespace reflection {
     const TypeDescriptor_Struct* parentTypeDesc;
 
     void (*setup)(void*);
+    void (*reconfigure)(void*);
 
     TypeDescriptor_Struct(void (*init)(TypeDescriptor_Struct*)) : TypeDescriptor{ nullptr, 0 }
     {
@@ -156,7 +157,8 @@ namespace reflection {
     TypeDescriptor_Ptr(const char* name, size_t size) : TypeDescriptor{ nullptr, 0 }
     {}
 
-    const TypeDescriptor* (*getDynamicType)(const void*);
+    const TypeDescriptor* (*getStaticType)();
+    const TypeDescriptor* (*getDynamicType)(const void*);    
 
     virtual const TypeDescriptor* GetDynamic(const void*pObj) const override;
 
@@ -201,6 +203,7 @@ namespace reflection {
     size_t(*getSize)(const void*);
     void* (*getItem)(const void*, size_t);
     void (*resize) (void*, size_t);
+    void (*pushBack) (void*, void*);
 
     template <typename ItemType>
     TypeDescriptor_StdVector(ItemType*) :
@@ -221,6 +224,10 @@ namespace reflection {
           auto vec = (std::vector<ItemType>*) vecPtr;
           vec->resize(size);
         };
+        pushBack = [](void* vecPtr, void* valuePtr) {
+          auto vec = (std::vector<ItemType>*) vecPtr;
+          vec->push_back(*(ItemType*)valuePtr);
+        };
         construct = [](void* obj) {
           new(obj) std::vector<ItemType>();
         };
@@ -234,6 +241,10 @@ namespace reflection {
     std::string GetValueStr(const void* obj) const override { return {}; }
     void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
+
+  //--------------------------------------------------------
+  // Type descriptor for struct/class we want to hide from visitors
+  //--------------------------------------------------------
 
   class TypeDescriptor_Ignored : public TypeDescriptor_Struct {
   public:

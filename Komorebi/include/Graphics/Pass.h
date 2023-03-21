@@ -36,6 +36,8 @@ public:
 public:
 	unsigned int m_layer;	
 private:
+	std::string m_PSFilename;
+	std::string m_VSFilename;
 	OWNED_PTR(PixelShader) m_pixelShader;
 	OWNED_PTR(VertexShader) m_vertexShader;
 	std::vector<OWNED_PTR(StateBindable)> m_binds;

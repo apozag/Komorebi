@@ -10,9 +10,9 @@ IMPLEMENT_REFLECTION_PRIMITIVE(float, Float)
 IMPLEMENT_REFLECTION_PRIMITIVE(double, Double)
 IMPLEMENT_REFLECTION_PRIMITIVE(bool, Bool)
 
-__IMPLEMENT_REFLECTION_PRIMITIVE_BEGIN(std::string*, CStr)
+__IMPLEMENT_REFLECTION_PRIMITIVE_BEGIN(std::string, CStr)
 std::string GetValueStr(const void* obj) const override{  
-  return *static_cast<const std::string*>(obj);
+  return obj? *static_cast<const std::string*>(obj) : std::string();
 } 
 void SetValueFromString(void* pObj, const char* valueCStr) const override {
   *(std::string*)pObj = valueCStr; 

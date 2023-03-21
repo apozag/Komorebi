@@ -429,6 +429,9 @@
     <ClInclude Include="include\Core\Memory\Allocator.h">
       <Filter>Archivos de encabezado\Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\Reflection\CopyTypeVisitor.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -612,6 +615,9 @@
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClCompile>
     <ClCompile Include="include\Core\Reflection\ReflectionSettings.cpp">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Core\Reflection\CopyTypeVisitor.cpp">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClCompile>
   </ItemGroup>

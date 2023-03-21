@@ -20,6 +20,23 @@ void Model::Setup() {
   }
 }
 
+void Model::Reconfigure(){
+  for (Pass* pass : m_passes) {
+    for (Drawable* drawable : m_drawables) {
+      bool found = false;
+      for (Pass* p : drawable->m_material->GetPasses()) {
+        if (p == pass) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        drawable->m_material->AddPass(pass);
+      }
+    }
+  }
+}
+
 Model::~Model() {
   //delete(m_animation);
 }
@@ -67,3 +84,5 @@ REFLECT_STRUCT_MEMBER(m_filename)
 REFLECT_STRUCT_MEMBER(m_passes)
 REFLECT_STRUCT_MEMBER(m_binds)
 REFLECT_STRUCT_END(Model)
+
+REGISTER_ENTITY(Model)
