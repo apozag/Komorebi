@@ -3,7 +3,7 @@
 #include <d3dcompiler.h>
 #include "Graphics/GraphicsThrowMacros.h"
 #include "3rd/dxerr/dxerr.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 #include "Graphics/Bindables/State/Viewport.h"
 #include "Core/WindowAttachment.h"

@@ -5,7 +5,7 @@
 #include "imgui/backends/imgui_impl_dx11.h"
 
 #include "Core/Engine.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 
 #include "Core/Reflection/TypeDescriptors.h"
@@ -52,7 +52,7 @@ void DrawLoadSceneMenu() {
   ImGui::InputText("##LoadFileName", buff, buffSize);
   ImGui::SameLine();
   if (ImGui::Button("Load##LoadButton") && buff[0] != '\0') {
-    memory::Factory::FreeToMarker();
+    memory::Factory::FreeAll();
     Engine::m_activeScene = SceneLoader::LoadScene(buff);
   }
   ImGui::EndMenu();

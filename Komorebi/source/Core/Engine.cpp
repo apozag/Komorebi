@@ -1,7 +1,7 @@
 #include <thread>
 
 #include "Core/Engine.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Core/Time/Timer.h"
 #include "Graphics/Renderer.h"
 #include "Scene/Scene.h"
@@ -24,11 +24,13 @@ RenderTarget* Engine::GetDefaultRendertarget() {
 }
 
 void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, float targetFramerate) {
-	m_window = new Window(windowWidth, windowHeight, windowTitle);	
+	memory::Factory::Init(1024*32, 1024 * 1024);
+	memory::Factory::SetGlobalMode(true);
+	m_window = memory::Factory::Create<Window>(windowWidth, windowHeight, windowTitle);
 	m_window->Init();
-	m_renderer = new Renderer();
+	m_renderer = memory::Factory::Create<Renderer>();
 	m_targetFramerate = targetFramerate;
-	memory::Factory::SetMarker();
+	memory::Factory::SetGlobalMode(false);
 }
 
 int Engine::Run() 	

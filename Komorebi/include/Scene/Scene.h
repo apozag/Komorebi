@@ -4,7 +4,7 @@
 #include <string>
 
 #include "Scene/Node.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Core/Reflection/ReflectionMacros.h"
 
 class Graphics;

@@ -204,6 +204,7 @@ namespace reflection {
     void* (*getItem)(const void*, size_t);
     void (*resize) (void*, size_t);
     void (*pushBack) (void*, void*);
+    void (*remove) (void*, unsigned int);
 
     template <typename ItemType>
     TypeDescriptor_StdVector(ItemType*) :
@@ -230,6 +231,10 @@ namespace reflection {
         };
         construct = [](void* obj) {
           new(obj) std::vector<ItemType>();
+        };
+        remove = [](void* vecPtr, unsigned int idx) {
+          auto vec = (std::vector<ItemType>*) vecPtr;
+          vec->erase(vec->begin() + idx);
         };
       }
 

@@ -426,11 +426,14 @@
     <ClInclude Include="include\Core\Reflection\ReflectionSettings.h">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\Core\Memory\Allocator.h">
+    <ClInclude Include="include\Core\Memory\Factory.h">
       <Filter>Archivos de encabezado\Core\Memory</Filter>
     </ClInclude>
     <ClInclude Include="include\Core\Reflection\CopyTypeVisitor.h">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Memory\PoolAllocator.h">
+      <Filter>Archivos de encabezado\Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -619,6 +622,9 @@
     </ClCompile>
     <ClCompile Include="include\Core\Reflection\CopyTypeVisitor.cpp">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Memory\PoolAllocator.cpp">
+      <Filter>Archivos de origen\Core\Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

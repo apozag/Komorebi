@@ -44,6 +44,7 @@ private:
 	bool m_skinned;
 	static unsigned char static_idx;
 	const unsigned char m_idx;
+	bool m_enabled = true;
 };
 
 DECLARE_REFLECTION_POINTER(Pass)

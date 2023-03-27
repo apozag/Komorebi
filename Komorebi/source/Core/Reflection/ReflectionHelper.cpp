@@ -63,6 +63,22 @@ namespace reflection {
     }
   }
 
+  std::vector<const TypeDescriptor_Struct*> ReflectionHelper::GetChildTypes(const TypeDescriptor_Struct* typeDesc) {
+    std::vector<const TypeDescriptor_Struct*> childTypes;
+    TypeDict& typeDict = GetTypeDict();
+    for (auto& it : typeDict) {
+      const TypeDescriptor_Struct* typeDescStruct = dynamic_cast<const reflection::TypeDescriptor_Struct*>(it.second);
+      while(typeDescStruct) {                       
+        if (typeDescStruct == typeDesc) {
+          childTypes.push_back(static_cast<const reflection::TypeDescriptor_Struct*>(it.second));
+          break;
+        }
+        typeDescStruct = typeDescStruct->parentTypeDesc;
+      }
+    }
+    return childTypes;
+  }
+
   void ReflectionHelper::ClearAll() {
     ClearTrackedStrings();
     GetPtrInfoVector().clear();

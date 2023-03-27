@@ -1,10 +1,11 @@
 #include "GUI/ImGuiTypeVisitor.h"
 
 #include <string>
+#include <vector>
 
 #include "imgui/imgui.h"
 
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Core/Reflection/CopyTypeVisitor.h"
 #include "Scene/Node.h"
 #include "Scene/Scene.h"
@@ -60,11 +61,25 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
 void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
   size_t size = type->getSize(m_pObj);
   void* pObj = m_pObj;
-  bool prevDirty = m_dirty;
+  bool prevDirty = m_dirty;  
+
+  const reflection::TypeDescriptor_Ptr* ptrTypeDesc = dynamic_cast<const reflection::TypeDescriptor_Ptr*>(type->itemType);
+  static const bool isPointerType = ptrTypeDesc != nullptr;
 
   for (int i = 0; i < size; i++) {
     m_pObj = type->getItem(pObj, i);
     if (ImGui::TreeNode(std::to_string((size_t)m_pObj).c_str(), type->itemType->GetDynamic(m_pObj)->getFullName().c_str())) {
+
+      // Delete button
+      ImGui::SameLine();
+      if (ImGui::Button((std::string("-##DleteElem")).c_str())) {
+        type->remove(pObj, i);
+        memory::Factory::Destroy(isPointerType? *(void**) m_pObj : m_pObj);
+        // The vector was modified! stop iterating for this frame
+        ImGui::TreePop();
+        return;
+      }
+
       m_dirty = false;
       type->itemType->Accept(this);
       ImGui::TreePop();
@@ -75,32 +90,65 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
   static void* pCurrVector = nullptr;
   static void* pTempElem = nullptr;
   static const reflection::TypeDescriptor* typeDesc = nullptr;
-  static bool isPointerType = false;
+  static bool currVectorIsPointerType = false;
+
+  static std::vector<const reflection::TypeDescriptor_Struct*> possibleTypes;
+  static std::string possibleTypesStr;
 
   if (!pCurrVector && ImGui::Button((std::string("+##AddElem")).c_str())) {
+
     pCurrVector = pObj;
-    if (pTempElem) free(pTempElem);
-    const reflection::TypeDescriptor_Ptr* ptrTypeDesc = dynamic_cast<const reflection::TypeDescriptor_Ptr*>(type->itemType);
-    if (ptrTypeDesc) {
+    currVectorIsPointerType = isPointerType;
+    
+    // For pointers (even if struct), get static type
+    if (currVectorIsPointerType) {
       typeDesc = ptrTypeDesc->getStaticType();
-      isPointerType = true;
     }
+    // Any other just get the type
     else {
       typeDesc = type->itemType;
-      isPointerType = false;
     }    
+
+    // If its a struct, fetch Types that inherit from itemType
+    const TypeDescriptor_Struct* itemTypeStruct = dynamic_cast<const reflection::TypeDescriptor_Struct*>(typeDesc);
+    if (itemTypeStruct) {
+      possibleTypes = ReflectionHelper::GetChildTypes(itemTypeStruct);
+      possibleTypesStr = "";
+      for(const reflection::TypeDescriptor_Struct* childType : possibleTypes){
+        possibleTypesStr += childType->name;
+        possibleTypesStr += '\0';
+      }
+    }
+
+    // Allocate our temporal object (base class if struct pointer)
+    if (pTempElem) free(pTempElem);
     pTempElem = malloc(typeDesc->size);
     typeDesc->construct(pTempElem);
   }
 
+  // Edit window for new element
   if (pCurrVector == pObj) {
     ImGui::Begin("Add Element");
+
+    // Combo with child types. When chosen, free and allocate new temporal object
+    static int currItem = 0;
+    if (possibleTypes.size() > 1 && ImGui::Combo("##EntityCombo", &currItem, possibleTypesStr.c_str())) {
+      if (pTempElem) free(pTempElem);
+      if (currItem >= 0 && currItem < possibleTypes.size()) {
+        typeDesc = possibleTypes[currItem];
+        pTempElem = malloc(typeDesc->size);
+        typeDesc->construct(pTempElem);
+      }
+    }
+
+    // Show (and edit) object info
     ImGuiTypeVisitor visitor_imgui(pTempElem);
     typeDesc->Accept(&visitor_imgui);
 
+    // If accept, copy to real element and push 
     if (ImGui::Button("Accept##AcceptButton")) {
       const TypeDescriptor_Struct* itemTypeStruct = dynamic_cast<const reflection::TypeDescriptor_Struct*>(typeDesc);
-      if (isPointerType) {
+      if (currVectorIsPointerType) {
         void* pElem = typeDesc->create();
         reflection::CopyTypeVisitor visitor_copy(pElem, pTempElem);
         typeDesc->Accept(&visitor_copy);
@@ -116,11 +164,12 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
       prevDirty = true;
     }
 
+    // Cancel to close window
     if (ImGui::Button("Cancel##AddEntityCancel")) {
       pCurrVector = nullptr;
     }
     ImGui::End();
-  }
+  }  
 
   m_dirty = prevDirty;
 }

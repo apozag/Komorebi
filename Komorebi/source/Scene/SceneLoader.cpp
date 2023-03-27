@@ -5,7 +5,7 @@
 #include "3rd/rapidxml/rapidxml.hpp"
 
 #include "Core/Engine.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Scene/SceneLoader.h"
 #include "Core/Reflection/TypeDescriptors.h"
 #include "Core/Reflection/ReflectionSettings.h"
@@ -21,7 +21,7 @@ constexpr const char* nodeTypeName = "Scene";
 
 Scene* SceneLoader::LoadScene(const char* filename) {
   
-  memory::Factory::SetMarker();
+  //memory::Factory::SetMarker();
 
   rapidxml::file<> xmlFile(filename);
   xml_document<> doc;
@@ -49,7 +49,8 @@ void SceneLoader::UnloadScene(Scene* scene) {
   //reflection::__internal::forceVisitIgnored = true;
   //scene->GetReflection().Accept(&visitor);
   //reflection::__internal::forceVisitIgnored = false;
-  memory::Factory::FreeToMarker();
+  //memory::Factory::FreeToMarker();
+  memory::Factory::FreeAll();
 }
 
 void SceneLoader::SaveScene(Scene* scene, const char* filename) {

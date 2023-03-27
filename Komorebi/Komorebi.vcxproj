@@ -398,7 +398,8 @@
     <ClInclude Include="include\Animation\Animation.h" />
     <ClInclude Include="include\Animation\Skeleton.h" />
     <ClInclude Include="include\Core\AssetManager.h" />
-    <ClInclude Include="include\Core\Memory\Allocator.h" />
+    <ClInclude Include="include\Core\Memory\Factory.h" />
+    <ClInclude Include="include\Core\Memory\PoolAllocator.h" />
     <ClInclude Include="include\Core\Reflection\CopyTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\DeserializationTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\ReflectionSettings.h" />
@@ -484,6 +485,7 @@
     <ClCompile Include="source\Core\ImageManager.cpp" />
     <ClCompile Include="source\Core\Math\MathWrappers.cpp" />
     <ClCompile Include="source\Core\Math\Transform.cpp" />
+    <ClCompile Include="source\Core\Memory\PoolAllocator.cpp" />
     <ClCompile Include="source\Core\Reflection\DeserializationTypeVisitor.cpp" />
     <ClCompile Include="source\Core\Reflection\ReflectionHelper.cpp" />
     <ClCompile Include="source\Core\Reflection\ReflectionPrimitives.cpp" />

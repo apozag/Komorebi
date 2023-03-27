@@ -6,7 +6,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Scene/ModelLoader.h"
 #include "Graphics/Bindables/Resource/Texture2D.h"
 #include "Graphics/Bindables/State/RasterizerState.h"

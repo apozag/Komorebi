@@ -8,7 +8,7 @@
 
 #include "Core/Exceptions/Exception.h"
 #include "Core/Engine.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Scene/Scene.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Material.h"

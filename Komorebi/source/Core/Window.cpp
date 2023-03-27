@@ -5,6 +5,7 @@
 #include "Core/Exceptions/WindowsThrowMacros.h"
 
 #include "Core/WindowAttachment.h"
+#include "Core/Memory/Factory.h"
 
 // Window Exception Stuff
 std::string Window::WindowException::TranslateErrorCode(HRESULT hr) noexcept
@@ -149,7 +150,7 @@ void Window::Init() {
 
 	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 
-	m_gfx = new Graphics(m_hWnd, m_width, m_height);
+	m_gfx = memory::Factory::Create<Graphics>(m_hWnd, m_width, m_height);
 	m_gfx->Init();
 }
 

@@ -1,6 +1,6 @@
 #include "Entities/Light.h"
 #include "Scene/Scene.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Core/Math/Transform.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"

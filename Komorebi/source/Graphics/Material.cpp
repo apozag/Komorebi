@@ -1,5 +1,5 @@
 #include "Graphics/Material.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/ReflectedConstantBuffer.h"
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Pass.h"

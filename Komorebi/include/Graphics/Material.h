@@ -24,6 +24,7 @@ public:
 	void AddBindable(ResourceBindable* bindable);
 	void AddPass(Pass* pass);
 	const std::vector<Pass*>& GetPasses() { return m_passes; }
+	const std::vector<ResourceBindable*>& GetBinds() { return m_binds; }
 	unsigned int GetIdx() { return m_idx; }
 
 	bool SetFloat(const char* name, float value);

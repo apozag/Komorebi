@@ -1,5 +1,5 @@
 #include "Entities/Mesh.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"
 #include "Graphics/Bindables/Resource/VertexBuffer.h"
 #include "Scene/Node.h"

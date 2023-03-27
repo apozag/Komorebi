@@ -9,7 +9,7 @@
 
 #include "Core/Engine.h"
 #include "Core/Math/Transform.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Entities/Drawable.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Renderer.h"

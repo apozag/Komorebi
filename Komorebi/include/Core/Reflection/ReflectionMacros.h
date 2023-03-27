@@ -10,7 +10,7 @@
 #include "Core/Reflection/TypeDescriptors.h"
 #include "Core/Reflection/ReflectionHelper.h"
 
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 
 #define CAT(a, b) a ## b
 

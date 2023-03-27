@@ -1,6 +1,6 @@
 #include "Graphics/Pass.h"
 
-#include "Core\Memory\Allocator.h"
+#include "Core\Memory\Factory.h"
 #include "Graphics/Bindables/State/StateBindable.h"
 #include "Graphics/Bindables/State/VertexShader.h"
 #include "Graphics/Bindables/State/PixelShader.h"
@@ -56,6 +56,8 @@ void Pass::AddBindable(StateBindable* bind){
 }
 
 void Pass::Bind( ) {
+	if (!m_enabled) return;
+
 	m_vertexShader->Bind();
 	m_pixelShader->Bind();
 	for (Bindable* bind : m_binds) {
@@ -63,6 +65,8 @@ void Pass::Bind( ) {
 	}
 }
 void Pass::Unbind( ) {
+	if (!m_enabled) return;
+
 	m_vertexShader->Unbind();
 	m_pixelShader->Unbind();
 	for (Bindable* bind : m_binds) {
@@ -71,6 +75,7 @@ void Pass::Unbind( ) {
 }
 
 REFLECT_STRUCT_BASE_BEGIN(Pass)
+REFLECT_STRUCT_MEMBER(m_enabled)
 REFLECT_STRUCT_MEMBER(m_layer)
 REFLECT_STRUCT_MEMBER(m_PSFilename)
 REFLECT_STRUCT_MEMBER(m_VSFilename)

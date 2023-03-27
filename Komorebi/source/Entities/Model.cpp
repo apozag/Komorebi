@@ -35,6 +35,21 @@ void Model::Reconfigure(){
       }
     }
   }
+
+  for (ResourceBindable* bind : m_binds) {
+    for (Drawable* drawable : m_drawables) {
+      bool found = false;
+      for (ResourceBindable*b : drawable->m_material->GetBinds()){
+        if (b == bind) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        drawable->m_material->AddBindable(bind);
+      }
+    }
+  }
 }
 
 Model::~Model() {

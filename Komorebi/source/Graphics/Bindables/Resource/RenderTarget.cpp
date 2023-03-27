@@ -1,5 +1,5 @@
 #include "Graphics/Bindables/Resource/RenderTarget.h"
-#include "Core\Memory\Allocator.h"
+#include "Core\Memory\Factory.h"
 #include "Graphics/GraphicsThrowMacros.h"
 
 namespace wrl = Microsoft::WRL;

@@ -1,5 +1,5 @@
 #include "Entities/SkinnedMesh.h"
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"
 #include "Graphics/Bindables/Resource/SkinnedVertexBuffer.h"
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"

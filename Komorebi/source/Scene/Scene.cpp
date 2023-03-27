@@ -1,6 +1,6 @@
 #define NOMINMAX
 
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Scene/Scene.h"
 #include "Scene/Node.h"
 #include "Scene/AuxNode.h"

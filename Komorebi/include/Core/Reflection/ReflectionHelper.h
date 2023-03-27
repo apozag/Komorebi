@@ -28,6 +28,8 @@ namespace reflection {
 
     static void ResolvePendingPointers();
 
+    static std::vector<const TypeDescriptor_Struct*> GetChildTypes(const TypeDescriptor_Struct* typeDesc);
+
     static void ClearAll();
 
   private:

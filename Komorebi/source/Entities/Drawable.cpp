@@ -1,6 +1,6 @@
 #define NOMINMAX
 
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"

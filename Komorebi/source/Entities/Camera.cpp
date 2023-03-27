@@ -1,6 +1,6 @@
 #include "Graphics/BindableSlotsInfo.h"
 
-#include "Core/Memory/Allocator.h"
+#include "Core/Memory/Factory.h"
 #include "Entities/Camera.h"
 #include "Scene\Scene.h"
 #include "Core/Math/Transform.h"

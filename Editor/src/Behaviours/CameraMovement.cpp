@@ -2,6 +2,7 @@
 #include "Core/Engine.h"
 #include "Core/Window.h"
 #include "Scene/Node.h"
+#include "Scene/Scene.h"
 
 void CameraMovement::Run(Node* node) {
 
@@ -56,3 +57,5 @@ void CameraMovement::Update(Node* node) {
 
 REFLECT_STRUCT_BEGIN(CameraMovement, Script)
 REFLECT_STRUCT_END(CameraMovement)
+
+REGISTER_ENTITY(CameraMovement)
