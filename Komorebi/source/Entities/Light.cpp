@@ -6,7 +6,7 @@
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 
 void DirectionalLight::Setup() {
-	m_rt = memory::Factory::Create<RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
+	m_rt = memory::Factory::Create < gfx::RenderTarget > (1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
 	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, m_rt, true);
 	m_camera->m_priority = -100;
@@ -15,7 +15,7 @@ void DirectionalLight::Setup() {
 
 void SpotLight::Setup() {
 
-	m_rt = memory::Factory::Create<RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
+	m_rt = memory::Factory::Create<gfx::RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
 	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, m_rt, true);
 	m_camera->m_priority = -100;
@@ -24,7 +24,7 @@ void SpotLight::Setup() {
 
 void PointLight::Setup() {
 	for (int i = 0; i < 6; i++) {
-		m_rts[i] = RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
+		m_rts[i] = gfx::RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 		m_rts[i].Setup();
 		m_cameras[i] = Camera(1.0472f, 1, 0.1f, 1000, &m_rts[i]);
 		m_cameras[i].Setup();

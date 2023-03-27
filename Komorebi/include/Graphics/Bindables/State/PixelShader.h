@@ -6,33 +6,37 @@
 
 #include "Graphics/Bindables/State/StateBindable.h"
 
+struct ID3D11PixelShader;
 //struct ID3D11ShaderReflection;
 
-class PixelShader : public StateBindable {
-public:
-	PixelShader() {}
-	PixelShader(const char* filename) : m_filename(filename) {}
-	~PixelShader();
+namespace gfx {
 
-	void Setup() override;
+	class PixelShader : public StateBindable {
+	public:
+		PixelShader() {}
+		PixelShader(const char* filename) : m_filename(filename) {}
+		~PixelShader();
 
-	void Bind()const override;
-	void Unbind()const override {}
-	void Update() {}
-	ID3D11ShaderReflection * const GetShaderReflection() const { return m_reflection.Get(); }
+		void Setup() override;
 
-	REFLECT()
+		void Bind()const override;
+		void Unbind()const override {}
+		void Update() {}
+		ID3D11ShaderReflection* const GetShaderReflection() const { return m_reflection.Get(); }
 
-private:
+		REFLECT()
 
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
-	Microsoft::WRL::ComPtr<ID3D11ShaderReflection> m_reflection;
+	private:
 
-	////////////////////////
-	// Serializable
-	////////////////////////
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pixelShader;
+		Microsoft::WRL::ComPtr<ID3D11ShaderReflection> m_reflection;
 
-	std::string m_filename;
-};
+		////////////////////////
+		// Serializable
+		////////////////////////
 
-DECLARE_REFLECTION_POINTER(PixelShader)
+		std::string m_filename;
+	};
+}
+
+DECLARE_REFLECTION_POINTER(gfx::PixelShader)

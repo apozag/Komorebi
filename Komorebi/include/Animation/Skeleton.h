@@ -7,7 +7,7 @@
 
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"
 
-class Graphics;
+//class Graphics;
 
 #define MAX_BONES 200
 
@@ -25,5 +25,5 @@ public:
 private:
 	bool m_dirty;
 	BoneCBuffData m_boneCBuffData;
-	VertexConstantBuffer<BoneCBuffData> m_boneCBuff;
+	gfx::VertexConstantBuffer<BoneCBuffData> m_boneCBuff;
 };

@@ -40,11 +40,11 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 
   if (filename == "cube") {
     Mesh* mesh = GenerateCube();
-    mesh->m_material = memory::Factory::Create<Material>();
-    for (Pass* pass : model->GetPasses()) {
+    mesh->m_material = memory::Factory::Create<gfx::Material>();
+    for (gfx::Pass* pass : model->GetPasses()) {
       mesh->m_material->AddPass(pass);
     }
-    for (ResourceBindable* bind : model->GetBinds()) {
+    for (gfx::ResourceBindable* bind : model->GetBinds()) {
       mesh->m_material->AddBindable(bind);
     }
     sceneGraph->AddNode(mesh, Transform(), sceneGraphParent, true);
@@ -65,11 +65,11 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 
   processMaterials(scene);
 
-  for (Material* mat : materials) {
-    for (Pass* pass : model->GetPasses()) {
+  for (gfx::Material* mat : materials) {
+    for (gfx::Pass* pass : model->GetPasses()) {
       mat->AddPass(pass);
     }
-    for (ResourceBindable* bind : model->GetBinds()) {
+    for (gfx::ResourceBindable* bind : model->GetBinds()) {
       mat->AddBindable(bind);
     }
   }
@@ -94,7 +94,7 @@ Model* ModelLoader::LoadModel(std::string path, Scene* sceneGraph, Node* sceneGr
   Model* model = memory::Factory::Create<Model>();
   if (path == "cube") {
     Mesh* mesh = GenerateCube();
-    mesh->m_material = memory::Factory::Create<Material>();
+    mesh->m_material = memory::Factory::Create<gfx::Material>();
     sceneGraph->AddNode(mesh, Transform(), sceneGraphParent, true);
     model->AddDrawable(mesh);
   }
@@ -244,7 +244,7 @@ void ModelLoader::processMaterials(const aiScene* scene) {
 
   for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
     aiMaterial* material = scene->mMaterials[i];
-    Material* mat = memory::Factory::Create<Material>();
+    gfx::Material* mat = memory::Factory::Create<gfx::Material>();
     std::vector<aiTextureType> types = {
         aiTextureType_DIFFUSE, // t0
         aiTextureType_HEIGHT, // t1
@@ -259,19 +259,19 @@ void ModelLoader::processMaterials(const aiScene* scene) {
         if (texture->mHeight == 0) {
           // Compressed image data, we need to decode it
           Image img = ImageManager::decodeFromMemory(texture->mFilename.C_Str(), (unsigned char*)texture->pcData, texture->mWidth);
-          mat->AddBindable(memory::Factory::Create < Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
+          mat->AddBindable(memory::Factory::Create < gfx::Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
         }
         else {
-          mat->AddBindable(memory::Factory::Create < Texture2D>((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
+          mat->AddBindable(memory::Factory::Create < gfx::Texture2D>((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
         }
       }
       else {
         //regular file, read it from disk
-        mat->AddBindable(memory::Factory::Create < Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j));
+        mat->AddBindable(memory::Factory::Create < gfx::Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j));
       }
 
     }
-    mat->AddBindable(memory::Factory::Create<SamplerState>(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
+    mat->AddBindable(memory::Factory::Create<gfx::SamplerState>(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
     materials.push_back(mat);
   }
 }

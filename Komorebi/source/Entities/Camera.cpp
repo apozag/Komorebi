@@ -16,7 +16,7 @@ void Camera::Setup() {
 	else {
 		m_proj = DirectX::XMMatrixPerspectiveFovLH(m_fov, m_aspectratio, m_near, 1000);
 	}
-	m_cameraTransformCB = memory::Factory::Create<VertexConstantBuffer<CameraTransformCB>>(VCBUFF_CAMERATRANSFORM_SLOT);
+	m_cameraTransformCB = memory::Factory::Create<gfx::VertexConstantBuffer<CameraTransformCB>>(VCBUFF_CAMERATRANSFORM_SLOT);
 	if(!m_rt) m_rt = GetRenderer()->GetRenderTarget(m_RTId);
 }
 

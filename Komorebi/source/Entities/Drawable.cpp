@@ -21,22 +21,22 @@ Drawable* Drawable::Clone() {
 }
 
 void Drawable::Setup() {
-	m_modelCbuffer = memory::Factory::Create< VertexConstantBuffer<ModelMatrixData>>(VCBUFF_MODEL_SLOT);
+	m_modelCbuffer = memory::Factory::Create< gfx::VertexConstantBuffer<ModelMatrixData>>(VCBUFF_MODEL_SLOT);
 	AddBindable(m_modelCbuffer);
 }
 
 Drawable::~Drawable() {
 	//delete(m_modelCbuffer);
-	for (ResourceBindable* bind : m_binds) {
+	for (gfx::ResourceBindable* bind : m_binds) {
 		//delete(bind);
 	}
 }
 
-void Drawable::AddBindable(ResourceBindable* bindable) {
+void Drawable::AddBindable(gfx::ResourceBindable* bindable) {
 	m_binds.push_back(bindable);
 }
 
-void Drawable::AddIndexBuffer(IndexBuffer* ib) {
+void Drawable::AddIndexBuffer(gfx::IndexBuffer* ib) {
 	m_indexCount = ib->GetCount();
 	m_binds.push_back(ib);
 }
@@ -49,17 +49,17 @@ void Drawable::Draw(const DirectX::XMMATRIX& modelMatrix) const {
 
 	m_modelCbuffer->SetBuffer({ modelMatrix});
 
-	for (ResourceBindable* bind : m_binds) {
+	for (gfx::ResourceBindable* bind : m_binds) {
 		bind->Update ();
 	}
 
-	for (ResourceBindable* bind : m_binds) {
+	for (gfx::ResourceBindable* bind : m_binds) {
 		bind->Bind ();
 	}	
 	
 	GetGraphics()->DrawIndexed(m_indexCount);
 
-	for (ResourceBindable* bind : m_binds) {
+	for (gfx::ResourceBindable* bind : m_binds) {
 		bind->Unbind ();
 	}
 }

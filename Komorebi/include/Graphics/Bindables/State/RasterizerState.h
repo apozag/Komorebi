@@ -2,25 +2,31 @@
 
 #include "Graphics/Bindables/State/StateBindable.h"
 
-class RasterizerState : public StateBindable{
-public:
-	RasterizerState(bool cullFront = false, bool wireframe = false) : m_cullFront(cullFront), m_wireframe(wireframe) {}
-	~RasterizerState();
+struct ID3D11RasterizerState;
 
-	void Setup() override;
+namespace gfx {
 
-	void Bind()const override;
-	void Unbind()const override;
+	class RasterizerState : public StateBindable {
+	public:
+		RasterizerState(bool cullFront = false, bool wireframe = false) : m_cullFront(cullFront), m_wireframe(wireframe) {}
+		~RasterizerState();
 
-	REFLECT()
+		void Setup() override;
 
-private:
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer;
+		void Bind()const override;
+		void Unbind()const override;
 
-	//////////////////
-	// Serializable
-	//////////////////
+		REFLECT()
 
-	bool m_cullFront;
-	bool m_wireframe;
-};
+	private:
+		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer;
+
+		//////////////////
+		// Serializable
+		//////////////////
+
+		bool m_cullFront;
+		bool m_wireframe;
+	};
+
+}

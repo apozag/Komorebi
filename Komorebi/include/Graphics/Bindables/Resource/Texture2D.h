@@ -5,31 +5,37 @@
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 
 struct Image;
+struct ID3D11Texture2D;
+struct ID3D11ShaderResourceView;
+enum DXGI_FORMAT;
 
-class Texture2D : public ResourceBindable {
-public:
-	Texture2D(){}
-	Texture2D(std::string filename, unsigned int slot) : ResourceBindable(slot), m_filename(filename) {}
-	Texture2D(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int slot);
-	Texture2D(Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot);
-	~Texture2D();
+namespace gfx {
 
-	void Setup() override;
+	class Texture2D : public ResourceBindable {
+	public:
+		Texture2D() {}
+		Texture2D(std::string filename, unsigned int slot) : ResourceBindable(slot), m_filename(filename) {}
+		Texture2D(unsigned char* data, unsigned int width, unsigned int height, unsigned int channels, unsigned int slot);
+		Texture2D(Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot);
+		~Texture2D();
 
-	void Bind()const override;
-	void Unbind()const override;
+		void Setup() override;
 
-	REFLECT()
+		void Bind()const override;
+		void Unbind()const override;
 
-private:
+		REFLECT()
 
-	void CreateFromImage(const Image& image);
+	private:
 
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
+		void CreateFromImage(const Image& image);
 
-	//////////////////
-	// Serializable
-	//////////////////
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
 
-	std::string m_filename;
-};
+		//////////////////
+		// Serializable
+		//////////////////
+
+		std::string m_filename;
+	};
+}

@@ -6,7 +6,7 @@
 #include "Core/Math/MathWrappers.h"
 
 class Transform;
-class Graphics;
+//class Graphics;
 
 class DirectionalLight : public Entity {
 public:
@@ -20,12 +20,12 @@ public:
   void Insert(Node* node, const Transform& worldTransform) override;
   DirectX::SimpleMath::Vector3 GetColor() const { return m_color; }
   const Camera* GetCamera() const { return m_camera; }
-  Texture2D* GetShadowMap() const { return m_rt->GetTextures2D()[0]; }
+  gfx::Texture2D* GetShadowMap() const { return m_rt->GetTextures2D()[0]; }
   REFLECT()
 private:
   math::Vector3 m_color;
   Camera* m_camera;
-  RenderTarget* m_rt;
+  gfx::RenderTarget* m_rt;
 };
 
 class PointLight : public Entity {
@@ -45,7 +45,7 @@ public:
 private:
   math::Vector3 m_color;
   Camera m_cameras[6];
-  RenderTarget m_rts[6];
+  gfx::RenderTarget m_rts[6];
 };
 
 class SpotLight : public Entity {
@@ -68,5 +68,5 @@ private:
   math::Vector3 m_color;
   float m_phi, m_theta;
   Camera* m_camera;
-  RenderTarget* m_rt;
+  gfx::RenderTarget* m_rt;
 };

@@ -4,14 +4,16 @@
 #include "Entities/Entity.h"
 #include "Core/Math/MathWrappers.h"
 
-class Graphics;
-class Pass;
-class ResourceBindable;
-class IndexBuffer;
-class Material;
+namespace gfx {
+	class Graphics;
+	class Pass;
+	class ResourceBindable;
+	class IndexBuffer;
+	class Material;
 
-template<typename T>
-class VertexConstantBuffer;
+	template<typename T>
+	class VertexConstantBuffer;
+}
 
 class Drawable : public Entity {
 	friend class Renderer;
@@ -41,8 +43,8 @@ public:
 
 	virtual void Setup() override;
 
-	void AddBindable(ResourceBindable* bind);
-	void AddIndexBuffer(IndexBuffer* ib);
+	void AddBindable(gfx::ResourceBindable* bind);
+	void AddIndexBuffer(gfx::IndexBuffer* ib);
 	const BVHData& GetBVHData() const { return m_bvhData; }
 	
 	void Insert(Node* node, const Transform& worldTransform) override;
@@ -52,12 +54,12 @@ public:
 	REFLECT()
 
 public:
-	Material* m_material;
+	gfx::Material* m_material;
 protected:
 	BVHData m_bvhData;
 private:
-	std::vector<ResourceBindable*> m_binds;
+	std::vector<gfx::ResourceBindable*> m_binds;
 	unsigned int m_indexCount;
 
-	VertexConstantBuffer<ModelMatrixData>* m_modelCbuffer;
+	gfx::VertexConstantBuffer<ModelMatrixData>* m_modelCbuffer;
 };

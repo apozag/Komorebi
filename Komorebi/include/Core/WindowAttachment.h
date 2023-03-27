@@ -5,9 +5,11 @@
 struct ID3D11DeviceContext;
 struct ID3D11Device;
 
+namespace gfx { class Graphics; }
+
 class WindowAttachment {
   friend class Window;
-  friend class Graphics;
+  friend class gfx::Graphics;
 
 public:
   virtual bool IsBlocking() { return false; }

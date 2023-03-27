@@ -8,8 +8,8 @@
 #include "Animation/Skeleton.h"
 
 SkinnedMesh::SkinnedMesh( std::vector<POD::SkinnedVertex>& vertices, std::vector<unsigned short>& indices, Skeleton* skeleton, BVHData bvhData) : Drawable (), m_skeleton(skeleton) {
-    AddBindable(memory::Factory::Create<SkinnedVertexBuffer>( vertices.data(), vertices.size(), sizeof(POD::SkinnedVertex), 0));
-    AddIndexBuffer(memory::Factory::Create<IndexBuffer>( indices.data(), indices.size()));
+    AddBindable(memory::Factory::Create<gfx::SkinnedVertexBuffer>( vertices.data(), vertices.size(), sizeof(POD::SkinnedVertex), 0));
+    AddIndexBuffer(memory::Factory::Create<gfx::IndexBuffer>( indices.data(), indices.size()));
     m_bvhData = bvhData;
 }
 

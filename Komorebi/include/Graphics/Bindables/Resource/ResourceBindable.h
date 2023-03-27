@@ -2,18 +2,22 @@
 
 #include "Graphics/Bindables/Bindable.h"
 
-class ResourceBindable : public Bindable {
-public:
-	virtual void Bind() const = 0;
-	virtual void Unbind() const = 0;
-	virtual void Update() {};
-	unsigned int m_slot;
+namespace gfx {
 
-	REFLECT()
+	class ResourceBindable : public Bindable {
+	public:
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+		virtual void Update() {};
+		unsigned int m_slot;
 
-protected:
-	ResourceBindable(unsigned int slot) : m_slot(slot) {}
-	ResourceBindable() : m_slot(0) {}
-};
+		REFLECT()
 
-DECLARE_REFLECTION_POINTER(ResourceBindable)
+	protected:
+		ResourceBindable(unsigned int slot) : m_slot(slot) {}
+		ResourceBindable() : m_slot(0) {}
+	};
+
+}
+
+DECLARE_REFLECTION_POINTER(gfx::ResourceBindable)

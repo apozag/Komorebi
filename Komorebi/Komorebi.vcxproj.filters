@@ -348,9 +348,6 @@
     <ClInclude Include="include\Graphics\Bindables\Resource\ReflectedConstantBuffer.h">
       <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="include\Graphics\Bindables\Resource\RenderTarget.h">
-      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
-    </ClInclude>
     <ClInclude Include="include\Graphics\Bindables\Resource\ResourceBindable.h">
       <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
     </ClInclude>
@@ -434,6 +431,9 @@
     </ClInclude>
     <ClInclude Include="include\Core\Memory\PoolAllocator.h">
       <Filter>Archivos de encabezado\Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\RenderTarget.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

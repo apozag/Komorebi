@@ -4,13 +4,14 @@
 #include "Core/Memory/Factory.h"
 #include "Core/Time/Timer.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/Graphics.h"
 #include "Scene/Scene.h"
 #include "Core/Window.h"
 #include "Entities/Script.h"
 #include "Core/ScriptDispatcher.h"
 #include "Core/Window.h"
 
-Renderer* Engine::m_renderer;
+gfx::Renderer* Engine::m_renderer;
 Window* Engine::m_window;
 Scene* Engine::m_activeScene;
 ScriptDispatcher Engine::m_scriptDispatcher;
@@ -19,7 +20,7 @@ std::vector<Engine::CallbackFunc> Engine::m_postRenderCallbacks;
 float Engine::m_dt;
 float Engine::m_targetFramerate;
 
-RenderTarget* Engine::GetDefaultRendertarget() {
+gfx::RenderTarget* Engine::GetDefaultRendertarget() {
 	return m_window->m_gfx->GetDefaultRenderTarget();
 }
 
@@ -28,7 +29,7 @@ void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, fl
 	memory::Factory::SetGlobalMode(true);
 	m_window = memory::Factory::Create<Window>(windowWidth, windowHeight, windowTitle);
 	m_window->Init();
-	m_renderer = memory::Factory::Create<Renderer>();
+	m_renderer = memory::Factory::Create<gfx::Renderer>();
 	m_targetFramerate = targetFramerate;
 	memory::Factory::SetGlobalMode(false);
 }
@@ -38,7 +39,7 @@ int Engine::Run()
 	long long minFrameTime = 1000 / m_targetFramerate;
 	Timer timer;
 
-	Graphics& m_gfx = *m_window->m_gfx;
+	gfx::Graphics& m_gfx = *m_window->m_gfx;
 
 	while (true) {
 

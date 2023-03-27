@@ -11,14 +11,17 @@
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"
 #include "Graphics/Bindables/State/SamplerState.h"
 
-class Graphics;
-class Drawable;
-class Pass;
 class SpotLight;
 class DirectionalLight;
 class PointLight;
 class Camera;
 class Transform;
+class Drawable;
+
+namespace gfx {
+
+class Graphics;
+class Pass;
 class Texture2D;
 class Texture3D;
 class Material;
@@ -73,11 +76,11 @@ public:
 	void SubmitDirectionalLight(const DirectionalLight* spotlight, const Transform* worldTransform);
 	void SubmitPointLight(const PointLight* spotlight, const Transform* worldTransform);
 	void SubmitCamera(const Camera* camera, const Transform* worldTransform);
-	void Render( );
+	void Render();
 
 	RenderTarget* GetRenderTarget(unsigned int idx) { return m_renderTargets[idx]; }
 
-	friend bool compareJob(const Job& j1, const Job& j2);
+	friend bool compareJob(const gfx::Renderer::Job& j1, const gfx::Renderer::Job& j2);
 	friend bool compareCamera(const CameraView& c1, const CameraView& c2);
 
 private:
@@ -90,7 +93,7 @@ private:
 	SpotLightData m_spotLightData;
 	PixelConstantBuffer<DirLightData> m_dirLightsCbuff;
 	PixelConstantBuffer<PointLightData> m_pointLightsCbuff;
-	PixelConstantBuffer<SpotLightData> m_spotLightsCbuff;	
+	PixelConstantBuffer<SpotLightData> m_spotLightsCbuff;
 
 	LightTransformData m_lightTransformData;
 	VertexConstantBuffer<LightTransformData> m_lightTransformCbuff;
@@ -103,3 +106,5 @@ private:
 
 	std::vector<RenderTarget*> m_renderTargets;
 };
+
+}

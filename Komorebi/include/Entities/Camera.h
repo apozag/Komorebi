@@ -6,10 +6,11 @@
 #include "Entities/Entity.h"
 #include "Core/Reflection/ReflectionMacros.h"
 
-template<typename T>
-class VertexConstantBuffer;
-class PostProcMaterial;
-class RenderTarget;
+namespace gfx {
+	template<typename T>
+	class VertexConstantBuffer;
+	class RenderTarget;
+}
 
 class Camera : public Entity{
 public:
@@ -22,7 +23,7 @@ public:
 	Camera(float fov, float aspectratio, float nearZ, float farZ, unsigned int rtId, bool orthographic = false)
 		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_RTId(rtId), m_priority(0)
 	{}
-	Camera(float fov, float aspectratio, float nearZ, float farZ, RenderTarget* rt, bool orthographic = false)
+	Camera(float fov, float aspectratio, float nearZ, float farZ, gfx::RenderTarget* rt, bool orthographic = false)
 		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0)
 	{}
 	Camera() = default;
@@ -58,8 +59,8 @@ public:
 	int m_priority;
 
 	DirectX::XMMATRIX m_proj;
-	VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
-	RenderTarget* m_rt;
+	gfx::VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
+	gfx::RenderTarget* m_rt;
 
 	//std::vector<PostProcMaterial*> m_postProcMaterials;
 

@@ -21,10 +21,10 @@ void Model::Setup() {
 }
 
 void Model::Reconfigure(){
-  for (Pass* pass : m_passes) {
+  for (gfx::Pass* pass : m_passes) {
     for (Drawable* drawable : m_drawables) {
       bool found = false;
-      for (Pass* p : drawable->m_material->GetPasses()) {
+      for (gfx::Pass* p : drawable->m_material->GetPasses()) {
         if (p == pass) {
           found = true;
           break;
@@ -36,10 +36,10 @@ void Model::Reconfigure(){
     }
   }
 
-  for (ResourceBindable* bind : m_binds) {
+  for (gfx::ResourceBindable* bind : m_binds) {
     for (Drawable* drawable : m_drawables) {
       bool found = false;
-      for (ResourceBindable*b : drawable->m_material->GetBinds()){
+      for (gfx::ResourceBindable*b : drawable->m_material->GetBinds()){
         if (b == bind) {
           found = true;
           break;
@@ -82,11 +82,11 @@ const Drawable::BVHData& Model::GetBVHData() const {
   return m_bvh;
 }
 
-void Model::AddPass(Pass* pass) {
+void Model::AddPass(gfx::Pass* pass) {
   m_passes.push_back(pass);
 }
 
-void Model::AddBindable(ResourceBindable* bind) {
+void Model::AddBindable(gfx::ResourceBindable* bind) {
   m_binds.push_back(bind);
 }
 

@@ -3,15 +3,21 @@
 #include "Graphics/Bindables/State/StateBindable.h"
 #include "Graphics/Bindables/State/VertexShader.h"
 
-class InputLayout : public StateBindable {
-public:
-	InputLayout(const D3D11_INPUT_ELEMENT_DESC* ied, unsigned int numElements, const VertexShader& vs);
-	~InputLayout();
-	void Bind()const override;
-	void Unbind()const override;
+struct D3D11_INPUT_ELEMENT_DESC;
+struct ID3D11InputLayout;
 
-	REFLECT_HIDE()
+namespace gfx {
 
-private:
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
-};
+	class InputLayout : public StateBindable {
+	public:
+		InputLayout(const D3D11_INPUT_ELEMENT_DESC* ied, unsigned int numElements, const gfx::VertexShader& vs);
+		~InputLayout();
+		void Bind()const override;
+		void Unbind()const override;
+
+		REFLECT_HIDE()
+
+	private:
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
+	};
+}

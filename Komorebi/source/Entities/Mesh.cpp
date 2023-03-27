@@ -20,8 +20,8 @@ Mesh Mesh::s_quad(
 );
 */
 Mesh::Mesh( std::vector<POD::Vertex>& vertices, std::vector<unsigned short>& indices, BVHData bvhData): Drawable () {
-    AddBindable(memory::Factory::Create<VertexBuffer>( vertices.data(), vertices.size(), sizeof(POD::Vertex), 0));
-    AddIndexBuffer(memory::Factory::Create<IndexBuffer>( indices.data(), indices.size()));
+    AddBindable(memory::Factory::Create<gfx::VertexBuffer>( vertices.data(), vertices.size(), sizeof(POD::Vertex), 0));
+    AddIndexBuffer(memory::Factory::Create<gfx::IndexBuffer>( indices.data(), indices.size()));
     m_bvhData = bvhData;
 }
 

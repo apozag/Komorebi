@@ -7,8 +7,6 @@
 #include "Core/Memory/Factory.h"
 #include "Core/Reflection/ReflectionMacros.h"
 
-class Graphics;
-class Renderer;
 class Entity;
 
 class Scene : public GameObject{

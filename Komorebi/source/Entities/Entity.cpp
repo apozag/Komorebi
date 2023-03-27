@@ -6,9 +6,9 @@
 #include "Core/Engine.h"
 #include "Core/Window.h"
 
-Renderer* Entity::GetRenderer() const { return Engine::m_renderer; }
+gfx::Renderer* Entity::GetRenderer() const { return Engine::m_renderer; }
 ScriptDispatcher* Entity::GetScriptDispatcher() const { return &Engine::m_scriptDispatcher; }
-const Graphics* Entity::GetGraphics() const { return Engine::m_window->m_gfx; }
+const gfx::Graphics* Entity::GetGraphics() const { return Engine::m_window->m_gfx; }
 const Window* Entity::GetWindow() const { return Engine::m_window; }
 
 REFLECT_STRUCT_BASE_VIRTUAL_BEGIN(Entity)

@@ -4,50 +4,53 @@
 #include "Core/GameObject.h"
 #include "Core/Reflection/ReflectionMacros.h"
 
-class Pass;
-class ResourceBindable;
-class ReflectedConstantBuffer;
-class PixelShader;
-class VertexShader;
+namespace gfx {
 
-class Material : public GameObject {
-public:
-	Material() : m_idx(static_idx++) {}
+	class Pass;
+	class ResourceBindable;
+	class ReflectedConstantBuffer;
+	class PixelShader;
+	class VertexShader;
 
-	~Material();
+	class Material : public GameObject {
+	public:
+		Material() : m_idx(static_idx++) {}
 
-	void Setup() override;
+		~Material();
 
-	void Bind();
-	void Unbind();
+		void Setup() override;
 
-	void AddBindable(ResourceBindable* bindable);
-	void AddPass(Pass* pass);
-	const std::vector<Pass*>& GetPasses() { return m_passes; }
-	const std::vector<ResourceBindable*>& GetBinds() { return m_binds; }
-	unsigned int GetIdx() { return m_idx; }
+		void Bind();
+		void Unbind();
 
-	bool SetFloat(const char* name, float value);
-	bool SetVector4(const char* name, float* data);
-	bool SetMat4(const char* name, float* data);
+		void AddBindable(ResourceBindable* bindable);
+		void AddPass(Pass* pass);
+		const std::vector<Pass*>& GetPasses() { return m_passes; }
+		const std::vector<ResourceBindable*>& GetBinds() { return m_binds; }
+		unsigned int GetIdx() { return m_idx; }
 
-	REFLECT_BASE()
+		bool SetFloat(const char* name, float value);
+		bool SetVector4(const char* name, float* data);
+		bool SetMat4(const char* name, float* data);
 
-private:
+		REFLECT_BASE()
 
-	void ProcessPass(Pass* pass);
+	private:
 
-	std::vector<ReflectedConstantBuffer*> m_cbuffers;
-	const unsigned int m_idx;
-	static unsigned int static_idx;
+		void ProcessPass(Pass* pass);
 
-	//////////////////
-	// Serializable
-	//////////////////
+		std::vector<ReflectedConstantBuffer*> m_cbuffers;
+		const unsigned int m_idx;
+		static unsigned int static_idx;
 
-	std::vector<Pass*> m_passes;
-	std::vector<ResourceBindable*> m_binds;
+		//////////////////
+		// Serializable
+		//////////////////
 
-};
+		std::vector<Pass*> m_passes;
+		std::vector<ResourceBindable*> m_binds;
 
-DECLARE_REFLECTION_POINTER(Material)
+	};
+}
+
+DECLARE_REFLECTION_POINTER(gfx::Material)

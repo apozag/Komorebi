@@ -8,7 +8,9 @@
 #include "Input/Mouse.h"
 
 class WindowAttachment;
-class Graphics;
+namespace gfx {
+	class Graphics;
+}
 
 class Window {
 public: 
@@ -63,7 +65,7 @@ private:
 public: 
 	Keyboard m_keyboard;
 	Mouse m_mouse;
-	Graphics* m_gfx;
+	gfx::Graphics* m_gfx;
 private: 
 	std::vector<WindowAttachment*> m_attachments;
 	int m_width, m_height;

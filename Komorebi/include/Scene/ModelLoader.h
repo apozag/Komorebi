@@ -11,17 +11,20 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-class Graphics;
+namespace gfx {
+	class Graphics;
+	class Material;
+	class Pass;
+}
+
 class Camera;
 class SkinnedMesh;
-class Pass;
 class Scene;
 class Skeleton;
 class Model;
 class Mesh;
 class Animation;
 class Node;
-class Material;
 
 class ModelLoader : public Singleton<ModelLoader> {
 public:
@@ -40,7 +43,7 @@ private:
 	SkinnedMesh* processSkinnedMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);	
 
 	std::string directory;
-	std::vector<Material*> materials;
+	std::vector<gfx::Material*> materials;
 	std::vector<Node*> boneNodes;
 	std::vector<std::string> boneNames;
 	std::vector<DirectX::XMMATRIX> boneOffsets;

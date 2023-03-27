@@ -2,14 +2,19 @@
 
 #include <vector>
 
+
+namespace gfx {
+	class RenderTarget;
+	class Renderer;
+	class Bindable;
+}
+
 class Scene;
-class Renderer;
 class ScriptDispatcher;
 class Window;
-class RenderTarget;
 
 class Engine {
-	friend class Bindable;
+	friend class gfx::Bindable;
 	friend class Entity;
 
 	typedef void (*CallbackFunc)(float);
@@ -25,7 +30,7 @@ public:
 	static void AddPostRenderCallback(CallbackFunc func) { m_postRenderCallbacks.push_back(func); }
 
 	static float GetDeltaTime() { return m_dt; }
-	static RenderTarget* GetDefaultRendertarget();
+	static gfx::RenderTarget* GetDefaultRendertarget();
 
 	static Window* GetWindow() { return m_window; }
 
@@ -33,7 +38,7 @@ public:
 
 private:
 
-	static Renderer* m_renderer;
+	static gfx::Renderer* m_renderer;
 	static Window* m_window;
 
 	static ScriptDispatcher m_scriptDispatcher;

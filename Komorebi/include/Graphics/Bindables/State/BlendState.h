@@ -2,26 +2,31 @@
 
 #include "Graphics/Bindables/State/StateBindable.h"
 
-class BlendState : public StateBindable{
-public:
-	BlendState() {}
-	BlendState(bool enable) : m_enable(enable) {}
-	~BlendState();
+struct ID3D11BlendState;
 
-	void Setup() override;
+namespace gfx {
 
-	void Bind()const override;
-	void Unbind()const override;
+	class BlendState : public StateBindable {
+	public:
+		BlendState() {}
+		BlendState(bool enable) : m_enable(enable) {}
+		~BlendState();
 
-	REFLECT()
+		void Setup() override;
 
-private:
-	Microsoft::WRL::ComPtr<ID3D11BlendState> m_blendState;
+		void Bind()const override;
+		void Unbind()const override;
 
-	//////////////////
-	// Serializable
-	//////////////////
+		REFLECT()
 
-	bool m_enable;
+	private:
+		Microsoft::WRL::ComPtr<ID3D11BlendState> m_blendState;
 
-};
+		//////////////////
+		// Serializable
+		//////////////////
+
+		bool m_enable;
+
+	};
+}

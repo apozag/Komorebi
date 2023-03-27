@@ -1,28 +1,39 @@
 #pragma once
+
+#include <d3d11.h>
+
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
-class SamplerState : public ResourceBindable{
-public:
-	SamplerState(){}
-	SamplerState(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE mode, int slot) : ResourceBindable(slot), m_filter(filter), m_mode(mode) {}
-	~SamplerState();
 
-	void Setup() override;
+struct ID3D11SamplerState;
+enum D3D11_TEXTURE_ADDRESS_MODE;
+enum D3D11_FILTER;
 
-	void Bind()const override;
-	void Unbind()const override;
+namespace gfx {
 
-	REFLECT()
+	class SamplerState : public ResourceBindable {
+	public:
+		SamplerState() {}
+		SamplerState(D3D11_FILTER filter, D3D11_TEXTURE_ADDRESS_MODE mode, int slot) : gfx::ResourceBindable(slot), m_filter(filter), m_mode(mode) {}
+		~SamplerState();
 
-private:
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
+		void Setup() override;
 
-	//////////////////
-	// Serializable
-	//////////////////
+		void Bind()const override;
+		void Unbind()const override;
 
-	D3D11_FILTER m_filter;
-	D3D11_TEXTURE_ADDRESS_MODE m_mode;
-};
+		REFLECT()
+
+	private:
+		Microsoft::WRL::ComPtr<ID3D11SamplerState> m_sampler;
+
+		//////////////////
+		// Serializable
+		//////////////////
+
+		D3D11_FILTER m_filter;
+		D3D11_TEXTURE_ADDRESS_MODE m_mode;
+	};
+}
 
 DECLARE_REFLECTION_PRIMITIVE(D3D11_FILTER)
 DECLARE_REFLECTION_PRIMITIVE(D3D11_TEXTURE_ADDRESS_MODE)

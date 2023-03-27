@@ -3,46 +3,55 @@
 #include <unordered_map>
 
 #include "Graphics/Bindables/State/StateBindable.h"
-#include "Graphics/Bindables/Resource/Texture2D.h"
 #include "Core/Reflection/ReflectionMacros.h"
 
-class RenderTarget : public StateBindable{
-public:
-	RenderTarget(IDXGISwapChain* m_swapChain);
-	RenderTarget(unsigned int width, unsigned int height, DXGI_FORMAT format, unsigned int count, unsigned int slot) :
-		m_width(width), m_height(height),	m_format(format),	m_count(count), m_slot(slot)
-	{};
-	RenderTarget() {};
-	~RenderTarget();
+struct ID3D11RenderTargetView;
+struct ID3D11DepthStencilView;
+struct IDXGISwapChain;
+enum DXGI_FORMAT;
 
-	virtual void Setup() override;
+namespace gfx {
 
-	void Bind()const override;
-	void Unbind()const override;
+	class Texture2D;
 
-	void Update() {};
+	class RenderTarget : public StateBindable {
+	public:
+		RenderTarget(IDXGISwapChain* m_swapChain);
+		RenderTarget(unsigned int width, unsigned int height, DXGI_FORMAT format, unsigned int count, unsigned int slot) :
+			m_width(width), m_height(height), m_format(format), m_count(count), m_slot(slot) {
+		};
+		RenderTarget() {};
+		~RenderTarget();
 
-	void Clear(float r, float g, float b);
+		virtual void Setup() override;
 
-	unsigned int GetWidth() { return m_width; }
-	unsigned int GetHeight() { return m_height; }
+		void Bind()const override;
+		void Unbind()const override;
 
-	const std::vector<Texture2D*>& GetTextures2D() { return m_textures; }
+		void Update() {};
 
-	REFLECT_BASE()
+		void Clear(float r, float g, float b);
 
-private:
-	std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> m_rtv;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_dsv;
-	std::vector<Texture2D*> m_textures;
+		unsigned int GetWidth() { return m_width; }
+		unsigned int GetHeight() { return m_height; }
 
-/////////////////////////////////////////////////////
-// Serializable
-/////////////////////////////////////////////////////
-private:
-	unsigned int m_width, m_height;
-	DXGI_FORMAT m_format;
-	unsigned int m_count, m_slot;
-};
+		const std::vector<gfx::Texture2D*>& GetTextures2D() { return m_textures; }
+
+		REFLECT_BASE()
+
+	private:
+		std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> m_rtv;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_dsv;
+		std::vector <gfx::Texture2D* > m_textures;
+
+		/////////////////////////////////////////////////////
+		// Serializable
+		/////////////////////////////////////////////////////
+	private:
+		unsigned int m_width, m_height;
+		DXGI_FORMAT m_format;
+		unsigned int m_count, m_slot;
+	};
+}
 
 DECLARE_REFLECTION_PRIMITIVE(DXGI_FORMAT)

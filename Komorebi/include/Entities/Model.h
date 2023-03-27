@@ -19,12 +19,12 @@ public:
 
   virtual void Setup() override;
   virtual void Reconfigure() override;
-  void AddPass(Pass* pass);
-  void AddBindable(ResourceBindable* bind);
+  void AddPass(gfx::Pass* pass);
+  void AddBindable(gfx::ResourceBindable* bind);
   void AddDrawable(Drawable* mesh);
   const Drawable::BVHData& GetBVHData() const;
-  const std::vector<OWNED_PTR(Pass)>& GetPasses() const { return m_passes; }
-  const std::vector<OWNED_PTR(ResourceBindable)>& GetBinds() const { return m_binds; }
+  const std::vector<OWNED_PTR(gfx::Pass)>& GetPasses() const { return m_passes; }
+  const std::vector<OWNED_PTR(gfx::ResourceBindable)>& GetBinds() const { return m_binds; }
   void Insert(Node* node, const Transform& worldTransform) override;
   REFLECT()
 public:
@@ -38,6 +38,6 @@ private:
 /// Serialized members
 private:
   std::string m_filename;
-  std::vector<OWNED_PTR(Pass)> m_passes;
-  std::vector<OWNED_PTR(ResourceBindable)> m_binds;
+  std::vector<OWNED_PTR(gfx::Pass)> m_passes;
+  std::vector<OWNED_PTR(gfx::ResourceBindable)> m_binds;
 };
