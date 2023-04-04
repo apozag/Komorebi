@@ -4,10 +4,15 @@
 			<m_name>FORWARD</m_name>
 			<m_steps>
 				<RenderStepType>
+					<m_type>CLEAR</m_type>
+					<m_outRtId>DEFAULT</m_outRtId>
+					<m_maxLayer>0</m_maxLayer>
+				</RenderStepType>
+				<RenderStepType>
+					<m_type>DEFAULT</m_type>
 					<m_inputs/>
 					<m_outRtId>DEFAULT</m_outRtId>
 					<m_maxLayer>10</m_maxLayer>
-					<m_screenEffect>0</m_screenEffect>
 					<m_sortReverse>0</m_sortReverse>
 				</RenderStepType>
 			</m_steps>

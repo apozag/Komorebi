@@ -14,7 +14,6 @@ namespace gfx {
       rt->Bind();
     }
     if (m_outRt) { 
-      m_outRt->Clear(1,1,1);
       m_outRt->Bind(); 
     }
   }
@@ -23,18 +22,9 @@ namespace gfx {
 
     Bind();
 
-    if (m_screenEffect) {
-      if (m_screenEffectMat) {
-        m_screenEffectMat->Bind();
-        for (Pass* pass : m_screenEffectMat->GetPasses()) {
-          pass->Bind();
-          Engine::GetRenderer()->GetQuadPrimitive()->Draw(DirectX::XMMatrixIdentity());
-          pass->Unbind();
-        }        
-        m_screenEffectMat->Bind();
-      }
-    }
-    else {
+    switch (m_type) {
+    case DEFAULT:
+    {
       Pass* lastPass = nullptr;
       Material* lastMat = nullptr;
       for (int i = idx; i < jobsToExecute; i++) {
@@ -67,6 +57,27 @@ namespace gfx {
         lastMat = job.material;
       }
     }
+    break;
+    case CLEAR:
+    {
+      m_outRt->Clear(0, 0, 0);
+    }
+    break;
+    case SCREEN:
+    {
+      if (m_screenEffectMat) {
+        m_screenEffectMat->Bind();
+        for (Pass* pass : m_screenEffectMat->GetPasses()) {
+          pass->Bind();
+          Engine::GetRenderer()->GetQuadPrimitive()->Draw(DirectX::XMMatrixIdentity());
+          pass->Unbind();
+        }
+        m_screenEffectMat->Bind();
+      }
+    }
+    break;
+    }
+
     Unbind();
   }
 
@@ -78,6 +89,13 @@ namespace gfx {
   }
 }
 
+typedef gfx::RenderStep::Type RenderStepTypeEnum;
+REFLECT_ENUM_BEGIN(RenderStepTypeEnum)
+REFLECT_ENUM_VALUE(DEFAULT)
+REFLECT_ENUM_VALUE(CLEAR)
+REFLECT_ENUM_VALUE(SCREEN)
+REFLECT_ENUM_END(RenderStepTypeEnum)
+
 typedef gfx::RenderStep::TextureInfo TextureInfoType;
 REFLECT_STRUCT_BASE_BEGIN(TextureInfoType)
 REFLECT_STRUCT_MEMBER(m_rtId)
@@ -86,11 +104,11 @@ REFLECT_STRUCT_END(TextureInfoType)
 
 typedef gfx::RenderStep RenderStepType;
 REFLECT_STRUCT_BASE_BEGIN(RenderStepType)
+REFLECT_STRUCT_MEMBER(m_type)
 REFLECT_STRUCT_MEMBER(m_inputsInfo)
 REFLECT_STRUCT_MEMBER(m_outRtId)
 REFLECT_STRUCT_MEMBER(m_maxLayer)
 REFLECT_STRUCT_MEMBER(m_sortReverse)
-REFLECT_STRUCT_MEMBER(m_screenEffect)
 REFLECT_STRUCT_MEMBER(m_screenEffectMat)
 REFLECT_STRUCT_END(RenderStepType)
 

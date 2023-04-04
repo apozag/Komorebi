@@ -142,6 +142,31 @@ namespace reflection {
   };
 
   //--------------------------------------------------------
+  // Type descriptor for enums
+  //--------------------------------------------------------
+
+  struct TypeDescriptor_Enum : public TypeDescriptor {
+
+    struct EnumValue {
+      const char* name;
+      int value;
+    };
+
+    std::vector<EnumValue> values;
+
+    TypeDescriptor_Enum(void (*init)(TypeDescriptor_Enum*)) : TypeDescriptor{ nullptr, 0 } {
+      init(this);
+    }
+    TypeDescriptor_Enum(const char* name) : TypeDescriptor{ name, sizeof(int)} {}
+
+    virtual void Accept(TypeVisitor* visitor) const override;
+
+  private:
+    std::string GetValueStr(const void* obj) const override;
+    void SetValueFromString(void* pObj, const char* valueCStr) const override;
+  };
+
+  //--------------------------------------------------------
   // Type descriptor for pointer to struct/class
   //--------------------------------------------------------
 

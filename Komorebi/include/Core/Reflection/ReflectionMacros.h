@@ -14,6 +14,10 @@
 
 #define CAT(a, b) a ## b
 
+////////////////////////////////////////////////////////////////////////
+// Struct / Class
+////////////////////////////////////////////////////////////////////////
+
 #define __REFLECT(X)	\
   friend struct ::reflection::DefaultResolver;	\
   static const ::reflection::TypeDescriptor_Struct& GetReflection() { \
@@ -74,6 +78,11 @@
     ::reflection::ReflectionHelper::RegisterTypeDesc(typeDesc);  \
   } \
   const ::reflection::TypeDescriptor_Struct& __typeDesc_ ## TYPE = TYPE::GetReflection(); \
+  
+
+////////////////////////////////////////////////////////////////////////
+// Primitive
+////////////////////////////////////////////////////////////////////////
 
 #define DECLARE_REFLECTION_PRIMITIVE(TYPE) \
   namespace reflection {  \
@@ -101,6 +110,48 @@
       *(TYPE*)pObj = (TYPE)std::stod(valueCStr); \
     } \
   __IMPLEMENT_REFLECTION_PRIMITIVE_END(TYPE, TAG)
+
+DECLARE_REFLECTION_PRIMITIVE(int)
+DECLARE_REFLECTION_PRIMITIVE(unsigned int)
+DECLARE_REFLECTION_PRIMITIVE(uint64_t)
+DECLARE_REFLECTION_PRIMITIVE(float)
+DECLARE_REFLECTION_PRIMITIVE(double)
+DECLARE_REFLECTION_PRIMITIVE(bool)
+DECLARE_REFLECTION_PRIMITIVE(std::string)
+
+////////////////////////////////////////////////////////////////////////
+// Enum
+////////////////////////////////////////////////////////////////////////
+
+#define DECLARE_REFLECTION_ENUM(NAME) \
+  DECLARE_REFLECTION_PRIMITIVE(NAME)
+
+#define REFLECT_ENUM_BEGIN(NAME) \
+  namespace CAT(__, NAME ## ReflectionInternal){  \
+    void initReflection(::reflection::TypeDescriptor_Enum* typeDesc) { \
+      using T = NAME; \
+      typeDesc->name = #NAME; \
+      typeDesc->size = sizeof(T); \
+      typeDesc->values = {
+
+#define REFLECT_ENUM_VALUE(VALUE)  \
+        ::reflection::TypeDescriptor_Enum::EnumValue{#VALUE, (int) T::VALUE},
+
+#define REFLECT_ENUM_END(NAME)  \
+      };  \
+      ::reflection::ReflectionHelper::RegisterTypeDesc(typeDesc);  \
+    } \
+  } \
+  template <> \
+  ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<NAME>() {  \
+    static TypeDescriptor_Enum typeDesc {CAT(__, NAME ## ReflectionInternal)::initReflection};  \
+    return &typeDesc; \
+  } \
+  const ::reflection::TypeDescriptor* __typeDesc_ ## NAME = ::reflection::TypeResolver<NAME>::get(); \
+
+////////////////////////////////////////////////////////////////////////
+// Pointer
+////////////////////////////////////////////////////////////////////////
 
 #define DECLARE_REFLECTION_OWNED_POINTER(TYPE)  \
   DECLARE_REFLECTION_PRIMITIVE(::reflection::Owned_Ptr_Wrapper<TYPE>)
@@ -147,6 +198,10 @@
 #define IMPLEMENT_REFLECTION_POINTER_NAMESPACE(NAMESPACE, TYPE) __IMPLEMENT_REFLECTION_POINTER(TYPE, NAMESPACE::)
 #define IMPLEMENT_REFLECTION_POINTER(TYPE) __IMPLEMENT_REFLECTION_POINTER(TYPE,::)  
 
+////////////////////////////////////////////////////////////////////////
+// Vector
+////////////////////////////////////////////////////////////////////////
+
 #define DECLARE_REFLECTION_VECTOR(TYPE) \
   DECLARE_REFLECTION_PRIMITIVE(std::vector<TYPE>)
 
@@ -157,11 +212,5 @@
     return &typeDesc; \
   }
 
-DECLARE_REFLECTION_PRIMITIVE(int)
-DECLARE_REFLECTION_PRIMITIVE(unsigned int)
-DECLARE_REFLECTION_PRIMITIVE(uint64_t)
-DECLARE_REFLECTION_PRIMITIVE(float)
-DECLARE_REFLECTION_PRIMITIVE(double)
-DECLARE_REFLECTION_PRIMITIVE(bool)
-DECLARE_REFLECTION_PRIMITIVE(std::string)
 DECLARE_REFLECTION_VECTOR(std::string)
+

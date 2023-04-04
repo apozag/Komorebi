@@ -16,6 +16,9 @@ namespace reflection {
   void TypeDescriptor_Struct::Accept(TypeVisitor* visitor) const {
     visitor->Visit(this);
   }
+  void TypeDescriptor_Enum::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
   void TypeDescriptor_Owned_Ptr::Accept(TypeVisitor* visitor) const {
     visitor->Visit(this);
   }
@@ -34,6 +37,25 @@ namespace reflection {
   int TypeDescriptor_Struct::getFirstMemberIdx() const {
     if (!parentTypeDesc) return 0;
     return parentTypeDesc->getFirstMemberIdx() + parentTypeDesc->members.size();
+  }
+
+  std::string TypeDescriptor_Enum::GetValueStr(const void* obj) const {
+    int val = *(int*)obj;
+    for (int i = 0; i < values.size(); i++) {
+      if (val == values[i].value) {
+       return values[i].name;
+      }
+    }
+    return "ERROR";
+  }
+  void TypeDescriptor_Enum::SetValueFromString(void* pObj, const char* valueCStr) const {
+    for (int i = 0; i < values.size(); i++) {
+      if (strcmp(valueCStr, values[i].name) == 0) {
+        *(int*)pObj = values[i].value;
+        return;
+      }
+    }
+    *(int*)pObj = 0;
   }
 
   const std::string TypeDescriptor_StdVector::getFullName() const {

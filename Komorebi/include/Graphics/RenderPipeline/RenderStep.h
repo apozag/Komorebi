@@ -11,18 +11,26 @@ namespace gfx {
 
   class RenderStep : public GameObject {
   public:
+
+    enum Type {
+      DEFAULT,
+      CLEAR,
+      SCREEN
+    };
+
     struct TextureInfo : public GameObject{
       std::string m_rtId;
       int m_textureIdx;
       REFLECT_BASE()
     };
 
+    Type m_type;
+
     std::vector<TextureInfo> m_inputsInfo;
     std::string m_outRtId;
     unsigned int m_maxLayer = 0xFFFFFFFF;
     bool m_sortReverse = false;
 
-    bool m_screenEffect = false;
     OWNED_PTR(Material) m_screenEffectMat;
 
     // Non serialized
@@ -30,8 +38,8 @@ namespace gfx {
     const RenderTarget* m_outRt;
 
     RenderStep() {}
-    RenderStep(std::vector<TextureInfo> inputs, const char* outid, unsigned int layer, bool screen, bool sort)
-      : m_inputsInfo(inputs), m_outRtId(outid), m_maxLayer(layer), m_screenEffect(screen), m_sortReverse(sort) {
+    RenderStep(Type type, std::vector<TextureInfo> inputs, const char* outid, unsigned int layer, bool sort)
+      : m_type(type), m_inputsInfo(inputs), m_outRtId(outid), m_maxLayer(layer), m_sortReverse(sort) {
     };
 
     void Bind() const;
@@ -45,6 +53,8 @@ namespace gfx {
   };
 
 }
+
+DECLARE_REFLECTION_ENUM(gfx::RenderStep::Type)
 
 DECLARE_REFLECTION_VECTOR(gfx::RenderStep)
 DECLARE_REFLECTION_VECTOR(gfx::RenderStep::TextureInfo)

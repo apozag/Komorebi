@@ -87,41 +87,6 @@ gfx::Renderer::Renderer() :
   reflection::ReflectionHelper::ResolvePendingPointers();
 
   reflection::ReflectionHelper::ClearAll();
-
-
-  /// DEBUG
-  /*
-  m_renderInfo = new RenderInfo();
-  m_renderInfo->m_globalRTs.push_back(
-    {
-      "TEST",
-      RenderTarget(1024, 1024, DXGI_FORMAT_R8G8B8A8_UINT, 1, 8)
-    });
-  m_renderInfo->m_renderPipelines.push_back(
-    RenderPipeline{
-      "FW_STEP",
-      {
-        RenderPipeline::RenderStep{
-          std::vector<std::string>(),
-          std::vector<std::string>(),
-          "DEFAULT",
-          0,
-          false,
-          false
-        }
-      }
-    });
-
-  rapidxml::xml_document<> doc;
-  reflection::SerializationTypeVisitor visitor(m_renderInfo, &doc);
-  m_renderInfo->GetReflection().Accept(&visitor);
-  reflection::ReflectionHelper::ResolvePendingPointers();
-  std::ofstream myfile;
-  myfile.open("renderInfo.xml");
-  myfile << doc;
-  myfile.close();
-  reflection::ReflectionHelper::ClearTrackedStrings();
-  */
 }
 
 void gfx::Renderer::Init() {
@@ -243,10 +208,12 @@ void gfx::Renderer::Render() {
   static RenderPipeline* shadowRenderPipeline;
   if (shadowRenderPipeline == nullptr) {
     shadowRenderPipeline = memory::Factory::Create<RenderPipeline>();
-    shadowRenderPipeline->m_steps.push_back(RenderStep());
+    shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::CLEAR, {}, "", 0, false));
+    shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::DEFAULT, {}, "", 0xFFFFFFFF, false));    
   }
   for (int i = 0; i < m_shadowCameras.size(); i++) {
     shadowRenderPipeline->m_steps[0].m_outRt = m_shadowMaps[i];
+    shadowRenderPipeline->m_steps[1].m_outRt = m_shadowMaps[i];
     shadowRenderPipeline->Execute(m_shadowCameras[i], m_jobs);
   }
 
@@ -257,7 +224,7 @@ void gfx::Renderer::Render() {
   // Cameras sorted by priority.
   std::sort(m_cameras.begin(), m_cameras.end(), compareCamera);
 
-  Engine::GetDefaultRendertarget()->Clear(0.f, 0.f, 0.f);
+  //Engine::GetDefaultRendertarget()->Clear(0.f, 0.f, 0.f);
 
   // Draw scene
   for (int i = 0; i < m_cameras.size(); i++) {
