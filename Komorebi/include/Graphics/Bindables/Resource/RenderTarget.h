@@ -30,12 +30,12 @@ namespace gfx {
 
 		void Update() {};
 
-		void Clear(float r, float g, float b);
+		void Clear(float r, float g, float b) const;
 
 		unsigned int GetWidth() { return m_width; }
 		unsigned int GetHeight() { return m_height; }
 
-		const std::vector<gfx::Texture2D*>& GetTextures2D() { return m_textures; }
+		const std::vector<gfx::Texture2D*>& GetTextures2D() const { return m_textures; }
 
 		REFLECT_BASE()
 

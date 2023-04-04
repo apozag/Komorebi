@@ -18,3 +18,5 @@ void SetValueFromString(void* pObj, const char* valueCStr) const override {
   *(std::string*)pObj = valueCStr; 
 } 
 __IMPLEMENT_REFLECTION_PRIMITIVE_END(std::string, CStr)
+
+IMPLEMENT_REFLECTION_VECTOR(std::string)

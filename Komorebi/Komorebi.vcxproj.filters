@@ -111,6 +111,12 @@
     <Filter Include="Archivos de origen\Core\Memory">
       <UniqueIdentifier>{2a5c3ba3-b37d-4f51-9fab-832cc49e4a92}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Graphics\RenderPipeline">
+      <UniqueIdentifier>{062b434d-6e3f-47cb-9619-4fe32b85585a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Graphics\RenderPipeline">
+      <UniqueIdentifier>{c0441962-fe6c-4642-adc4-24cd285f7452}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\3rd\dxerr\DXGetErrorDescription.inl">
@@ -432,8 +438,23 @@
     <ClInclude Include="include\Core\Memory\PoolAllocator.h">
       <Filter>Archivos de encabezado\Core\Memory</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics\RenderPipeline.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Math\MathUtils.h">
+      <Filter>Archivos de encabezado\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Math\BvhData.h">
+      <Filter>Archivos de encabezado\Core\Math</Filter>
+    </ClInclude>
     <ClInclude Include="include\Graphics\Bindables\Resource\RenderTarget.h">
-      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\RenderInfo.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\RenderPipeline\RenderStep.h">
+      <Filter>Archivos de encabezado\Graphics\RenderPipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -542,9 +563,6 @@
     <ClCompile Include="source\Graphics\Bindables\Resource\ReflectedConstantBuffer.cpp">
       <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\Bindables\Resource\RenderTarget.cpp">
-      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="source\Graphics\Bindables\Resource\ResourceBindable.cpp">
       <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
     </ClCompile>
@@ -625,6 +643,24 @@
     </ClCompile>
     <ClCompile Include="source\Core\Memory\PoolAllocator.cpp">
       <Filter>Archivos de origen\Core\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderPipeline.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Math\BvhData.cpp">
+      <Filter>Archivos de origen\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Math\MathUtils.cpp">
+      <Filter>Archivos de origen\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\RenderTarget.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderInfo.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderPipeline\RenderStep.cpp">
+      <Filter>Archivos de origen\Graphics\RenderPipeline</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

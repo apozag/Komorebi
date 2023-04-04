@@ -33,6 +33,7 @@ public:
 	static gfx::RenderTarget* GetDefaultRendertarget();
 
 	static Window* GetWindow() { return m_window; }
+	static gfx::Renderer* GetRenderer() { return m_renderer; }
 
 	static Scene* m_activeScene;
 

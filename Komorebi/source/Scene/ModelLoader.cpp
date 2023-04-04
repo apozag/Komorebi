@@ -115,7 +115,7 @@ Mesh* ModelLoader::GenerateMesh(std::vector<POD::Vertex> vertices, std::vector<u
     max.y = std::max(max.y, vertices[i].pos.y);
     max.z = std::max(max.z, vertices[i].pos.z);
   }
-  Drawable::BVHData bvhData{ {min.x, min.y, min.z}, {max.x, max.y, max.z} };
+  BVHData bvhData{ {min.x, min.y, min.z}, {max.x, max.y, max.z} };
   Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, bvhData);
   return m;
 }
@@ -342,7 +342,7 @@ Mesh* ModelLoader::processMesh(aiMesh* mesh, const aiScene* scene, Scene* sceneG
     for (unsigned int j = 0; j < face.mNumIndices; j++)
       indices[i * 3u + j] = face.mIndices[j];
   }
-  Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
+  Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
   m->m_material = materials[mesh->mMaterialIndex];
   sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
 
@@ -443,7 +443,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(aiMesh* mesh, const aiScene* scene,
 
   free(boneFreeSlots);
 
-  SkinnedMesh* m = memory::Factory::Create<SkinnedMesh>(vertices, indices, &model->m_skeleton, Drawable::BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
+  SkinnedMesh* m = memory::Factory::Create<SkinnedMesh>(vertices, indices, &model->m_skeleton, BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
   m->m_material = materials[mesh->mMaterialIndex];
   Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
 

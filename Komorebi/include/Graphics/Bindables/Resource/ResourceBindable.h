@@ -21,3 +21,5 @@ namespace gfx {
 }
 
 DECLARE_REFLECTION_POINTER(gfx::ResourceBindable)
+DECLARE_REFLECTION_VECTOR(gfx::ResourceBindable*)
+DECLARE_REFLECTION_VECTOR(OWNED_PTR(gfx::ResourceBindable))

@@ -1,7 +1,8 @@
-#pragma once
+	#pragma once
 #include <wrl.h>
 #include <d3d11.h>
 #include <vector>
+#include <string>
 #include "SimpleMath.h"
 #include "Entities/Entity.h"
 #include "Core/Reflection/ReflectionMacros.h"
@@ -20,11 +21,8 @@ public:
 		DirectX::XMMATRIX proj;
 	};
 public:
-	Camera(float fov, float aspectratio, float nearZ, float farZ, unsigned int rtId, bool orthographic = false)
-		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_RTId(rtId), m_priority(0)
-	{}
-	Camera(float fov, float aspectratio, float nearZ, float farZ, gfx::RenderTarget* rt, bool orthographic = false)
-		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_rt(rt), m_priority(0)
+	Camera(float fov, float aspectratio, float nearZ, float farZ, bool orthographic = false)
+		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_priority(0), m_orthographic(orthographic)
 	{}
 	Camera() = default;
 	~Camera();
@@ -47,12 +45,15 @@ public:
 	float GetAspect() const { return m_aspectratio; }
 	bool IsOrthographic() const { return m_orthographic; }
 
+	const std::string& GetRenderPipelineId() const { return m_renderPipelineId; }
+
+	std::vector<DirectX::XMFLOAT4> GetFrustumPlanes(const Transform& transform) const;
+
 	REFLECT()
 
 public:
 
 	float m_fov, m_aspectratio, m_near, m_far;
-	unsigned int m_RTId;
 	bool m_orthographic = false;
 public:
 	uint32_t m_tagMask = 0xFFFFFFFF;
@@ -60,12 +61,9 @@ public:
 
 	DirectX::XMMATRIX m_proj;
 	gfx::VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
-	gfx::RenderTarget* m_rt;
 
-	//std::vector<PostProcMaterial*> m_postProcMaterials;
+private:
 
-	/////////////////////////////////////////////////////
-	// Serializable
-	/////////////////////////////////////////////////////
-//private:
+	std::string m_renderPipelineId;
+
 };

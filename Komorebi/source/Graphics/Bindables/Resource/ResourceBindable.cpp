@@ -5,3 +5,5 @@ namespace gfx {
 }
 
 IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, ResourceBindable)
+IMPLEMENT_REFLECTION_VECTOR(gfx::ResourceBindable*)
+IMPLEMENT_REFLECTION_VECTOR(OWNED_PTR(gfx::ResourceBindable))

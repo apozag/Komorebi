@@ -128,6 +128,9 @@ namespace reflection {
 
   void SetupTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
     void** ppObj = (void**)m_pObj;   
+    if (*ppObj == nullptr) {
+      return;
+    }
     const TypeDescriptor* dynamicType = type->GetDynamic(m_pObj);
     m_pObj = *ppObj;
     dynamicType->Accept(this);

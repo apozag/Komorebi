@@ -63,7 +63,7 @@ void Model::AddDrawable(Drawable* drawable) {
     m_bvh = drawable->GetBVHData();
   }
   else {
-    const Drawable::BVHData& data = drawable->GetBVHData();
+    const BVHData& data = drawable->GetBVHData();
 
     m_bvh.m_min.x = std::min(m_bvh.m_min.x, data.m_min.x);
     m_bvh.m_min.y = std::min(m_bvh.m_min.y, data.m_min.y);
@@ -78,7 +78,7 @@ void Model::AddDrawable(Drawable* drawable) {
 }
 
 
-const Drawable::BVHData& Model::GetBVHData() const {
+const BVHData& Model::GetBVHData() const {
   return m_bvh;
 }
 

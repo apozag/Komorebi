@@ -3,11 +3,13 @@
 
 #include "Core/GameObject.h"
 #include "Core/Reflection/ReflectionMacros.h"
+#include "Graphics\Bindables\Resource\ResourceBindable.h"
+#include "Graphics\Pass.h"
 
 namespace gfx {
 
-	class Pass;
-	class ResourceBindable;
+	//class Pass;
+	//class ResourceBindable;
 	class ReflectedConstantBuffer;
 	class PixelShader;
 	class VertexShader;

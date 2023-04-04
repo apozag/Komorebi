@@ -25,21 +25,23 @@ class Pass;
 class Texture2D;
 class Texture3D;
 class Material;
+class RenderInfo;
+
+struct Job {
+	uint64_t key;
+	const Drawable* drawable;
+	const Transform* transform;
+	Pass* pass;
+	Material* material;
+};
+
+struct CameraView {
+	const Camera* camera;
+	const Transform* transform;
+};
 
 class Renderer {
 private:
-	struct Job {
-		uint64_t key;
-		const Drawable* drawable;
-		const Transform* transform;
-		Pass* pass;
-		Material* material;
-	};
-
-	struct CameraView {
-		const Camera* camera;
-		const Transform* transform;
-	};
 
 	struct alignas(16) DirLightData {
 		POD::Vector4 m_color[MAX_DIRLIGHTS];
@@ -71,21 +73,29 @@ private:
 
 public:
 	Renderer();
+
+	void Init();
+
 	void SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material);
 	void SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform);
 	void SubmitDirectionalLight(const DirectionalLight* spotlight, const Transform* worldTransform);
 	void SubmitPointLight(const PointLight* spotlight, const Transform* worldTransform);
 	void SubmitCamera(const Camera* camera, const Transform* worldTransform);
+
 	void Render();
 
-	RenderTarget* GetRenderTarget(unsigned int idx) { return m_renderTargets[idx]; }
+	const std::vector<Job>& GetJobs() const { return m_jobs; }
 
-	friend bool compareJob(const gfx::Renderer::Job& j1, const gfx::Renderer::Job& j2);
-	friend bool compareCamera(const CameraView& c1, const CameraView& c2);
+	const Drawable* GetQuadPrimitive() const;
+
+	RenderTarget* GetGlobalRenderTarget(unsigned int idx) const { return m_renderTargets[idx]; }
+
+	const RenderInfo* GetRenderInfo() const { return m_renderInfo; }
 
 private:
 
 	std::vector<Job> m_jobs;
+	std::vector<CameraView> m_shadowCameras;
 	std::vector<CameraView> m_cameras;
 
 	DirLightData m_dirLightData;
@@ -98,13 +108,16 @@ private:
 	LightTransformData m_lightTransformData;
 	VertexConstantBuffer<LightTransformData> m_lightTransformCbuff;
 
-	std::vector<Texture2D*> m_shadowMaps;
 	SamplerState m_shadowMapSampler;
 	SamplerState m_PCFFiltersSampler;
 	Texture3D* m_PCFFilters;
 	PixelConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
 
 	std::vector<RenderTarget*> m_renderTargets;
+
+	RenderInfo* m_renderInfo = nullptr;
+
+	std::vector<RenderTarget*> m_shadowMaps;
 };
 
 }

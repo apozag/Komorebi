@@ -16,7 +16,6 @@ namespace gfx {
 
 	Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
 
-	//Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : Pass(memory::Factory::Create<VertexShader>(vsFilename), memory::Factory::Create<PixelShader>(psFilename), layer, skinned) {}
 	Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : m_VSFilename(vsFilename), m_PSFilename(psFilename), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
 
 	void Pass::Setup() {
@@ -86,7 +85,10 @@ namespace gfx {
 		REFLECT_STRUCT_MEMBER(m_VSFilename)
 		REFLECT_STRUCT_MEMBER(m_binds)
 		REFLECT_STRUCT_MEMBER(m_skinned)
+		REFLECT_STRUCT_MEMBER(m_ignoreFrustumCulling)
 		REFLECT_STRUCT_END(Pass)
 }
 
 IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, Pass)
+IMPLEMENT_REFLECTION_VECTOR(gfx::Pass*)
+IMPLEMENT_REFLECTION_VECTOR(OWNED_PTR(gfx::Pass))

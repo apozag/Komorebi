@@ -2,7 +2,8 @@
 
 #include <vector>
 #include "Entities/Entity.h"
-#include "Core/Math/MathWrappers.h"
+//#include "Core/Math/MathWrappers.h"
+#include "Core/Math/BvhData.h"
 
 namespace gfx {
 	class Graphics;
@@ -22,17 +23,7 @@ private:
 		DirectX::XMMATRIX model;
 	};
 public:
-	struct BVHData : public GameObject{
-
-		BVHData() {}
-
-		BVHData(const math::Vector3& min, const math::Vector3& max) : m_min(min), m_max(max) {}
-
-		math::Vector3 m_min;
-		math::Vector3 m_max;
-
-		REFLECT_BASE()
-	};
+	
 public:
 	Drawable() {};
 	Drawable(const Drawable& drawable);
@@ -49,7 +40,7 @@ public:
 	
 	void Insert(Node* node, const Transform& worldTransform) override;
 
-	virtual void Draw(const DirectX::XMMATRIX& modelMatrix) const;
+	virtual void Draw(const DirectX::XMMATRIX&& modelMatrix) const;
 
 	REFLECT()
 

@@ -11,7 +11,7 @@ namespace gfx {
 	class VertexShader;
 	class StateBindable;
 
-#define PASSLAYER_OPAQUE		0u
+#define PASSLAYER_FW_OPAQUE		0u
 #define PASSLAYER_SKYBOX		1u
 #define PASSLAYER_PREPASS		2u
 #define PASSLAYER_TRANSPARENT	3u
@@ -19,7 +19,7 @@ namespace gfx {
 
 	class Pass : public GameObject {
 	public:
-		Pass() : m_layer(PASSLAYER_OPAQUE), m_idx(static_idx++) {}
+		Pass() : m_layer(PASSLAYER_FW_OPAQUE), m_idx(static_idx++) {}
 		Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned = false);
 		Pass(const char* vsFilename, const char* psFilename, unsigned int m_layer, bool skinned = false);
 		~Pass();
@@ -32,6 +32,7 @@ namespace gfx {
 		unsigned char GetIdx() const { return m_idx; }
 		PixelShader const* GetPixelShader() const { return m_pixelShader; }
 		VertexShader const* GetVertexShader() const { return m_vertexShader; }
+		bool DoesIgnoreFrustumCulling() { return m_ignoreFrustumCulling; }
 
 		REFLECT_BASE()
 
@@ -46,8 +47,11 @@ namespace gfx {
 		bool m_skinned;
 		static unsigned char static_idx;
 		const unsigned char m_idx;
+		bool m_ignoreFrustumCulling = false;
 		bool m_enabled = true;
 	};
 }
 
 DECLARE_REFLECTION_POINTER(gfx::Pass)
+DECLARE_REFLECTION_VECTOR(gfx::Pass*)
+DECLARE_REFLECTION_VECTOR(OWNED_PTR(gfx::Pass))

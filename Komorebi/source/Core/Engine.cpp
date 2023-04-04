@@ -32,6 +32,8 @@ void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, fl
 	m_renderer = memory::Factory::Create<gfx::Renderer>();
 	m_targetFramerate = targetFramerate;
 	memory::Factory::SetGlobalMode(false);
+
+	m_renderer->Init();
 }
 
 int Engine::Run() 	

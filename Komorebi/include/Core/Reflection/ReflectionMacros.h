@@ -142,25 +142,20 @@
   ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<::reflection::Weak_Ptr_Wrapper<NAMESPACE ## TYPE>>() {  \
     static TypeDescriptor_Weak_Ptr typeDesc{CAT(initReflection_ ## TYPE, _Weak_Ptr)};  \
     return &typeDesc; \
-  } \
-  template <> \
-  ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<std::vector<::reflection::Owned_Ptr_Wrapper<NAMESPACE ## TYPE>>>() { \
-    static TypeDescriptor_StdVector typeDesc{ (::reflection::Owned_Ptr_Wrapper<NAMESPACE ## TYPE>*) nullptr };  \
-    return &typeDesc; \
-  } \
-  template <> \
-  ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<std::vector<::reflection::Weak_Ptr_Wrapper<NAMESPACE ## TYPE>>>() {  \
-    static TypeDescriptor_StdVector typeDesc{ (::reflection::Weak_Ptr_Wrapper<NAMESPACE ## TYPE>*) nullptr };  \
-    return &typeDesc; \
-  } \
-  template <> \
-  ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<std::vector<NAMESPACE ## TYPE*>>() {  \
-    static TypeDescriptor_StdVector typeDesc{ (::reflection::Weak_Ptr_Wrapper<NAMESPACE ## TYPE>*) nullptr };  \
-    return &typeDesc; \
-  }
+  } 
 
 #define IMPLEMENT_REFLECTION_POINTER_NAMESPACE(NAMESPACE, TYPE) __IMPLEMENT_REFLECTION_POINTER(TYPE, NAMESPACE::)
 #define IMPLEMENT_REFLECTION_POINTER(TYPE) __IMPLEMENT_REFLECTION_POINTER(TYPE,::)  
+
+#define DECLARE_REFLECTION_VECTOR(TYPE) \
+  DECLARE_REFLECTION_PRIMITIVE(std::vector<TYPE>)
+
+#define IMPLEMENT_REFLECTION_VECTOR(TYPE) \
+  template <> \
+  reflection::TypeDescriptor* reflection::getPrimitiveDescriptor<std::vector<TYPE>>() {  \
+    static TypeDescriptor_StdVector typeDesc{ (TYPE*) nullptr };  \
+    return &typeDesc; \
+  }
 
 DECLARE_REFLECTION_PRIMITIVE(int)
 DECLARE_REFLECTION_PRIMITIVE(unsigned int)
@@ -169,3 +164,4 @@ DECLARE_REFLECTION_PRIMITIVE(float)
 DECLARE_REFLECTION_PRIMITIVE(double)
 DECLARE_REFLECTION_PRIMITIVE(bool)
 DECLARE_REFLECTION_PRIMITIVE(std::string)
+DECLARE_REFLECTION_VECTOR(std::string)

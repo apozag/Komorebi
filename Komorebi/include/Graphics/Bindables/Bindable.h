@@ -9,7 +9,7 @@ struct ID3D11DeviceContext;
 
 namespace gfx {
 
-	struct DxgiInfoManager;
+	class DxgiInfoManager;
 
 	class Bindable : public GameObject {
 	public:

@@ -15,7 +15,7 @@ public:
 	SkinnedMesh( std::vector<POD::SkinnedVertex>& vertices, std::vector<unsigned short>& indices, Skeleton* skeleton, BVHData bvhData = BVHData());
 	SkinnedMesh(const SkinnedMesh& drawable);
 	SkinnedMesh* Clone();
-	void Draw(const DirectX::XMMATRIX& modelMatrix) const override;
+	void Draw(const DirectX::XMMATRIX&& modelMatrix) const override;
 private:
 	Skeleton* m_skeleton;
 };

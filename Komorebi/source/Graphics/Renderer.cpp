@@ -5,11 +5,10 @@
 #include <sstream>
 #include <ctime>
 
-#define _XM_NO_INTRINSICS_
-
 #include "Core/Engine.h"
 #include "Core/Math/Transform.h"
 #include "Core/Memory/Factory.h"
+#include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Entities/Drawable.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Renderer.h"
@@ -18,19 +17,16 @@
 #include "Graphics/Bindables/Resource/Texture2D.h"
 #include "Graphics/Bindables/Resource/Texture3D.h"
 #include "Graphics/Material.h"
+#include "Graphics\RenderPipeline.h"
+#include "Graphics\RenderInfo.h"
+
+#include "Scene\ModelLoader.h"
 
 namespace gfx {
-  bool compareJob(const gfx::Renderer::Job& j1, const gfx::Renderer::Job& j2) {
-    return j1.key < j2.key;
-  }
-  bool compareCamera(const gfx::Renderer::CameraView& c1, const gfx::Renderer::CameraView& c2) {
+  bool compareCamera(const gfx::CameraView& c1, const gfx::CameraView& c2) {
     return (c1.camera->m_priority < c2.camera->m_priority);
   }
 }
-
-std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj);
-void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b);
-bool cullAABB(const std::vector<DirectX::XMFLOAT4>& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform);
 
 gfx::Renderer::Renderer() :
   m_dirLightsCbuff(PixelConstantBuffer<DirLightData>(PCBUFF_DIRLIGHT_SLOT)),
@@ -61,6 +57,9 @@ gfx::Renderer::Renderer() :
     windowSize,
     windowSize,
     DXGI_FORMAT_R32G32_FLOAT, 8, SRV_PCF_SLOT);
+  m_PCFFilters->Bind();
+
+  m_PCFFiltersSampler.Bind();
 
   m_shadowInfoCbuff.SetBuffer(ShadowInfoData{
     1024.f,				// Shadowmap size
@@ -70,8 +69,74 @@ gfx::Renderer::Renderer() :
     1.0f / filterSize
     });
   m_shadowInfoCbuff.Update();
+  m_shadowInfoCbuff.Bind();
 
   m_renderTargets.push_back(Engine::GetDefaultRendertarget());
+
+  rapidxml::file<> xmlFile("renderInfo.xml");
+  rapidxml::xml_document<> doc;
+  doc.parse<0>(xmlFile.data());
+
+  const reflection::TypeDescriptor* renderInfoType = reflection::DefaultResolver::get<RenderInfo>();
+
+  m_renderInfo = memory::Factory::Create<RenderInfo>();
+
+  reflection::DeserializationTypeVisitor deserializationVisitor(m_renderInfo, doc.first_node());
+  renderInfoType->Accept(&deserializationVisitor);
+
+  reflection::ReflectionHelper::ResolvePendingPointers();
+
+  reflection::ReflectionHelper::ClearAll();
+
+
+  /// DEBUG
+  /*
+  m_renderInfo = new RenderInfo();
+  m_renderInfo->m_globalRTs.push_back(
+    {
+      "TEST",
+      RenderTarget(1024, 1024, DXGI_FORMAT_R8G8B8A8_UINT, 1, 8)
+    });
+  m_renderInfo->m_renderPipelines.push_back(
+    RenderPipeline{
+      "FW_STEP",
+      {
+        RenderPipeline::RenderStep{
+          std::vector<std::string>(),
+          std::vector<std::string>(),
+          "DEFAULT",
+          0,
+          false,
+          false
+        }
+      }
+    });
+
+  rapidxml::xml_document<> doc;
+  reflection::SerializationTypeVisitor visitor(m_renderInfo, &doc);
+  m_renderInfo->GetReflection().Accept(&visitor);
+  reflection::ReflectionHelper::ResolvePendingPointers();
+  std::ofstream myfile;
+  myfile.open("renderInfo.xml");
+  myfile << doc;
+  myfile.close();
+  reflection::ReflectionHelper::ClearTrackedStrings();
+  */
+}
+
+void gfx::Renderer::Init() {
+
+  const reflection::TypeDescriptor* renderInfoType = reflection::DefaultResolver::get<RenderInfo>();
+
+  reflection::SetupTypeVisitor setupVisitor(m_renderInfo);
+  renderInfoType->Accept(&setupVisitor);
+
+  reflection::ReflectionHelper::ClearAll();
+
+  m_dirLightData.count = 0;
+  m_spotLightData.count = 0;
+  m_pointLightData.count = 0;
+
 }
 
 void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material) {
@@ -133,7 +198,7 @@ void gfx::Renderer::SubmitDirectionalLight(const DirectionalLight* dirlight, con
   );
 
   // Shadow mapping camera
-  m_cameras.push_back({ dirlight->GetCamera() , worldTransform });
+  m_shadowCameras.push_back({ dirlight->GetCamera() , worldTransform });
   m_shadowMaps.push_back(dirlight->GetShadowMap());
 
   m_dirLightData.count++;
@@ -174,244 +239,53 @@ void gfx::Renderer::Render() {
   m_lightTransformCbuff.Update();
   m_lightTransformCbuff.Bind();
 
-  // Cameras sorted by priority. Specially important for shadow mapping.
-  std::sort(m_cameras.begin(), m_cameras.end(), compareCamera);
-
-  for (int i = 0; i < m_cameras.size(); i++) {
-    CameraView& camView = m_cameras[i];
-
-    // Bind camera
-    camView.camera->Bind(camView.transform);
-
-    unsigned int jobsToExecute = m_jobs.size();
-
-    // Get frustum planes for culling
-    const std::vector<DirectX::XMFLOAT4>& planes = getFrustumPlanes(camView.transform->GetInverseMatrixUnsafe() * camView.camera->getProj());
-
-    // Time to bind shadowmaps?
-    if (i == m_shadowMaps.size() && i > 0) {
-      for (Texture2D* rt : m_shadowMaps) {
-        rt->Bind();
-      }
-      m_shadowMapSampler.Bind();
-      m_PCFFilters->Bind();
-      m_PCFFiltersSampler.Bind();
-      m_shadowInfoCbuff.Bind();
-    }
-
-    // Update job sorting keys for this camera. 
-    for (int i = 0; i < m_jobs.size(); i++) {
-
-      Job& job = m_jobs[i];
-
-      // Ignored tag?
-      bool ignore = false;//camView.camera->m_tagMask & job.drawable->m_tagMask;
-
-      // Skybox passes are exempt from culling
-      bool isSkybox = job.pass->m_layer == PASSLAYER_SKYBOX;
-
-      // Frustum culling
-      bool cull = ignore || (!isSkybox && cullAABB(planes, job.drawable->GetBVHData(), job.transform));
-
-      job.key &= ~(uint64_t(1) << 34);
-      job.key |= uint64_t(cull) << 34;
-
-      jobsToExecute -= cull;
-
-      // Depth
-      if (!cull) {
-        bool isTransparent = job.pass->m_layer == PASSLAYER_TRANSPARENT;
-        unsigned int shifts = isTransparent * 16;
-        job.key &= ~(uint64_t(0xFFFF) << shifts);
-        float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
-        float farZ = camView.camera->m_far;
-        float nearZ = camView.camera->m_near;
-        float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
-        uint64_t depthKeyComponent = (isTransparent ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
-        job.key |= depthKeyComponent << shifts;
-        job.key |= 0;
-      }
-
-    }
-
-    // Sort jobs based on its key
-    std::sort(m_jobs.begin(), m_jobs.end(), compareJob);
-
-    // Dispatch jobs
-    int stateBindCount = 0;
-    int resourceBindCount = 0;
-    Pass* lastPass = nullptr;
-    Material* lastMat = nullptr;
-    for (int i = 0; i < jobsToExecute; i++) {
-
-      Job job = m_jobs[i];
-
-      Pass* nextPass = i < jobsToExecute - 1 ? m_jobs[i + 1].pass : nullptr;
-      Material* nextMat = i < jobsToExecute - 1 ? m_jobs[i + 1].material : nullptr;
-
-      if (lastPass != job.pass) { job.pass->Bind(); stateBindCount++; };
-      if (lastMat != job.material) { job.material->Bind(); resourceBindCount++; };
-
-      const DirectX::XMMATRIX& modelMat = DirectX::XMMatrixTranspose(job.transform->GetMatrix());
-      job.drawable->Draw(modelMat);
-
-      if (nextPass != job.pass) job.pass->Unbind();
-      if (nextMat != job.material) job.material->Unbind();
-
-      lastPass = job.pass;
-      lastMat = job.material;
-    }
-
-    std::ostringstream os_;
-    os_ << "setPass: " << stateBindCount <<
-      " setMat: " << resourceBindCount <<
-      " DrawCalls: " << jobsToExecute << "\n";
-    OutputDebugString(os_.str().c_str());
-
-    camView.camera->Unbind();
+  // Render shadowmaps
+  static RenderPipeline* shadowRenderPipeline;
+  if (shadowRenderPipeline == nullptr) {
+    shadowRenderPipeline = memory::Factory::Create<RenderPipeline>();
+    shadowRenderPipeline->m_steps.push_back(RenderStep());
+  }
+  for (int i = 0; i < m_shadowCameras.size(); i++) {
+    shadowRenderPipeline->m_steps[0].m_outRt = m_shadowMaps[i];
+    shadowRenderPipeline->Execute(m_shadowCameras[i], m_jobs);
   }
 
-  for (Texture2D* rt : m_shadowMaps) {
-    rt->Unbind();
+  for (RenderTarget* rt : m_shadowMaps) {
+    rt->GetTextures2D()[0]->Bind();
+  }
+
+  // Cameras sorted by priority.
+  std::sort(m_cameras.begin(), m_cameras.end(), compareCamera);
+
+  Engine::GetDefaultRendertarget()->Clear(0.f, 0.f, 0.f);
+
+  // Draw scene
+  for (int i = 0; i < m_cameras.size(); i++) {
+    CameraView camView = m_cameras[i];
+    const RenderPipeline* pipeline = m_renderInfo->FindRenderPipeline(camView.camera->GetRenderPipelineId());
+    if (pipeline != nullptr) {
+      pipeline->Execute(camView, m_jobs);
+    }
+  }
+
+  for (RenderTarget* rt : m_shadowMaps) {
+    rt->GetTextures2D()[0]->Unbind();
   }
 
   m_jobs.clear();
   m_cameras.clear();
+  m_shadowCameras.clear();
   m_shadowMaps.clear();
   m_dirLightData.count = 0;
   m_pointLightData.count = 0;
   m_spotLightData.count = 0;
 }
 
-bool cullAABB(const std::vector<DirectX::XMFLOAT4>& frustumPlanes, const Drawable::BVHData& bvhData, const Transform* worldTransform) {
-
-  Drawable::BVHData updatedBvh;
-  UpdateAABB(bvhData, *worldTransform, updatedBvh);
-  for (int planeID = 0; planeID < 6; ++planeID) {
-    DirectX::XMVECTOR planeNormal{ frustumPlanes[planeID].x, frustumPlanes[planeID].y, frustumPlanes[planeID].z, 0.0f };
-    float planeConstant = frustumPlanes[planeID].w;
-
-    DirectX::SimpleMath::Vector3 worldMin = updatedBvh.m_min + worldTransform->GetPositionUnsafe();
-    DirectX::SimpleMath::Vector3 worldMax = updatedBvh.m_max + worldTransform->GetPositionUnsafe();
-
-    // Check each axis (x,y,z) to get the AABB vertex furthest away from the direction the plane is facing (plane normal)
-    DirectX::XMFLOAT3 axisVert;
-
-    // x-axis
-    if (frustumPlanes[planeID].x < 0.0f)    // Which AABB vertex is furthest down (plane normals direction) the x axis
-      axisVert.x = worldMin.x; // min x plus tree positions x
-    else
-      axisVert.x = worldMax.x; // max x plus tree positions x
-
-    // y-axis
-    if (frustumPlanes[planeID].y < 0.0f)    // Which AABB vertex is furthest down (plane normals direction) the y axis
-      axisVert.y = worldMin.y; // min y plus tree positions y
-    else
-      axisVert.y = worldMax.y; // max y plus tree positions y
-
-    // z-axis
-    if (frustumPlanes[planeID].z < 0.0f)    // Which AABB vertex is furthest down (plane normals direction) the z axis
-      axisVert.z = worldMin.z; // min z plus tree positions z
-    else
-      axisVert.z = worldMax.z; // max z plus tree positions z
-
-    // Now we get the signed distance from the AABB vertex that's furthest down the frustum planes normal,
-    // and if the signed distance is negative, then the entire bounding box is behind the frustum plane, which means
-    // that it should be culled
-    if (XMVectorGetX(XMVector3Dot(planeNormal, XMLoadFloat3(&axisVert))) + planeConstant < 0.0f) {
-      return true;
-    }
+const Drawable* gfx::Renderer::GetQuadPrimitive() const {
+  static Drawable* quad = nullptr;
+  if (quad == nullptr) {
+    quad = (Drawable*)(ModelLoader::GetInstance()->GenerateQuad());
   }
-  return false;
-}
-
-std::vector<DirectX::XMFLOAT4> getFrustumPlanes(DirectX::XMMATRIX&& viewProj) {
-  // x, y, z, and w represent A, B, C and D in the plane equation
-  // where ABC are the xyz of the planes normal, and D is the plane constant
-  std::vector<DirectX::XMFLOAT4> tempFrustumPlane(6);
-
-  // Left Frustum Plane
-  // Add first column of the matrix to the fourth column
-  tempFrustumPlane[0].x = viewProj._14 + viewProj._11;
-  tempFrustumPlane[0].y = viewProj._24 + viewProj._21;
-  tempFrustumPlane[0].z = viewProj._34 + viewProj._31;
-  tempFrustumPlane[0].w = viewProj._44 + viewProj._41;
-
-  // Right Frustum Plane
-  // Subtract first column of matrix from the fourth column
-  tempFrustumPlane[1].x = viewProj._14 - viewProj._11;
-  tempFrustumPlane[1].y = viewProj._24 - viewProj._21;
-  tempFrustumPlane[1].z = viewProj._34 - viewProj._31;
-  tempFrustumPlane[1].w = viewProj._44 - viewProj._41;
-
-  // Top Frustum Plane
-  // Subtract second column of matrix from the fourth column
-  tempFrustumPlane[2].x = viewProj._14 - viewProj._12;
-  tempFrustumPlane[2].y = viewProj._24 - viewProj._22;
-  tempFrustumPlane[2].z = viewProj._34 - viewProj._32;
-  tempFrustumPlane[2].w = viewProj._44 - viewProj._42;
-
-  // Bottom Frustum Plane
-  // Add second column of the matrix to the fourth column
-  tempFrustumPlane[3].x = viewProj._14 + viewProj._12;
-  tempFrustumPlane[3].y = viewProj._24 + viewProj._22;
-  tempFrustumPlane[3].z = viewProj._34 + viewProj._32;
-  tempFrustumPlane[3].w = viewProj._44 + viewProj._42;
-
-  // Near Frustum Plane
-  // We could add the third column to the fourth column to get the near plane,
-  // but we don't have to do this because the third column IS the near plane
-  tempFrustumPlane[4].x = viewProj._13;
-  tempFrustumPlane[4].y = viewProj._23;
-  tempFrustumPlane[4].z = viewProj._33;
-  tempFrustumPlane[4].w = viewProj._43;
-
-  // Far Frustum Plane
-  // Subtract third column of matrix from the fourth column
-  tempFrustumPlane[5].x = viewProj._14 - viewProj._13;
-  tempFrustumPlane[5].y = viewProj._24 - viewProj._23;
-  tempFrustumPlane[5].z = viewProj._34 - viewProj._33;
-  tempFrustumPlane[5].w = viewProj._44 - viewProj._43;
-
-  // Normalize plane normals (A, B and C (xyz))
-  // Also take note that planes face inward
-  for (int i = 0; i < 6; ++i) {
-    float length = sqrt((tempFrustumPlane[i].x * tempFrustumPlane[i].x) + (tempFrustumPlane[i].y * tempFrustumPlane[i].y) + (tempFrustumPlane[i].z * tempFrustumPlane[i].z));
-    tempFrustumPlane[i].x /= length;
-    tempFrustumPlane[i].y /= length;
-    tempFrustumPlane[i].z /= length;
-    tempFrustumPlane[i].w /= length;
-  }
-
-  return tempFrustumPlane;
-}
-
-// Transform AABB a by the matrix m and translation t,
-// find maximum extents, and store result into AABB b.
-void UpdateAABB(const Drawable::BVHData& a, const Transform& transform, Drawable::BVHData& b) {
-  const float* amin = (const float*)&a.m_min.x;
-  const float* amax = (const float*)&a.m_max.x;
-  float* bmin = (float*)&b.m_min.x;
-  float* bmax = (float*)&b.m_max.x;
-  float* t = (float*)&transform.GetPositionUnsafe();
-  const DirectX::XMMATRIX& m = transform.GetMatrix();
-  // For all three axes
-  for (int i = 0; i < 3; i++) {
-    // Start by adding in translation
-    bmin[i] = bmax[i] = t[i];
-    // Form extent by summing smaller and larger terms respectively
-    for (int j = 0; j < 3; j++) {
-      float e = m(j, i) * amin[j];
-      float f = m(j, i) * amax[j];
-      if (e < f) {
-        bmin[i] += e;
-        bmax[i] += f;
-      }
-      else {
-        bmin[i] += f;
-        bmax[i] += e;
-      }
-    }
-  }
+  return quad;
 }
 

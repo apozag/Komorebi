@@ -155,6 +155,7 @@
     </ProjectReference>
     <FxCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)\Komorebi\assets\shaders\include</AdditionalIncludeDirectories>
+      <ObjectFileOutput>assets\shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

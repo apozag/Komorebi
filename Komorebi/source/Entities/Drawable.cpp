@@ -45,7 +45,7 @@ void Drawable::Insert(Node* node, const Transform& worldTransform) {
 	GetRenderer()->SubmitDrawable(this, &worldTransform, m_material);
 }
 
-void Drawable::Draw(const DirectX::XMMATRIX& modelMatrix) const {
+void Drawable::Draw(const DirectX::XMMATRIX&& modelMatrix) const {
 
 	m_modelCbuffer->SetBuffer({ modelMatrix});
 
@@ -63,13 +63,6 @@ void Drawable::Draw(const DirectX::XMMATRIX& modelMatrix) const {
 		bind->Unbind ();
 	}
 }
-
-
-typedef Drawable::BVHData bvhDataType;
-REFLECT_STRUCT_BASE_BEGIN(bvhDataType)
-REFLECT_STRUCT_MEMBER(m_min)
-REFLECT_STRUCT_MEMBER(m_max)
-REFLECT_STRUCT_END(bvhDataType)
 
 REFLECT_STRUCT_BEGIN(Drawable, Entity)
 REFLECT_STRUCT_MEMBER(m_material)

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 #include "Core\Memory\Factory.h"
 #include "Graphics/GraphicsThrowMacros.h"
@@ -101,6 +102,8 @@ namespace gfx {
 		texDesc.CPUAccessFlags = 0;
 		texDesc.MiscFlags = 0;
 
+		assert(m_count < 10 && "RenderTarget: texture count is higher than 10. Did you initialize m_count?");
+
 		for (int i = 0; i < m_count; i++) {
 
 			// Create Texture 2D
@@ -146,7 +149,7 @@ namespace gfx {
 		}
 	}
 
-	void RenderTarget::Clear(float r, float g, float b) {
+	void RenderTarget::Clear(float r, float g, float b) const {
 
 		INFOMAN_NOHR
 			const float m_color[] = { r, g, b, 1.0f };
@@ -157,6 +160,7 @@ namespace gfx {
 	}	
 
 		REFLECT_STRUCT_BEGIN(RenderTarget, StateBindable)
+		REFLECT_STRUCT_MEMBER(m_count)
 		REFLECT_STRUCT_MEMBER(m_width)
 		REFLECT_STRUCT_MEMBER(m_height)
 		REFLECT_STRUCT_MEMBER(m_format)
