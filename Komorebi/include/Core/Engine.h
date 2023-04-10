@@ -12,6 +12,7 @@ namespace gfx {
 class Scene;
 class ScriptDispatcher;
 class Window;
+class Camera;
 
 class Engine {
 	friend class gfx::Bindable;
@@ -35,7 +36,10 @@ public:
 	static Window* GetWindow() { return m_window; }
 	static gfx::Renderer* GetRenderer() { return m_renderer; }
 
-	static Scene* m_activeScene;
+	static Camera* GetMainCamera() { return m_mainCamera; }	
+
+	static Scene* GetActiveScene() { return m_activeScene; }
+	static void SetActiveScene(Scene* scene);
 
 private:
 
@@ -46,6 +50,10 @@ private:
 
 	static std::vector<CallbackFunc> m_preRenderCallbacks;
 	static std::vector<CallbackFunc> m_postRenderCallbacks;
+
+	static Scene* m_activeScene;
+
+	static Camera* m_mainCamera;
 
 	static float m_dt;
 

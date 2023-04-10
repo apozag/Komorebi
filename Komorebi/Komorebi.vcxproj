@@ -161,7 +161,7 @@
       <AdditionalDependencies>d3d11.lib;assimp-vc142-mtd.lib;D3DCompiler.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
-      <ObjectFileOutput>$(ProjectDir)%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>assets/shaders/samples/%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <Lib>
       <AdditionalDependencies>
@@ -408,6 +408,7 @@
     <ClInclude Include="include\Core\Reflection\SerializationTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\TypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\UnloadTypeVisitor.h" />
+    <ClInclude Include="include\Core\Util\Bitmask.h" />
     <ClInclude Include="include\Core\WindowAttachment.h" />
     <ClInclude Include="include\Core\Defines.h" />
     <ClInclude Include="include\Core\Engine.h" />
@@ -422,7 +423,6 @@
     <ClInclude Include="include\Core\ScriptDispatcher.h" />
     <ClInclude Include="include\Core\Singleton.h" />
     <ClInclude Include="include\Core\Time\Timer.h" />
-    <ClInclude Include="include\Core\Util\BitmaskUtils.h" />
     <ClInclude Include="include\Core\Util\ImageManager.h" />
     <ClInclude Include="include\Core\Util\TagManager.h" />
     <ClInclude Include="include\Core\Util\WideStringUtility.h" />

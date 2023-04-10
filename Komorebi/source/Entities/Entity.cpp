@@ -5,6 +5,7 @@
 #include "Core/Math/Transform.h"
 #include "Core/Engine.h"
 #include "Core/Window.h"
+#include "Scene/Node.h"
 
 gfx::Renderer* Entity::GetRenderer() const { return Engine::m_renderer; }
 ScriptDispatcher* Entity::GetScriptDispatcher() const { return &Engine::m_scriptDispatcher; }

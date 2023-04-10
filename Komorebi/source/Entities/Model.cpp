@@ -14,7 +14,7 @@
 #include "Scene/ModelLoader.h"
 
 void Model::Setup() {
-  ModelLoader::GetInstance()->LoadModel(m_filename, Engine::m_activeScene, m_node, this);
+  ModelLoader::GetInstance()->LoadModel(m_filename, Engine::GetActiveScene(), m_node, this);
   for (int i = 0; i < m_drawables.size(); i++) {
     m_drawables[i]->Setup();
   }

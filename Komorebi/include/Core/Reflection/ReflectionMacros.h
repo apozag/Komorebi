@@ -127,7 +127,7 @@ DECLARE_REFLECTION_PRIMITIVE(std::string)
   DECLARE_REFLECTION_PRIMITIVE(NAME)
 
 #define REFLECT_ENUM_BEGIN(NAME) \
-  namespace CAT(__, NAME ## ReflectionInternal){  \
+  namespace CAT(__, NAME ## EnumReflectionInternal){  \
     void initReflection(::reflection::TypeDescriptor_Enum* typeDesc) { \
       using T = NAME; \
       typeDesc->name = #NAME; \
@@ -144,10 +144,35 @@ DECLARE_REFLECTION_PRIMITIVE(std::string)
   } \
   template <> \
   ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<NAME>() {  \
-    static TypeDescriptor_Enum typeDesc {CAT(__, NAME ## ReflectionInternal)::initReflection};  \
+    static TypeDescriptor_Enum typeDesc {CAT(__, NAME ## EnumReflectionInternal)::initReflection};  \
     return &typeDesc; \
   } \
-  const ::reflection::TypeDescriptor* __typeDesc_ ## NAME = ::reflection::TypeResolver<NAME>::get(); \
+  const ::reflection::TypeDescriptor* CAT(__typeDesc_ ## NAME, _Enum) = ::reflection::TypeResolver<NAME>::get(); \
+
+////////////////////////////////////////////////////////////////////////
+// Enum Bitmask
+////////////////////////////////////////////////////////////////////////
+
+#define DECLARE_REFLECTION_BITMASK(NAME) \
+  DECLARE_REFLECTION_PRIMITIVE(::reflection::BitmaskWrapper<NAME>)
+
+#define IMPLEMENT_REFLECTION_BITMASK(NAME) \
+  namespace CAT(__, NAME ## BitmaskReflectionInternal){  \
+    void initReflection(::reflection::TypeDescriptor_Bitmask* typeDesc) { \
+      using T = NAME; \
+      typeDesc->name = #NAME "Bitmask"; \
+      typeDesc->size = sizeof(T); \
+      typeDesc->enumType = (::reflection::TypeDescriptor_Enum*) ::reflection::TypeResolver<NAME>::get(); \
+      ::reflection::ReflectionHelper::RegisterTypeDesc(typeDesc);  \
+    } \
+  } \
+  template <> \
+  ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<::reflection::BitmaskWrapper<NAME>>() {  \
+    static TypeDescriptor_Bitmask typeDesc {CAT(__, NAME ## BitmaskReflectionInternal)::initReflection};  \
+    return &typeDesc; \
+  } \
+  const ::reflection::TypeDescriptor* CAT(__typeDesc_ ## NAME, _Bitmask) = ::reflection::TypeResolver<::reflection::BitmaskWrapper<NAME>>::get(); \
+
 
 ////////////////////////////////////////////////////////////////////////
 // Pointer
@@ -160,8 +185,9 @@ DECLARE_REFLECTION_PRIMITIVE(std::string)
   DECLARE_REFLECTION_PRIMITIVE(::reflection::Weak_Ptr_Wrapper<TYPE>)
 
 #define DECLARE_REFLECTION_POINTER(TYPE)  \
-  DECLARE_REFLECTION_OWNED_POINTER(TYPE*) \
-  DECLARE_REFLECTION_WEAK_POINTER(TYPE*) 
+  DECLARE_REFLECTION_OWNED_POINTER(TYPE) \
+  DECLARE_REFLECTION_WEAK_POINTER(TYPE)  \
+  DECLARE_REFLECTION_PRIMITIVE(TYPE*)
 
 #define __IMPLEMENT_REFLECTION_POINTER(TYPE, NAMESPACE) \
   void CAT(initReflection_ ## TYPE, _Owned_Ptr)(::reflection::TypeDescriptor_Ptr* typeDesc) { \
@@ -193,6 +219,10 @@ DECLARE_REFLECTION_PRIMITIVE(std::string)
   ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<::reflection::Weak_Ptr_Wrapper<NAMESPACE ## TYPE>>() {  \
     static TypeDescriptor_Weak_Ptr typeDesc{CAT(initReflection_ ## TYPE, _Weak_Ptr)};  \
     return &typeDesc; \
+  } \
+  template <> \
+  ::reflection::TypeDescriptor* ::reflection::getPrimitiveDescriptor<NAMESPACE ## TYPE *>() {  \
+    return getPrimitiveDescriptor<Weak_Ptr_Wrapper<NAMESPACE ## TYPE>>(); \
   } 
 
 #define IMPLEMENT_REFLECTION_POINTER_NAMESPACE(NAMESPACE, TYPE) __IMPLEMENT_REFLECTION_POINTER(TYPE, NAMESPACE::)

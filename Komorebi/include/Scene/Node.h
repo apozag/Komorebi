@@ -10,7 +10,7 @@ class Scene;
 class Entity;
 
 class Node : public GameObject{
-	friend class Scene;
+	//friend class Scene;
 public:
 
 	Node() : m_name("Node"){}
@@ -28,7 +28,7 @@ public:
 
 	REFLECT_BASE()
 
-private:
+//private:
 	Transform m_globalTransform;
 	Node* m_parent;
 };

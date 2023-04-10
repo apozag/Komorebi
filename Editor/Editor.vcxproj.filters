@@ -81,6 +81,9 @@
     <ClCompile Include="src\GUI\SceneGUIWindow.cpp">
       <Filter>Archivos de origen\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\GuizmoUtils.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\imgui\imgui.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="3rd\ImGuizmo\ImGuizmo.h">
       <Filter>3rd\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\GizmoUtils.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

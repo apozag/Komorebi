@@ -7,6 +7,8 @@
 #include "Entities/Entity.h"
 #include "Core/Reflection/ReflectionMacros.h"
 
+#define MAIN_CAMERA_TAG 5
+
 namespace gfx {
 	template<typename T>
 	class VertexConstantBuffer;

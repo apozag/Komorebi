@@ -29,10 +29,11 @@ Scene* SceneLoader::LoadScene(const char* filename) {
   const xml_node<>* nodeElem = doc.first_node(nodeTypeName);
 
   Scene* scene = memory::Factory::Create<Scene>();
-  Engine::m_activeScene = scene;
 
   DeserializationTypeVisitor deserializationVisitor(scene, nodeElem);
   scene->GetReflection().Accept(&deserializationVisitor);
+
+  Engine::SetActiveScene(scene);
 
   ReflectionHelper::ResolvePendingPointers();
 

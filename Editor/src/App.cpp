@@ -26,7 +26,7 @@ int CALLBACK WinMain(
 
 		Engine::GetWindow()->Attach(&attachment);
 
-		Engine::m_activeScene = SceneLoader::LoadScene("assets/scenes/testScene.xml");
+		SceneLoader::LoadScene("assets/scenes/testScene.xml");
 
 		int result = Engine::Run();
 

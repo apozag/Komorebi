@@ -4,6 +4,8 @@
 #include "imgui/backends/imgui_impl_win32.h"
 #include "imgui/backends/imgui_impl_dx11.h"
 
+#include "ImGuizmo/ImGuizmo.h"
+
 #include "Core/Engine.h"
 #include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
@@ -19,8 +21,8 @@
 void DrawRawEditor(){
   ImGui::Begin("Raw Editor");
 
-  ImGuiTypeVisitor visitor(Engine::m_activeScene);
-  Engine::m_activeScene->GetReflection().Accept(&visitor);
+  ImGuiTypeVisitor visitor(Engine::GetActiveScene());
+  reflection::TypeResolver<Scene>::get()->Accept(&visitor);
 
   ImGui::End();
 }
@@ -36,7 +38,7 @@ void DrawSaveSceneMenu() {
   ImGui::InputText("##SaveFileName", buff, buffSize);
   ImGui::SameLine();
   if (ImGui::Button("Save##SaveButton") && buff[0] != '\0') {
-    SceneLoader::SaveScene(Engine::m_activeScene, buff);
+    SceneLoader::SaveScene(Engine::GetActiveScene(), buff);
   }
   ImGui::EndMenu();
 }
@@ -53,7 +55,7 @@ void DrawLoadSceneMenu() {
   ImGui::SameLine();
   if (ImGui::Button("Load##LoadButton") && buff[0] != '\0') {
     memory::Factory::FreeAll();
-    Engine::m_activeScene = SceneLoader::LoadScene(buff);
+    Engine::SetActiveScene(SceneLoader::LoadScene(buff));
   }
   ImGui::EndMenu();
 }
@@ -104,6 +106,8 @@ void Render(float /*dt*/) {
   ImGui_ImplWin32_NewFrame();
   ImGui::NewFrame();
 
+  ImGuizmo::BeginFrame();
+
   {
     DrawTopMenu();
     ImGui::Render();
@@ -114,7 +118,7 @@ void Render(float /*dt*/) {
 
 bool GUIAttachment::IsBlocking() {
   ImGuiIO& io = ImGui::GetIO();
-  return io.WantCaptureKeyboard || io.WantCaptureMouse;
+  return io.WantCaptureKeyboard || io.WantCaptureMouse || ImGuizmo::IsUsing();
 }
 
 void GUIAttachment::Setup() {

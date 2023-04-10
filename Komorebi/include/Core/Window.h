@@ -58,6 +58,8 @@ public:
 	void Init();
 	static std::optional<int> ProcessMessages();
 	void Attach(WindowAttachment* attachment);
+	int GetHeight() { return m_height; }
+	int GetWidth() { return m_width; }
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT mg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT mg, WPARAM wParam, LPARAM lParam);

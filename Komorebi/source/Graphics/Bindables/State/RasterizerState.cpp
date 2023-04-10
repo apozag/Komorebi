@@ -29,6 +29,7 @@ namespace gfx {
 		GetContext()->RSSetState(m_rasterizer.Get());
 	}
 	void RasterizerState::Unbind() const {
+		GetContext()->RSSetState(nullptr);
 	}
 
 	REFLECT_STRUCT_BEGIN(RasterizerState, StateBindable)

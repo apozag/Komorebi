@@ -191,6 +191,7 @@ void ModelLoader::processNode(aiNode* node, const aiScene* scene, Scene* sceneGr
   Node* sceneNode = sceneGraphParent;
   if (node->mNumMeshes > 0) {
     sceneNode = sceneGraph->AddNode(nullptr, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, true);
+    sceneNode->m_name = node->mName.C_Str();
   }
 
   for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -227,6 +228,7 @@ void ModelLoader::processNodeBones(aiNode* node, const aiScene* scene, Scene* sc
 
   if (nodeIdx >= 0) {
     sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, true);
+    sceneNode->m_name = nodeName;
     boneNodes[nodeIdx] = sceneNode;
     boneCount++;
   }
@@ -446,7 +448,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(aiMesh* mesh, const aiScene* scene,
   SkinnedMesh* m = memory::Factory::Create<SkinnedMesh>(vertices, indices, &model->m_skeleton, BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
   m->m_material = materials[mesh->mMaterialIndex];
   Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
-
+  meshNode->m_name = mesh->mName.C_Str();
   return m;
 }
 

@@ -10,36 +10,6 @@ namespace reflection {
   class TypeVisitor;
 
   template <typename T>
-  struct Ptr_Wrapper {
-    T* m_ptr = nullptr;
-
-    T* operator->() const { return m_ptr; }
-    operator T* () const { return m_ptr; }
-    const T& operator* () const {return *m_ptr;}
-    T& operator* () {return *m_ptr;}
-    T* operator+(int offset) { return m_ptr + offset; }
-    T* operator++() { return m_ptr++; }
-    T* operator-(int offset) { return m_ptr - offset; }
-    T* operator--() { return m_ptr--; }
-  protected:
-    Ptr_Wrapper() {}
-    Ptr_Wrapper(T* ptr) : m_ptr(ptr) {}
-  };
-  template <typename T>
-  struct Owned_Ptr_Wrapper: public Ptr_Wrapper<T> {
-    Owned_Ptr_Wrapper() {}
-    Owned_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
-  };
-  template <typename T>
-  struct Weak_Ptr_Wrapper : public Ptr_Wrapper<T> {
-    Weak_Ptr_Wrapper() {}
-    Weak_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
-  };
-
-#define WEAK_PTR(TYPE) reflection::Weak_Ptr_Wrapper<TYPE>
-#define OWNED_PTR(TYPE) reflection::Owned_Ptr_Wrapper<TYPE>
-
-  template <typename T>
   TypeDescriptor* getPrimitiveDescriptor();
 
   struct DefaultResolver {
@@ -55,7 +25,7 @@ namespace reflection {
       return &T::GetReflection();
     }
 
-    template <typename T, typename std::enable_if<!IsReflected<T>::value && !std::is_pointer<T>::value, int>::type = 0>
+    template <typename T, typename std::enable_if<!IsReflected<T>::value, int>::type = 0>
     static const TypeDescriptor* get() {
       return getPrimitiveDescriptor<T>();
     }
@@ -68,11 +38,6 @@ namespace reflection {
     template <typename T, typename std::enable_if<!IsReflected<T>::value, int>::type = 0>
     static const TypeDescriptor* getDynamic(const void* /* unused */) {
       return getPrimitiveDescriptor<T>();
-    }
-
-    template <typename T, typename std::enable_if<!IsReflected<T>::value && std::is_pointer<T>::value, int>::type = 0>
-    static const TypeDescriptor* get() {
-      return getPrimitiveDescriptor<WEAK_PTR(std::remove_pointer<T>::type)>();
     }
   };
 
@@ -161,10 +126,38 @@ namespace reflection {
 
     virtual void Accept(TypeVisitor* visitor) const override;
 
-  private:
     std::string GetValueStr(const void* obj) const override;
     void SetValueFromString(void* pObj, const char* valueCStr) const override;
   };
+
+  //--------------------------------------------------------
+  // Type descriptor for enum bitmasks
+  //--------------------------------------------------------
+
+  struct TypeDescriptor_Bitmask : public TypeDescriptor {
+
+    TypeDescriptor_Enum* enumType;
+
+    TypeDescriptor_Bitmask(void (*init)(TypeDescriptor_Bitmask*)) : TypeDescriptor{ nullptr, 0 } {
+      init(this);
+    }
+    TypeDescriptor_Bitmask() : TypeDescriptor{ "", sizeof(int) } {}
+
+    virtual void Accept(TypeVisitor* visitor) const override;
+
+    std::string GetValueStr(const void* obj) const override;
+    void SetValueFromString(void* pObj, const char* valueCStr) const override;
+  };
+
+  template<typename T>
+  struct BitmaskWrapper {
+    int m_value;
+    BitmaskWrapper() {}
+    BitmaskWrapper(int value) { m_value = value; }
+    operator int() { return m_value; }
+  };
+
+#define BITMASK(TYPE) ::reflection::BitmaskWrapper<TYPE> 
 
   //--------------------------------------------------------
   // Type descriptor for pointer to struct/class
@@ -218,6 +211,36 @@ namespace reflection {
     std::string GetValueStr(const void* obj) const override { return {}; }
     void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
+
+  template <typename T>
+  struct Ptr_Wrapper {
+    T* m_ptr = nullptr;
+
+    T* operator->() const { return m_ptr; }
+    operator T* () const { return m_ptr; }
+    const T& operator* () const { return *m_ptr; }
+    T& operator* () { return *m_ptr; }
+    T* operator+(int offset) { return m_ptr + offset; }
+    T* operator++() { return m_ptr++; }
+    T* operator-(int offset) { return m_ptr - offset; }
+    T* operator--() { return m_ptr--; }
+  protected:
+    Ptr_Wrapper() {}
+    Ptr_Wrapper(T* ptr) : m_ptr(ptr) {}
+  };
+  template <typename T>
+  struct Owned_Ptr_Wrapper : public Ptr_Wrapper<T> {
+    Owned_Ptr_Wrapper() {}
+    Owned_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
+  };
+  template <typename T>
+  struct Weak_Ptr_Wrapper : public Ptr_Wrapper<T> {
+    Weak_Ptr_Wrapper() {}
+    Weak_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
+  };
+
+#define WEAK_PTR(TYPE) ::reflection::Weak_Ptr_Wrapper<TYPE>
+#define OWNED_PTR(TYPE) ::reflection::Owned_Ptr_Wrapper<TYPE>
 
   //--------------------------------------------------------
   // Type descriptors for std::vector

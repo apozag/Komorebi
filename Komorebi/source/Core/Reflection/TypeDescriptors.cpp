@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "3rd/rapidxml/rapidxml_ext.hpp"
 #include "3rd/rapidxml/rapidxml.hpp"
 
@@ -17,6 +19,9 @@ namespace reflection {
     visitor->Visit(this);
   }
   void TypeDescriptor_Enum::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
+  void TypeDescriptor_Bitmask::Accept(TypeVisitor* visitor) const {
     visitor->Visit(this);
   }
   void TypeDescriptor_Owned_Ptr::Accept(TypeVisitor* visitor) const {
@@ -56,6 +61,33 @@ namespace reflection {
       }
     }
     *(int*)pObj = 0;
+  }
+
+  std::string TypeDescriptor_Bitmask::GetValueStr(const void* obj) const {
+    std::string str;
+    static const std::string barStr = "|";
+    unsigned int bitmask = *(unsigned int*) obj;
+    for (const TypeDescriptor_Enum::EnumValue& val : enumType->values) {
+      if ((bitmask & val.value) != 0) {
+        str += barStr + val.name;
+      }
+    }
+    /*if (!str.empty()) {
+      str.pop_back();
+    }*/
+    return str;
+  }
+  void TypeDescriptor_Bitmask::SetValueFromString(void* pObj, const char* valueCStr) const {
+    *(unsigned int*)pObj = 0u;
+    std::stringstream sstr(valueCStr);
+    std::string subStr;
+    while (std::getline(sstr, subStr, '|')) {
+      for (const TypeDescriptor_Enum::EnumValue& val : enumType->values) {
+        if (subStr == val.name) {
+          *(unsigned int*)pObj |= val.value;
+        }
+      }
+    }
   }
 
   const std::string TypeDescriptor_StdVector::getFullName() const {

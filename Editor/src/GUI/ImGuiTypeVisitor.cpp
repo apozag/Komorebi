@@ -183,3 +183,56 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
   m_pObj = *ppObj;
   concreteType->Accept(this);
 }
+
+void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Enum* type) {
+  using EnumVal = ::reflection::TypeDescriptor_Enum::EnumValue;
+  int currValue = *(int*)m_pObj;
+  int currItemIdx;
+  std::string names;
+  for (int i = 0; i < type->values.size(); i++) {
+    const EnumVal& val = type->values[i];
+    if (currValue == val.value) {
+      currItemIdx == i;
+    }
+    names += val.name;
+    names += "\0";
+  }
+  if (ImGui::Combo("##EntityCombo", &currItemIdx, names.c_str())) {
+    *(int*)m_pObj = type->values[currItemIdx].value;
+    m_dirty = true;
+  }
+}
+
+void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Bitmask* type) {
+  ImGui::Text(type->GetValueStr(m_pObj).c_str());
+  ImGui::SameLine();
+  static bool open = false;
+  if (!open) {
+    open |= ImGui::Button("Edit##EditBitmask");
+  }
+  if (open) {
+    ImGui::Begin(type->enumType->name);
+    int bitmask = *(int*)m_pObj;
+    using EnumVal = ::reflection::TypeDescriptor_Enum::EnumValue;
+    for (const EnumVal& val : type->enumType->values) {
+      bool on = (val.value & bitmask) != 0;
+      if (ImGui::Checkbox(val.name, &on)) {
+        m_dirty = true;
+      }
+      if (on) {
+        *(int*)m_pObj |= val.value;
+      }
+      else {
+        *(int*)m_pObj &= ~val.value;
+      }
+    }
+
+    ImGui::Separator();
+
+    if (ImGui::Button("Close##CloseBitmask")) {
+      open = false;
+    }
+
+    ImGui::End();
+  }
+}

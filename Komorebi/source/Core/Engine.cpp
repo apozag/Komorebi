@@ -8,12 +8,14 @@
 #include "Scene/Scene.h"
 #include "Core/Window.h"
 #include "Entities/Script.h"
+#include "Entities/Camera.h"
 #include "Core/ScriptDispatcher.h"
 #include "Core/Window.h"
 
 gfx::Renderer* Engine::m_renderer;
 Window* Engine::m_window;
 Scene* Engine::m_activeScene;
+Camera* Engine::m_mainCamera;
 ScriptDispatcher Engine::m_scriptDispatcher;
 std::vector<Engine::CallbackFunc> Engine::m_preRenderCallbacks;
 std::vector<Engine::CallbackFunc> Engine::m_postRenderCallbacks;
@@ -79,4 +81,27 @@ int Engine::Run()
 
 
 	return 0;
+}
+
+Camera* RecursiveFindMainCamera(Node* node) {
+	for (Entity* entity : node->m_entities) {
+		Camera* camera = dynamic_cast<Camera*>(entity);
+		if (camera && camera->m_tag == MAIN_CAMERA_TAG) {
+			return camera;
+		}
+	}
+
+	for (Node* child : node->m_children) {
+		Camera* mainCamera = RecursiveFindMainCamera(child);
+		if (mainCamera != nullptr) {
+			return mainCamera;
+		}
+	}
+
+	return nullptr;
+}
+
+void Engine::SetActiveScene(Scene* scene) {
+	m_activeScene = scene;
+	m_mainCamera = RecursiveFindMainCamera(m_activeScene->m_transformHierarchy);
 }

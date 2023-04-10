@@ -231,9 +231,6 @@
     <ClInclude Include="include\Core\Reflection\TypeDescriptors.h">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClInclude>
-    <ClInclude Include="include\Core\Util\BitmaskUtils.h">
-      <Filter>Archivos de encabezado\Core\Util</Filter>
-    </ClInclude>
     <ClInclude Include="include\Core\Util\ImageManager.h">
       <Filter>Archivos de encabezado\Core\Util</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="include\Graphics\RenderPipeline\RenderStep.h">
       <Filter>Archivos de encabezado\Graphics\RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Util\Bitmask.h">
+      <Filter>Archivos de encabezado\Core\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

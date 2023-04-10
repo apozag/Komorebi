@@ -17,6 +17,7 @@ class Entity : public GameObject{
 	friend class Scene;
 public:
 	virtual void Insert(Node* node, const Transform& worldTransform) = 0;
+	Node* GetNode() { return m_node; }
 	REFLECT_BASE();
 protected:
 	gfx::Renderer* GetRenderer() const;

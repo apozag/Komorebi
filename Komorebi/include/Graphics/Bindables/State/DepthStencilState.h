@@ -9,10 +9,11 @@ namespace gfx {
 	class DepthStencilState : public StateBindable {
 	public:
 		enum DepthStencilAccess {
-			DEPTH_WRITE = 0x1,
-			DEPTH_READ = 0x2,
+			NONE					= 0x0,
+			DEPTH_WRITE		= 0x1,
+			DEPTH_READ		= 0x2,
 			STENCIL_WRITE = 0X4,
-			STENCIL_READ = 0x8
+			STENCIL_READ	= 0x8
 		};
 	public:
 
@@ -21,6 +22,7 @@ namespace gfx {
 		~DepthStencilState();
 
 		void Setup() override;
+		void Reconfigure() override;
 
 		void Bind()const override;
 		void Unbind()const override {}
@@ -34,10 +36,13 @@ namespace gfx {
 		// Serializable
 		//////////////////
 
-		unsigned int m_DSAccess;
+		BITMASK(DepthStencilAccess) m_DSAccess;
 		unsigned int m_refVal;
 	};
 
 }
+
+DECLARE_REFLECTION_ENUM(gfx::DepthStencilState::DepthStencilAccess)
+DECLARE_REFLECTION_BITMASK(gfx::DepthStencilState::DepthStencilAccess)
 
 DECLARE_REFLECTION_POINTER(gfx::DepthStencilState)

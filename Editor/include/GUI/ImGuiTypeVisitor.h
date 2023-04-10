@@ -10,6 +10,8 @@ public:
   void Visit(const reflection::TypeDescriptor_StdVector* type);
   void Visit(const reflection::TypeDescriptor_Weak_Ptr* type);
   void Visit(const reflection::TypeDescriptor_Owned_Ptr* type);
+  void Visit(const reflection::TypeDescriptor_Enum* type);
+  void Visit(const reflection::TypeDescriptor_Bitmask* type);
 private:
   void* m_pObj;
   bool m_dirty = false;

@@ -3,8 +3,6 @@
 #include "Core/Math/MathWrappers.h"
 #include "Core/GameObject.h"
 
-class Node;
-
 class Transform : public GameObject{
 	friend class Scene;
 public:
@@ -85,6 +83,12 @@ public:
 		m_scale = scale;
 		compose();
 		m_dirty = true;
+	}
+	void SetMatrix(DirectX::XMMATRIX matrix) {
+		m_matrix = matrix;
+		m_invMatDirty = true;
+		m_dirty = true;
+		decompose();
 	}
 
 	DirectX::SimpleMath::Vector3 PointToLocal(DirectX::SimpleMath::Vector3 point) {
@@ -192,4 +196,3 @@ private:
 };
 
 Transform operator*(Transform leftTransform, Transform rightTransform);
-std::ostream& operator<<(std::ostream& os, Transform transform);

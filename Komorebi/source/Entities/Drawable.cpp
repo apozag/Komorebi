@@ -5,6 +5,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"
 #include "Graphics/Pass.h"
+#include "Graphics/Material.h"
 
 #include "Entities/Drawable.h"
 

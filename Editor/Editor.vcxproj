@@ -199,6 +199,7 @@
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\Behaviours\CameraMovement.cpp" />
     <ClCompile Include="src\GUI\GUI.cpp" />
+    <ClCompile Include="src\GUI\GuizmoUtils.cpp" />
     <ClCompile Include="src\GUI\ImGuiTypeVisitor.cpp" />
     <ClCompile Include="src\GUI\SceneGUIWindow.cpp" />
   </ItemGroup>
@@ -213,6 +214,7 @@
     <ClInclude Include="3rd\imgui\imstb_textedit.h" />
     <ClInclude Include="3rd\imgui\imstb_truetype.h" />
     <ClInclude Include="include\Behaviours\CameraMovement.h" />
+    <ClInclude Include="include\GUI\GizmoUtils.h" />
     <ClInclude Include="include\GUI\GUI.h" />
     <ClInclude Include="include\GUI\ImGuiTypeVisitor.h" />
     <ClInclude Include="include\GUI\SceneGUIWindow.h" />

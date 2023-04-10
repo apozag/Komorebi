@@ -3,6 +3,7 @@
 
 #include "GUI\SceneGUIWindow.h"
 #include "GUI\ImGuiTypeVisitor.h"
+#include "GUI\GizmoUtils.h"
 #include "Core/Engine.h"
 #include "Core/Reflection/ReflectionHelper.h"
 #include "Core/Reflection/CopyTypeVisitor.h"
@@ -76,13 +77,16 @@ void DrawAddEntityButton() {
 
 void DrawAddNodeButton(Node* parent) {
   if (ImGui::Button((std::string("+##NewNode") + std::to_string((size_t)parent)).c_str())) {
-    Engine::m_activeScene->AddNode(nullptr, Transform(), parent);
+    Engine::GetActiveScene()->AddNode(nullptr, Transform(), parent);
   }
 }
 
 void DrawNodeRecursive(Node* node) {
   if (node == selectedNode) {
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);
+
+    
+
   }
   else {
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_WHITE);
@@ -133,12 +137,14 @@ void DrawNodeInfo() {
     }    
   }
   ImGui::Separator();
+  DrawImGuiTransform(selectedNode->m_localTransform, selectedNode->m_globalTransform);
+  ImGui::Separator();
   DrawAddEntityButton();
 }
 
 void DrawSceneGUIWindow() {
   ImGui::Begin("Scene Window");
-  Node* rootNode = Engine::m_activeScene->GetRootNode();
+  Node* rootNode = Engine::GetActiveScene()->GetRootNode();
   for (Node* child : rootNode->m_children) {
     DrawNodeRecursive(child);
   }
