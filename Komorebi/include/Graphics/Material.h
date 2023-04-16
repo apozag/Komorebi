@@ -27,8 +27,8 @@ namespace gfx {
 
 		void AddBindable(ResourceBindable* bindable);
 		void AddPass(Pass* pass);
-		const std::vector<Pass*>& GetPasses() { return m_passes; }
-		const std::vector<ResourceBindable*>& GetBinds() { return m_binds; }
+		const std::vector<OWNED_PTR(Pass)>& GetPasses() { return m_passes; }
+		const std::vector<OWNED_PTR(ResourceBindable)>& GetBinds() { return m_binds; }
 		unsigned int GetIdx() { return m_idx; }
 
 		bool SetFloat(const char* name, float value);
@@ -49,8 +49,8 @@ namespace gfx {
 		// Serializable
 		//////////////////
 
-		std::vector<Pass*> m_passes;
-		std::vector<ResourceBindable*> m_binds;
+		std::vector<OWNED_PTR(Pass)> m_passes;
+		std::vector<OWNED_PTR(ResourceBindable)> m_binds;
 
 	};
 }

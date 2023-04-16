@@ -45,9 +45,9 @@ namespace gfx {
   REFLECT_STRUCT_END(ResourceNamePairType)
 
   REFLECT_STRUCT_BASE_BEGIN(RenderInfo)
-  REFLECT_STRUCT_MEMBER(m_renderPipelines)
   REFLECT_STRUCT_MEMBER(m_globalRTs)
   REFLECT_STRUCT_MEMBER(m_globalResources)
+  REFLECT_STRUCT_MEMBER(m_renderPipelines)
   REFLECT_STRUCT_END(RenderInfo)
 
 }

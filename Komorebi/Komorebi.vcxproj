@@ -198,9 +198,18 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="assets\shaders\include\Common.hlsli" />
-    <None Include="assets\shaders\include\Lighting.hlsli" />
-    <None Include="assets\shaders\include\VertexCommon.hlsli" />
+    <None Include="assets\shaders\include\Common.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="assets\shaders\include\Lighting.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="assets\shaders\include\VertexCommon.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </None>
     <None Include="include\3rd\dxerr\DXGetErrorDescription.inl" />
     <None Include="include\3rd\dxerr\DXGetErrorString.inl" />
     <None Include="include\3rd\dxerr\DXTrace.inl" />

@@ -22,7 +22,7 @@ public:
   RenderPipeline() {}
   RenderPipeline(const char* name, std::vector<RenderStep> steps) : m_name(name), m_steps(steps) {}
 
-  void Setup();
+  void Setup() override;
   void Execute(CameraView camView, std::vector<Job>& jobs) const;
 
   const std::string& GetName() const { return m_name; }

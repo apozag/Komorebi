@@ -48,7 +48,7 @@ void Drawable::Insert(Node* node, const Transform& worldTransform) {
 
 void Drawable::Draw(const DirectX::XMMATRIX&& modelMatrix) const {
 
-	m_modelCbuffer->SetBuffer({ modelMatrix});
+	m_modelCbuffer->m_buffer = { modelMatrix };
 
 	for (gfx::ResourceBindable* bind : m_binds) {
 		bind->Update ();

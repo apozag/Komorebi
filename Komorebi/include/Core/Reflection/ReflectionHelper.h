@@ -16,7 +16,7 @@ namespace reflection {
 
     static void RegisterTypeDesc(TypeDescriptor* typeDesc);
 
-    static const TypeDescriptor* GetTypeDesc(std::string name);
+    static const TypeDescriptor* GetTypeDesc(const std::string& name);
 
     static void TrackString(std::string* string);
 

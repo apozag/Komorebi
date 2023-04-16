@@ -23,7 +23,7 @@ namespace reflection {
     GetTypeDict().insert({ typeDesc->name, typeDesc });
   }
 
-  const TypeDescriptor* ReflectionHelper::GetTypeDesc(std::string name) {
+  const TypeDescriptor* ReflectionHelper::GetTypeDesc(const std::string& name) {
     return GetTypeDict()[name];
   }
 

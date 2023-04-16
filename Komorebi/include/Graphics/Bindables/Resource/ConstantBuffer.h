@@ -52,7 +52,7 @@ namespace gfx {
 		}
 
 		ConstantBuffer(unsigned int slot, T& buffer) : ConstantBuffer(slot) {
-			SetBuffer(buffer);
+			m_buffer(buffer);
 		}
 
 		~ConstantBuffer() {
@@ -72,17 +72,14 @@ namespace gfx {
 				&msr
 			));
 			int size = sizeof(T);
-			memcpy(msr.pData, &m_cbuffer, size);
+			memcpy(msr.pData, &m_buffer, size);
 			GetContext()->Unmap(m_constantBuffer.Get(), 0u);
 		}
 
-		void SetBuffer(const T& cbuffer) {
-			m_cbuffer = cbuffer;
-		}
+		T m_buffer;
 
 	protected:
-		Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
-		T m_cbuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;		
 		unsigned int m_slot;
 		bool m_dynamic;
 	};

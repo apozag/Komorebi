@@ -11,10 +11,11 @@ namespace reflection {
   void DeserializationTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
     void* pObj = m_pObj;
     const rapidxml::xml_node<>* xmlNode = m_xmlNode;
+    type->construct(pObj);
     if (type->parentTypeDesc) {
       type->parentTypeDesc->Accept(this);
     }
-    //type->construct(pObj);
+    //memset(pObj, 0, type->size);    
     rapidxml::xml_node<>* child = xmlNode->first_node();
     int startMemberIdx = type->getFirstMemberIdx();
     int memberIdx = 0;
@@ -71,7 +72,7 @@ namespace reflection {
     void** ppObj = (void**)m_pObj;
     const rapidxml::xml_node<>* xmlNode = m_xmlNode;
 
-    char* name = nullptr;
+    std::string name;
     intptr_t ptrId = std::numeric_limits<intptr_t>::max();
 
     rapidxml::xml_attribute<>* att = xmlNode->first_attribute();
@@ -85,11 +86,9 @@ namespace reflection {
       att = att->next_attribute();
     }
 
-    if (!name) {
+    if (name.empty()) {
       // TODO: [ERROR] Owned Pointer node must have a "Type" attribute
-    }
-    else if (ptrId == std::numeric_limits<intptr_t>::max()) {
-      // TODO: [ERROR] Owned Pointer node must have a "PrtId" attribute
+      name = type->getStaticType()->name;
     }
 
     const TypeDescriptor* typeDesc = ReflectionHelper::GetTypeDesc(name);
@@ -97,7 +96,12 @@ namespace reflection {
     //*ppObj = malloc(typeDesc->size);
     *ppObj = typeDesc->create();
 
-    ReflectionHelper::RegisterPtrId(*ppObj, ptrId, typeDesc->size);
+    if (ptrId == std::numeric_limits<intptr_t>::max()) {
+      // TODO: [ERROR] Owned Pointer node must have a "PrtId" attribute
+    }
+    else {
+      ReflectionHelper::RegisterPtrId(*ppObj, ptrId, typeDesc->size);
+    }
 
     m_pObj = *ppObj;
     typeDesc->Accept(this);

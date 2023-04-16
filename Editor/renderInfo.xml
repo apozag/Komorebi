@@ -1,25 +1,96 @@
 <RenderInfo>
 	<m_renderPipelines>
 		<RenderPipeline>
-			<m_name>FORWARD</m_name>
+			<m_name>DEFERRED</m_name>
 			<m_steps>
 				<RenderStepType>
 					<m_type>CLEAR</m_type>
 					<m_outRtId>DEFAULT</m_outRtId>
-					<m_maxLayer>0</m_maxLayer>
+				</RenderStepType>
+				<RenderStepType>
+					<m_type>CLEAR</m_type>
+					<m_outRtId>GBUFFER</m_outRtId>
 				</RenderStepType>
 				<RenderStepType>
 					<m_type>DEFAULT</m_type>
-					<m_inputs/>
+					<m_inputsInfo/>
+					<m_outRtId>GBUFFER</m_outRtId>
+					<m_maxLayer>99</m_maxLayer>
+				</RenderStepType>
+				<RenderStepType>
+					<m_type>SCREEN</m_type>
+					<m_inputsInfo>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>0</m_textureIdx>
+						</TextureInfoType>
+					</m_inputsInfo>
 					<m_outRtId>DEFAULT</m_outRtId>
-					<m_maxLayer>10</m_maxLayer>
-					<m_sortReverse>0</m_sortReverse>
+					<m_screenEffectMat>
+						<m_passes>
+							<Pass*>
+								<m_layer>11</m_layer>
+								<m_PSFilename>assets/shaders/deferred/ComposeAmbientPixel.cso</m_PSFilename>
+								<m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
+								<m_binds/>
+							</Pass*>
+						</m_passes>
+						<m_binds/>
+					</m_screenEffectMat>
+				</RenderStepType>
+				<RenderStepType>
+					<m_type>SCREEN</m_type>
+					<m_inputsInfo>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>0</m_textureIdx>
+						</TextureInfoType>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>1</m_textureIdx>
+						</TextureInfoType>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>2</m_textureIdx>
+						</TextureInfoType>
+					</m_inputsInfo>
+					<m_outRtId>DEFAULT</m_outRtId>
+					<m_repeatFor>DIRLIGHT</m_repeatFor>
+					<m_screenEffectMat>
+						<m_passes>
+							<Pass*>
+								<m_layer>11</m_layer>
+								<m_PSFilename>assets/shaders/deferred/ComposeDirLightPixel.cso</m_PSFilename>
+								<m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
+								<m_binds>
+									<BlendState* Type="BlendState">
+										<m_enable>1</m_enable>
+										<m_srcBlendFactor>ONE</m_srcBlendFactor>
+										<m_dstBlendFactor>ONE</m_dstBlendFactor>
+										<m_blendOp>ADD</m_blendOp>
+									</BlendState*>
+								</m_binds>
+							</Pass*>
+						</m_passes>
+						<m_binds/>
+					</m_screenEffectMat>
 				</RenderStepType>
 			</m_steps>
 		</RenderPipeline>	
 	</m_renderPipelines>
 	<m_globalRTs>
+		<RTNamePairType>
+			<m_name>GBUFFER</m_name>
+			<m_rt>
+				<m_count>3</m_count>
+				<m_width>-1</m_width>
+				<m_height>-1</m_height>
+				<m_format>DXGI_FORMAT_R32G32B32A32_FLOAT</m_format>
+				<m_slot>7</m_slot>
+			</m_rt>
+		</RTNamePairType>
 	</m_globalRTs>
 	<m_globalResources/>
 </RenderInfo>
+
 

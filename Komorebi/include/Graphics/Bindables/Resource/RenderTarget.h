@@ -48,10 +48,10 @@ namespace gfx {
 		// Serializable
 		/////////////////////////////////////////////////////
 	private:
-		unsigned int m_width, m_height;
+		int m_width, m_height;
 		DXGI_FORMAT m_format;
 		unsigned int m_count, m_slot;
 	};
 }
 
-DECLARE_REFLECTION_PRIMITIVE(DXGI_FORMAT)
+DECLARE_REFLECTION_ENUM(DXGI_FORMAT)

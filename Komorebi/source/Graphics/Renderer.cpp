@@ -29,10 +29,6 @@ namespace gfx {
 }
 
 gfx::Renderer::Renderer() :
-  m_dirLightsCbuff(PixelConstantBuffer<DirLightData>(PCBUFF_DIRLIGHT_SLOT)),
-  m_pointLightsCbuff(PixelConstantBuffer<PointLightData>(PCBUFF_POINTLIGHT_SLOT)),
-  m_spotLightsCbuff(PixelConstantBuffer<SpotLightData>(PCBUFF_SPOTLIGHT_SLOT)),
-  m_lightTransformCbuff(VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT)),
   m_shadowInfoCbuff(PixelConstantBuffer<ShadowInfoData>(PCBUFF_SHADOW_SLOT)),
   m_shadowMapSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, SRV_SHADOWMAP_SLOT),
   m_PCFFiltersSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, SRV_PCF_SLOT) {
@@ -59,15 +55,16 @@ gfx::Renderer::Renderer() :
     DXGI_FORMAT_R32G32_FLOAT, 8, SRV_PCF_SLOT);
   m_PCFFilters->Bind();
 
+  m_PCFFiltersSampler.Setup();
   m_PCFFiltersSampler.Bind();
 
-  m_shadowInfoCbuff.SetBuffer(ShadowInfoData{
-    1024.f,				// Shadowmap size
+  m_shadowInfoCbuff.m_buffer = ShadowInfoData {
+    1024.f,				    // Shadowmap size
     1.0f / 1024,			// 1/Shadowmap Size
     (float)windowSize,
     (float)filterSize,
     1.0f / filterSize
-    });
+  };
   m_shadowInfoCbuff.Update();
   m_shadowInfoCbuff.Bind();
 
@@ -98,15 +95,11 @@ void gfx::Renderer::Init() {
 
   reflection::ReflectionHelper::ClearAll();
 
-  m_dirLightData.count = 0;
-  m_spotLightData.count = 0;
-  m_pointLightData.count = 0;
-
 }
 
 void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material) {
   for (Pass* pass : material->GetPasses()) {
-    //Opaque:			29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
+    //Opaque:			    29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
     //Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx
 
     bool isTransparent = pass->m_layer == PASSLAYER_TRANSPARENT;
@@ -134,75 +127,28 @@ void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* tr
 }
 
 void gfx::Renderer::SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform) {
-  if (m_spotLightData.count >= MAX_DIRLIGHTS) return;
-
-  const DirectX::SimpleMath::Vector3& c = spotlight->GetColor();
-  const DirectX::SimpleMath::Vector3& f = worldTransform->GetForward();
-  const DirectX::SimpleMath::Vector3& p = worldTransform->GetPositionUnsafe();
-
-  m_spotLightData.m_color[m_spotLightData.count] = { c.x, c.y, c.z };
-  m_spotLightData.dir[m_spotLightData.count] = { f.x, f.y, f.z };
-  m_spotLightData.pos[m_spotLightData.count] = { p.x, p.y, p.z, };
-  m_spotLightData.count++;
+  // Shadow mapping camera
+  m_lightViews.push_back({ spotlight->GetCamera() , worldTransform, spotlight->GetShadowMap() });
+  m_spotLights.push_back(spotlight);
 }
 
-void gfx::Renderer::SubmitDirectionalLight(const DirectionalLight* dirlight, const Transform* worldTransform) {
-  if (m_dirLightData.count >= MAX_DIRLIGHTS) return;
-
-  const DirectX::SimpleMath::Vector3& c = dirlight->GetColor();
-  const DirectX::SimpleMath::Vector3& f = -worldTransform->GetForward();
-
-  m_dirLightData.m_color[m_dirLightData.count] = { c.x, c.y, c.z };
-  m_dirLightData.dir[m_dirLightData.count] = { f.x, f.y, f.z };
-
-  m_lightTransformData.viewProj[m_dirLightData.count] = DirectX::XMMatrixTranspose(
-    DirectX::XMMatrixMultiply(
-      worldTransform->GetInverseMatrixUnsafe(),
-      dirlight->GetCamera()->getProj()
-    )
-  );
-
-  // Shadow mapping camera
-  m_shadowCameras.push_back({ dirlight->GetCamera() , worldTransform });
-  m_shadowMaps.push_back(dirlight->GetShadowMap());
-
-  m_dirLightData.count++;
+void gfx::Renderer::SubmitDirectionalLight(const DirectionalLight* dirlight, const Transform* worldTransform) {  
+  m_lightViews.push_back({ dirlight->GetCamera() , worldTransform, dirlight->GetShadowMap()});
+  m_dirLights.push_back(dirlight);
 }
 
 void gfx::Renderer::SubmitPointLight(const PointLight* pointlight, const Transform* worldTransform) {
-  if (m_pointLightData.count >= MAX_DIRLIGHTS) return;
-
-  const DirectX::SimpleMath::Vector3& c = pointlight->GetColor();
-  const DirectX::SimpleMath::Vector3& f = worldTransform->GetForward();
-
-  m_pointLightData.m_color[m_pointLightData.count] = { c.x, c.y, c.z };
-  m_pointLightData.pos[m_pointLightData.count] = { f.x, f.y, f.z };
-  m_pointLightData.count++;
+  for (int i = 0; i < 6; i++) {
+    m_lightViews.push_back({ pointlight->GetCameras() + i, worldTransform, pointlight->GetShadowMaps() + i });
+  }
+  m_pointLights.push_back(pointlight);
 }
 
 void gfx::Renderer::SubmitCamera(const Camera* camera, const Transform* worldTransform) {
-  m_cameras.push_back({ camera, worldTransform });
+  m_camViews.push_back({ camera, worldTransform });
 }
 
-void gfx::Renderer::Render() {
-
-  // Light info to pixel shader
-  m_dirLightsCbuff.SetBuffer(m_dirLightData);
-  m_pointLightsCbuff.SetBuffer(m_pointLightData);
-  m_spotLightsCbuff.SetBuffer(m_spotLightData);
-
-  m_dirLightsCbuff.Update();
-  m_pointLightsCbuff.Update();
-  m_spotLightsCbuff.Update();
-
-  m_dirLightsCbuff.Bind();
-  m_pointLightsCbuff.Bind();
-  m_spotLightsCbuff.Bind();
-
-  // Light transforms to vertex shader
-  m_lightTransformCbuff.SetBuffer(m_lightTransformData);
-  m_lightTransformCbuff.Update();
-  m_lightTransformCbuff.Bind();
+void gfx::Renderer::Render() {  
 
   // Render shadowmaps
   static RenderPipeline* shadowRenderPipeline;
@@ -211,41 +157,31 @@ void gfx::Renderer::Render() {
     shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::CLEAR, {}, "", 0, false));
     shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::DEFAULT, {}, "", 0xFFFFFFFF, false));    
   }
-  for (int i = 0; i < m_shadowCameras.size(); i++) {
-    shadowRenderPipeline->m_steps[0].m_outRt = m_shadowMaps[i];
-    shadowRenderPipeline->m_steps[1].m_outRt = m_shadowMaps[i];
-    shadowRenderPipeline->Execute(m_shadowCameras[i], m_jobs);
-  }
-
-  for (RenderTarget* rt : m_shadowMaps) {
-    rt->GetTextures2D()[0]->Bind();
+  for (const LightView& lv : m_lightViews) {
+    shadowRenderPipeline->m_steps[0].m_outRt = lv.m_rt;
+    shadowRenderPipeline->m_steps[1].m_outRt = lv.m_rt;
+    shadowRenderPipeline->Execute({ lv.m_camera, lv.m_transform }, m_jobs);
   }
 
   // Cameras sorted by priority.
-  std::sort(m_cameras.begin(), m_cameras.end(), compareCamera);
-
-  //Engine::GetDefaultRendertarget()->Clear(0.f, 0.f, 0.f);
+  std::sort(m_camViews.begin(), m_camViews.end(), compareCamera);
 
   // Draw scene
-  for (int i = 0; i < m_cameras.size(); i++) {
-    CameraView camView = m_cameras[i];
-    const RenderPipeline* pipeline = m_renderInfo->FindRenderPipeline(camView.camera->GetRenderPipelineId());
+  for (int i = 0; i < m_camViews.size(); i++) {
+    CameraView camView = m_camViews[i];
+    const RenderPipeline* pipeline = m_renderInfo->FindRenderPipeline(camView.camera->m_renderPipelineId);
     if (pipeline != nullptr) {
       pipeline->Execute(camView, m_jobs);
     }
   }
 
-  for (RenderTarget* rt : m_shadowMaps) {
-    rt->GetTextures2D()[0]->Unbind();
-  }
-
+  // Clear stuff
   m_jobs.clear();
-  m_cameras.clear();
-  m_shadowCameras.clear();
-  m_shadowMaps.clear();
-  m_dirLightData.count = 0;
-  m_pointLightData.count = 0;
-  m_spotLightData.count = 0;
+  m_camViews.clear();
+  m_lightViews.clear();
+  m_dirLights.clear();
+  m_spotLights.clear();
+  m_pointLights.clear();
 }
 
 const Drawable* gfx::Renderer::GetQuadPrimitive() const {
@@ -255,4 +191,3 @@ const Drawable* gfx::Renderer::GetQuadPrimitive() const {
   }
   return quad;
 }
-

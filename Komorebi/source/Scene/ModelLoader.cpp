@@ -117,6 +117,7 @@ Mesh* ModelLoader::GenerateMesh(std::vector<POD::Vertex> vertices, std::vector<u
   }
   BVHData bvhData{ {min.x, min.y, min.z}, {max.x, max.y, max.z} };
   Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, bvhData);
+  m->Setup();
   return m;
 }
 
@@ -129,8 +130,8 @@ Mesh* ModelLoader::GenerateQuad(float scale) {
   };
 
   std::vector<unsigned short> indices{
-      0, 1, 2,
-      0, 2, 3
+    3, 0, 1,
+    2, 3, 1
   };
 
   return GenerateMesh(vertices, indices);

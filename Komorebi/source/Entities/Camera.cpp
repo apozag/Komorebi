@@ -12,23 +12,27 @@
 
 void Camera::Setup() {
 
-	if (m_orthographic) {
-		m_proj = DirectX::XMMatrixOrthographicLH(500, 500, m_near, m_far);
-	}
-	else {
-		m_proj = DirectX::XMMatrixPerspectiveFovLH(m_fov, m_aspectratio, m_near, 1000);
-	}
+  Reconfigure();
 	m_cameraTransformCB = memory::Factory::Create<gfx::VertexConstantBuffer<CameraTransformCB>>(VCBUFF_CAMERATRANSFORM_SLOT);
+}
+
+void Camera::Reconfigure() {
+  if (m_orthographic) {
+    m_proj = DirectX::XMMatrixOrthographicLH(m_orthoWidth, m_orthoHeight, m_near, m_far);
+  }
+  else {
+    m_proj = DirectX::XMMatrixPerspectiveFovLH(m_fov, m_aspectratio, m_near, m_far);
+  }
 }
 
 void Camera::Bind( const Transform* worldTransform) const {
 	const DirectX::XMMATRIX view = worldTransform->GetInverseMatrixUnsafe();
 	DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiply(view, m_proj);
-	m_cameraTransformCB->SetBuffer(CameraTransformCB{
+	m_cameraTransformCB->m_buffer = CameraTransformCB{
 		DirectX::XMMatrixTranspose(viewProj),
 		DirectX::XMMatrixTranspose(view),
 		DirectX::XMMatrixTranspose(m_proj)
-		});
+	};
 	m_cameraTransformCB->Update ();
 	m_cameraTransformCB->Bind ();
 }
@@ -119,6 +123,8 @@ REFLECT_STRUCT_MEMBER(m_fov)
 REFLECT_STRUCT_MEMBER(m_aspectratio)
 REFLECT_STRUCT_MEMBER(m_near)
 REFLECT_STRUCT_MEMBER(m_far)
+REFLECT_STRUCT_MEMBER(m_orthoWidth)
+REFLECT_STRUCT_MEMBER(m_orthoHeight)
 REFLECT_STRUCT_MEMBER(m_orthographic)
 REFLECT_STRUCT_MEMBER(m_tagMask)
 REFLECT_STRUCT_MEMBER(m_priority)

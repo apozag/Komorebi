@@ -30,6 +30,7 @@ public:
 	~Camera();
 
 	void Setup() override;
+	void Reconfigure() override;
 	void Bind(const Transform* worldTransform) const;
 	void Unbind( ) const;
 	DirectX::XMMATRIX getProj() const;
@@ -47,16 +48,16 @@ public:
 	float GetAspect() const { return m_aspectratio; }
 	bool IsOrthographic() const { return m_orthographic; }
 
-	const std::string& GetRenderPipelineId() const { return m_renderPipelineId; }
-
 	std::vector<DirectX::XMFLOAT4> GetFrustumPlanes(const Transform& transform) const;
 
 	REFLECT()
 
 public:
 
-	float m_fov, m_aspectratio, m_near, m_far;
+	float m_fov, m_aspectratio, m_near, m_far, m_orthoWidth, m_orthoHeight;
 	bool m_orthographic = false;
+	std::string m_renderPipelineId;
+
 public:
 	uint32_t m_tagMask = 0xFFFFFFFF;
 	int m_priority;
@@ -64,8 +65,6 @@ public:
 	DirectX::XMMATRIX m_proj;
 	gfx::VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
 
-private:
-
-	std::string m_renderPipelineId;
+	
 
 };

@@ -43,6 +43,9 @@
     <Filter Include="Shaders\Pixel">
       <UniqueIdentifier>{67436556-9511-433e-982f-f18ec57f9f21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Pixel\Deferred">
+      <UniqueIdentifier>{8700bec0-9447-4e13-98e0-77b04dc671b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp">
@@ -186,6 +189,15 @@
     </FxCompile>
     <FxCompile Include="assets\shaders\TexturedModelPixel.hlsl">
       <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\SkinnedPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\ComposeAmbientPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\ComposeDirLightPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

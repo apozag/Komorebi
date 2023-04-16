@@ -154,7 +154,7 @@ namespace reflection {
     int m_value;
     BitmaskWrapper() {}
     BitmaskWrapper(int value) { m_value = value; }
-    operator int() { return m_value; }
+    operator int() const { return m_value; }
   };
 
 #define BITMASK(TYPE) ::reflection::BitmaskWrapper<TYPE> 

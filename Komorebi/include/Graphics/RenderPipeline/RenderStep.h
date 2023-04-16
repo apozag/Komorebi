@@ -18,6 +18,13 @@ namespace gfx {
       SCREEN
     };
 
+    enum RepeatFor {
+      ONCE = 0,
+      DIRLIGHT = 1,
+      SPOTLIGHT = 2,
+      POINTLIGHT = 4,
+    };
+
     struct TextureInfo : public GameObject{
       std::string m_rtId;
       int m_textureIdx;
@@ -28,8 +35,9 @@ namespace gfx {
 
     std::vector<TextureInfo> m_inputsInfo;
     std::string m_outRtId;
-    unsigned int m_maxLayer = 0xFFFFFFFF;
+    unsigned int m_maxLayer = 0;
     bool m_sortReverse = false;
+    BITMASK(RepeatFor) m_repeatFor = 0u;
 
     OWNED_PTR(Material) m_screenEffectMat;
 
@@ -55,6 +63,9 @@ namespace gfx {
 }
 
 DECLARE_REFLECTION_ENUM(gfx::RenderStep::Type)
+DECLARE_REFLECTION_ENUM(gfx::RenderStep::RepeatFor)
+
+DECLARE_REFLECTION_BITMASK(gfx::RenderStep::RepeatFor)
 
 DECLARE_REFLECTION_VECTOR(gfx::RenderStep)
 DECLARE_REFLECTION_VECTOR(gfx::RenderStep::TextureInfo)

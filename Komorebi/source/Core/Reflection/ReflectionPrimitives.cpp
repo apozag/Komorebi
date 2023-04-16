@@ -15,7 +15,7 @@ std::string GetValueStr(const void* obj) const override{
   return obj? *static_cast<const std::string*>(obj) : std::string();
 } 
 void SetValueFromString(void* pObj, const char* valueCStr) const override {
-  *(std::string*)pObj = valueCStr; 
+  (*(std::string*)pObj) = valueCStr; 
 } 
 __IMPLEMENT_REFLECTION_PRIMITIVE_END(std::string, CStr)
 

@@ -4,17 +4,9 @@
 #include "Core/Math/Transform.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
+#include "Graphics/Bindables/Resource/Texture2D.h"
 
 void DirectionalLight::Setup() {
-	m_rt = memory::Factory::Create < gfx::RenderTarget > (1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
-	m_rt->Setup();
-	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, true);
-	m_camera->m_priority = -100;
-	m_camera->Setup();
-}
-
-void SpotLight::Setup() {
-
 	m_rt = memory::Factory::Create<gfx::RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
 	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, true);
@@ -22,9 +14,17 @@ void SpotLight::Setup() {
 	m_camera->Setup();
 }
 
+void SpotLight::Setup() {
+	m_rt = memory::Factory::Create<gfx::RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
+	m_rt->Setup();
+	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, true);
+	m_camera->m_priority = -100;
+	m_camera->Setup();	
+}
+
 void PointLight::Setup() {
 	for (int i = 0; i < 6; i++) {
-		m_rts[i] = gfx::RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
+		m_rts[i] = gfx::RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT + i);
 		m_rts[i].Setup();
 		m_cameras[i] = Camera(1.0472f, 1, 0.1f, 1000, &m_rts[i]);
 		m_cameras[i].Setup();
@@ -32,30 +32,65 @@ void PointLight::Setup() {
 }
 
 DirectionalLight::~DirectionalLight() {
-	//delete(m_rt);
-	//delete(m_camera);
 }
 
 SpotLight::~SpotLight() {
-	//delete(m_rt);
-	//delete(m_camera);
 }
 
 PointLight::~PointLight() {
 }
 
 void DirectionalLight::Insert(Node* node, const Transform& worldTransform) {
+	const DirectX::SimpleMath::Vector3& dir = worldTransform.GetForward();
+	m_pcbuffer.m_buffer.m_color = { m_color.x, m_color.y, m_color.z };
+	m_pcbuffer.m_buffer.m_dir = { dir.x, dir.y, dir.z, 0.f };
+	m_vcbuffer.m_buffer.m_viewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(worldTransform.GetInverseMatrixUnsafe(),m_camera->getProj()));
+
+	m_pcbuffer.Update();
+	m_vcbuffer.Update();
+
 	GetRenderer()->SubmitDirectionalLight(this, &worldTransform);
 }
 
 void SpotLight::Insert(Node* node, const Transform& worldTransform)
 {
+	const DirectX::SimpleMath::Vector3& f = worldTransform.GetForward();
+	const DirectX::SimpleMath::Vector3& p = worldTransform.GetPositionUnsafe();
+
+	m_pcbuffer.m_buffer.m_color = { m_color.x, m_color.y, m_color.z, 0.f };
+	m_pcbuffer.m_buffer.m_dir = { f.x, f.y, f.z, 0.f};
+	m_pcbuffer.m_buffer.m_pos = { p.x, p.y, p.z, 0.f};
+	m_pcbuffer.m_buffer.m_phiTheta = { m_phi, m_theta, 0.f, 0.f };
+	m_vcbuffer.m_buffer.m_viewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(worldTransform.GetInverseMatrixUnsafe(), m_camera->getProj()));
+
+	m_pcbuffer.Update();
+	m_vcbuffer.Update();
+
 	GetRenderer()->SubmitSpotlight(this, &worldTransform);
 }
 
 void PointLight::Insert(Node* node, const Transform& worldTransform) {
 	GetRenderer()->SubmitPointLight(this, &worldTransform);
 }
+
+void DirectionalLight::Bind() const{
+	m_pcbuffer.Bind();
+	m_vcbuffer.Bind();
+	m_rt->GetTextures2D()[0]->Bind();
+}
+void SpotLight::Bind() const{
+	m_pcbuffer.Bind();
+	m_vcbuffer.Bind();
+	m_rt->GetTextures2D()[0]->Bind();
+}
+void PointLight::Bind() const{
+	m_pcbuffer.Bind();
+	m_vcbuffer.Bind();
+	for (auto rt : m_rts) {
+		rt.GetTextures2D()[0]->Bind();
+	}
+}
+
 
 REFLECT_STRUCT_BEGIN(DirectionalLight, Entity)
 REFLECT_STRUCT_MEMBER(m_color)

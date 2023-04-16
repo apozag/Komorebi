@@ -40,28 +40,15 @@ struct CameraView {
 	const Transform* transform;
 };
 
+struct LightView {
+	const Camera* m_camera;
+	const Transform* m_transform;
+	const RenderTarget* m_rt;
+};
+
 class Renderer {
 private:
-
-	struct alignas(16) DirLightData {
-		POD::Vector4 m_color[MAX_DIRLIGHTS];
-		POD::Vector4 dir[MAX_DIRLIGHTS];
-		unsigned int count;
-	};
-	struct alignas(16) PointLightData {
-		POD::Vector3 pos[MAX_POINTLIGHTS];
-		POD::Vector3 m_color[MAX_POINTLIGHTS];
-		unsigned int count;
-	};
-	struct alignas(16) SpotLightData {
-		POD::Vector3 pos[MAX_SPOTLIGHTS];
-		POD::Vector3 dir[MAX_SPOTLIGHTS];
-		POD::Vector3 m_color[MAX_SPOTLIGHTS];
-		unsigned int count;
-	};
-	struct alignas(16) LightTransformData {
-		DirectX::XMMATRIX viewProj[MAX_DIRLIGHTS];
-	};
+	
 	struct alignas(16) ShadowInfoData {
 		float shadowmapSize;
 		float shadowmapTexelSize;
@@ -92,32 +79,28 @@ public:
 
 	const RenderInfo* GetRenderInfo() const { return m_renderInfo; }
 
+	const std::vector<const DirectionalLight*>& GetDirLights() {return m_dirLights;}
+	const std::vector<const SpotLight*>& GetSpotLights() {return m_spotLights;}
+	const std::vector<const PointLight*>& GetPointLights() {return m_pointLights;}
+
 private:
 
 	std::vector<Job> m_jobs;
-	std::vector<CameraView> m_shadowCameras;
-	std::vector<CameraView> m_cameras;
-
-	DirLightData m_dirLightData;
-	PointLightData m_pointLightData;
-	SpotLightData m_spotLightData;
-	PixelConstantBuffer<DirLightData> m_dirLightsCbuff;
-	PixelConstantBuffer<PointLightData> m_pointLightsCbuff;
-	PixelConstantBuffer<SpotLightData> m_spotLightsCbuff;
-
-	LightTransformData m_lightTransformData;
-	VertexConstantBuffer<LightTransformData> m_lightTransformCbuff;
+	std::vector<CameraView> m_camViews;
+	std::vector<LightView> m_lightViews;
 
 	SamplerState m_shadowMapSampler;
 	SamplerState m_PCFFiltersSampler;
 	Texture3D* m_PCFFilters;
 	PixelConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
 
+	std::vector<const DirectionalLight*> m_dirLights;
+	std::vector<const SpotLight*> m_spotLights;
+	std::vector<const PointLight*> m_pointLights;
+
 	std::vector<RenderTarget*> m_renderTargets;
 
 	RenderInfo* m_renderInfo = nullptr;
-
-	std::vector<RenderTarget*> m_shadowMaps;
 };
 
 }

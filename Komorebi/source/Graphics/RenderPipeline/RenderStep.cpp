@@ -6,6 +6,7 @@
 #include "Graphics\Bindables\Resource\RenderTarget.h"
 #include "Graphics\Material.h"
 #include "Entities\Drawable.h"
+#include "Entities\Light.h"
 
 namespace gfx {
 
@@ -22,6 +23,34 @@ namespace gfx {
 
     Bind();
 
+    if (m_repeatFor == RepeatFor::ONCE) {
+      ExecuteInternal(jobs, jobsToExecute, idx);
+    } 
+    else {
+      if (m_repeatFor & RepeatFor::DIRLIGHT != 0) {
+        for (const DirectionalLight* light : Engine::GetRenderer()->GetDirLights()) {
+          light->Bind();
+          ExecuteInternal(jobs, jobsToExecute, idx);
+        }
+      }
+      if (m_repeatFor & RepeatFor::SPOTLIGHT != 0) {
+        for (const SpotLight* light : Engine::GetRenderer()->GetSpotLights()) {
+          light->Bind();
+          ExecuteInternal(jobs, jobsToExecute, idx);
+        }
+      }
+      if (m_repeatFor & RepeatFor::POINTLIGHT != 0) {
+        for (const PointLight* light : Engine::GetRenderer()->GetPointLights()) {
+          light->Bind();
+          ExecuteInternal(jobs, jobsToExecute, idx);
+        }
+      }
+    }    
+
+    Unbind();
+  }
+
+  void RenderStep::ExecuteInternal(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int idx) const {
     switch (m_type) {
     case DEFAULT:
     {
@@ -77,8 +106,6 @@ namespace gfx {
     }
     break;
     }
-
-    Unbind();
   }
 
   void RenderStep::Unbind() const {
@@ -96,6 +123,16 @@ REFLECT_ENUM_VALUE(CLEAR)
 REFLECT_ENUM_VALUE(SCREEN)
 REFLECT_ENUM_END(RenderStepTypeEnum)
 
+typedef gfx::RenderStep::RepeatFor RepeatForEnum;
+REFLECT_ENUM_BEGIN(RepeatForEnum)
+REFLECT_ENUM_VALUE(ONCE)
+REFLECT_ENUM_VALUE(DIRLIGHT)
+REFLECT_ENUM_VALUE(SPOTLIGHT)
+REFLECT_ENUM_VALUE(POINTLIGHT)
+REFLECT_ENUM_END(RepeatForEnum)
+
+IMPLEMENT_REFLECTION_BITMASK(RepeatForEnum)
+
 typedef gfx::RenderStep::TextureInfo TextureInfoType;
 REFLECT_STRUCT_BASE_BEGIN(TextureInfoType)
 REFLECT_STRUCT_MEMBER(m_rtId)
@@ -109,6 +146,7 @@ REFLECT_STRUCT_MEMBER(m_inputsInfo)
 REFLECT_STRUCT_MEMBER(m_outRtId)
 REFLECT_STRUCT_MEMBER(m_maxLayer)
 REFLECT_STRUCT_MEMBER(m_sortReverse)
+REFLECT_STRUCT_MEMBER(m_repeatFor)
 REFLECT_STRUCT_MEMBER(m_screenEffectMat)
 REFLECT_STRUCT_END(RenderStepType)
 
