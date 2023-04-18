@@ -117,40 +117,46 @@ public:
 
 	void Translate(DirectX::SimpleMath::Vector3 translation) {
 		m_matrix = m_matrix * DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z);
-		m_decomposeDirty = true;
+		//m_decomposeDirty = true;
+		decompose();
 		m_dirty = true;
 	}
 
 	void TranslateLocal(DirectX::SimpleMath::Vector3 translation) {
 		m_matrix =  DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z) * m_matrix;
-		m_decomposeDirty = true;
+		//m_decomposeDirty = true;
+		decompose();
 		m_dirty = true;
 	}
 
 	void RotateEulerLocal(DirectX::SimpleMath::Vector3 rotation) {
 		m_matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(rotation) * m_matrix;
-		m_decomposeDirty = true;
+		//m_decomposeDirty = true;
+		decompose();
 		m_invMatDirty = true;
 		m_dirty = true; 
 	}
 
 	void RotateEuler(DirectX::SimpleMath::Vector3 rotation) {
 		m_matrix = m_matrix * DirectX::XMMatrixRotationRollPitchYawFromVector(rotation) ;
-		m_decomposeDirty = true;
+		//m_decomposeDirty = true;
+		decompose();
 		m_invMatDirty = true;
 		m_dirty = true;
 	}
 
 	void RotateQuaternion(DirectX::SimpleMath::Quaternion rotation) {
 		m_matrix = m_matrix * DirectX::XMMatrixRotationQuaternion(rotation);
-		m_decomposeDirty = true;
+		//m_decomposeDirty = true;
+		decompose();
 		m_invMatDirty = true;
 		m_dirty = true;
 	}
 
 	void RotateQuaternionLocal(DirectX::SimpleMath::Vector3 quaternion) {
 		m_matrix = DirectX::XMMatrixRotationQuaternion(quaternion) * m_matrix;
-		m_decomposeDirty = true;
+		//m_decomposeDirty = true;
+		decompose();
 		m_invMatDirty = true;
 		m_dirty = true;
 	}
@@ -179,7 +185,7 @@ private:
 	}
 
 	void compose() {
-		m_matrix = DirectX::XMMatrixTranslationFromVector(m_position)* DirectX::XMMatrixRotationQuaternion(m_rotation)* DirectX::XMMatrixScalingFromVector(m_scale);
+		m_matrix = DirectX::XMMatrixScalingFromVector(m_scale) * DirectX::XMMatrixRotationQuaternion(m_rotation) * DirectX::XMMatrixTranslationFromVector(m_position);
 		m_invMatDirty = true;
 	}
 

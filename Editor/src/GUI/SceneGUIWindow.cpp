@@ -54,7 +54,7 @@ void DrawAddEntityButton() {
       ImGuiTypeVisitor visitor_imgui(pObj);
       typeDesc->Accept(&visitor_imgui);
 
-      if (ImGui::Button("Accept##AcceptEntity")) {
+      if (ImGui::Button("Accept##AcceptEntity") && pObj != nullptr) {
         Entity* entity = Scene::AddEntity(selectedNode, entityNames[currItem].c_str());
         reflection::CopyTypeVisitor visitor_copy(entity, pObj);
         typeDesc->Accept(&visitor_copy);
@@ -62,12 +62,14 @@ void DrawAddEntityButton() {
         free(pObj);
         pObj = nullptr;
         toAddNode = nullptr;
+        currItem = -1;
       }
 
       if (ImGui::Button("Cancel##CancelEntity")) {
         free(pObj);
         pObj = nullptr;
         toAddNode = nullptr;
+        currItem = -1;
       }
     }    
 

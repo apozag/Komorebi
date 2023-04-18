@@ -87,6 +87,9 @@
     <ClCompile Include="src\GUI\GuizmoUtils.cpp">
       <Filter>Archivos de origen\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\RendererGUIWindow.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\imgui\imgui.h">
@@ -131,11 +134,11 @@
     <ClInclude Include="include\GUI\GizmoUtils.h">
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="include\GUI\RendererGUIWindow.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="assets\shaders\blankPixel.hlsl">
-      <Filter>Shaders\Pixel</Filter>
-    </FxCompile>
     <FxCompile Include="assets\shaders\composeDeferredPixel.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
@@ -197,6 +200,9 @@
       <Filter>Shaders\Pixel\Deferred</Filter>
     </FxCompile>
     <FxCompile Include="assets\shaders\deferred\ComposeDirLightPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\SolidPixel.hlsl">
       <Filter>Shaders\Pixel\Deferred</Filter>
     </FxCompile>
   </ItemGroup>

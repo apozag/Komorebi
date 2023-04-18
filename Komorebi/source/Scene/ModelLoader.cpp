@@ -38,8 +38,15 @@ int boneCount = 0;
 
 void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
 
-  if (filename == "cube") {
-    Mesh* mesh = GenerateCube();
+  if (filename == "cube" || filename == "quad") {
+    Mesh* mesh = nullptr;
+    if (filename == "cube") {
+      mesh = GenerateCube();
+    }
+    else {
+      mesh = GenerateQuad();
+    }
+     
     mesh->m_material = memory::Factory::Create<gfx::Material>();
     for (gfx::Pass* pass : model->GetPasses()) {
       mesh->m_material->AddPass(pass);

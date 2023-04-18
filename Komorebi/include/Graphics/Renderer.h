@@ -70,6 +70,7 @@ public:
 	void SubmitCamera(const Camera* camera, const Transform* worldTransform);
 
 	void Render();
+	void Clear();
 
 	const std::vector<Job>& GetJobs() const { return m_jobs; }
 
@@ -77,7 +78,7 @@ public:
 
 	RenderTarget* GetGlobalRenderTarget(unsigned int idx) const { return m_renderTargets[idx]; }
 
-	const RenderInfo* GetRenderInfo() const { return m_renderInfo; }
+	RenderInfo* GetRenderInfo() const { return m_renderInfo; }
 
 	const std::vector<const DirectionalLight*>& GetDirLights() {return m_dirLights;}
 	const std::vector<const SpotLight*>& GetSpotLights() {return m_spotLights;}

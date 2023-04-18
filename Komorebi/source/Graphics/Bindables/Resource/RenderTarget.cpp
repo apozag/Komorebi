@@ -69,10 +69,10 @@ namespace gfx {
 		INFOMAN
 
 		if (m_width < 0) {
-			m_width = Engine::GetWindow()->GetWidth();
+			m_width = Engine::GetWindow()->GetClientWidth();
 		}
 		if (m_height < 0) {
-			m_height = Engine::GetWindow()->GetHeight();
+			m_height = Engine::GetWindow()->GetClientHeight();
 		}
 
 		// Depth-Stencil Texture

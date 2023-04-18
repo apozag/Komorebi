@@ -7,6 +7,7 @@
 #include "ImGuizmo/ImGuizmo.h"
 
 #include "Core/Engine.h"
+#include "Core/Window.h"
 #include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 
@@ -14,6 +15,7 @@
 #include "GUI/ImGuiTypeVisitor.h"
 
 #include "GUI/SceneGUIWindow.h"
+#include "GUI/RendererGUIWindow.h"
 
 #include "Scene/Scene.h"
 #include "Scene/SceneLoader.h"
@@ -95,6 +97,13 @@ void DrawTopMenu() {
     if (enabled) DrawSceneGUIWindow();
   }
 
+  // Renderer
+  {
+    static bool enabled = false;
+    if (ImGui::Button("Renderer")) enabled = !enabled;
+    if (enabled) DrawRendererGUIWindow();
+  }
+
   ImGui::EndMainMenuBar();
 }
 
@@ -104,6 +113,7 @@ void Render(float /*dt*/) {
 
   ImGui_ImplDX11_NewFrame();
   ImGui_ImplWin32_NewFrame();
+
   ImGui::NewFrame();
 
   ImGuizmo::BeginFrame();
@@ -133,6 +143,10 @@ void GUIAttachment::Setup() {
   Engine::AddPostRenderCallback(Render);
 
   SetupSceneGUIWindow();
+  SetupRendererGUIWindow();
+
+  ImGui::GetIO().DisplaySize.x = Engine::GetWindow()->GetClientWidth();
+  ImGui::GetIO().DisplaySize.y = Engine::GetWindow()->GetClientHeight();
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

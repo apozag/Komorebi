@@ -150,7 +150,11 @@ void Window::Init() {
 
 	ShowWindow(m_hWnd, SW_SHOWDEFAULT);
 
-	m_gfx = memory::Factory::Create<gfx::Graphics>(m_hWnd, m_width, m_height);
+	RECT rect;
+	GetClientRect(m_hWnd, &rect);
+	m_clientWidth = rect.right - rect.left;
+	m_clientHeight = rect.bottom - rect.top;
+	m_gfx = memory::Factory::Create<gfx::Graphics>(m_hWnd, m_clientWidth, m_clientWidth);
 	m_gfx->Init();
 }
 

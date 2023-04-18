@@ -10,15 +10,13 @@ void DirectionalLight::Setup() {
 	m_rt = memory::Factory::Create<gfx::RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
 	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, true);
-	m_camera->m_priority = -100;
 	m_camera->Setup();
 }
 
 void SpotLight::Setup() {
 	m_rt = memory::Factory::Create<gfx::RenderTarget>(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT);
 	m_rt->Setup();
-	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000, true);
-	m_camera->m_priority = -100;
+	m_camera = memory::Factory::Create<Camera>(1.0472f, 1, 0.1f, 1000);
 	m_camera->Setup();	
 }
 
@@ -26,7 +24,7 @@ void PointLight::Setup() {
 	for (int i = 0; i < 6; i++) {
 		m_rts[i] = gfx::RenderTarget(1024, 1024, DXGI_FORMAT_R32_FLOAT, 0, SRV_SHADOWMAP_SLOT + i);
 		m_rts[i].Setup();
-		m_cameras[i] = Camera(1.0472f, 1, 0.1f, 1000, &m_rts[i]);
+		m_cameras[i] = Camera(1.0472f, 1, 0.1f, 1000);
 		m_cameras[i].Setup();
 	}
 }
@@ -41,7 +39,7 @@ PointLight::~PointLight() {
 }
 
 void DirectionalLight::Insert(Node* node, const Transform& worldTransform) {
-	const DirectX::SimpleMath::Vector3& dir = worldTransform.GetForward();
+	const DirectX::SimpleMath::Vector3& dir = -worldTransform.GetForward();
 	m_pcbuffer.m_buffer.m_color = { m_color.x, m_color.y, m_color.z };
 	m_pcbuffer.m_buffer.m_dir = { dir.x, dir.y, dir.z, 0.f };
 	m_vcbuffer.m_buffer.m_viewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(worldTransform.GetInverseMatrixUnsafe(),m_camera->getProj()));
@@ -88,6 +86,24 @@ void PointLight::Bind() const{
 	m_vcbuffer.Bind();
 	for (auto rt : m_rts) {
 		rt.GetTextures2D()[0]->Bind();
+	}
+}
+
+void DirectionalLight::Unbind() const {
+	m_pcbuffer.Unbind();
+	m_vcbuffer.Unbind();
+	m_rt->GetTextures2D()[0]->Unbind();
+}
+void SpotLight::Unbind() const {
+	m_pcbuffer.Unbind();
+	m_vcbuffer.Unbind();
+	m_rt->GetTextures2D()[0]->Unbind();
+}
+void PointLight::Unbind() const {
+	m_pcbuffer.Unbind();
+	m_vcbuffer.Unbind();
+	for (auto rt : m_rts) {
+		rt.GetTextures2D()[0]->Unbind();
 	}
 }
 

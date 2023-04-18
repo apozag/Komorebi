@@ -31,18 +31,21 @@ namespace gfx {
         for (const DirectionalLight* light : Engine::GetRenderer()->GetDirLights()) {
           light->Bind();
           ExecuteInternal(jobs, jobsToExecute, idx);
+          light->Unbind();
         }
       }
       if (m_repeatFor & RepeatFor::SPOTLIGHT != 0) {
         for (const SpotLight* light : Engine::GetRenderer()->GetSpotLights()) {
           light->Bind();
           ExecuteInternal(jobs, jobsToExecute, idx);
+          light->Unbind();
         }
       }
       if (m_repeatFor & RepeatFor::POINTLIGHT != 0) {
         for (const PointLight* light : Engine::GetRenderer()->GetPointLights()) {
           light->Bind();
           ExecuteInternal(jobs, jobsToExecute, idx);
+          light->Unbind();
         }
       }
     }    

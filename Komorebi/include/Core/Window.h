@@ -60,6 +60,8 @@ public:
 	void Attach(WindowAttachment* attachment);
 	int GetHeight() { return m_height; }
 	int GetWidth() { return m_width; }
+	int GetClientHeight() { return m_clientHeight; }
+	int GetClientWidth() { return m_clientWidth; }
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT mg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT mg, WPARAM wParam, LPARAM lParam);
@@ -71,6 +73,7 @@ public:
 private: 
 	std::vector<WindowAttachment*> m_attachments;
 	int m_width, m_height;
+	int m_clientWidth, m_clientHeight;
 	std::string m_name;
 	HWND m_hWnd;
 };

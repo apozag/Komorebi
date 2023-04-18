@@ -64,7 +64,7 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
   bool prevDirty = m_dirty;  
 
   const reflection::TypeDescriptor_Ptr* ptrTypeDesc = dynamic_cast<const reflection::TypeDescriptor_Ptr*>(type->itemType);
-  static const bool isPointerType = ptrTypeDesc != nullptr;
+  const bool isPointerType = ptrTypeDesc != nullptr;
 
   for (int i = 0; i < size; i++) {
     m_pObj = type->getItem(pObj, i);
@@ -181,13 +181,18 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
   void** ppObj = (void**)m_pObj;
   const TypeDescriptor* concreteType = type->getDynamicType(*ppObj);
   m_pObj = *ppObj;
-  concreteType->Accept(this);
+  if (m_pObj != nullptr) {
+    concreteType->Accept(this);
+  }
+  else {
+    ImGui::Text("NULL");
+  }
 }
 
 void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Enum* type) {
   using EnumVal = ::reflection::TypeDescriptor_Enum::EnumValue;
   int currValue = *(int*)m_pObj;
-  int currItemIdx;
+  static int currItemIdx = -1;
   std::string names;
   for (int i = 0; i < type->values.size(); i++) {
     const EnumVal& val = type->values[i];
@@ -195,7 +200,7 @@ void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Enum* type) {
       currItemIdx == i;
     }
     names += val.name;
-    names += "\0";
+    names += '\0';
   }
   if (ImGui::Combo("##EntityCombo", &currItemIdx, names.c_str())) {
     *(int*)m_pObj = type->values[currItemIdx].value;

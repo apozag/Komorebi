@@ -24,6 +24,8 @@ namespace gfx {
 		void Bind()const override;
 		void Unbind()const override;
 
+		const ID3D11ShaderResourceView* GetSRV() const { return m_srv.Get(); }
+
 		REFLECT()
 
 	private:

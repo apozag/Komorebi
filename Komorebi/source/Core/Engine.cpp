@@ -33,9 +33,8 @@ void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, fl
 	m_window->Init();
 	m_renderer = memory::Factory::Create<gfx::Renderer>();
 	m_targetFramerate = targetFramerate;
-	memory::Factory::SetGlobalMode(false);
-
 	m_renderer->Init();
+	memory::Factory::SetGlobalMode(false);
 }
 
 int Engine::Run() 	
@@ -66,6 +65,8 @@ int Engine::Run()
 		for (CallbackFunc func : m_postRenderCallbacks) {
 			func(m_dt);
 		}
+
+		m_renderer->Clear();
 
 		m_gfx.SwapBuffers();		
 

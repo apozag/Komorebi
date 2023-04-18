@@ -23,8 +23,8 @@ public:
 		DirectX::XMMATRIX proj;
 	};
 public:
-	Camera(float fov, float aspectratio, float nearZ, float farZ, bool orthographic = false)
-		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_priority(0), m_orthographic(orthographic)
+	Camera(float fov, float aspectratio, float nearZ, float farZ, bool orthographic = false, float orthoWidth = 500, float orthoHeight = 500)
+		: m_fov(fov), m_aspectratio(aspectratio), m_near(nearZ), m_far(farZ), m_priority(0), m_orthographic(orthographic), m_orthoWidth(orthoWidth), m_orthoHeight(orthoHeight)
 	{}
 	Camera() = default;
 	~Camera();

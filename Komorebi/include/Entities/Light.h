@@ -23,12 +23,12 @@ private:
 public:
   DirectionalLight() : 
     m_pcbuffer(gfx::PixelConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT))
+    m_vcbuffer(gfx::PixelConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT))
   {};
   DirectionalLight(DirectX::SimpleMath::Vector3 m_color) : 
     m_color(m_color), 
     m_pcbuffer(gfx::PixelConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT))
+    m_vcbuffer(gfx::PixelConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT))
   {};
 
   ~DirectionalLight();
@@ -38,6 +38,7 @@ public:
   void Insert(Node* node, const Transform& worldTransform) override;
 
   void Bind() const;
+  void Unbind() const;
 
   DirectX::SimpleMath::Vector3 GetColor() const { return m_color; }
   const Camera* GetCamera() const { return m_camera; }
@@ -49,7 +50,7 @@ private:
   gfx::RenderTarget* m_rt;
 
   gfx::PixelConstantBuffer<DirLightData> m_pcbuffer;
-  gfx::VertexConstantBuffer<LightTransformData> m_vcbuffer;
+  gfx::PixelConstantBuffer<LightTransformData> m_vcbuffer;
 };
 
 class PointLight : public Entity {
@@ -77,6 +78,7 @@ public:
   void Insert(Node* node, const Transform& worldTransform) override;
 
   void Bind() const;
+  void Unbind() const;
 
   DirectX::SimpleMath::Vector3 GetColor() const { return m_color; }
   const Camera* GetCameras() const { return m_cameras; }
@@ -120,6 +122,7 @@ public:
   void Insert(Node* node, const Transform& worldTransform) override;
 
   void Bind() const;
+  void Unbind() const;
 
   DirectX::SimpleMath::Vector3 GetColor() const { return m_color; }
   const Camera* GetCamera() const { return m_camera; }

@@ -1,5 +1,7 @@
 #define _XM_NO_INTRINSICS_
 
+#include <iostream>
+
 #include "GUI\GizmoUtils.h"
 
 #include "imgui/imgui.h"
@@ -57,8 +59,19 @@ void DrawImGuiTransform(Transform& localTransform, Transform& parentTransform) {
      xmGlobalMat._31, xmGlobalMat._32, xmGlobalMat._33, xmGlobalMat._34,
      xmGlobalMat._41, xmGlobalMat._42, xmGlobalMat._43, xmGlobalMat._44
   };
-  ImGuizmo::SetRect(0, 0, Engine::GetWindow()->GetWidth(), Engine::GetWindow()->GetHeight());
-  if (ImGuizmo::Manipulate(viewMatrix, projMatrix, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::WORLD, globalMatrix)) {
+  //float globalMatrixPrev[16];
+  //memcpy(globalMatrixPrev, globalMatrix, 16 * sizeof(float));
+  ImGuizmo::SetRect(0, 0, Engine::GetWindow()->GetClientWidth(), Engine::GetWindow()->GetClientHeight());
+  if (ImGuizmo::Manipulate(viewMatrix, projMatrix, ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, globalMatrix)) {
+
+    /*std::ostringstream os_;
+
+    os_ << "----------------------------------------------------------------\n";
+    os_ << globalMatrix[12] << ", " << globalMatrix[13] << ", " << globalMatrix[14] << "\n";
+    os_ << globalMatrixPrev[12] << ", " << globalMatrixPrev[13] << ", " << globalMatrixPrev[14] << "\n";
+
+    OutputDebugString(os_.str().c_str());*/
+
     xmGlobalMat = {
       globalMatrix[0], globalMatrix[1], globalMatrix[2], globalMatrix[3],
       globalMatrix[4], globalMatrix[5], globalMatrix[6], globalMatrix[7],

@@ -30,8 +30,6 @@ int CALLBACK WinMain(
 
 		int result = Engine::Run();
 
-		_CrtDumpMemoryLeaks();
-
 		return result;
 	}
 	catch (const Exception& e) {

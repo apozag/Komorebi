@@ -174,8 +174,9 @@ void gfx::Renderer::Render() {
       pipeline->Execute(camView, m_jobs);
     }
   }
+}
 
-  // Clear stuff
+void gfx::Renderer::Clear() {
   m_jobs.clear();
   m_camViews.clear();
   m_lightViews.clear();
