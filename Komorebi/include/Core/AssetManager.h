@@ -7,7 +7,7 @@
 
 class GameObject;
 
-struct Asset {
+struct AssetInfo {
   std::string name;
   std::string typeName;
   void* ptr;
@@ -15,10 +15,10 @@ struct Asset {
 
 class AssetManager : public Singleton<AssetManager>{
   template<class T>
-  T* LoadAsset(const char* filename);
+  T* LoadAsset(const char* filename, bool setup = true);
   template<class T>
   void SaveAsset(const char* filename, T* pObj);
 private:
   std::vector<std::string> m_loadingAssetNameStack;
-  std::vector<Asset> m_loadedAssets;
+  std::vector<AssetInfo> m_loadedAssets;
 };

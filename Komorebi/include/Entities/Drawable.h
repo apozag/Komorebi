@@ -10,7 +10,7 @@ namespace gfx {
 	class Pass;
 	class ResourceBindable;
 	class IndexBuffer;
-	class Material;
+	class MaterialInstance;
 
 	template<typename T>
 	class VertexConstantBuffer;
@@ -45,7 +45,7 @@ public:
 	REFLECT()
 
 public:
-	gfx::Material* m_material;
+	gfx::MaterialInstance* m_material;
 protected:
 	BVHData m_bvhData;
 private:

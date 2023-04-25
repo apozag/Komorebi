@@ -14,6 +14,7 @@
 namespace gfx {
 	class Graphics;
 	class Material;
+	class MaterialInstance;
 	class Pass;
 }
 
@@ -37,13 +38,13 @@ public:
 private:
 	void processNode( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
 	void processNodeBones( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
-	void processMaterials(const aiScene* scene);
+	void processMaterials(const aiScene* scene, const gfx::Material* material);
 	Mesh* processMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent);
 	Animation* processAnimation(const aiScene* scene);
 	SkinnedMesh* processSkinnedMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);	
 
 	std::string directory;
-	std::vector<gfx::Material*> materials;
+	std::vector<gfx::MaterialInstance*> matInstances;
 	std::vector<Node*> boneNodes;
 	std::vector<std::string> boneNames;
 	std::vector<DirectX::XMMATRIX> boneOffsets;

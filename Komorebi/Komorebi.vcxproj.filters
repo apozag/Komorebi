@@ -456,6 +456,9 @@
     <ClInclude Include="include\Core\Util\Bitmask.h">
       <Filter>Archivos de encabezado\Core\Util</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics\MaterialInstance.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -661,6 +664,9 @@
     </ClCompile>
     <ClCompile Include="source\Graphics\RenderPipeline\RenderStep.cpp">
       <Filter>Archivos de origen\Graphics\RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\MaterialInstance.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

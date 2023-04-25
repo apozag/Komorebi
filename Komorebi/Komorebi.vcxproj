@@ -470,6 +470,7 @@
     <ClInclude Include="include\Graphics\Graphics.h" />
     <ClInclude Include="include\Graphics\GraphicsThrowMacros.h" />
     <ClInclude Include="include\Graphics\Material.h" />
+    <ClInclude Include="include\Graphics\MaterialInstance.h" />
     <ClInclude Include="include\Graphics\Pass.h" />
     <ClInclude Include="include\Graphics\PostProcMaterial.h" />
     <ClInclude Include="include\Graphics\PostProcPass.h" />
@@ -541,6 +542,7 @@
     <ClCompile Include="source\Graphics\DxgiInfoManager.cpp" />
     <ClCompile Include="source\Graphics\Graphics.cpp" />
     <ClCompile Include="source\Graphics\Material.cpp" />
+    <ClCompile Include="source\Graphics\MaterialInstance.cpp" />
     <ClCompile Include="source\Graphics\Pass.cpp" />
     <ClCompile Include="source\Graphics\PostProcMaterial.cpp" />
     <ClCompile Include="source\Graphics\PostProcPass.cpp" />

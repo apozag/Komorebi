@@ -24,7 +24,7 @@ class Graphics;
 class Pass;
 class Texture2D;
 class Texture3D;
-class Material;
+class MaterialInstance;
 class RenderInfo;
 
 struct Job {
@@ -32,7 +32,7 @@ struct Job {
 	const Drawable* drawable;
 	const Transform* transform;
 	Pass* pass;
-	Material* material;
+	MaterialInstance* material;
 };
 
 struct CameraView {
@@ -63,7 +63,7 @@ public:
 
 	void Init();
 
-	void SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material);
+	void SubmitDrawable(const Drawable* drawable, const Transform* transform, MaterialInstance* material);
 	void SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform);
 	void SubmitDirectionalLight(const DirectionalLight* spotlight, const Transform* worldTransform);
 	void SubmitPointLight(const PointLight* spotlight, const Transform* worldTransform);

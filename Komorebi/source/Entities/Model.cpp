@@ -21,7 +21,7 @@ void Model::Setup() {
 }
 
 void Model::Reconfigure(){
-  for (gfx::Pass* pass : m_passes) {
+  /*for (gfx::Pass* pass : m_passes) {
     for (Drawable* drawable : m_drawables) {
       bool found = false;
       for (gfx::Pass* p : drawable->m_material->GetPasses()) {
@@ -49,7 +49,7 @@ void Model::Reconfigure(){
         drawable->m_material->AddBindable(bind);
       }
     }
-  }
+  }*/
 }
 
 Model::~Model() {
@@ -96,8 +96,7 @@ void Model::Insert(Node* node, const Transform& worldTransform) {
 
 REFLECT_STRUCT_BEGIN(Model, Entity)
 REFLECT_STRUCT_MEMBER(m_filename)
-REFLECT_STRUCT_MEMBER(m_passes)
-REFLECT_STRUCT_MEMBER(m_binds)
+REFLECT_STRUCT_MEMBER(m_material)
 REFLECT_STRUCT_END(Model)
 
 REGISTER_ENTITY(Model)

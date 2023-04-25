@@ -5,11 +5,16 @@
 
 #include "Core/Reflection/TypeDescriptors.h"
 #include "Core/Reflection/ReflectionHelper.h"
+#include "Core/Reflection/DeserializationTypeVisitor.h"
+#include "Core/Reflection/SerializationTypeVisitor.h"
 
 template<class T>
-T* AssetManager::LoadAsset(const char* filename) {
+T* AssetManager::LoadAsset(const char* filename, bool setup) {
+
+  const reflection::TypeDescriptor* typeDesc = reflection::TypeResolver<OWNED_PTR(T)>::get();
+
   std::string strFilename = filename;
-  std::string& typeName = reflection::TypeResolver<T>::get()->getFullName();
+  std::string& typeName = typeDesc->getFullName();
 
   // Return same instance if already loaded
   auto it = m_loadedAssets.begin();
@@ -24,7 +29,7 @@ T* AssetManager::LoadAsset(const char* filename) {
     return nullptr;
   }
 
-  // Load, store and return asset
+  // Load asset from xml
   rapidxml::file<> xmlFile(filename);
   rapidxml::xml_document<> doc;
   doc.parse<0>(xmlFile.data());
@@ -32,10 +37,17 @@ T* AssetManager::LoadAsset(const char* filename) {
 
   m_loadingAssetNameStack.push_back(strFilename);
 
-  T* pObj = nullptr;
-  reflection::TypeResolver<OWNED_PTR(T)>::get()->deserialize(&pObj, nodeElem);
+  T* pObj = nullptr;  
+
+  reflection::DeserializationTypeVisitor deserializationVisitor(&pObj, nodeElem);
+  typeDesc->Accept(&deserializationVisitor);
 
   reflection::ReflectionHelper::ResolvePendingPointers();
+
+  if (setup) {
+    reflection::SetupTypeVisitor setupVisitor(&pObj);
+    typeDesc->Accept(setupVisitor);
+  }
 
   m_loadedAssets({strFilename, typeName, pObj});
 

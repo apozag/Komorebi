@@ -17,8 +17,9 @@
 #include "Graphics/Bindables/Resource/Texture2D.h"
 #include "Graphics/Bindables/Resource/Texture3D.h"
 #include "Graphics/Material.h"
-#include "Graphics\RenderPipeline.h"
-#include "Graphics\RenderInfo.h"
+#include "Graphics/MaterialInstance.h"
+#include "Graphics/RenderPipeline.h"
+#include "Graphics/RenderInfo.h"
 
 #include "Scene\ModelLoader.h"
 
@@ -97,8 +98,8 @@ void gfx::Renderer::Init() {
 
 }
 
-void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, Material* material) {
-  for (Pass* pass : material->GetPasses()) {
+void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, MaterialInstance* material) {
+  for (Pass* pass : material->GetMaterial()->GetPasses()) {
     //Opaque:			    29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
     //Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx
 
@@ -108,7 +109,7 @@ void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* tr
     uint64_t key = uint64_t(pass->m_layer) << 32;
 
     // Material (resource binds)
-    unsigned int idx = material->GetIdx();
+    unsigned int idx = material->GetMaterial()->GetIdx();
     unsigned int shifts = 8 + 16 * isTransparent;
     key |= ((uint64_t)idx) << shifts;
 

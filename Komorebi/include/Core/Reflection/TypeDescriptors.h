@@ -212,6 +212,21 @@ namespace reflection {
     void SetValueFromString(void* pObj, const char* valueCStr) const override {}
   };
 
+  struct TypeDescriptor_Asset_Ptr : public TypeDescriptor_Ptr {
+
+    TypeDescriptor_Asset_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor_Ptr{ init }
+    {}
+    TypeDescriptor_Asset_Ptr(const char* name, size_t size) : TypeDescriptor_Ptr{ nullptr, 0 }
+    {}
+
+    virtual void Accept(TypeVisitor* visitor) const override;
+   
+  private:
+    std::string GetValueStr(const void* obj) const override { return {}; }
+    void SetValueFromString(void* pObj, const char* valueCStr) const override {}
+  };
+
+
   template <typename T>
   struct Ptr_Wrapper {
     T* m_ptr = nullptr;
@@ -238,9 +253,15 @@ namespace reflection {
     Weak_Ptr_Wrapper() {}
     Weak_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
   };
+  template <typename T>
+  struct Asset_Ptr_Wrapper : public Ptr_Wrapper<T> {
+    Asset_Ptr_Wrapper() {}
+    Asset_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
+  };
 
 #define WEAK_PTR(TYPE) ::reflection::Weak_Ptr_Wrapper<TYPE>
 #define OWNED_PTR(TYPE) ::reflection::Owned_Ptr_Wrapper<TYPE>
+#define ASSET_PTR(TYPE) ::reflection::Asset_Ptr_Wrapper<TYPE>
 
   //--------------------------------------------------------
   // Type descriptors for std::vector

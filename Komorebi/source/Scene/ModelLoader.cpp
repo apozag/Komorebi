@@ -22,6 +22,7 @@
 #include "Entities/Model.h"
 #include "Animation/Animation.h"
 #include "Graphics/Material.h"
+#include "Graphics/MaterialInstance.h"
 #include "Graphics/BindableSlotsInfo.h"
 #include "Core/Util/ImageManager.h"
 
@@ -47,13 +48,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
       mesh = GenerateQuad();
     }
      
-    mesh->m_material = memory::Factory::Create<gfx::Material>();
-    for (gfx::Pass* pass : model->GetPasses()) {
-      mesh->m_material->AddPass(pass);
-    }
-    for (gfx::ResourceBindable* bind : model->GetBinds()) {
-      mesh->m_material->AddBindable(bind);
-    }
+    mesh->m_material = memory::Factory::Create<gfx::MaterialInstance>(model->GetMaterial());
     sceneGraph->AddNode(mesh, Transform(), sceneGraphParent, true);
     model->AddDrawable(mesh);
     return;
@@ -70,16 +65,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 
   directory = filename.substr(0, filename.find_last_of('/') + 1);
 
-  processMaterials(scene);
-
-  for (gfx::Material* mat : materials) {
-    for (gfx::Pass* pass : model->GetPasses()) {
-      mat->AddPass(pass);
-    }
-    for (gfx::ResourceBindable* bind : model->GetBinds()) {
-      mat->AddBindable(bind);
-    }
-  }
+  processMaterials(scene, model->GetMaterial());
 
   processNode(scene->mRootNode, scene, sceneGraph, sceneGraphParent, model);
 
@@ -91,7 +77,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
     model->m_animation = processAnimation(scene);
   }
 
-  materials.clear();
+  matInstances.clear();
   boneNames.clear();
   boneOffsets.clear();
   boneNodes.clear();
@@ -99,15 +85,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 
 Model* ModelLoader::LoadModel(std::string path, Scene* sceneGraph, Node* sceneGraphParent) {
   Model* model = memory::Factory::Create<Model>();
-  if (path == "cube") {
-    Mesh* mesh = GenerateCube();
-    mesh->m_material = memory::Factory::Create<gfx::Material>();
-    sceneGraph->AddNode(mesh, Transform(), sceneGraphParent, true);
-    model->AddDrawable(mesh);
-  }
-  else {
-    LoadModel(path, sceneGraph, sceneGraphParent, model);
-  }
+  LoadModel(path, sceneGraph, sceneGraphParent, model);
   return model;
 }
 
@@ -250,11 +228,11 @@ void ModelLoader::processNodeBones(aiNode* node, const aiScene* scene, Scene* sc
   }
 }
 
-void ModelLoader::processMaterials(const aiScene* scene) {
+void ModelLoader::processMaterials(const aiScene* scene, const gfx::Material* material) {
 
   for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
     aiMaterial* material = scene->mMaterials[i];
-    gfx::Material* mat = memory::Factory::Create<gfx::Material>();
+    gfx::MaterialInstance* matInstance = memory::Factory::Create<gfx::MaterialInstance>(material);
     std::vector<aiTextureType> types = {
         aiTextureType_DIFFUSE, // t0
         aiTextureType_HEIGHT, // t1
@@ -269,20 +247,20 @@ void ModelLoader::processMaterials(const aiScene* scene) {
         if (texture->mHeight == 0) {
           // Compressed image data, we need to decode it
           Image img = ImageManager::decodeFromMemory(texture->mFilename.C_Str(), (unsigned char*)texture->pcData, texture->mWidth);
-          mat->AddBindable(memory::Factory::Create < gfx::Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
+          matInstance->AddBindable(memory::Factory::Create < gfx::Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
         }
         else {
-          mat->AddBindable(memory::Factory::Create < gfx::Texture2D>((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
+          matInstance->AddBindable(memory::Factory::Create < gfx::Texture2D>((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
         }
       }
       else {
         //regular file, read it from disk
-        mat->AddBindable(memory::Factory::Create < gfx::Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j));
+        matInstance->AddBindable(memory::Factory::Create < gfx::Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j));
       }
 
     }
-    mat->AddBindable(memory::Factory::Create<gfx::SamplerState>(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
-    materials.push_back(mat);
+    //matInstance->AddBindable(memory::Factory::Create<gfx::SamplerState>(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_WRAP, SRV_FREE_SLOT));
+    matInstances.push_back(matInstance);
   }
 }
 
@@ -353,7 +331,7 @@ Mesh* ModelLoader::processMesh(aiMesh* mesh, const aiScene* scene, Scene* sceneG
       indices[i * 3u + j] = face.mIndices[j];
   }
   Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
-  m->m_material = materials[mesh->mMaterialIndex];
+  m->m_material = matInstances[mesh->mMaterialIndex];
   sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
 
   return m;
@@ -454,7 +432,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(aiMesh* mesh, const aiScene* scene,
   free(boneFreeSlots);
 
   SkinnedMesh* m = memory::Factory::Create<SkinnedMesh>(vertices, indices, &model->m_skeleton, BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
-  m->m_material = materials[mesh->mMaterialIndex];
+  m->m_material = matInstances[mesh->mMaterialIndex];
   Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
   meshNode->m_name = mesh->mName.C_Str();
   return m;

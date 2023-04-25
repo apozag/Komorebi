@@ -10,6 +10,10 @@ class SkinnedMesh;
 class Animation;
 class ResourceBindable;
 
+namespace gfx {
+  class Material;
+}
+
 class Model : public Entity {
 public:
   Model() {}
@@ -24,8 +28,7 @@ public:
   void AddBindable(gfx::ResourceBindable* bind);
   void AddDrawable(Drawable* mesh);
   const BVHData& GetBVHData() const;
-  const std::vector<OWNED_PTR(gfx::Pass)>& GetPasses() const { return m_passes; }
-  const std::vector<OWNED_PTR(gfx::ResourceBindable)>& GetBinds() const { return m_binds; }
+  const gfx::Material* GetMaterial() const { return m_material; }
   void Insert(Node* node, const Transform& worldTransform) override;
   REFLECT()
 public:
@@ -38,7 +41,6 @@ private:
 
 /// Serialized members
 private:
-  std::string m_filename;
-  std::vector<OWNED_PTR(gfx::Pass)> m_passes;
-  std::vector<OWNED_PTR(gfx::ResourceBindable)> m_binds;
+  std::string m_filename;  
+  gfx::Material* m_material;
 };
