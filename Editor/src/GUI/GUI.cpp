@@ -16,6 +16,7 @@
 
 #include "GUI/SceneGUIWindow.h"
 #include "GUI/RendererGUIWindow.h"
+#include "GUI/PrefabGUIWindow.h"
 
 #include "Scene/Scene.h"
 #include "Scene/SceneLoader.h"
@@ -104,6 +105,13 @@ void DrawTopMenu() {
     if (enabled) DrawRendererGUIWindow();
   }
 
+  // Prefabs
+  {
+    static bool enabled = false;
+    if (ImGui::Button("Prefabs")) enabled = !enabled;
+    if (enabled) DrawPrefabGUIWindow(); 
+  }
+
   ImGui::EndMainMenuBar();
 }
 
@@ -144,6 +152,7 @@ void GUIAttachment::Setup() {
 
   SetupSceneGUIWindow();
   SetupRendererGUIWindow();
+  SetupPrefabGUIWindow();
 
   ImGui::GetIO().DisplaySize.x = Engine::GetWindow()->GetClientWidth();
   ImGui::GetIO().DisplaySize.y = Engine::GetWindow()->GetClientHeight();

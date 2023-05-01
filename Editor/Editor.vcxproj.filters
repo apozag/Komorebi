@@ -90,6 +90,9 @@
     <ClCompile Include="src\GUI\RendererGUIWindow.cpp">
       <Filter>Archivos de origen\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\PrefabGUIWindow.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\imgui\imgui.h">
@@ -135,6 +138,9 @@
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
     <ClInclude Include="include\GUI\RendererGUIWindow.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\PrefabGUIWindow.h">
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
   </ItemGroup>

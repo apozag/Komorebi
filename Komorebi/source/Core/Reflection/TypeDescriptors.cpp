@@ -30,6 +30,9 @@ namespace reflection {
   void TypeDescriptor_Weak_Ptr::Accept(TypeVisitor* visitor) const {
     visitor->Visit(this);
   }
+  void TypeDescriptor_Asset_Ptr::Accept(TypeVisitor* visitor) const {
+    visitor->Visit(this);
+  }
   void TypeDescriptor_StdVector::Accept(TypeVisitor* visitor) const {
     visitor->Visit(this);
   }

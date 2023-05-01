@@ -3,6 +3,8 @@
 
 #include "Graphics/Pass.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core\Memory\Factory.h"
 #include "Graphics/Bindables/State/StateBindable.h"
 #include "Graphics/Bindables/State/VertexShader.h"
@@ -59,7 +61,7 @@ namespace gfx {
 		m_binds.push_back(bind);
 	}
 
-	void Pass::Bind() {
+	void Pass::Bind() const {
 		if (!m_enabled) return;
 
 		m_vertexShader->Bind();
@@ -68,7 +70,7 @@ namespace gfx {
 			bind->Bind();
 		}
 	}
-	void Pass::Unbind() {
+	void Pass::Unbind() const {
 		if (!m_enabled) return;
 
 		m_vertexShader->Unbind();

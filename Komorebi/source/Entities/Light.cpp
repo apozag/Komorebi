@@ -1,4 +1,7 @@
 #include "Entities/Light.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Scene/Scene.h"
 #include "Core/Memory/Factory.h"
 #include "Core/Math/Transform.h"

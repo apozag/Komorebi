@@ -1,4 +1,7 @@
 #include "Rotate.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Engine.h"
 #include "Scene/Node.h"
 

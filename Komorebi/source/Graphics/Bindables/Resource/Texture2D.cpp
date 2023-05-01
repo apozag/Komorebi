@@ -1,4 +1,7 @@
 #include "Graphics/GraphicsThrowMacros.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Graphics/Bindables/Resource/Texture2D.h"
 #include "Core/Util/ImageManager.h"
 

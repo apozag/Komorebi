@@ -19,6 +19,7 @@ namespace reflection {
     void Visit(const TypeDescriptor_StdVector* type) override;
     void Visit(const TypeDescriptor_Weak_Ptr* type) override;
     void Visit(const TypeDescriptor_Owned_Ptr* type) override;
+    void Visit(const TypeDescriptor_Asset_Ptr* type) override;
   private:
     void* m_pObj;
     const rapidxml::xml_node<>* m_xmlNode;
@@ -34,6 +35,7 @@ namespace reflection {
     void Visit(const TypeDescriptor_StdVector* type) override;
     void Visit(const TypeDescriptor_Weak_Ptr* type) override {}
     void Visit(const TypeDescriptor_Owned_Ptr* type) override;
+    void Visit(const TypeDescriptor_Asset_Ptr* type) override {};
   private:
     void* m_pObj;
   };

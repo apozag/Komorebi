@@ -406,13 +406,14 @@
     <ClInclude Include="include\3rd\std_image\stb_image.h" />
     <ClInclude Include="include\Animation\Animation.h" />
     <ClInclude Include="include\Animation\Skeleton.h" />
-    <ClInclude Include="include\Core\AssetManager.h" />
+    <ClInclude Include="include\Core\PrefabManager.h" />
     <ClInclude Include="include\Core\Math\BvhData.h" />
     <ClInclude Include="include\Core\Math\MathUtils.h" />
     <ClInclude Include="include\Core\Memory\Factory.h" />
     <ClInclude Include="include\Core\Memory\PoolAllocator.h" />
     <ClInclude Include="include\Core\Reflection\CopyTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\DeserializationTypeVisitor.h" />
+    <ClInclude Include="include\Core\Reflection\ReflectionImplMacros.h" />
     <ClInclude Include="include\Core\Reflection\ReflectionSettings.h" />
     <ClInclude Include="include\Core\Reflection\SerializationTypeVisitor.h" />
     <ClInclude Include="include\Core\Reflection\TypeVisitor.h" />
@@ -494,7 +495,7 @@
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp" />
     <ClCompile Include="source\Animation\Animation.cpp" />
     <ClCompile Include="source\Animation\Skeleton.cpp" />
-    <ClCompile Include="source\Core\AssetManager.cpp" />
+    <ClCompile Include="source\Core\PrefabManager.cpp" />
     <ClCompile Include="source\Core\Engine.cpp" />
     <ClCompile Include="source\Core\Exceptions\Exception.cpp" />
     <ClCompile Include="source\Core\ImageManager.cpp" />

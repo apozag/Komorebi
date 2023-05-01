@@ -6,6 +6,7 @@
 
 #include "Core/Engine.h"
 #include "Core/Memory/Factory.h"
+#include "Core/Reflection/ReflectionHelper.h"
 #include "Scene/SceneLoader.h"
 #include "Core/Reflection/TypeDescriptors.h"
 #include "Core/Reflection/ReflectionSettings.h"

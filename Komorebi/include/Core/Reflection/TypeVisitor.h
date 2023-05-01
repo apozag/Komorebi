@@ -10,6 +10,7 @@ namespace reflection {
     virtual void Visit(const TypeDescriptor_StdVector* type) = 0;
     virtual void Visit(const TypeDescriptor_Weak_Ptr* type) = 0;
     virtual void Visit(const TypeDescriptor_Owned_Ptr* type) = 0;
+    virtual void Visit(const TypeDescriptor_Asset_Ptr* type) { this->Visit((TypeDescriptor*)type); };
     virtual void Visit(const TypeDescriptor_Enum* type) { this->Visit((TypeDescriptor*)type); };
     virtual void Visit(const TypeDescriptor_Bitmask* type) { this->Visit((TypeDescriptor*)type); };
   protected:

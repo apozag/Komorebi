@@ -1,5 +1,7 @@
 #include "Core/Math/Transform.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 void Transform::Setup() {
 	compose();
 }

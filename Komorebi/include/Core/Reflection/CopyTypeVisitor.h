@@ -10,8 +10,9 @@ namespace reflection {
     void Visit(const reflection::TypeDescriptor* type);
     void Visit(const reflection::TypeDescriptor_Struct* type);
     void Visit(const reflection::TypeDescriptor_StdVector* type);
-    void Visit(const reflection::TypeDescriptor_Weak_Ptr* type) {}
+    void Visit(const reflection::TypeDescriptor_Weak_Ptr* type) { this->Visit((reflection::TypeDescriptor*)type); }
     void Visit(const reflection::TypeDescriptor_Owned_Ptr* type);
+    void Visit(const reflection::TypeDescriptor_Asset_Ptr* type);
   private:
     void* m_pObjDst;
     void* m_pObjSrc;

@@ -7,6 +7,7 @@
 #include "Core/Engine.h"
 #include "Core/Reflection/ReflectionHelper.h"
 #include "Core/Reflection/CopyTypeVisitor.h"
+#include "Core/PrefabManager.h"
 #include "Entities/Entity.h"
 #include "Scene/Scene.h"
 #include "Scene/Node.h"
@@ -16,8 +17,31 @@ Node* selectedNode;
 #define GUI_ORANGE IM_COL32(255, 69, 0, 255)
 #define GUI_WHITE IM_COL32(255, 255, 255, 255)
 
+#define UNIQUE_LABEL(LABEL, PTR) (std::string(LABEL) + "##" + std::to_string((size_t)PTR)).c_str()
+
 std::string entityNamesStr;
 std::vector<std::string> entityNames;
+
+void SavePrefabPopup(void* pObj, const reflection::TypeDescriptor* type) {
+  if (ImGui::IsItemClicked(1)) {
+    ImGui::OpenPopup(UNIQUE_LABEL("CreatePrefab", pObj));
+  }
+  if (ImGui::BeginPopup(UNIQUE_LABEL("CreatePrefab", pObj))) {
+    static constexpr size_t buffSize = 256;
+    static char str[buffSize];
+    ImGui::Text("Create Prefab");
+    ImGui::InputText("Path:", str, buffSize);
+    ImGui::SameLine();
+    if (ImGui::Button("Save##PrefabFromScene")) {
+      void* pCopy = type->create();
+      reflection::CopyTypeVisitor visitor(pCopy, pObj);
+      type->Accept(&visitor);
+      PrefabManager::GetInstance()->SavePrefab(str, pCopy, type);
+      ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
+  }
+}
 
 void SetupSceneGUIWindow() {
   entityNames = Scene::GetEntityNames();
@@ -86,15 +110,14 @@ void DrawAddNodeButton(Node* parent) {
 void DrawNodeRecursive(Node* node) {
   if (node == selectedNode) {
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);
-
-    
-
   }
   else {
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_WHITE);
   }
 
   bool open = ImGui::TreeNode((node->m_name + std::string("##Node") + std::to_string((size_t)node)).c_str());
+
+  SavePrefabPopup(node, reflection::TypeResolver<Node>::get());
 
   ImGui::PopStyleColor();
 
@@ -131,6 +154,7 @@ void DrawNodeInfo() {
     ImGui::Separator();
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);
     bool open = ImGui::TreeNode(entity->GetReflectionDynamic()->name);
+    SavePrefabPopup(entity, reflection::TypeResolver<Entity>::getDynamic(entity));
     ImGui::PopStyleColor();
     if (open) {      
       ImGuiTypeVisitor visitor(entity);

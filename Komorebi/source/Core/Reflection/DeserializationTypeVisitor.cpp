@@ -1,5 +1,6 @@
 #include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Core/Reflection/ReflectionHelper.h"
+#include "Core/PrefabManager.h"
 #include "rapidxml.hpp"
 
 namespace reflection {
@@ -105,6 +106,17 @@ namespace reflection {
 
     m_pObj = *ppObj;
     typeDesc->Accept(this);
+  }
+
+  void DeserializationTypeVisitor::Visit(const TypeDescriptor_Asset_Ptr* type) {
+    char* filename = m_xmlNode->value();
+    if (filename[0] != '\0') {
+      void** ppObj = type->getPPtr(m_pObj);
+      const TypeDescriptor* dynamicType = type->GetDynamic(ppObj);      
+      *ppObj = dynamicType->create();
+      PrefabManager::GetInstance()->LoadPrefab(filename, *ppObj, dynamicType);
+      type->setFilename(m_pObj, filename);
+    }
   }
 
   //////////////////// SETUP TYPE VISITOR ///////////////////////

@@ -1,5 +1,7 @@
 #include "Scene/Node.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 IMPLEMENT_REFLECTION_POINTER(Node)
 
 REFLECT_STRUCT_BASE_BEGIN(Node)

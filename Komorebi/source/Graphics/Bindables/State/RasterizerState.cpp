@@ -1,6 +1,8 @@
 #include <d3d11.h>
 #include "Graphics/Bindables/State/RasterizerState.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #define DEPTH_BIAS_D32_FLOAT(d) (d/(1/pow(2,23)))
 
 namespace gfx {

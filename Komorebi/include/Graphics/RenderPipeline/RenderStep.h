@@ -9,6 +9,8 @@
 
 namespace gfx {
 
+  class Material;
+
   class RenderStep : public GameObject {
   public:
 

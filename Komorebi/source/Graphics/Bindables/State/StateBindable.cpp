@@ -1,5 +1,7 @@
 #include "Graphics/Bindables/State/StateBindable.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 namespace gfx {
   REFLECT_STRUCT_VIRTUAL_BEGIN(StateBindable, Bindable)
     REFLECT_STRUCT_END(StateBindable)

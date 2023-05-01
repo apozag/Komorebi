@@ -1,6 +1,8 @@
 #include <d3d11.h>
 #include "Graphics/Bindables/State/BlendState.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 namespace gfx {
 
 	BlendState::~BlendState() {

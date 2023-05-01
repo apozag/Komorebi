@@ -1,5 +1,6 @@
 #include "Graphics/Bindables/State/SamplerState.h"
 #include "Graphics/GraphicsThrowMacros.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 
 namespace gfx {
 

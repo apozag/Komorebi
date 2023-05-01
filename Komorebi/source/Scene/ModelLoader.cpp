@@ -228,10 +228,10 @@ void ModelLoader::processNodeBones(aiNode* node, const aiScene* scene, Scene* sc
   }
 }
 
-void ModelLoader::processMaterials(const aiScene* scene, const gfx::Material* material) {
+void ModelLoader::processMaterials(const aiScene* scene, gfx::Material* material) {
 
   for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
-    aiMaterial* material = scene->mMaterials[i];
+    aiMaterial* aiMat = scene->mMaterials[i];
     gfx::MaterialInstance* matInstance = memory::Factory::Create<gfx::MaterialInstance>(material);
     std::vector<aiTextureType> types = {
         aiTextureType_DIFFUSE, // t0
@@ -239,9 +239,9 @@ void ModelLoader::processMaterials(const aiScene* scene, const gfx::Material* ma
         aiTextureType_SPECULAR // t2      
     };
     for (int j = 0; j < types.size(); j++) {
-      if (material->GetTextureCount(types[j]) == 0) continue;
+      if (aiMat->GetTextureCount(types[j]) == 0) continue;
       aiString str;
-      material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), str);
+      aiMat->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), str);
       if (const aiTexture* texture = scene->GetEmbeddedTexture(str.C_Str())) {
         //returned pointer is not null, read texture from memory
         if (texture->mHeight == 0) {

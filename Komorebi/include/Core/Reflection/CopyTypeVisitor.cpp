@@ -2,6 +2,9 @@
 
 #include "Core/Reflection/CopyTypeVisitor.h"
 
+#include "Core/Memory/Factory.h"
+#include "Core/PrefabManager.h"
+
 namespace reflection {
 
   void CopyTypeVisitor::Visit(const reflection::TypeDescriptor* type) {
@@ -28,24 +31,52 @@ namespace reflection {
   }
 
   void CopyTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
-    /*void* pObjSrc = m_pObjSrc;
+    void* pObjSrc = m_pObjSrc;
     void* pObjDst = m_pObjDst;
 
-    size_t size = type->getSize(pObj);
+    size_t size = type->getSize(pObjSrc);
+    type->resize(pObjDst, size);
     for (size_t i = 0; i < size; i++) {
-      m_pObj = type->getItem(pObj, i);
+      m_pObjSrc = type->getItem(pObjSrc, i);
+      m_pObjDst = type->getItem(pObjDst, i);
       type->itemType->Accept(this);
-    }*/
+    }
   }
 
   void CopyTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
-   /* void* pObjSrc = m_pObjSrc;
-    void* pObjDst = m_pObjDst;
+    void** ppObjSrc = (void**)m_pObjSrc;
+    void** ppObjDst = (void**)m_pObjDst;
 
-    const TypeDescriptor* dynamicType = type->GetDynamic(m_pObj);
-    m_pObj = *ppObj;
-    dynamicType->Accept(this);
-    delete(*ppObj);*/
+    const TypeDescriptor* dynamicTypeSrc = type->GetDynamic(ppObjSrc);
+
+    // TypeDescriptor_Ignored does not have these function pointers assigned
+    if (dynamicTypeSrc->create == nullptr) {
+      return;
+    }
+
+    if (*ppObjDst != nullptr) {
+      const TypeDescriptor* dynamicTypeDst= type->GetDynamic(ppObjDst);
+      // TODO: This is a memory leak, think of something
+      if (dynamicTypeDst->destroy) {
+        dynamicTypeDst->destroy(*ppObjDst);
+      }
+    }
+
+    *ppObjDst = dynamicTypeSrc->create();
+
+    m_pObjSrc = *ppObjSrc;
+    m_pObjDst = *ppObjDst;
+    dynamicTypeSrc->Accept(this);
+  }
+
+  void CopyTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
+    void** ppObjSrc = type->getPPtr(m_pObjSrc);
+    void** ppObjDst = type->getPPtr(m_pObjDst);
+    const TypeDescriptor* dynamicType = type->GetDynamic(ppObjSrc);
+    *ppObjDst = dynamicType->create();
+    std::string filename = type->getFilename(m_pObjSrc);
+    PrefabManager::GetInstance()->LoadPrefab(filename.c_str(), *ppObjDst, dynamicType);
+    type->setFilename(m_pObjDst, filename);
   }
 
 }

@@ -2,6 +2,8 @@
 
 #include "Graphics/BindableSlotsInfo.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Memory/Factory.h"
 #include "Entities/Camera.h"
 #include "Scene\Scene.h"

@@ -27,12 +27,12 @@ namespace gfx {
 		void Setup() override;
 
 		void AddBindable(StateBindable* bind);
-		void Bind();
-		void Unbind();
+		void Bind()const;
+		void Unbind()const;
 		unsigned char GetIdx() const { return m_idx; }
 		PixelShader const* GetPixelShader() const { return m_pixelShader; }
 		VertexShader const* GetVertexShader() const { return m_vertexShader; }
-		bool DoesIgnoreFrustumCulling() { return m_ignoreFrustumCulling; }
+		bool DoesIgnoreFrustumCulling() const { return m_ignoreFrustumCulling; }
 
 		REFLECT_BASE()
 

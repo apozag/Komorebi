@@ -6,6 +6,7 @@
 namespace reflection {
 
   struct TypeDescriptor;
+  struct TypeDescriptor_Struct;
 
   struct PtrIdPair;
 

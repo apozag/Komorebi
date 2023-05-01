@@ -1,7 +1,8 @@
 #include <d3d11.h>
 
-#include "Entities/Entity.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 
+#include "Entities/Entity.h"
 #include "Core/Math/Transform.h"
 #include "Core/Engine.h"
 #include "Core/Window.h"

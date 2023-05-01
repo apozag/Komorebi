@@ -1,5 +1,7 @@
 #include "d3dcompiler.h"
 #include <D3d11shader.h>
+
+#include "Core/Reflection/ReflectionImplMacros.h"
 #include "Core/Util/WideStringUtility.h"
 #include "Graphics/Bindables/State/PixelShader.h"
 #include "Graphics/GraphicsThrowMacros.h"

@@ -1,5 +1,7 @@
 #include "Graphics/Bindables/State/DepthStencilState.h"
+
 #include "Graphics/GraphicsThrowMacros.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 
 typedef gfx::DepthStencilState::DepthStencilAccess DepthStencilAccessEnum;
 REFLECT_ENUM_BEGIN(DepthStencilAccessEnum)

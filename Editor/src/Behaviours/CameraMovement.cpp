@@ -1,4 +1,7 @@
 #include "Behaviours/CameraMovement.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Engine.h"
 #include "Core/Window.h"
 #include "Scene/Node.h"

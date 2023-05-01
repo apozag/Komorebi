@@ -1,7 +1,7 @@
 #include "3rd/rapidxml/rapidxml_ext.hpp"
 #include "3rd/rapidxml/rapidxml.hpp"
 
-#include "Core/Reflection/ReflectionMacros.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 
 IMPLEMENT_REFLECTION_PRIMITIVE(int, Int)
 IMPLEMENT_REFLECTION_PRIMITIVE(unsigned int, UInt)

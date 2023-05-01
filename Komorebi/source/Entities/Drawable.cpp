@@ -1,13 +1,15 @@
 #define NOMINMAX
 
+#include "Entities/Drawable.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Material.h"
-
-#include "Entities/Drawable.h"
 
 Drawable::Drawable(const Drawable& drawable) {
 	this->m_indexCount = drawable.m_indexCount;

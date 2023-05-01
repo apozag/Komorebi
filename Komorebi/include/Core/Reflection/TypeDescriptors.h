@@ -61,6 +61,7 @@ namespace reflection {
 
     void (*construct)(void*);
     void* (*create)();
+    void (*destroy)(void*);
 
     TypeDescriptor(const char* name, size_t size) : name{ name }, size{ size }, construct([](void* obj) {})
     {}
@@ -214,6 +215,11 @@ namespace reflection {
 
   struct TypeDescriptor_Asset_Ptr : public TypeDescriptor_Ptr {
 
+    std::string (*getFilename)(const void*);
+    void (*setFilename)(void*, const std::string&);
+    void (*loadAsset) (void*);
+    void** (*getPPtr)(void*);
+
     TypeDescriptor_Asset_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor_Ptr{ init }
     {}
     TypeDescriptor_Asset_Ptr(const char* name, size_t size) : TypeDescriptor_Ptr{ nullptr, 0 }
@@ -221,9 +227,8 @@ namespace reflection {
 
     virtual void Accept(TypeVisitor* visitor) const override;
    
-  private:
-    std::string GetValueStr(const void* obj) const override { return {}; }
-    void SetValueFromString(void* pObj, const char* valueCStr) const override {}
+    std::string GetValueStr(const void* obj) const override { return getFilename(obj); }
+    void SetValueFromString(void* pObj, const char* valueCStr) const override { setFilename(pObj, valueCStr); }
   };
 
 
@@ -256,7 +261,8 @@ namespace reflection {
   template <typename T>
   struct Asset_Ptr_Wrapper : public Ptr_Wrapper<T> {
     Asset_Ptr_Wrapper() {}
-    Asset_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}
+    Asset_Ptr_Wrapper(T* ptr) : Ptr_Wrapper<T>(ptr) {}   
+    std::string m_filename;
   };
 
 #define WEAK_PTR(TYPE) ::reflection::Weak_Ptr_Wrapper<TYPE>

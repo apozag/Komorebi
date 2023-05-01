@@ -1,4 +1,5 @@
 #include "GUI/ImGuiTypeVisitor.h"
+#include "GUI/ImGuiTypeVisitor.h"
 
 #include <string>
 #include <vector>
@@ -7,17 +8,22 @@
 
 #include "Core/Memory/Factory.h"
 #include "Core/Reflection/CopyTypeVisitor.h"
+#include "Core/Reflection/ReflectionHelper.h"
+#include "Core/PrefabManager.h"
 #include "Scene/Node.h"
 #include "Scene/Scene.h"
+
+#define UNIQUE_LABEL(LABEL) (std::string(LABEL) + std::to_string((size_t)m_pObj)).c_str()
+#define UNIQUE_LABEL2(LABEL) (std::string(LABEL) + std::to_string((size_t)pObj)).c_str()
 
 using namespace reflection;
 
 void ImGuiTypeVisitor::Visit(const TypeDescriptor* type) {
-  constexpr const size_t buffSize = 64;
+  constexpr const size_t buffSize = 256;
   std::string stdStr = type->GetValueStr(m_pObj);
   char str[buffSize];
   memcpy(str, stdStr.c_str(), stdStr.size()+1);
-  if (ImGui::InputText((std::string("##") + std::to_string((size_t)m_pObj)).c_str(), (char*)&str, buffSize) && str[0] != '\0') {
+  if (ImGui::InputText(UNIQUE_LABEL("##"), (char*)&str, buffSize) && str[0] != '\0') {
     type->SetValueFromString(m_pObj, str);
     m_dirty = true;
   }
@@ -27,6 +33,25 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
   void* pObj = m_pObj;
   bool prevDirty = m_dirty;
 
+  // Save as prefab
+  if (ImGui::IsItemClicked(1)) {
+    ImGui::OpenPopup("CreatePrefab");
+  }
+  if (ImGui::BeginPopup("CreatePrefab")) {
+    static constexpr size_t buffSize = 216;
+    static char str[buffSize];
+    ImGui::Text("Create Prefab");
+    ImGui::InputText("Path:", str, buffSize);
+    if (ImGui::Button("Save##PrefabFromScene")) {
+      void* pCopy = type->create();
+      CopyTypeVisitor visitor(pCopy, pObj);
+      type->Accept(&visitor);
+      PrefabManager::GetInstance()->SavePrefab(str, pCopy, type);
+      ImGui::CloseCurrentPopup();
+    }
+    ImGui::EndPopup();
+  }
+
   if (type->parentTypeDesc) {
     type->parentTypeDesc->Accept(this);
   }
@@ -34,7 +59,7 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
   if (strcmp(type->name, "Node") == 0) {
     Node* pNode = (Node*)pObj;
     ImGui::SameLine();
-    ImGui::Checkbox((std::string("##CB") + std::to_string((size_t)m_pObj)).c_str(), &pNode->m_enabled);
+    ImGui::Checkbox(UNIQUE_LABEL("##CB"), &pNode->m_enabled);
   }
 
   bool currDirty = false;
@@ -68,11 +93,11 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
 
   for (int i = 0; i < size; i++) {
     m_pObj = type->getItem(pObj, i);
-    if (ImGui::TreeNode(std::to_string((size_t)m_pObj).c_str(), type->itemType->GetDynamic(m_pObj)->getFullName().c_str())) {
+    if (ImGui::TreeNode(UNIQUE_LABEL(""), type->itemType->GetDynamic(m_pObj)->getFullName().c_str())) {
 
       // Delete button
       ImGui::SameLine();
-      if (ImGui::Button((std::string("-##DleteElem")).c_str())) {
+      if (ImGui::Button(UNIQUE_LABEL("-##DeleteElem"))) {
         type->remove(pObj, i);
         memory::Factory::Destroy(isPointerType? *(void**) m_pObj : m_pObj);
         // The vector was modified! stop iterating for this frame
@@ -95,7 +120,7 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
   static std::vector<const reflection::TypeDescriptor_Struct*> possibleTypes;
   static std::string possibleTypesStr;
 
-  if (!pCurrVector && ImGui::Button((std::string("+##AddElem")).c_str())) {
+  if (!pCurrVector && ImGui::Button(UNIQUE_LABEL2("+##AddElem"))) {
 
     pCurrVector = pObj;
     currVectorIsPointerType = isPointerType;
@@ -132,7 +157,7 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
 
     // Combo with child types. When chosen, free and allocate new temporal object
     static int currItem = 0;
-    if (possibleTypes.size() > 1 && ImGui::Combo("##EntityCombo", &currItem, possibleTypesStr.c_str())) {
+    if (possibleTypes.size() > 1 && ImGui::Combo(UNIQUE_LABEL2("##EntityCombo"), &currItem, possibleTypesStr.c_str())) {
       if (pTempElem) free(pTempElem);
       if (currItem >= 0 && currItem < possibleTypes.size()) {
         typeDesc = possibleTypes[currItem];
@@ -189,6 +214,49 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
   }
 }
 
+void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
+  
+  const std::string& filename = type->getFilename(m_pObj);
+  ImGui::Text(type->getFilename(m_pObj).c_str());
+  const PrefabInfo* prefabInfo = PrefabManager::GetInstance()->GetPrefabInfo(filename.c_str());
+  if (!prefabInfo) return;
+
+  static const PrefabInfo* selectedPrefab = nullptr;
+  bool open = selectedPrefab == prefabInfo || ImGui::Button("Open Prefab");
+  if (open) {
+    selectedPrefab = prefabInfo;
+    ImGui::Begin((prefabInfo->m_name + "##" + filename).c_str());
+    ImGuiTypeVisitor visitor(prefabInfo->m_ptr);
+    prefabInfo->m_typeDesc->Accept(&visitor);
+    if (ImGui::Button((std::string("Close##Prefab") + filename).c_str())) {
+      selectedPrefab = nullptr;
+    }
+    ImGui::End();
+  }
+
+  /*
+  constexpr const size_t buffSize = 256;
+  const std::string& filename = type->getFilename(m_pObj);
+  char str[buffSize];
+  memcpy(str, filename.c_str(), filename.size() + 1);
+  if (ImGui::InputText(UNIQUE_LABEL("##AssetPtr"), str, buffSize)) {
+    type->setFilename(m_pObj, str);
+  }
+
+  if (*ppObj == nullptr) {
+    if (ImGui::Button(UNIQUE_LABEL("Load Asset##"))) {
+      const TypeDescriptor* dynamicType = type->GetDynamic(m_pObj);
+      *ppObj = dynamicType->create();
+      PrefabManager::GetInstance()->LoadPrefab(filename.c_str(), *ppObj, type->GetDynamic(m_pObj));
+    }
+  }
+  else {
+    if (ImGui::Button(UNIQUE_LABEL("Save Asset##"))) {
+      PrefabManager::GetInstance()->SavePrefab(filename.c_str(), *ppObj, type->GetDynamic(m_pObj));
+    }
+  }*/
+}
+
 void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Enum* type) {
   using EnumVal = ::reflection::TypeDescriptor_Enum::EnumValue;
   int currValue = *(int*)m_pObj;
@@ -213,7 +281,7 @@ void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Bitmask* type) {
   ImGui::SameLine();
   static bool open = false;
   if (!open) {
-    open |= ImGui::Button("Edit##EditBitmask");
+    open |= ImGui::Button((std::string("Edit##EditBitmask") + std::to_string((size_t)m_pObj)).c_str());
   }
   if (open) {
     ImGui::Begin(type->enumType->name);

@@ -1,19 +1,21 @@
 #include "Graphics\MaterialInstance.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Graphics\Material.h"
 #include "Graphics\Bindables\Resource\ResourceBindable.h"
 
 namespace gfx {
 
   void MaterialInstance::Bind() {
-    m_material->Bind();
+    //m_material->Bind();
     for (ResourceBindable* bind : m_binds) {
       bind->Bind();
     }
   }
 
   void MaterialInstance::Unbind() {
-    m_material->Unbind();
+    //m_material->Unbind();
     for (ResourceBindable* bind : m_binds) {
       bind->Unbind();
     }

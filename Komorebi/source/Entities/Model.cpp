@@ -2,11 +2,14 @@
 
 #include <algorithm>
 
+#include "Entities/Model.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Engine.h"
 #include "Scene/Scene.h"
 #include "Entities/Mesh.h"
 #include "Entities/SkinnedMesh.h"
-#include "Entities/Model.h"
 #include "Animation/Skeleton.h"
 #include "Animation/Animation.h"
 #include "Graphics/Material.h"
@@ -80,14 +83,6 @@ void Model::AddDrawable(Drawable* drawable) {
 
 const BVHData& Model::GetBVHData() const {
   return m_bvh;
-}
-
-void Model::AddPass(gfx::Pass* pass) {
-  m_passes.push_back(pass);
-}
-
-void Model::AddBindable(gfx::ResourceBindable* bind) {
-  m_binds.push_back(bind);
 }
 
 void Model::Insert(Node* node, const Transform& worldTransform) {

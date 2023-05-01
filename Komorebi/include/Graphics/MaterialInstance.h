@@ -19,12 +19,12 @@ namespace gfx {
 
     void AddBindable(ResourceBindable* bind) { m_binds.push_back(bind); }
 
-    Material* GetMaterial() { return m_material; }
+    const Material* GetMaterial() { return m_material; }
     
     REFLECT_BASE()
 
   private:    
-    Material* m_material;
+    ASSET_PTR(Material) m_material;
     std::vector<OWNED_PTR(ResourceBindable)> m_binds;
   };
 }

@@ -1,5 +1,7 @@
 #include "Graphics/RenderInfo.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 namespace gfx {
 
   const RenderPipeline* RenderInfo::FindRenderPipeline(const std::string& name) const {

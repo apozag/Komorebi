@@ -31,7 +31,7 @@ struct Job {
 	uint64_t key;
 	const Drawable* drawable;
 	const Transform* transform;
-	Pass* pass;
+	const Pass* pass;
 	MaterialInstance* material;
 };
 

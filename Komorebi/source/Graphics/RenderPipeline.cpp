@@ -1,6 +1,9 @@
 #include <algorithm>
 
 #include "Graphics\RenderPipeline.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Graphics\RenderInfo.h"
 #include "Core\Engine.h"
 #include "Core/Math/Transform.h"

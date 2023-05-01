@@ -1,7 +1,9 @@
 #define NOMINMAX
 
-#include "Core/Memory/Factory.h"
 #include "Scene/Scene.h"
+
+#include "Core/Memory/Factory.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 #include "Scene/Node.h"
 #include "Scene/AuxNode.h"
 #include "Graphics/Renderer.h"

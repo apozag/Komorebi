@@ -1,4 +1,7 @@
 #include "Graphics/Bindables/Resource/CubeTexture.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Util/ImageManager.h"
 
 namespace gfx {

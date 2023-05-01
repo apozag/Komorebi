@@ -22,14 +22,14 @@ namespace gfx {
 
 		void Setup() override;
 
-		void Bind();
-		void Unbind();
+		void Bind() const;
+		void Unbind() const;
 
 		void AddBindable(ResourceBindable* bindable);
 		void AddPass(Pass* pass);
-		const std::vector<OWNED_PTR(Pass)>& GetPasses() { return m_passes; }
-		const std::vector<OWNED_PTR(ResourceBindable)>& GetBinds() { return m_binds; }
-		unsigned int GetIdx() { return m_idx; }
+		const std::vector<OWNED_PTR(Pass)>& GetPasses() const { return m_passes; }
+		const std::vector<OWNED_PTR(ResourceBindable)>& GetBinds() const { return m_binds; }
+		unsigned int GetIdx() const { return m_idx; }
 
 		bool SetFloat(const char* name, float value);
 		bool SetVector4(const char* name, float* data);
@@ -46,7 +46,7 @@ namespace gfx {
 		static unsigned int static_idx;
 
 		//////////////////
-		// Serializable
+		// Serializable	//
 		//////////////////
 
 		std::vector<OWNED_PTR(Pass)> m_passes;
@@ -56,3 +56,6 @@ namespace gfx {
 }
 
 DECLARE_REFLECTION_POINTER(gfx::Material)
+DECLARE_REFLECTION_POINTER(const gfx::Material)
+DECLARE_REFLECTION_ASSET_POINTER(gfx::Material)
+DECLARE_REFLECTION_ASSET_POINTER(const gfx::Material)

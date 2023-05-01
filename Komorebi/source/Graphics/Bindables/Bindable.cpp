@@ -1,4 +1,7 @@
 #include "Graphics/Bindables/Bindable.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Engine.h"
 #include "Core/Window.h"
 #include "Graphics\Graphics.h"

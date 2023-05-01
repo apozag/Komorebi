@@ -1,4 +1,7 @@
 #include "Entities/Mesh.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Memory/Factory.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"
 #include "Graphics/Bindables/Resource/VertexBuffer.h"

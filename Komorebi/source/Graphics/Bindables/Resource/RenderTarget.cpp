@@ -1,5 +1,8 @@
 #include <assert.h>
 #include "Graphics/Bindables/Resource/RenderTarget.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core\Memory\Factory.h"
 #include "Graphics/GraphicsThrowMacros.h"
 #include "Core/Engine.h"

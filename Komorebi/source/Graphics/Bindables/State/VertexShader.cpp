@@ -2,6 +2,7 @@
 #include "Graphics/Bindables/State/VertexShader.h"
 #include "Core/Util/WideStringUtility.h"
 #include "Graphics/GraphicsThrowMacros.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 
 namespace gfx {
 

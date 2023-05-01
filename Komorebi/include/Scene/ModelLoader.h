@@ -38,7 +38,7 @@ public:
 private:
 	void processNode( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
 	void processNodeBones( aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);
-	void processMaterials(const aiScene* scene, const gfx::Material* material);
+	void processMaterials(const aiScene* scene, gfx::Material* material);
 	Mesh* processMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent);
 	Animation* processAnimation(const aiScene* scene);
 	SkinnedMesh* processSkinnedMesh( aiMesh* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model);	

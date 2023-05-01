@@ -1,5 +1,7 @@
 #include "Core/Math/MathWrappers.h"
 
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 using namespace math;
 
 REFLECT_STRUCT_BASE_BEGIN(Vector3)

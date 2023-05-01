@@ -201,6 +201,7 @@
     <ClCompile Include="src\GUI\GUI.cpp" />
     <ClCompile Include="src\GUI\GuizmoUtils.cpp" />
     <ClCompile Include="src\GUI\ImGuiTypeVisitor.cpp" />
+    <ClCompile Include="src\GUI\PrefabGUIWindow.cpp" />
     <ClCompile Include="src\GUI\RendererGUIWindow.cpp" />
     <ClCompile Include="src\GUI\SceneGUIWindow.cpp" />
   </ItemGroup>
@@ -217,6 +218,7 @@
     <ClInclude Include="include\Behaviours\CameraMovement.h" />
     <ClInclude Include="include\GUI\GizmoUtils.h" />
     <ClInclude Include="include\GUI\GUI.h" />
+    <ClInclude Include="include\GUI\PrefabGUIWindow.h" />
     <ClInclude Include="include\GUI\ImGuiTypeVisitor.h" />
     <ClInclude Include="include\GUI\RendererGUIWindow.h" />
     <ClInclude Include="include\GUI\SceneGUIWindow.h" />

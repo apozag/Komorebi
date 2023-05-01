@@ -24,11 +24,9 @@ public:
 
   virtual void Setup() override;
   virtual void Reconfigure() override;
-  void AddPass(gfx::Pass* pass);
-  void AddBindable(gfx::ResourceBindable* bind);
   void AddDrawable(Drawable* mesh);
   const BVHData& GetBVHData() const;
-  const gfx::Material* GetMaterial() const { return m_material; }
+  gfx::Material* GetMaterial() const { return m_material; }
   void Insert(Node* node, const Transform& worldTransform) override;
   REFLECT()
 public:
@@ -42,5 +40,5 @@ private:
 /// Serialized members
 private:
   std::string m_filename;  
-  gfx::Material* m_material;
+  ASSET_PTR(gfx::Material) m_material;
 };

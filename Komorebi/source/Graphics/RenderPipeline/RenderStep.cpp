@@ -1,10 +1,14 @@
 #include "Graphics\RenderPipeline\RenderStep.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Core/Engine.h"
 #include "Core/Math\Transform.h"
 #include "Graphics\Renderer.h"
 #include "Graphics\Bindables\Resource\Texture2D.h"
 #include "Graphics\Bindables\Resource\RenderTarget.h"
 #include "Graphics\Material.h"
+#include "Graphics\MaterialInstance.h"
 #include "Entities\Drawable.h"
 #include "Entities\Light.h"
 
@@ -27,21 +31,21 @@ namespace gfx {
       ExecuteInternal(jobs, jobsToExecute, idx);
     } 
     else {
-      if (m_repeatFor & RepeatFor::DIRLIGHT != 0) {
+      if ((m_repeatFor & RepeatFor::DIRLIGHT) != 0) {
         for (const DirectionalLight* light : Engine::GetRenderer()->GetDirLights()) {
           light->Bind();
           ExecuteInternal(jobs, jobsToExecute, idx);
           light->Unbind();
         }
       }
-      if (m_repeatFor & RepeatFor::SPOTLIGHT != 0) {
+      if ((m_repeatFor & RepeatFor::SPOTLIGHT) != 0) {
         for (const SpotLight* light : Engine::GetRenderer()->GetSpotLights()) {
           light->Bind();
           ExecuteInternal(jobs, jobsToExecute, idx);
           light->Unbind();
         }
       }
-      if (m_repeatFor & RepeatFor::POINTLIGHT != 0) {
+      if ((m_repeatFor & RepeatFor::POINTLIGHT) != 0) {
         for (const PointLight* light : Engine::GetRenderer()->GetPointLights()) {
           light->Bind();
           ExecuteInternal(jobs, jobsToExecute, idx);
@@ -57,8 +61,8 @@ namespace gfx {
     switch (m_type) {
     case DEFAULT:
     {
-      Pass* lastPass = nullptr;
-      Material* lastMat = nullptr;
+      const Pass* lastPass = nullptr;
+      const Material* lastMat = nullptr;
       for (int i = idx; i < jobsToExecute; i++) {
 
         Job job = jobs[i];
@@ -67,7 +71,7 @@ namespace gfx {
           break;
         }
 
-        Pass* pass = job.pass;
+        const Pass* pass = job.pass;
         if (pass != lastPass) {
           if (lastPass) lastPass->Unbind();
           pass->Bind();
@@ -75,7 +79,7 @@ namespace gfx {
           //stateBindCount++;
         }
 
-        Material* material = job.material;
+        const Material* material = job.material->GetMaterial();
         if (material != lastMat) {
           if (lastMat) lastMat->Unbind();
           material->Bind();
@@ -83,10 +87,14 @@ namespace gfx {
           //resourceBindCount++;
         }
 
+        job.material->Bind();
+
         job.drawable->Draw(DirectX::XMMatrixTranspose(job.transform->GetMatrix()));
 
+        job.material->Unbind();
+
         lastPass = job.pass;
-        lastMat = job.material;
+        lastMat = job.material->GetMaterial();
       }
     }
     break;

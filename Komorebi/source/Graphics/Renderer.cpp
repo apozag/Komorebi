@@ -5,10 +5,14 @@
 #include <sstream>
 #include <ctime>
 
+#include "3rd/rapidxml/rapidxml_ext.hpp"
+#include "3rd/rapidxml/rapidxml.hpp"
+
 #include "Core/Engine.h"
 #include "Core/Math/Transform.h"
 #include "Core/Memory/Factory.h"
 #include "Core/Reflection/DeserializationTypeVisitor.h"
+#include "Core/Reflection/ReflectionHelper.h"
 #include "Entities/Drawable.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Renderer.h"
@@ -99,7 +103,7 @@ void gfx::Renderer::Init() {
 }
 
 void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, MaterialInstance* material) {
-  for (Pass* pass : material->GetMaterial()->GetPasses()) {
+  for (const Pass* pass : material->GetMaterial()->GetPasses()) {
     //Opaque:			    29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
     //Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx
 

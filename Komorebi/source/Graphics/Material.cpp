@@ -1,5 +1,8 @@
 #include "Graphics/Material.h"
 #include "Core/Memory/Factory.h"
+
+#include "Core/Reflection/ReflectionImplMacros.h"
+
 #include "Graphics/Bindables/Resource/ReflectedConstantBuffer.h"
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Pass.h"
@@ -30,14 +33,14 @@ namespace gfx {
 		}*/
 	}
 
-	void Material::Bind() {
+	void Material::Bind() const {
 		for (ResourceBindable* bind : m_binds) {
 			bind->Update();
 			bind->Bind();
 		}
 	}
 
-	void Material::Unbind() {
+	void Material::Unbind() const {
 		for (ResourceBindable* bind : m_binds) {
 			bind->Unbind();
 		}
@@ -168,10 +171,15 @@ namespace gfx {
 	}
 
 	REFLECT_STRUCT_BASE_BEGIN(Material)
-		REFLECT_STRUCT_MEMBER(m_passes)
-		REFLECT_STRUCT_MEMBER(m_binds)
-		REFLECT_STRUCT_END(Material)
+	REFLECT_STRUCT_MEMBER(m_passes)
+	REFLECT_STRUCT_MEMBER(m_binds)
+	REFLECT_STRUCT_END(Material)
 
 }
 
 IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, Material)
+IMPLEMENT_REFLECTION_ASSET_POINTER_NAMESPACE(gfx, Material)
+
+typedef const gfx::Material ConstMatPtr;
+IMPLEMENT_REFLECTION_POINTER(ConstMatPtr)
+IMPLEMENT_REFLECTION_ASSET_POINTER(ConstMatPtr)

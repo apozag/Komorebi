@@ -399,9 +399,6 @@
     <ClInclude Include="include\3rd\std_image\stb_image.h">
       <Filter>Archivos de encabezado\3rd</Filter>
     </ClInclude>
-    <ClInclude Include="include\Core\AssetManager.h">
-      <Filter>Archivos de encabezado\Core</Filter>
-    </ClInclude>
     <ClInclude Include="include\Core\Singleton.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
@@ -458,6 +455,12 @@
     </ClInclude>
     <ClInclude Include="include\Graphics\MaterialInstance.h">
       <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\Reflection\ReflectionImplMacros.h">
+      <Filter>Archivos de encabezado\Core\Reflection</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Core\PrefabManager.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -626,9 +629,6 @@
     <ClCompile Include="source\Scene\SceneLoader.cpp">
       <Filter>Archivos de origen\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="source\Core\AssetManager.cpp">
-      <Filter>Archivos de origen\Core</Filter>
-    </ClCompile>
     <ClCompile Include="source\Core\Reflection\DeserializationTypeVisitor.cpp">
       <Filter>Archivos de encabezado\Core\Reflection</Filter>
     </ClCompile>
@@ -667,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="source\Graphics\MaterialInstance.cpp">
       <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\PrefabManager.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
