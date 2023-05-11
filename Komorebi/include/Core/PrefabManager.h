@@ -31,10 +31,14 @@ class PrefabManager : public Singleton<PrefabManager>{
 public:
   template<class T>
   T* LoadPrefab(const char* filename, bool setup = true) {
-    const reflection::TypeDescriptor* typeDesc = reflection::TypeResolver<OWNED_PTR(T)>::get();
-    void* pObj = typeDesc->create();
-    LoadPrefab(filename, pObj, typeDesc, setup);
-    return (T*)pObj;
+    const reflection::TypeDescriptor* typeDesc = reflection::TypeResolver<T>::get();
+    void* pObj = nullptr;
+    if (typeDesc->create != nullptr) {
+      pObj = typeDesc->create();
+      LoadPrefab(filename, pObj, typeDesc, setup);
+      return (T*)pObj;
+    }
+    return nullptr;
   }
 
   template<class T>

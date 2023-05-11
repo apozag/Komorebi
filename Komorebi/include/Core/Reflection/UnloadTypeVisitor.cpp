@@ -12,6 +12,8 @@ namespace reflection {
       m_pObj = type->members[i].getAddress(pObj);
       type->members[i].type->Accept(this);
     }
+
+    type->destroy(pObj);
   }
 
   void UnloadTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {

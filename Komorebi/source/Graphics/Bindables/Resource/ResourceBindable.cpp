@@ -4,6 +4,7 @@
 
 namespace gfx {
   REFLECT_STRUCT_VIRTUAL_BEGIN(ResourceBindable, Bindable)
+  REFLECT_STRUCT_MEMBER(m_slot)
   REFLECT_STRUCT_END(ResourceBindable)
 }
 

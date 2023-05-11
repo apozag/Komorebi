@@ -4,6 +4,7 @@
 
 #include "Core/Memory/Factory.h"
 #include "Core/Reflection/ReflectionImplMacros.h"
+#include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Scene/Node.h"
 #include "Scene/AuxNode.h"
 #include "Graphics/Renderer.h"
@@ -47,6 +48,25 @@ Node* Scene::AddNode(std::vector<Entity*> entities, const Transform& transform, 
 	node->m_parent = m_parent;
 	node->m_localTransform = transform;
 	m_parent->m_children.push_back(node);
+	return node;
+}
+
+Node* Scene::AddPrefabNode(const char* filename, const Transform& transform, Node* m_parent) {
+
+	Node* node = PrefabManager::GetInstance()->LoadPrefab<Node>(filename, false);
+	if (node != nullptr) {
+		if (!m_parent) m_parent = m_transformHierarchy;
+		node->m_parent = m_parent;
+		node->m_localTransform = transform;
+		m_parent->m_children.push_back(node);
+		// Entities of "node" will not have found its node pointer, becouse "node" was deserialized as struct and not owned_ptr
+		// Therefore, we link them here manually (kind of shitty)
+		for (Entity* entity : node->m_entities) {
+			entity->m_node = node;
+		}
+		reflection::SetupTypeVisitor setupVisitor((void*)node);
+		reflection::TypeResolver<Node>::get()->Accept(&setupVisitor);
+	}
 	return node;
 }
 

@@ -19,11 +19,15 @@ void Camera::Setup() {
 }
 
 void Camera::Reconfigure() {
-  if (m_orthographic) {
-    m_proj = DirectX::XMMatrixOrthographicLH(m_orthoWidth, m_orthoHeight, m_near, m_far);
-  }
-  else {
-    m_proj = DirectX::XMMatrixPerspectiveFovLH(m_fov, m_aspectratio, m_near, m_far);
+  if (m_near > 0 && m_far > 0) {
+    if (m_orthographic) {
+      if (m_orthoWidth > 0 && m_orthoHeight > 0)
+        m_proj = DirectX::XMMatrixOrthographicLH(m_orthoWidth, m_orthoHeight, m_near, m_far);
+    }
+    else {
+      if (m_fov > 0 && m_aspectratio > 0)
+        m_proj = DirectX::XMMatrixPerspectiveFovLH(m_fov, m_aspectratio, m_near, m_far);
+    }
   }
 }
 

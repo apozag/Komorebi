@@ -19,6 +19,9 @@ namespace gfx {
 		REFLECT()
 
 	private:
+
+		static RasterizerState* GetDefault();
+
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer;
 
 		//////////////////

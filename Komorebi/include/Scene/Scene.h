@@ -21,6 +21,7 @@ public:
 
 	Node* AddNode(Entity* entity, const Transform& transform, Node* m_parent = nullptr, bool auxNode = false);
 	Node* AddNode(std::vector<Entity*> m_entities, const Transform& transform, Node* m_parent = nullptr, bool auxNode = false);
+	Node* AddPrefabNode(const char* filename, const Transform& transform, Node* m_parent = nullptr);
 
 	template<class T, typename ...Args>
 	static T* AddEntity(Node* node, Args&&... args) {

@@ -34,7 +34,8 @@ Image ImageManager::decodeFromMemory(std::string path, unsigned char* data, int 
     return *loadedImg;
   }
 
-  Image img = {};
+  Image img;
+  img.path = path;
   try {
     img.data = stbi_load_from_memory(data, size, &(img.width), &(img.height), &(img.channels), 0);
   }
@@ -90,7 +91,13 @@ Image ImageManager::loadImage(std::string path) {
     img.format = DXGI_FORMAT_R8G8_UNORM;
     break;
   case 3:
+  {
+    unsigned char* rgbData = img.data;
+    img.data = RGBtoRGBA(img.data, img.width, img.height);
+    free(rgbData);
     img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    img.channels = 4;
+  }
     break;
   case 4:
     img.format = DXGI_FORMAT_R8G8B8A8_UNORM;

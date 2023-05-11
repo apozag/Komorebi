@@ -211,5 +211,11 @@
     <FxCompile Include="assets\shaders\deferred\SolidPixel.hlsl">
       <Filter>Shaders\Pixel\Deferred</Filter>
     </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\PBRPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\PBRVertex.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

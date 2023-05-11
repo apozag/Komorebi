@@ -45,7 +45,7 @@ public:
 	REFLECT()
 
 public:
-	gfx::MaterialInstance* m_material;
+	OWNED_PTR(gfx::MaterialInstance) m_material;
 protected:
 	BVHData m_bvhData;
 private:

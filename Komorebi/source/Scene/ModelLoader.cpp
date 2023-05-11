@@ -55,7 +55,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
   }
 
   Assimp::Importer importer;
-  const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+  const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_PreTransformVertices);
 
   if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
   {
@@ -242,20 +242,24 @@ void ModelLoader::processMaterials(const aiScene* scene, gfx::Material* material
       if (aiMat->GetTextureCount(types[j]) == 0) continue;
       aiString str;
       aiMat->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), str);
-      if (const aiTexture* texture = scene->GetEmbeddedTexture(str.C_Str())) {
+      if (const aiTexture* aiTex = scene->GetEmbeddedTexture(str.C_Str())) {
         //returned pointer is not null, read texture from memory
-        if (texture->mHeight == 0) {
+        if (aiTex->mHeight == 0) {
           // Compressed image data, we need to decode it
-          Image img = ImageManager::decodeFromMemory(texture->mFilename.C_Str(), (unsigned char*)texture->pcData, texture->mWidth);
-          matInstance->AddBindable(memory::Factory::Create < gfx::Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j));
+          Image img = ImageManager::decodeFromMemory(aiTex->mFilename.C_Str(), (unsigned char*)aiTex->pcData, aiTex->mWidth);
+          gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j);
+          matInstance->AddBindable(texture);
         }
         else {
-          matInstance->AddBindable(memory::Factory::Create < gfx::Texture2D>((unsigned char*)texture->pcData, texture->mWidth, texture->mHeight, 4, SRV_FREE_SLOT + j));
+          gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>((unsigned char*)aiTex->pcData, aiTex->mWidth, aiTex->mHeight, 4, SRV_FREE_SLOT + j);
+          matInstance->AddBindable(texture);
         }
       }
       else {
         //regular file, read it from disk
-        matInstance->AddBindable(memory::Factory::Create < gfx::Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j));
+        gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j);
+        texture->Setup();
+        matInstance->AddBindable(texture);
       }
 
     }

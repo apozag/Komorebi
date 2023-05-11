@@ -100,6 +100,8 @@ void gfx::Renderer::Init() {
 
   reflection::ReflectionHelper::ClearAll();
 
+  GetQuadPrimitive();
+
 }
 
 void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, MaterialInstance* material) {
