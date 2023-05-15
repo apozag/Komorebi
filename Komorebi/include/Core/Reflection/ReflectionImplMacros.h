@@ -183,7 +183,7 @@
     ((::reflection::TypeDescriptor_Asset_Ptr*)typeDesc)->setFilename = [](void* pObj, const std::string& str) { \
       ((::reflection::Asset_Ptr_Wrapper<NAMESPACE ## TYPE>*)pObj)->m_filename = str; \
     };  \
-    ((::reflection::TypeDescriptor_Asset_Ptr*)typeDesc)->loadAsset = [](void* pObj) { \
+    ((::reflection::TypeDescriptor_Asset_Ptr*)typeDesc)->loadPrefab = [](void* pObj) { \
       ::reflection::Asset_Ptr_Wrapper<NAMESPACE ## TYPE>* pAssetPtr = ((::reflection::Asset_Ptr_Wrapper<NAMESPACE ## TYPE>*)pObj);  \
       pAssetPtr->m_ptr = PrefabManager::GetInstance()->LoadPrefab<NAMESPACE ## TYPE>(pAssetPtr->m_filename.c_str()); \
     };  \

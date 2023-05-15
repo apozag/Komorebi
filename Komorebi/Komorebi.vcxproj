@@ -206,6 +206,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
     </None>
+    <None Include="assets\shaders\include\PBR.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
     <None Include="assets\shaders\include\VertexCommon.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
@@ -473,8 +477,6 @@
     <ClInclude Include="include\Graphics\Material.h" />
     <ClInclude Include="include\Graphics\MaterialInstance.h" />
     <ClInclude Include="include\Graphics\Pass.h" />
-    <ClInclude Include="include\Graphics\PostProcMaterial.h" />
-    <ClInclude Include="include\Graphics\PostProcPass.h" />
     <ClInclude Include="include\Graphics\Renderer.h" />
     <ClInclude Include="include\Graphics\RenderInfo.h" />
     <ClInclude Include="include\Graphics\RenderPipeline.h" />
@@ -545,8 +547,6 @@
     <ClCompile Include="source\Graphics\Material.cpp" />
     <ClCompile Include="source\Graphics\MaterialInstance.cpp" />
     <ClCompile Include="source\Graphics\Pass.cpp" />
-    <ClCompile Include="source\Graphics\PostProcMaterial.cpp" />
-    <ClCompile Include="source\Graphics\PostProcPass.cpp" />
     <ClCompile Include="source\Graphics\Renderer.cpp" />
     <ClCompile Include="source\Graphics\RenderInfo.cpp" />
     <ClCompile Include="source\Graphics\RenderPipeline.cpp" />

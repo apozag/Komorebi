@@ -34,6 +34,15 @@ namespace gfx {
 		GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, NULL, m_constantBuffer.GetAddressOf()));
 	}
 
+	float ReflectedConstantBuffer::GetFloat(const char* name) {
+		float* ptr = (float*)GetVariable(D3D_SVC_SCALAR, name);
+		return ptr != nullptr? *ptr : 0.f;
+	}
+
+	void ReflectedConstantBuffer::GetVector4(const char* name, float* values) {
+		memcpy(values, GetVariable(D3D_SVC_VECTOR, name), 4*sizeof(float));
+	}
+
 	bool ReflectedConstantBuffer::SetFloat(const char* name, float value) {
 		return SetVariable(D3D_SVC_SCALAR, name, &value, sizeof(float));
 	}
@@ -58,6 +67,20 @@ namespace gfx {
 		GetContext()->Unmap(m_constantBuffer.Get(), 0u);
 
 		m_dirty = false;
+	}
+
+	void* ReflectedConstantBuffer::GetVariable(D3D_SHADER_VARIABLE_CLASS varClass, const char* name) {
+		try {
+			for (ConstantBufferVariable variable : m_variables) {
+				if (variable.typeDesc.Class == varClass && !std::strcmp(variable.desc.Name, name)) {
+					return m_buffer + variable.desc.StartOffset;
+				}
+			}
+		}
+		catch (Exception e) {
+			throw CBufferException(__LINE__, __FILE__);
+		}
+		return nullptr;
 	}
 
 	bool ReflectedConstantBuffer::SetVariable(D3D_SHADER_VARIABLE_CLASS varClass, const char* name, void* data, size_t size) {

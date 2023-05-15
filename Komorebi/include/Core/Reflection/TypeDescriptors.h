@@ -217,7 +217,7 @@ namespace reflection {
 
     std::string (*getFilename)(const void*);
     void (*setFilename)(void*, const std::string&);
-    void (*loadAsset) (void*);
+    void (*loadPrefab) (void*);
     void** (*getPPtr)(void*);
 
     TypeDescriptor_Asset_Ptr(void (*init)(TypeDescriptor_Ptr*)) : TypeDescriptor_Ptr{ init }

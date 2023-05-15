@@ -18,6 +18,7 @@
 #include "GUI/SceneGUIWindow.h"
 #include "GUI/RendererGUIWindow.h"
 #include "GUI/PrefabGUIWindow.h"
+#include "GUI/MaterialGUIWindow.h"
 
 #include "Scene/Scene.h"
 #include "Scene/SceneLoader.h"
@@ -115,6 +116,13 @@ void DrawTopMenu() {
     if (enabled) DrawPrefabGUIWindow(); 
   }
 
+  // Materials
+  {
+    static bool enabled = false;
+    if (ImGui::Button("Materials")) enabled = !enabled;
+    if (enabled) DrawMaterialGUIWindow();
+  }
+
   ImGui::EndMainMenuBar();
 }
 
@@ -156,6 +164,7 @@ void GUIAttachment::Setup() {
   SetupSceneGUIWindow();
   SetupRendererGUIWindow();
   SetupPrefabGUIWindow();
+  SetupMaterialGUIWindow();
 
   ImGui::GetIO().DisplaySize.x = Engine::GetWindow()->GetClientWidth();
   ImGui::GetIO().DisplaySize.y = Engine::GetWindow()->GetClientHeight();

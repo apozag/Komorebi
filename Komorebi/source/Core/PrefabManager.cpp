@@ -29,7 +29,7 @@ std::string getFileNameFromPath(const std::string& path) {
   return auxStr.substr(0, auxStr.find_last_of('.'));
 }
 
-const PrefabInfo& PrefabManager::LoadPrefab(const char* filename, void* pObj, const reflection::TypeDescriptor* typeDesc, bool setup) {
+const PrefabManager::PrefabInfo& PrefabManager::LoadPrefab(const char* filename, void* pObj, const reflection::TypeDescriptor* typeDesc, bool setup) {
   std::string strFilename = filename;
   const std::string& typeName = typeDesc->getFullName();
 
@@ -97,7 +97,17 @@ void PrefabManager::SavePrefab(const char* filename, void* pObj, const reflectio
   m_loadedPrefabs.push_back({ getFileNameFromPath(filename), filename, typeDesc, pObj });
 }
 
-const PrefabInfo* PrefabManager::GetPrefabInfo(const char* filename) {
+std::vector<PrefabManager::PrefabInfo> PrefabManager::GetLoadedPrefabs(const reflection::TypeDescriptor* typeDesc) {
+  std::vector<PrefabInfo> prefabs;
+  for (const PrefabManager::PrefabInfo& prefab : m_loadedPrefabs) {
+    if (prefab.m_typeDesc == typeDesc) {
+      prefabs.push_back(prefab);
+    }
+  }
+  return prefabs;
+}
+
+const PrefabManager::PrefabInfo* PrefabManager::GetPrefabInfo(const char* filename) {
   for (PrefabInfo& prefab : m_loadedPrefabs) {
     if (prefab.m_fileName == filename) {
       return &prefab;

@@ -29,6 +29,11 @@ namespace gfx {
 		virtual void Bind() const override = 0;
 		virtual void Unbind() const override = 0;
 
+		const std::vector<ConstantBufferVariable>& GetVariables() const { return m_variables; }
+
+		float GetFloat(const char* name);
+		void GetVector4(const char* name, float* values);
+
 		bool SetFloat(const char* name, float value);
 		bool SetVector4(const char* name, float* data);
 		bool SetMat4(const char* name, float* data);
@@ -37,6 +42,7 @@ namespace gfx {
 
 	private:
 		bool SetVariable(D3D_SHADER_VARIABLE_CLASS varClass, const char* name, void* data, size_t size);
+		void* GetVariable(D3D_SHADER_VARIABLE_CLASS varClass, const char* name);
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
 		float* m_buffer;

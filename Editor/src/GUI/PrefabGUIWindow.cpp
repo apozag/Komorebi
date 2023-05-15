@@ -18,8 +18,8 @@ void SetupPrefabGUIWindow() {
 void DrawPrefabGUIWindow() {
   ImGui::Begin("Prefabs");
 
-  std::vector<PrefabInfo>& prefabs = PrefabManager::GetInstance()->GetLoadedPrefabs();
-  for (PrefabInfo& prefab : prefabs) {
+  std::vector<PrefabManager::PrefabInfo>& prefabs = PrefabManager::GetInstance()->GetAllLoadedPrefabs();
+  for (PrefabManager::PrefabInfo& prefab : prefabs) {
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);    
     bool open = ImGui::TreeNode((prefab.m_name + "##" + prefab.m_fileName).c_str());
     ImGui::PopStyleColor();

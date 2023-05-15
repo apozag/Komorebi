@@ -220,10 +220,10 @@ void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
   
   const std::string& filename = type->getFilename(m_pObj);
   ImGui::Text(type->getFilename(m_pObj).c_str());
-  const PrefabInfo* prefabInfo = PrefabManager::GetInstance()->GetPrefabInfo(filename.c_str());
+  const PrefabManager::PrefabInfo* prefabInfo = PrefabManager::GetInstance()->GetPrefabInfo(filename.c_str());
   if (!prefabInfo) return;
 
-  static const PrefabInfo* selectedPrefab = nullptr;
+  static const PrefabManager::PrefabInfo* selectedPrefab = nullptr;
   bool open = selectedPrefab == prefabInfo || ImGui::Button("Open Prefab");
   if (open) {
     selectedPrefab = prefabInfo;
