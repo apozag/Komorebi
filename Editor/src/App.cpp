@@ -26,7 +26,8 @@ int CALLBACK WinMain(
 
 		Engine::GetWindow()->Attach(&attachment);
 
-		SceneLoader::LoadScene("assets/scenes/testScene.xml");
+		SceneLoader::LoadScene("assets/scenes/sphereScene.xml");
+		//SceneLoader::LoadScene("assets/scenes/testScene.xml");
 		//SceneLoader::LoadScene("assets/scenes/roomScene.xml");
 		//SceneLoader::LoadScene("assets/scenes/sponzascene.xml");
 
@@ -44,8 +45,6 @@ int CALLBACK WinMain(
 		MessageBoxA(nullptr, "No details available", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
 
 	}
-
-	_CrtDumpMemoryLeaks();
 
 	return -1;
 }

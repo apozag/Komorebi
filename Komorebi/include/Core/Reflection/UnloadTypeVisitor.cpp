@@ -29,8 +29,7 @@ namespace reflection {
     void** ppObj = (void**)m_pObj;
     const TypeDescriptor* dynamicType = type->GetDynamic(m_pObj);
     m_pObj = *ppObj;
-    dynamicType->Accept(this);
-    delete(*ppObj);
+    dynamicType->Accept(this);    
   }
 
 }

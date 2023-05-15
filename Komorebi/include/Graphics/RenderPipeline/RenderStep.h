@@ -52,6 +52,8 @@ namespace gfx {
       : m_type(type), m_inputsInfo(inputs), m_outRtId(outid), m_maxLayer(layer), m_sortReverse(sort) {
     };
 
+    void Setup() override;
+
     void Bind() const;
     void Execute(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int idx) const;
     void Unbind() const;

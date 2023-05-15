@@ -217,5 +217,8 @@
     <FxCompile Include="assets\shaders\PBRVertex.hlsl">
       <Filter>Shaders\Vertex</Filter>
     </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\ComposePBRPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

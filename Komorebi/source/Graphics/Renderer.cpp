@@ -89,6 +89,10 @@ gfx::Renderer::Renderer() :
   reflection::ReflectionHelper::ResolvePendingPointers();
 
   reflection::ReflectionHelper::ClearAll();
+
+  m_shadowRenderPipeline = memory::Factory::Create<RenderPipeline>();
+  m_shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::CLEAR, {}, "", 0, false));
+  m_shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::DEFAULT, {}, "", 0xFFFFFFFF, false));
 }
 
 void gfx::Renderer::Init() {
@@ -155,19 +159,13 @@ void gfx::Renderer::SubmitCamera(const Camera* camera, const Transform* worldTra
   m_camViews.push_back({ camera, worldTransform });
 }
 
-void gfx::Renderer::Render() {  
+void gfx::Renderer::Render() {   
 
-  // Render shadowmaps
-  static RenderPipeline* shadowRenderPipeline;
-  if (shadowRenderPipeline == nullptr) {
-    shadowRenderPipeline = memory::Factory::Create<RenderPipeline>();
-    shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::CLEAR, {}, "", 0, false));
-    shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::DEFAULT, {}, "", 0xFFFFFFFF, false));    
-  }
+  // Render shadowmaps  
   for (const LightView& lv : m_lightViews) {
-    shadowRenderPipeline->m_steps[0].m_outRt = lv.m_rt;
-    shadowRenderPipeline->m_steps[1].m_outRt = lv.m_rt;
-    shadowRenderPipeline->Execute({ lv.m_camera, lv.m_transform }, m_jobs);
+    m_shadowRenderPipeline->m_steps[0].m_outRt = lv.m_rt;
+    m_shadowRenderPipeline->m_steps[1].m_outRt = lv.m_rt;
+    m_shadowRenderPipeline->Execute({ lv.m_camera, lv.m_transform }, m_jobs);
   }
 
   // Cameras sorted by priority.

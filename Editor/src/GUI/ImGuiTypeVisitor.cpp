@@ -8,6 +8,7 @@
 
 #include "Core/Memory/Factory.h"
 #include "Core/Reflection/CopyTypeVisitor.h"
+#include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Core/Reflection/ReflectionHelper.h"
 #include "Core/PrefabManager.h"
 #include "Scene/Node.h"
@@ -172,17 +173,18 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
 
     // If accept, copy to real element and push 
     if (ImGui::Button("Accept##AcceptButton")) {
-      const TypeDescriptor_Struct* itemTypeStruct = dynamic_cast<const reflection::TypeDescriptor_Struct*>(typeDesc);
+      const TypeDescriptor_Struct* itemTypeStruct = dynamic_cast<const reflection::TypeDescriptor_Struct*>(typeDesc);      
       if (currVectorIsPointerType) {
         void* pElem = typeDesc->create();
-        reflection::CopyTypeVisitor visitor_copy(pElem, pTempElem);
-        typeDesc->Accept(&visitor_copy);
-        if (itemTypeStruct) {
-          itemTypeStruct->setup(pElem);
-        }
+        reflection::CopyTypeVisitor copyVisitor(pElem, pTempElem);
+        typeDesc->Accept(&copyVisitor);
+        reflection::SetupTypeVisitor setupVisitor(pElem);
+        typeDesc->Accept(&setupVisitor);
         type->pushBack(pObj, &pElem);
       }
       else {
+        reflection::SetupTypeVisitor setupVisitor(pTempElem);
+        typeDesc->Accept(&setupVisitor);
         type->pushBack(pObj, pTempElem);
       }
       pCurrVector = nullptr;

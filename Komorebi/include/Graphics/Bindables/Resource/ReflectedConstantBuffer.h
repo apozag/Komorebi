@@ -23,7 +23,6 @@ namespace gfx {
 		ReflectedConstantBuffer(std::vector<ConstantBufferVariable> variables, unsigned int slot);
 
 		~ReflectedConstantBuffer() {
-			//m_constantBuffer->Release();
 			free(m_buffer);
 		}
 

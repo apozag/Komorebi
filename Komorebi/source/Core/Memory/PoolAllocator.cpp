@@ -78,6 +78,7 @@ namespace memory {
   void MemoryPool::DeallocateAll() {
     if (m_pChunkUsedBytes) {
       memset(m_pChunkUsedBytes, 0, m_numChunks * sizeof(size_t));
+      m_cursorIdx = 0;
     }
     else {
       // TODO: [WARNING] Nothing to deallocate

@@ -16,16 +16,17 @@ namespace reflection {
     if (type->parentTypeDesc) {
       type->parentTypeDesc->Accept(this);
     }
-    //memset(pObj, 0, type->size);    
     rapidxml::xml_node<>* child = xmlNode->first_node();
-    int startMemberIdx = type->getFirstMemberIdx();
-    int memberIdx = 0;
-    child = xmlNode->first_node();
-    // Fast forward to corresponding member index
-    while (child && memberIdx < startMemberIdx) {
-      child = child->next_sibling();
-      memberIdx++;
-    }
+
+    //int startMemberIdx = type->getFirstMemberIdx();
+    //int memberIdx = 0;
+    //child = xmlNode->first_node();
+    //// Fast forward to corresponding member index
+    //while (child && memberIdx < startMemberIdx) {
+    //  child = child->next_sibling();
+    //  memberIdx++;
+    //}
+    
     // Actually deserialize members
     while (child) {
       for (const TypeDescriptor_Struct::Member& member : type->members) {
@@ -94,7 +95,6 @@ namespace reflection {
 
     const TypeDescriptor* typeDesc = ReflectionHelper::GetTypeDesc(name);
 
-    //*ppObj = malloc(typeDesc->size);
     *ppObj = typeDesc->create();
 
     if (ptrId == std::numeric_limits<intptr_t>::max()) {

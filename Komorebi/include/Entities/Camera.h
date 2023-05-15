@@ -12,6 +12,8 @@
 namespace gfx {
 	template<typename T>
 	class VertexConstantBuffer;
+	template<typename T>
+	class PixelConstantBuffer;
 	class RenderTarget;
 }
 
@@ -21,6 +23,7 @@ public:
 		DirectX::XMMATRIX viewProj;
 		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX proj;
+		DirectX::XMMATRIX viewInv;
 	};
 public:
 	Camera(float fov, float aspectratio, float nearZ, float farZ, bool orthographic = false, float orthoWidth = 500, float orthoHeight = 500)
@@ -63,7 +66,8 @@ public:
 	int m_priority;
 
 	DirectX::XMMATRIX m_proj;
-	gfx::VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
+	gfx::VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformVCB;
+	gfx::PixelConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformPCB;
 
 	
 

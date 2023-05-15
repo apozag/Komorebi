@@ -7,17 +7,19 @@
 
 std::map<std::string, Image> ImageManager::loadedImages;
 
-unsigned char* RGBtoRGBA(unsigned char* data, int width, int height) {
+void RGBtoRGBA(unsigned char** ppData, int width, int height) {
+  unsigned char* oldData = *ppData;
   unsigned char* newData = (unsigned char*)malloc(width * height * 4);
   int old_i = 0;
   int new_i = 0;
   for (int i = 0; i < width * height; i++) {
-    newData[new_i++] = data[old_i++];
-    newData[new_i++] = data[old_i++];
-    newData[new_i++] = data[old_i++];
+    newData[new_i++] = oldData[old_i++];
+    newData[new_i++] = oldData[old_i++];
+    newData[new_i++] = oldData[old_i++];
     newData[new_i++] = 0xFF;
   }
-  return newData;
+  free(oldData);
+  *ppData = newData;
 }
 
 Image* ImageManager::tryGetLoadedImage(std::string filename) {
@@ -51,9 +53,7 @@ Image ImageManager::decodeFromMemory(std::string path, unsigned char* data, int 
     break;
   case 3:
   {
-    unsigned char* rgbData = img.data;
-    img.data = RGBtoRGBA(img.data, img.width, img.height);
-    free(rgbData);
+    RGBtoRGBA(&img.data, img.width, img.height);
     img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
     img.channels = 4;
   }
@@ -92,9 +92,7 @@ Image ImageManager::loadImage(std::string path) {
     break;
   case 3:
   {
-    unsigned char* rgbData = img.data;
-    img.data = RGBtoRGBA(img.data, img.width, img.height);
-    free(rgbData);
+    RGBtoRGBA(&img.data, img.width, img.height);
     img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
     img.channels = 4;
   }

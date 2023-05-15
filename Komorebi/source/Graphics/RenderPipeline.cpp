@@ -23,24 +23,6 @@ bool compareJob(const gfx::Job& j1, const gfx::Job& j2) {
 namespace gfx { 
 
   void RenderPipeline::Setup() {
-
-    const RenderInfo* renderInfo = Engine::GetRenderer()->GetRenderInfo();
-    for (RenderStep& step : m_steps) {
-      for (RenderStep::TextureInfo& texInfo : step.m_inputsInfo){
-        const RenderTarget* rt = renderInfo->FindGlobalRenderTarget(texInfo.m_rtId);
-        if (rt != nullptr) {
-          // TODO: [ERROR] Texture index is higher than texture count
-          step.m_inRts.push_back(rt->GetTextures2D()[texInfo.m_textureIdx]);
-        }
-      }
-
-      if (step.m_outRtId == "DEFAULT") {
-        step.m_outRt = Engine::GetDefaultRendertarget();
-      }
-      else {
-        step.m_outRt = renderInfo->FindGlobalRenderTarget(step.m_outRtId);
-      }
-    }
   }
 
   void RenderPipeline::Execute(CameraView camView, std::vector<Job>& jobs) const {

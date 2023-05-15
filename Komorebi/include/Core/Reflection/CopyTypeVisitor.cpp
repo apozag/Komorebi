@@ -34,10 +34,24 @@ namespace reflection {
     void* pObjSrc = m_pObjSrc;
     void* pObjDst = m_pObjDst;
 
-    size_t size = type->getSize(pObjSrc);
-    type->resize(pObjDst, size);
-    for (size_t i = 0; i < size; i++) {
+    size_t srcSize = type->getSize(pObjSrc);
+    size_t dstSize = srcSize;
+
+    // We must check for ignored items
+    for (size_t i = 0; i < srcSize; i++) {
+      void* pItem = type->getItem(pObjSrc, i);
+      if (type->itemType->GetDynamic(pItem)->create == nullptr) {
+        dstSize--;
+      }
+    }
+
+    type->resize(pObjDst, dstSize);
+
+    for (size_t i = 0; i < srcSize; i++) {
       m_pObjSrc = type->getItem(pObjSrc, i);
+      if (type->itemType->GetDynamic(m_pObjSrc)->create == nullptr) {
+        continue;
+      }
       m_pObjDst = type->getItem(pObjDst, i);
       type->itemType->Accept(this);
     }

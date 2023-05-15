@@ -26,6 +26,7 @@ class Texture2D;
 class Texture3D;
 class MaterialInstance;
 class RenderInfo;
+class RenderPipeline;
 
 struct Job {
 	uint64_t key;
@@ -94,6 +95,7 @@ private:
 	SamplerState m_PCFFiltersSampler;
 	Texture3D* m_PCFFilters;
 	PixelConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
+	RenderPipeline* m_shadowRenderPipeline;
 
 	std::vector<const DirectionalLight*> m_dirLights;
 	std::vector<const SpotLight*> m_spotLights;

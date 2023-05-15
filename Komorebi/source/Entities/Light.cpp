@@ -42,7 +42,7 @@ PointLight::~PointLight() {
 }
 
 void DirectionalLight::Insert(Node* node, const Transform& worldTransform) {
-	const DirectX::SimpleMath::Vector3& dir = -worldTransform.GetForward();
+	const DirectX::SimpleMath::Vector3& dir = worldTransform.GetForward();
 	m_pcbuffer.m_buffer.m_color = { m_color.x, m_color.y, m_color.z };
 	m_pcbuffer.m_buffer.m_dir = { dir.x, dir.y, dir.z, 0.f };
 	m_vcbuffer.m_buffer.m_viewProj = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(worldTransform.GetInverseMatrixUnsafe(),m_camera->getProj()));

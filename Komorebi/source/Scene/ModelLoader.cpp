@@ -55,7 +55,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
   }
 
   Assimp::Importer importer;
-  const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_PreTransformVertices);
+  const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace/* | aiProcess_PreTransformVertices*/);
 
   if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
   {
@@ -175,10 +175,10 @@ Mesh* ModelLoader::GenerateAABB(DirectX::SimpleMath::Vector3 min, DirectX::Simpl
 void ModelLoader::processNode(aiNode* node, const aiScene* scene, Scene* sceneGraph, Node* sceneGraphParent, Model* model)
 {
   Node* sceneNode = sceneGraphParent;
-  if (node->mNumMeshes > 0) {
+  //if (node->mNumMeshes > 0) {
     sceneNode = sceneGraph->AddNode(nullptr, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, true);
     sceneNode->m_name = node->mName.C_Str();
-  }
+  //}
 
   for (unsigned int i = 0; i < node->mNumMeshes; i++)
   {

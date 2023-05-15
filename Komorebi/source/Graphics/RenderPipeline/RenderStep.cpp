@@ -5,6 +5,7 @@
 #include "Core/Engine.h"
 #include "Core/Math\Transform.h"
 #include "Graphics\Renderer.h"
+#include "Graphics\RenderInfo.h"
 #include "Graphics\Bindables\Resource\Texture2D.h"
 #include "Graphics\Bindables\Resource\RenderTarget.h"
 #include "Graphics\Material.h"
@@ -13,6 +14,26 @@
 #include "Entities\Light.h"
 
 namespace gfx {
+
+  void RenderStep::Setup() {
+
+    const RenderInfo* renderInfo = Engine::GetRenderer()->GetRenderInfo();
+
+    for (RenderStep::TextureInfo& texInfo : m_inputsInfo) {
+      const RenderTarget* rt = renderInfo->FindGlobalRenderTarget(texInfo.m_rtId);
+      if (rt != nullptr) {
+        // TODO: [ERROR] Texture index is higher than texture count
+        m_inRts.push_back(rt->GetTextures2D()[texInfo.m_textureIdx]);
+      }
+    }
+
+    if (m_outRtId == "DEFAULT") {
+      m_outRt = Engine::GetDefaultRendertarget();
+    }
+    else {
+      m_outRt = renderInfo->FindGlobalRenderTarget(m_outRtId);
+    }
+  }
 
   void RenderStep::Bind() const {
     for (const Texture2D* rt : m_inRts) {

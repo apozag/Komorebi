@@ -40,10 +40,9 @@ namespace reflection {
   }
   void SerializationTypeVisitor::Visit(const TypeDescriptor_Weak_Ptr* type) {
     const void** ppObj = (const void**)m_pObj;
-
-    const TypeDescriptor* typeDesc = type->getDynamicType(*ppObj);;
+    
     if (!m_varName) {
-      std::string* name = new std::string(typeDesc->getFullName() + "*");
+      std::string* name = new std::string(type->getStaticType()->getFullName() + "*");
       ReflectionHelper::TrackString(name);
       m_varName = name->c_str();
     }

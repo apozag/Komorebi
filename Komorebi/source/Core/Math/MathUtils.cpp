@@ -15,29 +15,29 @@ namespace math {
       DirectX::XMVECTOR planeNormal{ frustumPlanes[planeID].x, frustumPlanes[planeID].y, frustumPlanes[planeID].z, 0.0f };
       float planeConstant = frustumPlanes[planeID].w;
 
-      DirectX::SimpleMath::Vector3 worldMin = updatedBvh.m_min + worldTransform->GetPositionUnsafe();
-      DirectX::SimpleMath::Vector3 worldMax = updatedBvh.m_max + worldTransform->GetPositionUnsafe();
+      //DirectX::SimpleMath::Vector3 worldMin = updatedBvh.m_min;
+      //DirectX::SimpleMath::Vector3 worldMax = updatedBvh.m_max;
 
       // Check each axis (x,y,z) to get the AABB vertex furthest away from the direction the plane is facing (plane normal)
       DirectX::XMFLOAT3 axisVert;
 
       // x-axis
       if (frustumPlanes[planeID].x < 0.0f)    // Which AABB vertex is furthest down (plane normals direction) the x axis
-        axisVert.x = worldMin.x; // min x plus tree positions x
+        axisVert.x = updatedBvh.m_min.x; // min x plus tree positions x
       else
-        axisVert.x = worldMax.x; // max x plus tree positions x
+        axisVert.x = updatedBvh.m_max.x; // max x plus tree positions x
 
       // y-axis
       if (frustumPlanes[planeID].y < 0.0f)    // Which AABB vertex is furthest down (plane normals direction) the y axis
-        axisVert.y = worldMin.y; // min y plus tree positions y
+        axisVert.y = updatedBvh.m_min.y; // min y plus tree positions y
       else
-        axisVert.y = worldMax.y; // max y plus tree positions y
+        axisVert.y = updatedBvh.m_max.y; // max y plus tree positions y
 
       // z-axis
       if (frustumPlanes[planeID].z < 0.0f)    // Which AABB vertex is furthest down (plane normals direction) the z axis
-        axisVert.z = worldMin.z; // min z plus tree positions z
+        axisVert.z = updatedBvh.m_min.z; // min z plus tree positions z
       else
-        axisVert.z = worldMax.z; // max z plus tree positions z
+        axisVert.z = updatedBvh.m_max.z; // max z plus tree positions z
 
       // Now we get the signed distance from the AABB vertex that's furthest down the frustum planes normal,
       // and if the signed distance is negative, then the entire bounding box is behind the frustum plane, which means
