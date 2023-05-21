@@ -74,12 +74,17 @@ void PrefabManager::SavePrefab(const char* filename, void* pObj, const reflectio
   std::string strFilename = filename;
   const std::string& typeName = typeDesc->getFullName();
 
+  bool alreadyLoaded = false;
+
   auto it = m_loadedPrefabs.begin();
   for (; it != m_loadedPrefabs.end(); it++) {
-    if (it->m_name == strFilename) { // && it->m_typeDesc == typeDesc && it->m_ptr != pObj) {
-      // TODO: [ERROR] To overwrite an asset, use the loaded object assigned to that filename. This is for avoiding memory leaks.
-      // TODO: wtf is the above commentary
-      return;
+    if (it->m_fileName == strFilename && it->m_typeDesc == typeDesc) {
+      alreadyLoaded = true;
+      if (it->m_ptr != pObj) {
+        // TODO: [ERROR] To overwrite an asset, use the loaded object assigned to that filename (The original loaded object).
+        return;
+      }
+      break;
     }
   }
 
@@ -94,7 +99,9 @@ void PrefabManager::SavePrefab(const char* filename, void* pObj, const reflectio
 
   reflection::ReflectionHelper::ClearTrackedStrings();
 
-  m_loadedPrefabs.push_back({ getFileNameFromPath(filename), filename, typeDesc, pObj });
+  if (!alreadyLoaded) {
+    m_loadedPrefabs.push_back({ getFileNameFromPath(filename), filename, typeDesc, pObj });
+  }
 }
 
 std::vector<PrefabManager::PrefabInfo> PrefabManager::GetLoadedPrefabs(const reflection::TypeDescriptor* typeDesc) {

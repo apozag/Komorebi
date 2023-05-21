@@ -22,15 +22,6 @@ namespace gfx {
 	}
 
 	Material::~Material() {
-		/*for (ReflectedConstantBuffer* cb : m_cbuffers) {
-			delete(cb);
-		}
-		for (Pass* pass : m_passes) {
-			delete(pass);
-		}
-		for (ResourceBindable* bind : m_binds) {
-			delete(bind);
-		}*/
 	}
 
 	void Material::Bind() const {
@@ -147,6 +138,73 @@ namespace gfx {
 				ReflectedPixelConstantBuffer* cbuff = memory::Factory::Create<ReflectedPixelConstantBuffer>(variables, register_index);
 				m_cbuffers.push_back(cbuff);
 				m_binds.push_back(cbuff);
+			}
+		}
+		
+		CopyFromConstantBufferCache();
+	}
+
+	void Material::UpdateConstantBufferCache() {
+		for (Pass* pass : m_passes) {
+			pass->m_cbuffCache.Clear();
+			for (ReflectedConstantBuffer* cbuffer : m_cbuffers) {
+				bool skipBuffer = false;
+				for (const ReflectedConstantBuffer::ConstantBufferVariable& variable : cbuffer->GetVariables()) {					
+					ConstantBufferCache::VarInfo varInfo;
+					varInfo.varName = variable.desc.Name;
+					varInfo.dataIdx = pass->m_cbuffCache.varsData.size();
+					switch (variable.typeDesc.Class) {
+					case D3D_SVC_SCALAR:
+					{
+						if (!cbuffer->HasFloat(varInfo.varName.c_str())) {
+							skipBuffer = true;
+							break;
+						}
+						varInfo.varType = ConstantBufferCache::VarInfo::VarType::SCALAR;
+						pass->m_cbuffCache.varsData.push_back(cbuffer->GetFloat(varInfo.varName.c_str()));
+					}
+						break;
+					case D3D_SVC_VECTOR:
+					{
+						if (!cbuffer->HasVector4(varInfo.varName.c_str())) {
+							skipBuffer = true;
+							break;
+						}
+						varInfo.varType = ConstantBufferCache::VarInfo::VarType::VECTOR;
+						float values[4];
+						cbuffer->GetVector4(varInfo.varName.c_str(), &(values[0]));
+						pass->m_cbuffCache.varsData.push_back(values[0]);
+						pass->m_cbuffCache.varsData.push_back(values[1]);
+						pass->m_cbuffCache.varsData.push_back(values[2]);
+						pass->m_cbuffCache.varsData.push_back(values[3]);
+					}
+						break;
+					}				
+					if (skipBuffer) {
+						break;
+					}
+					pass->m_cbuffCache.varsInfo.push_back(varInfo);
+				}
+				if (skipBuffer) {
+					break;
+				}
+			}
+		}		
+	}
+
+	void Material::CopyFromConstantBufferCache() {
+		using CacheVarType = ConstantBufferCache::VarInfo::VarType;
+		for (Pass* pass : m_passes) {
+			for (const ConstantBufferCache::VarInfo& varInfo : pass->m_cbuffCache.varsInfo) {
+				float* pValue = &(pass->m_cbuffCache.varsData[varInfo.dataIdx]);
+				switch (varInfo.varType) {
+				case CacheVarType::SCALAR:
+					SetFloat(varInfo.varName.c_str(), *pValue);
+					break;
+				case CacheVarType::VECTOR:
+					SetVector4(varInfo.varName.c_str(), pValue);
+					break;
+				}
 			}
 		}
 	}

@@ -34,11 +34,17 @@ namespace gfx {
 		GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, NULL, m_constantBuffer.GetAddressOf()));
 	}
 
+	bool ReflectedConstantBuffer::HasFloat(const char* name) {
+		return GetVariable(D3D_SVC_SCALAR, name) != nullptr;
+	}
+	bool ReflectedConstantBuffer::HasVector4(const char* name) {
+		return GetVariable(D3D_SVC_VECTOR, name) != nullptr;
+	}
+
 	float ReflectedConstantBuffer::GetFloat(const char* name) {
 		float* ptr = (float*)GetVariable(D3D_SVC_SCALAR, name);
 		return ptr != nullptr? *ptr : 0.f;
 	}
-
 	void ReflectedConstantBuffer::GetVector4(const char* name, float* values) {
 		memcpy(values, GetVariable(D3D_SVC_VECTOR, name), 4*sizeof(float));
 	}
@@ -73,7 +79,8 @@ namespace gfx {
 		try {
 			for (ConstantBufferVariable variable : m_variables) {
 				if (variable.typeDesc.Class == varClass && !std::strcmp(variable.desc.Name, name)) {
-					return m_buffer + variable.desc.StartOffset;
+					size_t offset = variable.desc.StartOffset / sizeof(float);
+					return m_buffer + offset;
 				}
 			}
 		}
@@ -87,7 +94,8 @@ namespace gfx {
 		try {
 			for (ConstantBufferVariable variable : m_variables) {
 				if (variable.typeDesc.Class == varClass && !std::strcmp(variable.desc.Name, name)) {
-					memcpy(m_buffer + variable.desc.StartOffset, data, size);
+					size_t offset = variable.desc.StartOffset / sizeof(float);
+					memcpy(m_buffer + offset, data, size);
 					m_dirty = true;
 					return true;
 				}

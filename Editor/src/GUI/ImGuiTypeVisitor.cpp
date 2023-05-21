@@ -262,17 +262,17 @@ void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
 void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Enum* type) {
   using EnumVal = ::reflection::TypeDescriptor_Enum::EnumValue;
   int currValue = *(int*)m_pObj;
-  static int currItemIdx = -1;
+  int currItemIdx = -1;
   std::string names;
   for (int i = 0; i < type->values.size(); i++) {
     const EnumVal& val = type->values[i];
     if (currValue == val.value) {
-      currItemIdx == i;
+      currItemIdx = i;
     }
     names += val.name;
     names += '\0';
   }
-  if (ImGui::Combo("##EntityCombo", &currItemIdx, names.c_str())) {
+  if (ImGui::Combo(UNIQUE_LABEL("##EntityCombo"), &currItemIdx, names.c_str())) {
     *(int*)m_pObj = type->values[currItemIdx].value;
     m_dirty = true;
   }

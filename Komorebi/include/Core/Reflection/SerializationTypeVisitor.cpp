@@ -5,6 +5,11 @@
 namespace reflection {
 
   void SerializationTypeVisitor::Visit(const TypeDescriptor* type) {
+    if (!m_varName) {
+      std::string* name = new std::string(type->getFullName());
+      ReflectionHelper::TrackString(name);
+      m_varName = name->c_str();
+    }
     rapidxml::xml_node<>* newNode = m_doc->allocate_node(rapidxml::node_type::node_element, m_varName); 
     m_xmlParent->append_node(newNode);  
     std::string* str = new std::string(type->GetValueStr(m_pObj));  

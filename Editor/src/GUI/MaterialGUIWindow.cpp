@@ -44,6 +44,15 @@ void DrawMaterialInfo(const PrefabManager::PrefabInfo& prefabInfo) {
     }    
     ImGui::Separator();
   }
+
+  if (ImGui::Button("Save##MaterialParams")) {
+    material->UpdateConstantBufferCache();
+    PrefabManager::GetInstance()->SavePrefab(prefabInfo.m_fileName.c_str(), material);
+  }
+  ImGui::SameLine();
+  if (ImGui::Button("Reset to last save")) {
+    material->CopyFromConstantBufferCache();
+  }
 }
 
 void DrawMaterialGUIWindow() {

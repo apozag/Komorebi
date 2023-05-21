@@ -26,6 +26,9 @@ void DrawPrefabGUIWindow() {
     if (open) {
       ImGuiTypeVisitor visitor(prefab.m_ptr);
       prefab.m_typeDesc->Accept(&visitor);
+      if (ImGui::Button("Save##PrefabEdit")) {
+        PrefabManager::GetInstance()->SavePrefab(prefab.m_fileName.c_str(), prefab.m_ptr, prefab.m_typeDesc);
+      }
       ImGui::TreePop();
     }
   }

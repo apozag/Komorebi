@@ -14,6 +14,11 @@
 
 namespace gfx {
 
+	void ConstantBufferCache::Clear() {
+		varsData.clear();
+		varsInfo.clear();
+	}
+
 	unsigned char Pass::static_idx = 0;
 
 	Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
@@ -78,18 +83,38 @@ namespace gfx {
 		for (Bindable* bind : m_binds) {
 			bind->Unbind();
 		}
-	}
+	}	
+	
+	REFLECT_STRUCT_BASE_BEGIN(ConstantBufferCache)
+	REFLECT_STRUCT_MEMBER(varsInfo)
+	REFLECT_STRUCT_MEMBER(varsData)
+	REFLECT_STRUCT_END(ConstantBufferCache)
 
 	REFLECT_STRUCT_BASE_BEGIN(Pass)
-		REFLECT_STRUCT_MEMBER(m_enabled)
-		REFLECT_STRUCT_MEMBER(m_layer)
-		REFLECT_STRUCT_MEMBER(m_PSFilename)
-		REFLECT_STRUCT_MEMBER(m_VSFilename)
-		REFLECT_STRUCT_MEMBER(m_binds)
-		REFLECT_STRUCT_MEMBER(m_skinned)
-		REFLECT_STRUCT_MEMBER(m_ignoreFrustumCulling)
-		REFLECT_STRUCT_END(Pass)
+	REFLECT_STRUCT_MEMBER(m_enabled)
+	REFLECT_STRUCT_MEMBER(m_layer)
+	REFLECT_STRUCT_MEMBER(m_PSFilename)
+	REFLECT_STRUCT_MEMBER(m_VSFilename)
+	REFLECT_STRUCT_MEMBER(m_binds)
+	REFLECT_STRUCT_MEMBER(m_skinned)
+	REFLECT_STRUCT_MEMBER(m_ignoreFrustumCulling)
+	REFLECT_STRUCT_MEMBER(m_cbuffCache)
+	REFLECT_STRUCT_END(Pass)
 }
+
+typedef gfx::ConstantBufferCache::VarInfo::VarType CacheVarType;
+REFLECT_ENUM_BEGIN(CacheVarType)
+REFLECT_ENUM_VALUE(SCALAR)
+REFLECT_ENUM_VALUE(VECTOR)
+REFLECT_ENUM_END(CacheVarType)
+
+typedef gfx::ConstantBufferCache::VarInfo CacheVarInfo;
+REFLECT_STRUCT_BASE_BEGIN(CacheVarInfo)
+REFLECT_STRUCT_MEMBER(varName)
+REFLECT_STRUCT_MEMBER(varType)
+REFLECT_STRUCT_MEMBER(dataIdx)
+REFLECT_STRUCT_END(CacheVarInfo)
+IMPLEMENT_REFLECTION_VECTOR(CacheVarInfo)
 
 IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, Pass)
 IMPLEMENT_REFLECTION_VECTOR(gfx::Pass*)

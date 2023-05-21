@@ -15,7 +15,27 @@ namespace gfx {
 #define PASSLAYER_SKYBOX		1u
 #define PASSLAYER_PREPASS		2u
 #define PASSLAYER_TRANSPARENT	3u
-#define PASSLAYER_SCREEN		4u
+#define PASSLAYER_SCREEN		4u	
+
+	class ConstantBufferCache : public GameObject{
+		public:
+		struct VarInfo : public GameObject {
+			enum VarType {
+				SCALAR,
+				VECTOR
+			};
+			std::string varName;
+			VarType varType;
+			size_t dataIdx;
+			REFLECT_BASE()
+		};
+		std::vector<VarInfo> varsInfo;
+		std::vector<float> varsData;
+
+		void Clear();
+
+		REFLECT_BASE()
+	};	
 
 	class Pass : public GameObject {
 	public:
@@ -38,12 +58,14 @@ namespace gfx {
 
 	public:
 		unsigned int m_layer;
+		ConstantBufferCache m_cbuffCache;
+
 	private:
 		std::string m_PSFilename;
 		std::string m_VSFilename;
 		OWNED_PTR(PixelShader) m_pixelShader;
 		OWNED_PTR(VertexShader) m_vertexShader;
-		std::vector<OWNED_PTR(StateBindable)> m_binds;
+		std::vector<OWNED_PTR(StateBindable)> m_binds;		
 		bool m_skinned;
 		static unsigned char static_idx;
 		const unsigned char m_idx;
@@ -51,6 +73,10 @@ namespace gfx {
 		bool m_enabled = true;
 	};
 }
+
+DECLARE_REFLECTION_VECTOR(gfx::ConstantBufferCache::VarInfo)
+
+DECLARE_REFLECTION_ENUM(gfx::ConstantBufferCache::VarInfo::VarType)
 
 DECLARE_REFLECTION_POINTER(gfx::Pass)
 DECLARE_REFLECTION_VECTOR(gfx::Pass*)

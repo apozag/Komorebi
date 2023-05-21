@@ -31,6 +31,8 @@ namespace gfx {
 		const std::vector<OWNED_PTR(ResourceBindable)>& GetBinds() const { return m_binds; }
 		unsigned int GetIdx() const { return m_idx; }
 		std::vector<ReflectedConstantBuffer*> GetReflectedConstantBuffers() { return m_cbuffers; }
+		void UpdateConstantBufferCache();
+		void CopyFromConstantBufferCache();
 
 		bool SetFloat(const char* name, float value);
 		bool SetVector4(const char* name, float* data);

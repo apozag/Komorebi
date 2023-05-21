@@ -31,6 +31,9 @@ namespace gfx {
 
 		const std::vector<ConstantBufferVariable>& GetVariables() const { return m_variables; }
 
+		bool HasFloat(const char* name);
+		bool HasVector4(const char* name);
+
 		float GetFloat(const char* name);
 		void GetVector4(const char* name, float* values);
 
@@ -46,7 +49,7 @@ namespace gfx {
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;
 		float* m_buffer;
-		std::vector<ConstantBufferVariable> m_variables;
+		std::vector<ConstantBufferVariable> m_variables;		
 		size_t m_size;
 		bool m_dynamic;
 		bool m_dirty = true;
@@ -59,6 +62,8 @@ namespace gfx {
 			GetContext()->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 		}
 		void Unbind() const override {}
+
+		REFLECT_HIDE()
 	};
 
 	class ReflectedPixelConstantBuffer : public ReflectedConstantBuffer {
@@ -68,5 +73,7 @@ namespace gfx {
 			GetContext()->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 		}
 		void Unbind() const override {}
+
+		REFLECT_HIDE()
 	};
 }
