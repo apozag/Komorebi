@@ -6,6 +6,6 @@ class CameraMovement : public Script {
 public:
 	REFLECT()
 private:
-	void Run(Node* node) override;
+	void Start(Node* node) override;
 	void Update(Node * node) override;
 };

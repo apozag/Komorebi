@@ -55,7 +55,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
   }
 
   Assimp::Importer importer;
-  const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace/* | aiProcess_PreTransformVertices*/);
+  const aiScene* scene = importer.ReadFile(filename, aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_CalcTangentSpace /* | aiProcess_PreTransformVertices */ );
 
   if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
   {
@@ -235,13 +235,14 @@ void ModelLoader::processMaterials(const aiScene* scene, gfx::Material* material
     gfx::MaterialInstance* matInstance = memory::Factory::Create<gfx::MaterialInstance>(material);
     std::vector<aiTextureType> types = {
         aiTextureType_DIFFUSE, // t0
-        aiTextureType_HEIGHT, // t1
-        aiTextureType_SPECULAR // t2      
+        aiTextureType_NORMALS, // t1
+        aiTextureType_METALNESS, // t2
+        aiTextureType_DIFFUSE_ROUGHNESS // t3
     };
     for (int j = 0; j < types.size(); j++) {
       if (aiMat->GetTextureCount(types[j]) == 0) continue;
       aiString str;
-      aiMat->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), str);
+      aiMat->Get(AI_MATKEY_TEXTURE(types[j], 0), str);
       if (const aiTexture* aiTex = scene->GetEmbeddedTexture(str.C_Str())) {
         //returned pointer is not null, read texture from memory
         if (aiTex->mHeight == 0) {

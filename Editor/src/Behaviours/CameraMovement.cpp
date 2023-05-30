@@ -1,5 +1,7 @@
 #include "Behaviours/CameraMovement.h"
 
+//#include <d3d11.h>
+
 #include "Core/Reflection/ReflectionImplMacros.h"
 
 #include "Core/Engine.h"
@@ -7,8 +9,11 @@
 #include "Scene/Node.h"
 #include "Scene/Scene.h"
 
-void CameraMovement::Run(Node* node) {
-
+void CameraMovement::Start(Node* node) {
+	Transform cameraTransform = node->m_localTransform;
+	const DirectX::SimpleMath::Vector3& rot = cameraTransform.GetRotationEuler();
+	m_yaw = rot.x;
+	m_pitch = rot.y;
 }
 
 void CameraMovement::Update(Node* node) {
@@ -24,10 +29,8 @@ void CameraMovement::Update(Node* node) {
 	if (window->m_mouse.IsLeftPressed()) {
 		float x = window->m_mouse.GetX();
 		float y = window->m_mouse.GetY();
-		float rotateR = (y - lastY) * m_sensitivity * dt;
-		float rotateU = (x - lastX) * m_sensitivity * dt;
-
-		cameraTransform.RotateEulerLocal(DirectX::SimpleMath::Vector3(rotateR, rotateU, 0));
+		m_yaw += (y - lastY) * m_sensitivity * dt;
+		m_pitch += (x - lastX) * m_sensitivity * dt;
 
 		lastX = x;
 		lastY = y;
@@ -35,24 +38,39 @@ void CameraMovement::Update(Node* node) {
 	lastX = window->m_mouse.GetX();
 	lastY = window->m_mouse.GetY();
 
+	float speed = m_speed;
+
+	// Shift key
+	if (window->m_keyboard.KeyIsPressed('\x10')) {
+		speed *= 2;
+	}
+
+	DirectX::SimpleMath::Vector3 cameraPos = cameraTransform.GetPosition();
 	if (window->m_keyboard.KeyIsPressed('W')) {
-		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 0, 1) * m_speed * dt);
+		cameraPos += cameraTransform.GetForward() * -speed * dt;
 	}
 	if (window->m_keyboard.KeyIsPressed('S')) {
-		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 0, 1) * -m_speed * dt);
+		cameraPos += cameraTransform.GetForward() * speed * dt;
 	}
 	if (window->m_keyboard.KeyIsPressed('D')) {
-		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(1, 0, 0) * m_speed * dt);
+		cameraPos += cameraTransform.GetRight() * speed * dt;
 	}
 	if (window->m_keyboard.KeyIsPressed('A')) {
-		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(1, 0, 0) * -m_speed * dt);
+		cameraPos += cameraTransform.GetRight() * -speed * dt;
 	}
 	if (window->m_keyboard.KeyIsPressed('E')) {
-		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 1, 0) * m_speed * dt);
+		cameraPos += cameraTransform.GetUp() * speed * dt;
 	}
 	if (window->m_keyboard.KeyIsPressed('Q')) {
-		cameraTransform.TranslateLocal(DirectX::SimpleMath::Vector3(0, 1, 0) * -m_speed * dt);
+		cameraPos += cameraTransform.GetUp() * -speed * dt;
 	}
+
+	cameraTransform = Transform(
+		DirectX::XMMatrixMultiply(
+			DirectX::XMMatrixRotationRollPitchYawFromVector({ m_yaw, m_pitch, 0.f, 0.f }),
+			DirectX::XMMatrixTranslationFromVector(cameraPos)
+		)
+	);
 }
 
 REFLECT_STRUCT_BEGIN(CameraMovement, Script)

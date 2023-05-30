@@ -121,7 +121,10 @@ namespace gfx {
     break;
     case CLEAR:
     {
-      m_outRt->Clear(0, 0, 0);
+      if (m_outRt) 
+      {
+        m_outRt->Clear(0, 0, 0);
+      }
     }
     break;
     case SCREEN:

@@ -7,7 +7,7 @@ namespace gfx {
 }
 
 class ChangeColor : public Script {
-	void Run(Node* node) override;
+	void Start(Node* node) override;
 	void Update(Node* node) override;
 private:
 	gfx::Material* m_material;

@@ -46,6 +46,11 @@ public:
 		return m_rotation;
 	}
 
+	const DirectX::SimpleMath::Vector3& GetRotationEuler() {
+		if (m_decomposeDirty) decompose();
+		return m_rotation.ToEuler();
+	}
+
 	const DirectX::SimpleMath::Vector3&  GetPositionUnsafe() const {
 		return m_position;
 	}

@@ -5,7 +5,7 @@
 
 #include "Core/GameObject.h"
 #include "Core/Reflection/ReflectionMacros.h"
-#include "Graphics\Renderer.h"
+#include "Graphics/Renderer.h"
 
 namespace gfx {
 
@@ -41,7 +41,7 @@ namespace gfx {
     bool m_sortReverse = false;
     BITMASK(RepeatFor) m_repeatFor = 0u;
 
-    OWNED_PTR(Material) m_screenEffectMat;
+    ASSET_PTR(Material) m_screenEffectMat;
 
     // Non serialized
     std::vector<const Texture2D*> m_inRts;

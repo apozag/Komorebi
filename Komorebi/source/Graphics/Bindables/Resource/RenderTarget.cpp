@@ -68,7 +68,6 @@ namespace gfx {
 
 	void RenderTarget::Setup() {
 
-
 		INFOMAN
 
 		if (m_width < 0) {
@@ -138,7 +137,6 @@ namespace gfx {
 	}
 
 	void RenderTarget::Bind() const {
-
 
 		//ID3D11RenderTargetView* const * srv = (m_rtv.size() ? m_rtv[0].GetAddressOf() : nullptr);
 		if (m_rtv.size()) {

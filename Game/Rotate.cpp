@@ -5,7 +5,7 @@
 #include "Core/Engine.h"
 #include "Scene/Node.h"
 
-void Rotate::Run(Node* node) {
+void Rotate::Start(Node* node) {
 
 }
 

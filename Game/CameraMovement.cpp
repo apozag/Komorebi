@@ -6,7 +6,7 @@
 #include "Core/Window.h"
 #include "Scene/Node.h"
 
-void CameraMovement::Run(Node* node) {
+void CameraMovement::Start(Node* node) {
 
 }
 
