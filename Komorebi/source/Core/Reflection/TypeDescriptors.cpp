@@ -68,16 +68,19 @@ namespace reflection {
 
   std::string TypeDescriptor_Bitmask::GetValueStr(const void* obj) const {
     std::string str;
-    static const std::string barStr = "|";
     unsigned int bitmask = *(unsigned int*) obj;
     for (const TypeDescriptor_Enum::EnumValue& val : enumType->values) {
       if ((bitmask & val.value) != 0) {
-        str += barStr + val.name;
+        if (!str.empty()) {
+          str += "|";
+        }
+        str += val.name;
       }
-    }
-    /*if (!str.empty()) {
-      str.pop_back();
-    }*/
+      else if (bitmask == 0 && val.value == 0) {
+        str = val.name;
+        break;
+      }
+    }    
     return str;
   }
   void TypeDescriptor_Bitmask::SetValueFromString(void* pObj, const char* valueCStr) const {

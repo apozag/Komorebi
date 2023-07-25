@@ -18,7 +18,7 @@ void DrawRendererGUIWindow() {
   ImGui::Begin("Renderer");
   if (ImGui::TreeNode("RenderInfo")) {
     gfx::RenderInfo* info = Engine::GetRenderer()->GetRenderInfo();
-    ImGuiTypeVisitor visitor(info);
+    ImGuiTypeVisitor visitor(info, "RenderInfo");
     reflection::TypeResolver<gfx::RenderInfo>::get()->Accept(&visitor);
     ImGui::TreePop();
   } 

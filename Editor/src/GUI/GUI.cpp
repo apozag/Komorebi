@@ -26,7 +26,7 @@
 void DrawRawEditor(){
   ImGui::Begin("Raw Editor");
 
-  ImGuiTypeVisitor visitor(Engine::GetActiveScene());
+  ImGuiTypeVisitor visitor(Engine::GetActiveScene(), "Scene");
   reflection::TypeResolver<Scene>::get()->Accept(&visitor);
 
   ImGui::End();

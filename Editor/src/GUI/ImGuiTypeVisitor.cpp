@@ -20,71 +20,94 @@
 using namespace reflection;
 
 void ImGuiTypeVisitor::Visit(const TypeDescriptor* type) {
-  constexpr const size_t buffSize = 256;
-  std::string stdStr = type->GetValueStr(m_pObj);
-  char str[buffSize];
-  memcpy(str, stdStr.c_str(), stdStr.size()+1);
-  if (ImGui::InputText(UNIQUE_LABEL("##"), (char*)&str, buffSize) && str[0] != '\0') {
-    type->SetValueFromString(m_pObj, str);
-    m_dirty = true;
+  
+  // Bools as checkboxes
+  static const TypeDescriptor* boolTypeDesc = reflection::TypeResolver<bool>::get();
+  if (type == boolTypeDesc) {
+    ImGui::Checkbox(UNIQUE_LABEL(m_currName + "##"), (bool*)m_pObj);
+  }
+  // Everything else as text fields
+  else {
+    constexpr const size_t buffSize = 256;
+    std::string stdStr = type->GetValueStr(m_pObj);
+    char str[buffSize];
+    memcpy(str, stdStr.c_str(), stdStr.size() + 1);
+    if (ImGui::InputText(UNIQUE_LABEL(m_currName + "##"), (char*)&str, buffSize) && str[0] != '\0') {
+      type->SetValueFromString(m_pObj, str);
+      m_dirty = true;
+    }
   }
 }
 
-void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {  
+void ImGuiTypeVisitor::Visit(const TypeDescriptor_Struct* type) {    
+
+  if (ImGui::TreeNode(UNIQUE_LABEL(m_currName + "##"))) {    
+
+    // Save as prefab
+    if (ImGui::IsItemClicked(1)) {
+      ImGui::OpenPopup("CreatePrefab");
+    }
+    if (ImGui::BeginPopup("CreatePrefab")) {
+      static constexpr size_t buffSize = 216;
+      static char str[buffSize];
+      ImGui::Text("Create Prefab");
+      ImGui::InputText("Path:", str, buffSize);
+      if (ImGui::Button("Save##PrefabFromScene")) {
+        void* pCopy = type->create();
+        CopyTypeVisitor visitor(pCopy, m_pObj);
+        type->Accept(&visitor);
+        PrefabManager::GetInstance()->SavePrefab(str, pCopy, type);
+        ImGui::CloseCurrentPopup();
+      }
+      ImGui::EndPopup();
+    }
+    
+    void* pObj = m_pObj;
+    bool currDirty = false;
+    bool prevDirty = m_dirty;
+
+    if (type->parentTypeDesc) {
+      VisitMembers(type->parentTypeDesc, currDirty);
+    }
+
+    static const TypeDescriptor* nodeTypeDesc = reflection::TypeResolver<Node>::get();
+    if (type == nodeTypeDesc) {
+      Node* pNode = (Node*)pObj;
+      ImGui::SameLine();
+      ImGui::Checkbox(UNIQUE_LABEL("##CB"), &pNode->m_enabled);
+    }
+    
+    m_pObj = pObj;
+    VisitMembers(type, currDirty);
+    if (currDirty) {
+      type->reconfigure(pObj);
+    }
+    m_dirty = prevDirty;
+
+    ImGui::TreePop();
+  }
+
+}
+
+void ImGuiTypeVisitor::VisitMembers(const reflection::TypeDescriptor_Struct* type, bool& currDirty) {
   void* pObj = m_pObj;
-  bool prevDirty = m_dirty;
-
-  // Save as prefab
-  if (ImGui::IsItemClicked(1)) {
-    ImGui::OpenPopup("CreatePrefab");
-  }
-  if (ImGui::BeginPopup("CreatePrefab")) {
-    static constexpr size_t buffSize = 216;
-    static char str[buffSize];
-    ImGui::Text("Create Prefab");
-    ImGui::InputText("Path:", str, buffSize);
-    if (ImGui::Button("Save##PrefabFromScene")) {
-      void* pCopy = type->create();
-      CopyTypeVisitor visitor(pCopy, pObj);
-      type->Accept(&visitor);
-      PrefabManager::GetInstance()->SavePrefab(str, pCopy, type);
-      ImGui::CloseCurrentPopup();
-    }
-    ImGui::EndPopup();
-  }
-
-  if (type->parentTypeDesc) {
-    type->parentTypeDesc->Accept(this);
-  }
-
-  if (strcmp(type->name, "Node") == 0) {
-    Node* pNode = (Node*)pObj;
-    ImGui::SameLine();
-    ImGui::Checkbox(UNIQUE_LABEL("##CB"), &pNode->m_enabled);
-  }
-
-  bool currDirty = false;
-
+  
   for (const TypeDescriptor_Struct::Member& member : type->members) {
-    if (ImGui::TreeNode(member.name)) {
-      m_pObj = member.getAddress(pObj);
-      m_dirty = false;
-      member.type->Accept(this);
-      currDirty |= m_dirty;
-      ImGui::TreePop();
-    }
+    m_pObj = member.getAddress(pObj);
+    m_currName = member.name;
+    m_dirty = false;
+    member.type->Accept(this);
+    currDirty |= m_dirty;
   }
-
-  if (currDirty) {
-    type->reconfigure(pObj);
-  }
-
-  m_dirty = prevDirty;
-
-
+  
 }
 
 void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
+
+  if (!ImGui::TreeNode(UNIQUE_LABEL(m_currName + "##"))){
+    return;
+  }
+
   size_t size = type->getSize(m_pObj);
   void* pObj = m_pObj;
   bool prevDirty = m_dirty;  
@@ -93,23 +116,20 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
   const bool isPointerType = ptrTypeDesc != nullptr;
 
   for (int i = 0; i < size; i++) {
-    m_pObj = type->getItem(pObj, i);
-    if (ImGui::TreeNode(UNIQUE_LABEL(""), type->itemType->GetDynamic(m_pObj)->getFullName().c_str())) {
-
-      // Delete button
-      ImGui::SameLine();
-      if (ImGui::Button(UNIQUE_LABEL("-##DeleteElem"))) {
-        type->remove(pObj, i);
-        memory::Factory::Destroy(isPointerType? *(void**) m_pObj : m_pObj);
-        // The vector was modified! stop iterating for this frame
-        ImGui::TreePop();
-        return;
-      }
-
-      m_dirty = false;
-      type->itemType->Accept(this);
+    m_pObj = type->getItem(pObj, i);    
+    // Delete button    
+    if (ImGui::Button(UNIQUE_LABEL("-##DeleteElem"))) {
+      type->remove(pObj, i);
+      memory::Factory::Destroy(isPointerType? *(void**) m_pObj : m_pObj);
+      // The vector was modified! stop iterating for this frame
       ImGui::TreePop();
+      return;
     }
+    ImGui::SameLine();
+
+    m_dirty = false;
+    m_currName = type->itemType->GetDynamic(m_pObj)->getFullName();
+    type->itemType->Accept(this);
   }
 
   // Add new element
@@ -168,7 +188,7 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
     }
 
     // Show (and edit) object info
-    ImGuiTypeVisitor visitor_imgui(pTempElem);
+    ImGuiTypeVisitor visitor_imgui(pTempElem, typeDesc->getFullName());
     typeDesc->Accept(&visitor_imgui);
 
     // If accept, copy to real element and push 
@@ -199,6 +219,8 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
   }  
 
   m_dirty = prevDirty;
+
+  ImGui::TreePop();
 }
 
 void ImGuiTypeVisitor::Visit(const TypeDescriptor_Weak_Ptr* type) {
@@ -218,22 +240,24 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
 
 void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
   
-  const std::string& filename = type->getFilename(m_pObj);
-  ImGui::Text(type->getFilename(m_pObj).c_str());
-  const PrefabManager::PrefabInfo* prefabInfo = PrefabManager::GetInstance()->GetPrefabInfo(filename.c_str());
-  if (!prefabInfo) return;
-
-  static const PrefabManager::PrefabInfo* selectedPrefab = nullptr;
-  bool open = selectedPrefab == prefabInfo || ImGui::Button("Open Prefab");
-  if (open) {
-    selectedPrefab = prefabInfo;
-    ImGui::Begin((prefabInfo->m_name + "##" + filename).c_str());
-    ImGuiTypeVisitor visitor(prefabInfo->m_ptr);
-    prefabInfo->m_typeDesc->Accept(&visitor);
-    if (ImGui::Button((std::string("Close##Prefab") + filename).c_str())) {
-      selectedPrefab = nullptr;
+  if (ImGui::TreeNode(UNIQUE_LABEL(m_currName + "##"))) {
+    const std::string& filename = type->getFilename(m_pObj);
+    ImGui::Text(type->getFilename(m_pObj).c_str());    
+    if (const PrefabManager::PrefabInfo* prefabInfo = PrefabManager::GetInstance()->GetPrefabInfo(filename.c_str())) {
+      static const PrefabManager::PrefabInfo* selectedPrefab = nullptr;
+      bool open = selectedPrefab == prefabInfo || ImGui::Button("Open Prefab");
+      if (open) {
+        selectedPrefab = prefabInfo;
+        ImGui::Begin((prefabInfo->m_name + "##" + filename).c_str());
+        ImGuiTypeVisitor visitor(prefabInfo->m_ptr, prefabInfo->m_typeDesc->GetDynamic(prefabInfo->m_ptr)->getFullName());
+        prefabInfo->m_typeDesc->Accept(&visitor);
+        if (ImGui::Button((std::string("Close##Prefab") + filename).c_str())) {
+          selectedPrefab = nullptr;
+        }
+        ImGui::End();
+      }
     }
-    ImGui::End();
+    ImGui::TreePop();
   }
 
   /*
@@ -272,14 +296,15 @@ void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Enum* type) {
     names += val.name;
     names += '\0';
   }
-  if (ImGui::Combo(UNIQUE_LABEL("##EntityCombo"), &currItemIdx, names.c_str())) {
+  if (ImGui::Combo(UNIQUE_LABEL(m_currName + "##EntityCombo"), &currItemIdx, names.c_str())) {
     *(int*)m_pObj = type->values[currItemIdx].value;
     m_dirty = true;
   }
 }
 
 void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Bitmask* type) {
-  ImGui::Text(type->GetValueStr(m_pObj).c_str());
+  std::string valueStr = type->GetValueStr(m_pObj);
+  ImGui::InputText(m_currName.c_str(), valueStr.data(), valueStr.size()+1, ImGuiInputTextFlags_ReadOnly);    
   ImGui::SameLine();
   static bool open = false;
   if (!open) {
@@ -290,16 +315,21 @@ void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Bitmask* type) {
     int bitmask = *(int*)m_pObj;
     using EnumVal = ::reflection::TypeDescriptor_Enum::EnumValue;
     for (const EnumVal& val : type->enumType->values) {
-      bool on = (val.value & bitmask) != 0;
+      bool on = ((val.value & bitmask) != 0) || (val.value == 0 && bitmask == 0);
       if (ImGui::Checkbox(val.name, &on)) {
         m_dirty = true;
-      }
-      if (on) {
-        *(int*)m_pObj |= val.value;
-      }
-      else {
-        *(int*)m_pObj &= ~val.value;
-      }
+        if (on) {
+          if (val.value == 0) {
+            *(int*)m_pObj = 0;
+          }
+          else {
+            *(int*)m_pObj |= val.value;
+          }
+        }
+        else {
+          *(int*)m_pObj &= ~val.value;
+        }
+      }      
     }
 
     ImGui::Separator();

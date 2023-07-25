@@ -20,17 +20,17 @@ void DrawPrefabGUIWindow() {
 
   std::vector<PrefabManager::PrefabInfo>& prefabs = PrefabManager::GetInstance()->GetAllLoadedPrefabs();
   for (PrefabManager::PrefabInfo& prefab : prefabs) {
-    ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);    
-    bool open = ImGui::TreeNode((prefab.m_name + "##" + prefab.m_fileName).c_str());
-    ImGui::PopStyleColor();
-    if (open) {
-      ImGuiTypeVisitor visitor(prefab.m_ptr);
+    //ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);    
+    //bool open = ImGui::TreeNode((prefab.m_name + "##" + prefab.m_fileName).c_str());
+    //ImGui::PopStyleColor();
+    //if (open) {
+      ImGuiTypeVisitor visitor(prefab.m_ptr, prefab.m_typeDesc->GetDynamic(prefab.m_ptr)->getFullName());
       prefab.m_typeDesc->Accept(&visitor);
       if (ImGui::Button("Save##PrefabEdit")) {
         PrefabManager::GetInstance()->SavePrefab(prefab.m_fileName.c_str(), prefab.m_ptr, prefab.m_typeDesc);
       }
-      ImGui::TreePop();
-    }
+      //ImGui::TreePop();
+    //}
   }
 
   ImGui::Separator();

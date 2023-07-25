@@ -75,7 +75,7 @@ void DrawAddEntityButton() {
     }
 
     if (pObj && typeDesc && currItem >= 0 && currItem < entityNames.size()) {
-      ImGuiTypeVisitor visitor_imgui(pObj);
+      ImGuiTypeVisitor visitor_imgui(pObj, typeDesc->getFullName());
       typeDesc->Accept(&visitor_imgui);
 
       if (ImGui::Button("Accept##AcceptEntity") && pObj != nullptr) {
@@ -152,15 +152,11 @@ void DrawNodeInfo() {
 
   for (Entity* entity : selectedNode->m_entities) {
     ImGui::Separator();
-    ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);
-    bool open = ImGui::TreeNode(entity->GetReflectionDynamic()->name);
+    //ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);    
     SavePrefabPopup(entity, reflection::TypeResolver<Entity>::getDynamic(entity));
-    ImGui::PopStyleColor();
-    if (open) {      
-      ImGuiTypeVisitor visitor(entity);
-      entity->GetReflectionDynamic()->Accept(&visitor);
-      ImGui::TreePop();
-    }    
+    //ImGui::PopStyleColor();
+    ImGuiTypeVisitor visitor(entity, entity->GetReflectionDynamic()->getFullName());
+    entity->GetReflectionDynamic()->Accept(&visitor);
   }
   ImGui::Separator();
   DrawImGuiTransform(selectedNode->m_localTransform, selectedNode->m_globalTransform);
