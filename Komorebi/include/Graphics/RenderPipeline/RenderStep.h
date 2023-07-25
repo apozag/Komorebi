@@ -18,7 +18,8 @@ namespace gfx {
     enum Type {
       DEFAULT,
       CLEAR,
-      SCREEN
+      SCREEN,
+      CUBE
     };
 
     enum RepeatFor {

@@ -59,7 +59,7 @@ namespace gfx {
       rt->Unbind();
     }
     for (const ResourceBindable* resource : m_inResources) {
-      resource->Bind();
+      resource->Unbind();
     }
     if (m_outRt) m_outRt->Unbind();
   }
@@ -158,7 +158,20 @@ namespace gfx {
           Engine::GetRenderer()->GetQuadPrimitive()->Draw(DirectX::XMMatrixIdentity());
           pass->Unbind();
         }
+        m_screenEffectMat->Unbind();
+      }
+    }
+    break;
+    case CUBE:
+    {
+      if (m_screenEffectMat) {
         m_screenEffectMat->Bind();
+        for (Pass* pass : m_screenEffectMat->GetPasses()) {
+          pass->Bind();
+          Engine::GetRenderer()->GetCubePrimitive()->Draw(DirectX::XMMatrixIdentity());
+          pass->Unbind();
+        }
+        m_screenEffectMat->Unbind();
       }
     }
     break;
@@ -171,6 +184,7 @@ REFLECT_ENUM_BEGIN(RenderStepTypeEnum)
 REFLECT_ENUM_VALUE(DEFAULT)
 REFLECT_ENUM_VALUE(CLEAR)
 REFLECT_ENUM_VALUE(SCREEN)
+REFLECT_ENUM_VALUE(CUBE)
 REFLECT_ENUM_END(RenderStepTypeEnum)
 
 typedef gfx::RenderStep::RepeatFor RepeatForEnum;

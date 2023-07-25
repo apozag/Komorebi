@@ -22,6 +22,14 @@
 					<m_maxLayer>99</m_maxLayer>
 				</RenderStepType>
 				<RenderStepType>
+					<m_type>CUBE</m_type>
+					<m_resourceInputs>
+						<resourceId>ENVMAP</resourceId>
+					</m_resourceInputs>					
+					<m_outRtId>GBUFFER</m_outRtId>
+					<m_screenEffectMat>assets/materials/hdrEnvMapMat.xml</m_screenEffectMat>
+				</RenderStepType>
+				<RenderStepType>
 					<m_type>SCREEN</m_type>
 					<m_textureInputs>
 						<TextureInfoType>
