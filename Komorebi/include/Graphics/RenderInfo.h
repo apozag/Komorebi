@@ -23,7 +23,7 @@ namespace gfx {
     };
     struct ResourceNamePair : public GameObject {
       std::string m_name;
-      ResourceBindable* m_resource;
+      OWNED_PTR(ResourceBindable) m_resource;
       REFLECT_BASE()
     };
 

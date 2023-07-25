@@ -53,7 +53,7 @@ namespace gfx {
 	void Texture2D::CreateFromImage(const Image& image) {
 		INFOMAN
 
-			D3D11_SUBRESOURCE_DATA data = {};
+		D3D11_SUBRESOURCE_DATA data = {};
 		data.pSysMem = image.data;
 		data.SysMemPitch = image.getMemPitch();
 

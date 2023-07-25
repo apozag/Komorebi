@@ -28,14 +28,17 @@ public:
   static void Init(size_t globalSize, size_t transientSize) {
     m_globalPool.Init(globalSize);
     m_transientPool.Init(transientSize);
+    m_modeStack.push_back(true);
   }
 
   template<class T, typename ...Args>
   static inline T* Create(Args&&... args) {    
 
     T* ptr = nullptr;
+
+    bool globalMode = m_modeStack.size() >= 1 ? m_modeStack[m_modeStack.size() - 1] : true;
     
-    if (m_globalMode) {
+    if (globalMode) {
       ptr = (T*)m_globalPool.Allocate(sizeof(T));
     }
     else {
@@ -63,14 +66,24 @@ public:
   }
 
   static void SetGlobalMode(bool enabled) {
-    m_globalMode = enabled;
+    m_modeStack.clear();
+    m_modeStack.push_back(enabled);
+  }
+
+  static void PushGlobalMode(bool enabled) {
+    m_modeStack.push_back(enabled);
+  }
+
+  static void PopGlobalMode() {
+    if (m_modeStack.size() > 1) {
+      m_modeStack.pop_back();
+    }
   }
 
 private:
-  inline static bool m_globalMode = true;
   inline static MemoryPool m_globalPool;
   inline static MemoryPool m_transientPool;
-
+  inline static std::vector<bool> m_modeStack;
 };
 
 }

@@ -46,6 +46,9 @@
     <Filter Include="Shaders\Pixel\Deferred">
       <UniqueIdentifier>{8700bec0-9447-4e13-98e0-77b04dc671b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Geometry">
+      <UniqueIdentifier>{5dfd2a6e-5aee-4874-a2aa-eff6b31ee8ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp">
@@ -233,6 +236,18 @@
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
     <FxCompile Include="assets\shaders\ReinhardPixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\hdrEnvMapPixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\hdrEnvMapGeom.hlsl">
+      <Filter>Shaders\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\hdrEnvMapVertex.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\CubemapConvolutionPixel.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
   </ItemGroup>

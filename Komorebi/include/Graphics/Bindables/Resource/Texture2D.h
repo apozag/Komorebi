@@ -19,24 +19,21 @@ namespace gfx {
 		Texture2D(Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot);
 		~Texture2D();
 
-		void Setup() override;
+		virtual void Setup() override;
 
-		void Bind()const override;
-		void Unbind()const override;
+		void Bind() const override;
+		void Unbind() const override;
 
-		const ID3D11ShaderResourceView* GetSRV() const { return m_srv.Get(); }
+		ID3D11ShaderResourceView* GetSRV() const { return (ID3D11ShaderResourceView*)m_srv.Get(); }
 
 		REFLECT()
 
 	private:
-
 		void CreateFromImage(const Image& image);
 
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
+	protected:
 
-		//////////////////
-		// Serializable
-		//////////////////
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
 
 		std::string m_filename;
 	};

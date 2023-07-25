@@ -111,4 +111,18 @@ namespace gfx {
 		}
 		void Unbind() const override {}
 	};
+
+	template<typename T>
+	class GeometryConstantBuffer : public ConstantBuffer<T> {
+		using ConstantBuffer<T>::m_constantBuffer;
+		using ConstantBuffer<T>::m_slot;
+		using Bindable::GetContext;
+	public:
+		GeometryConstantBuffer(unsigned int slot) : ConstantBuffer<T>(slot) {}
+		GeometryConstantBuffer(unsigned int slot, bool m_dynamic, const T& buffer) : ConstantBuffer<T>(slot, m_dynamic, buffer) {}
+		void Bind() const override {
+			GetContext()->GSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+		}
+		void Unbind() const override {}
+	};
 }

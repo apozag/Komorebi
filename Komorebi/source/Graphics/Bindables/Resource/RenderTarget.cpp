@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "Graphics/Bindables/Resource/RenderTarget.h"
+#include "Graphics/Bindables/State/Viewport.h"
 
 #include "Core/Reflection/ReflectionImplMacros.h"
 
@@ -54,16 +55,18 @@ namespace gfx {
 
 		m_width = rtDesc.Width;
 		m_height = rtDesc.Height;
+
+		m_viewport = memory::Factory::Create<Viewport>(0, 0, m_width, m_height);
 	}
 
 	RenderTarget::~RenderTarget() {
-		/*for (wrl::ComPtr<ID3D11RenderTargetView> rtv : m_rtv) {
-			rtv->Release();
-		}
 		for (Texture2D* texture : m_textures) {
-			delete(texture);
+			memory::Factory::Destroy(texture);
 		}
-		m_dsv->Release();*/
+
+		if (m_viewport) {
+			memory::Factory::Destroy(m_viewport);
+		}
 	}
 
 	void RenderTarget::Setup() {
@@ -134,6 +137,10 @@ namespace gfx {
 			m_textures.push_back(memory::Factory::Create<Texture2D>(pTexture, m_format, m_slot + i));
 		}
 		m_textures.push_back(memory::Factory::Create<Texture2D>(pDepthStencil, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, m_slot + m_count));
+
+		if (!m_viewport) {
+			m_viewport = memory::Factory::Create<Viewport>(0, 0, m_width, m_height);
+		}
 	}
 
 	void RenderTarget::Bind() const {
@@ -144,6 +151,10 @@ namespace gfx {
 		}
 		else {
 			GetContext()->OMSetRenderTargets(0, nullptr, m_dsv.Get());
+		}
+
+		if (m_viewport) {
+			m_viewport->Bind();
 		}
 	}
 
@@ -156,6 +167,10 @@ namespace gfx {
 		else {
 			ID3D11RenderTargetView* nullviews[1] = { nullptr };
 			GetContext()->OMSetRenderTargets(1, nullviews, nullptr);
+		}
+
+		if (m_viewport) {
+			m_viewport->Unbind();
 		}
 	}
 

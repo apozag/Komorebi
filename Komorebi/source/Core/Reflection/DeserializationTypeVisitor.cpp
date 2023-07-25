@@ -9,25 +9,18 @@ namespace reflection {
     type->SetValueFromString(m_pObj, m_xmlNode->value());
   }
 
-  void DeserializationTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
+  void DeserializationTypeVisitor::Visit(const TypeDescriptor_Struct* type) {    
+    type->construct(m_pObj);
+    DeserializeMembers(type);    
+  }
+
+  void DeserializationTypeVisitor::DeserializeMembers(const TypeDescriptor_Struct* type) {
     void* pObj = m_pObj;
     const rapidxml::xml_node<>* xmlNode = m_xmlNode;
-    type->construct(pObj);
     if (type->parentTypeDesc) {
-      type->parentTypeDesc->Accept(this);
-    }
+      DeserializeMembers(type->parentTypeDesc);
+    }    
     rapidxml::xml_node<>* child = xmlNode->first_node();
-
-    //int startMemberIdx = type->getFirstMemberIdx();
-    //int memberIdx = 0;
-    //child = xmlNode->first_node();
-    //// Fast forward to corresponding member index
-    //while (child && memberIdx < startMemberIdx) {
-    //  child = child->next_sibling();
-    //  memberIdx++;
-    //}
-    
-    // Actually deserialize members
     while (child) {
       for (const TypeDescriptor_Struct::Member& member : type->members) {
         if (strcmp(member.name, child->name()) == 0) {
@@ -123,14 +116,20 @@ namespace reflection {
 
   void SetupTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
     void* pObj = m_pObj;
+    SetupMembers(type);
+    type->setup(pObj);
+  }
 
+  void SetupTypeVisitor::SetupMembers(const TypeDescriptor_Struct* type) {
+    void* pObj = m_pObj;
+    if (type->parentTypeDesc) {
+      SetupMembers(type->parentTypeDesc);
+    }
     int memberCount = type->members.size();
     for (int i = 0; i < memberCount; i++) {
       m_pObj = type->members[i].getAddress(pObj);
       type->members[i].type->Accept(this);
     }
-
-    type->setup(pObj);
   }
 
   void SetupTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {

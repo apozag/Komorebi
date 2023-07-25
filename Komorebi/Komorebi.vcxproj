@@ -457,6 +457,7 @@
     <ClInclude Include="include\Graphics\Bindables\Bindable.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\ConstantBuffer.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\CubeTexture.h" />
+    <ClInclude Include="include\Graphics\Bindables\Resource\HDRCubeTexture.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\IndexBuffer.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\ReflectedConstantBuffer.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\RenderTarget.h" />
@@ -466,7 +467,9 @@
     <ClInclude Include="include\Graphics\Bindables\Resource\Texture3D.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\VertexBuffer.h" />
     <ClInclude Include="include\Graphics\Bindables\State\BlendState.h" />
+    <ClInclude Include="include\Graphics\Bindables\State\CubeRenderTarget.h" />
     <ClInclude Include="include\Graphics\Bindables\State\DepthStencilState.h" />
+    <ClInclude Include="include\Graphics\Bindables\State\GeometryShader.h" />
     <ClInclude Include="include\Graphics\Bindables\State\InputLayout.h" />
     <ClInclude Include="include\Graphics\Bindables\State\PixelShader.h" />
     <ClInclude Include="include\Graphics\Bindables\State\RasterizerState.h" />
@@ -528,6 +531,7 @@
     <ClCompile Include="source\Entities\SkinnedMesh.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Bindable.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\CubeTexture.cpp" />
+    <ClCompile Include="source\Graphics\Bindables\Resource\HDRCubeTexture.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\IndexBuffer.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\ReflectedConstantBuffer.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\RenderTarget.cpp" />
@@ -537,7 +541,9 @@
     <ClCompile Include="source\Graphics\Bindables\Resource\Texture3D.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\VertexBuffer.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\BlendState.cpp" />
+    <ClCompile Include="source\Graphics\Bindables\State\CubeRenderTarget.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\DepthStencilState.cpp" />
+    <ClCompile Include="source\Graphics\Bindables\State\GeometryShader.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\InputLayout.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\PixelShader.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\RasterizerState.cpp" />

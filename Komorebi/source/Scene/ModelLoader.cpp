@@ -124,24 +124,68 @@ Mesh* ModelLoader::GenerateQuad(float scale) {
 
 Mesh* ModelLoader::GenerateCube(float scale) {
   std::vector<POD::Vertex> vertices{
-      {{-1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
-      {{ 1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
-      {{ 1.0f * scale, -1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
-      {{-1.0f * scale, -1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 1}},
+    /*{{-1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
+    {{ 1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
+    {{ 1.0f * scale, -1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
+    {{-1.0f * scale, -1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 1}},
 
-      {{-1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
-      {{ 1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
-      {{ 1.0f * scale, -1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
-      {{-1.0f * scale, -1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 1}}
+    {{-1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
+    {{ 1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
+    {{ 1.0f * scale, -1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
+    {{-1.0f * scale, -1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 1}}*/
+
+    // + X
+    {{ 1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 0}}, // 0
+    {{ 1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
+    {{ 1.0f * scale, -1.0f * scale,  1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 1}},
+    {{ 1.0f * scale, -1.0f * scale, -1.0f * scale}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
+
+    // -X
+    {{-1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 0, -1}, {0, -1, 0}, {1, 0}}, // 4
+    {{-1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 0, -1}, {0, -1, 0}, {1, 1}},
+    {{-1.0f * scale, -1.0f * scale,  1.0f * scale}, {0, 0, -1}, {0, -1, 0}, {0, 1}},
+    {{-1.0f * scale, -1.0f * scale, -1.0f * scale}, {0, 0, -1}, {0, -1, 0}, {0, 0}},
+
+    // +Y
+    {{ 1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 1, 0}, {0, 0, 1}, {1, 0}}, // 8
+    {{ 1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 1, 0}, {0, 0, 1}, {1, 1}},
+    {{-1.0f * scale,  1.0f * scale,  1.0f * scale}, {0, 1, 0}, {0, 0, 1}, {0, 1}},
+    {{-1.0f * scale,  1.0f * scale, -1.0f * scale}, {0, 1, 0}, {0, 0, 1}, {0, 0}},
+
+    // -Y  
+    {{ 1.0f * scale,  -1.0f * scale, -1.0f * scale}, {0, -1, 0}, {0, 0, -1}, {1, 0}}, // 12
+    {{ 1.0f * scale,  -1.0f * scale,  1.0f * scale}, {0, -1, 0}, {0, 0, -1}, {1, 1}},
+    {{-1.0f * scale,  -1.0f * scale,  1.0f * scale}, {0, -1, 0}, {0, 0, -1}, {0, 1}},
+    {{-1.0f * scale,  -1.0f * scale, -1.0f * scale}, {0, -1, 0}, {0, 0, -1}, {0, 0}},
+
+    // +Z  
+    {{ 1.0f * scale,  -1.0f * scale,  1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {1, 0}}, // 16
+    {{ 1.0f * scale,   1.0f * scale,  1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {1, 1}},
+    {{-1.0f * scale,   1.0f * scale,  1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {0, 1}},
+    {{-1.0f * scale,  -1.0f * scale,  1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {0, 0}},
+
+    // -Z  
+    {{ 1.0f * scale,  -1.0f * scale,  -1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {1, 0}}, // 20
+    {{ 1.0f * scale,   1.0f * scale,  -1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {1, 1}},
+    {{-1.0f * scale,   1.0f * scale,  -1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {0, 1}},
+    {{-1.0f * scale,  -1.0f * scale,  -1.0f * scale}, {0, -1, 0}, {1, 0, 0}, {0, 0}},
   };
 
   std::vector<unsigned short> indices{
-      0, 3, 2,    2, 1, 0,
-      1, 2, 6,    6, 5, 1,
-      6, 4, 5,    4, 6, 7,
-      0, 4, 7,    7, 3, 0,
-      1, 5, 4,    4, 0, 1,
-      7, 6, 2,    2, 3, 7
+    /* 0, 3, 2,    2, 1, 0,
+    1, 2, 6,    6, 5, 1,
+    6, 4, 5,    4, 6, 7,
+    0, 4, 7,    7, 3, 0,
+    1, 5, 4,    4, 0, 1,
+    7, 6, 2,    2, 3, 7*/
+
+    
+    0, 1, 2,      0, 2, 3,      // +X
+    6, 5, 4,      7, 6, 4,      // -X
+    10, 9, 8,     11, 10, 8,    // +Y
+    12, 13, 14,   12, 14, 15,   // -Y
+    16, 17, 18,   16, 18, 19,   // +Z
+    22, 21, 20,   23, 22, 20,   // -Z
   };
 
   return GenerateMesh(vertices, indices);
@@ -149,24 +193,24 @@ Mesh* ModelLoader::GenerateCube(float scale) {
 
 Mesh* ModelLoader::GenerateAABB(DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max) {
   std::vector<POD::Vertex> vertices{
-      {{min.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
-      {{max.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
-      {{max.x, min.y, min.z}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
-      {{min.x, min.y, min.z}, {0, 0, 1}, {0, 1, 0}, {0, 1}},
+    {{min.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
+    {{max.x, max.y, min.z}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
+    {{max.x, min.y, min.z}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
+    {{min.x, min.y, min.z}, {0, 0, 1}, {0, 1, 0}, {0, 1}},
 
-      {{min.x, max.y, max.z}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
-      {{max.x, max.y, max.z}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
-      {{max.x, min.y, max.z}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
-      {{min.x, min.y, max.z}, {0, 0, 1}, {0, 1, 0}, {0, 1}}
+    {{min.x, max.y, max.z}, {0, 0, 1}, {0, 1, 0}, {0, 0}},
+    {{max.x, max.y, max.z}, {0, 0, 1}, {0, 1, 0}, {1, 0}},
+    {{max.x, min.y, max.z}, {0, 0, 1}, {0, 1, 0}, {1, 1}},
+    {{min.x, min.y, max.z}, {0, 0, 1}, {0, 1, 0}, {0, 1}}
   };
 
   std::vector<unsigned short> indices{
-      0, 3, 2,    2, 1, 0,
-      1, 2, 6,    6, 5, 1,
-      6, 4, 5,    4, 6, 7,
-      0, 4, 7,    7, 3, 0,
-      1, 5, 4,    4, 0, 1,
-      7, 6, 2,    2, 3, 7
+    0, 3, 2,    2, 1, 0,
+    1, 2, 6,    6, 5, 1,
+    6, 4, 5,    4, 6, 7,
+    0, 4, 7,    7, 3, 0,
+    1, 5, 4,    4, 0, 1,
+    7, 6, 2,    2, 3, 7
   };
 
   return GenerateMesh(vertices, indices);
@@ -248,7 +292,7 @@ void ModelLoader::processMaterials(const aiScene* scene, gfx::Material* material
         if (aiTex->mHeight == 0) {
           // Compressed image data, we need to decode it
           Image img = ImageManager::decodeFromMemory(aiTex->mFilename.C_Str(), (unsigned char*)aiTex->pcData, aiTex->mWidth);
-          gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>(img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j);
+          gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>((unsigned char*)img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j);
           matInstance->AddBindable(texture);
         }
         else {

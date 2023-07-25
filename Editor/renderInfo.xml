@@ -17,35 +17,54 @@
 				</RenderStepType>
 				<RenderStepType>
 					<m_type>DEFAULT</m_type>
-					<m_inputsInfo/>
+					<m_textureInputs/>
 					<m_outRtId>GBUFFER</m_outRtId>
 					<m_maxLayer>99</m_maxLayer>
 				</RenderStepType>
 				<RenderStepType>
 					<m_type>SCREEN</m_type>
-					<m_inputsInfo>
+					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>GBUFFER</m_rtId>
 							<m_textureIdx>3</m_textureIdx>
 						</TextureInfoType>
-					</m_inputsInfo>
+					</m_textureInputs>
 					<m_outRtId>HDR</m_outRtId>
 					<m_screenEffectMat>assets/materials/blitMat.xml</m_screenEffectMat>
 				</RenderStepType>
 				<RenderStepType>
 					<m_type>SCREEN</m_type>
-					<m_inputsInfo>
+					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>GBUFFER</m_rtId>
 							<m_textureIdx>0</m_textureIdx>
 						</TextureInfoType>
-					</m_inputsInfo>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>1</m_textureIdx>
+						</TextureInfoType>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>2</m_textureIdx>
+						</TextureInfoType>
+						<!-- <TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>3</m_textureIdx>
+						</TextureInfoType> -->
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>4</m_textureIdx>
+						</TextureInfoType>
+					</m_textureInputs>
+					<m_resourceInputs>
+						<resourceId>ENVMAP</resourceId>
+					</m_resourceInputs>>
 					<m_outRtId>HDR</m_outRtId>
 					<m_screenEffectMat>assets/materials/composeAmbientMat.xml</m_screenEffectMat>
 				</RenderStepType>
 				<RenderStepType>
 					<m_type>SCREEN</m_type>
-					<m_inputsInfo>
+					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>GBUFFER</m_rtId>
 							<m_textureIdx>0</m_textureIdx>
@@ -66,19 +85,19 @@
 							<m_rtId>GBUFFER</m_rtId>
 							<m_textureIdx>4</m_textureIdx>
 						</TextureInfoType>
-					</m_inputsInfo>
+					</m_textureInputs>					
 					<m_outRtId>HDR</m_outRtId>
 					<m_repeatFor>DIRLIGHT</m_repeatFor>
 					<m_screenEffectMat>assets/materials/composeDirlightMat.xml</m_screenEffectMat>
 				</RenderStepType>
 				<RenderStepType>
 					<m_type>SCREEN</m_type>
-					<m_inputsInfo>
+					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>HDR</m_rtId>
 							<m_textureIdx>0</m_textureIdx>
 						</TextureInfoType>
-					</m_inputsInfo>
+					</m_textureInputs>
 					<m_outRtId>DEFAULT</m_outRtId>
 					<m_repeatFor>ONCE</m_repeatFor>
 					<m_screenEffectMat>assets/materials/tonemappingMat.xml</m_screenEffectMat>
@@ -108,7 +127,16 @@
 			</m_rt>
 		</RTNamePairType>
 	</m_globalRTs>
-	<m_globalResources/>
+	<m_globalResources>
+		<RTNamePairType>
+			<m_name>ENVMAP</m_name>
+			<m_resource Type="HDRCubeTexture">
+				<m_filename>assets\images\hdri\pine_attic_4k.png</m_filename>
+				<m_slot>12</m_slot>
+				<m_size>258</m_size>
+			</m_resource>
+		</RTNamePairType>
+	</m_globalResources>
 </RenderInfo>
 
 

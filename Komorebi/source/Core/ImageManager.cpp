@@ -7,16 +7,17 @@
 
 std::map<std::string, Image> ImageManager::loadedImages;
 
-void RGBtoRGBA(unsigned char** ppData, int width, int height) {
-  unsigned char* oldData = *ppData;
-  unsigned char* newData = (unsigned char*)malloc(width * height * 4);
+template<typename T>
+void RGB2RGBA(T** ppData, int width, int height) {
+  T* oldData = *ppData;
+  T* newData = (T*)malloc(width * height * sizeof(T) * 4);
   int old_i = 0;
   int new_i = 0;
   for (int i = 0; i < width * height; i++) {
     newData[new_i++] = oldData[old_i++];
     newData[new_i++] = oldData[old_i++];
     newData[new_i++] = oldData[old_i++];
-    newData[new_i++] = 0xFF;
+    newData[new_i++] = 1;
   }
   free(oldData);
   *ppData = newData;
@@ -52,8 +53,8 @@ Image ImageManager::decodeFromMemory(std::string path, unsigned char* data, int 
     img.format = DXGI_FORMAT_R8G8_UNORM;
     break;
   case 3:
-  {
-    RGBtoRGBA(&img.data, img.width, img.height);
+  {    
+    RGB2RGBA((unsigned char**)(&img.data), img.width, img.height);
     img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
     img.channels = 4;
   }
@@ -77,29 +78,58 @@ Image ImageManager::loadImage(std::string path) {
 
   Image img;
   img.path = path;
-  try {
-    img.data = stbi_load(path.c_str(), &(img.width), &(img.height), &(img.channels), 0);
+  bool isHDR = false;
+  try {    
+    size_t extIdx = path.find_last_of('.');
+    if (extIdx != std::string::npos && extIdx < path.size()-1) {
+      std::string extension = path.substr(extIdx+1);
+      isHDR = extension == "exr" || extension == "hdr";
+    }
+    if (isHDR) {      
+      img.data = stbi_loadf(path.c_str(), &(img.width), &(img.height), &(img.channels), 0);
+    }
+    else {
+      img.data = stbi_load(path.c_str(), &(img.width), &(img.height), &(img.channels), 0);
+    }
   }
   catch (const char* err) {
     std::cout << err << std::endl;
   }
-  switch (img.channels) {
-  case 1:
-    img.format = DXGI_FORMAT_R8_UNORM;
+  if (isHDR) {
+    switch (img.channels) {
+    case 1:
+      img.format = DXGI_FORMAT_R32_FLOAT;
+      break;
+    case 2:
+      img.format = DXGI_FORMAT_R32G32_FLOAT;
+      break;
+    case 3:
+      //RGB2RGBA((float**)(&img.data), img.width, img.height);
+      //img.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+      img.format = DXGI_FORMAT_R32G32B32_FLOAT;
     break;
-  case 2:
-    img.format = DXGI_FORMAT_R8G8_UNORM;
-    break;
-  case 3:
-  {
-    RGBtoRGBA(&img.data, img.width, img.height);
-    img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    img.channels = 4;
+    case 4:
+      img.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+      break;
+    }
   }
+  else {
+    switch (img.channels) {
+    case 1:
+      img.format = DXGI_FORMAT_R8_UNORM;
+      break;
+    case 2:
+      img.format = DXGI_FORMAT_R8G8_UNORM;
+      break;
+    case 3:
+      RGB2RGBA((unsigned char**)(&img.data), img.width, img.height);
+      img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+      img.channels = 4;
     break;
-  case 4:
-    img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    break;
+    case 4:
+      img.format = DXGI_FORMAT_R8G8B8A8_UNORM;
+      break;
+    }
   }
 
   loadedImages.emplace(path, img);

@@ -13,6 +13,7 @@ enum DXGI_FORMAT;
 namespace gfx {
 
 	class Texture2D;
+	class Viewport;
 
 	class RenderTarget : public StateBindable {
 	public:
@@ -39,15 +40,16 @@ namespace gfx {
 
 		REFLECT_BASE()
 
-	private:
+	protected:
 		std::vector<Microsoft::WRL::ComPtr<ID3D11RenderTargetView>> m_rtv;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_dsv;
 		std::vector <gfx::Texture2D* > m_textures;
+		Viewport* m_viewport = nullptr;
 
 		/////////////////////////////////////////////////////
 		// Serializable
 		/////////////////////////////////////////////////////
-	private:
+	protected:
 		int m_width, m_height;
 		DXGI_FORMAT m_format;
 		unsigned int m_count, m_slot;

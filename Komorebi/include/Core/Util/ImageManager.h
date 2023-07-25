@@ -6,7 +6,7 @@
 #include <string>
 
 struct Image {
-	unsigned char* data;
+	void* data;
 	std::string path;
 	DXGI_FORMAT format;
 	int channels;

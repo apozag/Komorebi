@@ -33,7 +33,7 @@ namespace memory {
     unsigned int neededChunks = calculateNeededChunks(size);
 
     unsigned int currIdx = m_cursorIdx;
-    for (unsigned int _ = 0; _ < m_numChunks; _++) {
+    for (unsigned int chunksSkipped = 0; chunksSkipped < m_numChunks;) {
 
       if (currIdx >= m_numChunks) {
         currIdx = 0;
@@ -43,14 +43,14 @@ namespace memory {
       if (candidateIdx >= 0) {
         if (currIdx - candidateIdx >= neededChunks) {
           m_pChunkUsedBytes[candidateIdx] = size;
-          m_cursorIdx = candidateIdx;
+          m_cursorIdx = currIdx+1;
           return (char*)m_pData + candidateIdx * CHUNK_SIZE;
         }
         else if (m_pChunkUsedBytes[candidateIdx] > 0) {
           candidateIdx = -1;
         }
       }
-      // Find candidate chunk
+      // Found candidate chunk
       else if (m_pChunkUsedBytes[currIdx] == 0 && (m_totalSize - currIdx * (size_t)CHUNK_SIZE) >= size) {
         candidateIdx = currIdx;
       }
@@ -59,6 +59,7 @@ namespace memory {
       unsigned int chunksToSkip = calculateNeededChunks(m_pChunkUsedBytes[currIdx]);
       if (chunksToSkip < 1) chunksToSkip = 1;
       currIdx += chunksToSkip;
+      chunksSkipped += chunksToSkip;
     }
 
     // TODO: [ERROR] Not enough free chunks

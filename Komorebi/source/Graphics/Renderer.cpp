@@ -27,7 +27,98 @@
 
 #include "Scene\ModelLoader.h"
 
+// DEBUG
+#include "Graphics/Bindables/State/GeometryShader.h"
+#include "Graphics/Bindables/State/PixelShader.h"
+#include "Graphics/Bindables/State/CubeRenderTarget.h"
+#include "Graphics/Bindables/State/InputLayout.h"
+
+#define _PI 3.141592f
+#define _PI2 1.570796f
+
+// DEBUG
+
 namespace gfx {
+
+  struct ViewsCBufferData {
+    DirectX::XMMATRIX viewProj[6];
+  };
+
+  void HDRITest() {
+    static CubeRenderTarget* cubeRT = nullptr; 
+    
+    static Texture2D* hdri = nullptr;
+
+    static const Drawable* unitCube = Engine::GetRenderer()->GetCubePrimitive();
+
+    static PixelShader* pShader = nullptr;
+    static GeometryShader* gShader = nullptr;
+    static VertexShader* vShader = nullptr;
+    static GeometryConstantBuffer<ViewsCBufferData>* viewsCBuffer = nullptr;
+    static InputLayout* inputLayout = nullptr;
+
+    memory::Factory::PushGlobalMode(true);
+
+    if (cubeRT == nullptr) {
+      cubeRT = memory::Factory::Create<CubeRenderTarget>(512, 512, DXGI_FORMAT_R32G32B32A32_FLOAT, 0);
+      cubeRT->Setup();
+    }
+    if (hdri == nullptr) {
+      hdri = memory::Factory::Create<Texture2D>("assets/images/hdri/pine_attic_4k.hdr", 0u); 
+      hdri->Setup();
+    }
+    if (vShader == nullptr) {
+      vShader = memory::Factory::Create<VertexShader>("assets/shaders/hdrEnvMapVertex.cso");
+      vShader->Setup();
+    }
+    if (gShader == nullptr) {
+      gShader = memory::Factory::Create<GeometryShader>("assets/shaders/hdrEnvMapGeom.cso");
+      gShader->Setup();
+    }
+    if (pShader == nullptr) {
+      pShader = memory::Factory::Create<PixelShader>("assets/shaders/hdrEnvMapPixel.cso");
+      pShader->Setup();
+    }
+    if (viewsCBuffer == nullptr) {
+      ViewsCBufferData data;
+      DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(_PI2, 1, 0.1, 10);
+      data.viewProj[0] = proj;
+      data.viewProj[1] = DirectX::XMMatrixMultiply(DirectX::XMMatrixRotationY(_PI2), proj);
+      data.viewProj[2] = DirectX::XMMatrixMultiply(DirectX::XMMatrixRotationY(_PI), proj);
+      data.viewProj[3] = DirectX::XMMatrixMultiply(DirectX::XMMatrixRotationY(-_PI2), proj);
+      data.viewProj[4] = DirectX::XMMatrixMultiply(DirectX::XMMatrixRotationX(_PI2), proj);
+      data.viewProj[5] = DirectX::XMMatrixMultiply(DirectX::XMMatrixRotationX(-_PI2), proj);
+
+      viewsCBuffer = memory::Factory::Create<GeometryConstantBuffer<ViewsCBufferData>>(0, false, data);
+    }
+    if (inputLayout == nullptr) {
+      const D3D11_INPUT_ELEMENT_DESC ied[] =
+      {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+      };
+      inputLayout = memory::Factory::Create<InputLayout>(ied, 1, *vShader);
+    }
+    memory::Factory::PopGlobalMode();
+
+    cubeRT->Bind();
+    hdri->Bind();
+    pShader->Bind();
+    gShader->Bind();
+    vShader->Bind();
+    viewsCBuffer->Bind();
+    inputLayout->Bind();
+
+    unitCube->Draw(DirectX::XMMatrixIdentity());
+
+    inputLayout->Unbind();
+    viewsCBuffer->Unbind();
+    vShader->Unbind();
+    gShader->Unbind();
+    pShader->Unbind();
+    hdri->Unbind();
+    cubeRT->Unbind();
+  }
+
   bool compareCamera(const gfx::CameraView& c1, const gfx::CameraView& c2) {
     return (c1.camera->m_priority < c2.camera->m_priority);
   }
@@ -196,4 +287,12 @@ const Drawable* gfx::Renderer::GetQuadPrimitive() const {
     quad = (Drawable*)(ModelLoader::GetInstance()->GenerateQuad());
   }
   return quad;
+}
+
+const Drawable* gfx::Renderer::GetCubePrimitive() const {
+  static Drawable* cube = nullptr;
+  if (cube == nullptr) {
+    cube = (Drawable*)(ModelLoader::GetInstance()->GenerateCube());
+  }
+  return cube;
 }

@@ -2,33 +2,19 @@
 
 #include <string>
 #include "Graphics/Graphics.h"
-#include "Graphics/Bindables/Resource/ResourceBindable.h"
+#include "Graphics/Bindables/Resource/Texture2D.h"
 
 namespace gfx {
 
-	class CubeTexture : public ResourceBindable {
+	class CubeTexture : public Texture2D {
 	public:
 		CubeTexture() {}
-		CubeTexture(std::string path, unsigned int slot);
-		~CubeTexture();
+		CubeTexture(std::string path, unsigned int slot) : Texture2D(path, slot) {}		
+		CubeTexture(Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot);
 
-		void Setup() override;
-
-		void Bind()const override;
-		void Unbind()const override;
-		void Update();
+		virtual void Setup() override;
 
 		REFLECT()
-
-	private:
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
-
-		//////////////////
-		// Serializable
-		//////////////////
-
-		std::string m_path;
-		unsigned int m_slot;
 	};
 
 }

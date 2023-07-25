@@ -10,6 +10,7 @@
 namespace gfx {
 
   class Material;
+  class ResourceBindable;
 
   class RenderStep : public GameObject {
   public:
@@ -35,7 +36,8 @@ namespace gfx {
 
     Type m_type;
 
-    std::vector<TextureInfo> m_inputsInfo;
+    std::vector<TextureInfo> m_textureInputs;
+    std::vector<std::string> m_resourceInputs;
     std::string m_outRtId;
     unsigned int m_maxLayer = 0;
     bool m_sortReverse = false;
@@ -45,11 +47,12 @@ namespace gfx {
 
     // Non serialized
     std::vector<const Texture2D*> m_inRts;
+    std::vector<const ResourceBindable*> m_inResources;
     const RenderTarget* m_outRt;
 
     RenderStep() {}
     RenderStep(Type type, std::vector<TextureInfo> inputs, const char* outid, unsigned int layer, bool sort)
-      : m_type(type), m_inputsInfo(inputs), m_outRtId(outid), m_maxLayer(layer), m_sortReverse(sort) {
+      : m_type(type), m_textureInputs(inputs), m_outRtId(outid), m_maxLayer(layer), m_sortReverse(sort) {
     };
 
     void Setup() override;

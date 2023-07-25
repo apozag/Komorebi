@@ -76,6 +76,7 @@ public:
 	const std::vector<Job>& GetJobs() const { return m_jobs; }
 
 	const Drawable* GetQuadPrimitive() const;
+	const Drawable* GetCubePrimitive() const;
 
 	RenderTarget* GetGlobalRenderTarget(unsigned int idx) const { return m_renderTargets[idx]; }
 

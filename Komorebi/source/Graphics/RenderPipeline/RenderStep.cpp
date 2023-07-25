@@ -19,11 +19,18 @@ namespace gfx {
 
     const RenderInfo* renderInfo = Engine::GetRenderer()->GetRenderInfo();
 
-    for (RenderStep::TextureInfo& texInfo : m_inputsInfo) {
+    for (RenderStep::TextureInfo& texInfo : m_textureInputs) {
       const RenderTarget* rt = renderInfo->FindGlobalRenderTarget(texInfo.m_rtId);
       if (rt != nullptr) {
         // TODO: [ERROR] Texture index is higher than texture count
         m_inRts.push_back(rt->GetTextures2D()[texInfo.m_textureIdx]);
+      }
+    }
+
+    for (const std::string& resName : m_resourceInputs) {
+      const ResourceBindable* resource = renderInfo->FindGlobalResource(resName);
+      if (resource != nullptr) {        
+        m_inResources.push_back(resource);
       }
     }
 
@@ -39,9 +46,22 @@ namespace gfx {
     for (const Texture2D* rt : m_inRts) {
       rt->Bind();
     }
+    for (const ResourceBindable* resource : m_inResources) {
+      resource->Bind();
+    }
     if (m_outRt) { 
       m_outRt->Bind(); 
     }
+  }
+
+  void RenderStep::Unbind() const {
+    for (const Texture2D* rt : m_inRts) {
+      rt->Unbind();
+    }
+    for (const ResourceBindable* resource : m_inResources) {
+      resource->Bind();
+    }
+    if (m_outRt) m_outRt->Unbind();
   }
 
   void RenderStep::Execute(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int idx) const {
@@ -112,11 +132,13 @@ namespace gfx {
 
         job.drawable->Draw(DirectX::XMMatrixTranspose(job.transform->GetMatrix()));
 
-        job.material->Unbind();
+        job.material->Unbind();        
 
         lastPass = job.pass;
         lastMat = job.material->GetMaterial();
       }
+      if(lastPass) lastPass->Unbind();
+      if(lastMat) lastMat->Unbind();
     }
     break;
     case CLEAR:
@@ -141,14 +163,7 @@ namespace gfx {
     }
     break;
     }
-  }
-
-  void RenderStep::Unbind() const {
-    for (const Texture2D* rt : m_inRts) {
-      rt->Unbind();
-    }
-    if (m_outRt) m_outRt->Unbind();
-  }
+  }  
 }
 
 typedef gfx::RenderStep::Type RenderStepTypeEnum;
@@ -177,7 +192,8 @@ REFLECT_STRUCT_END(TextureInfoType)
 typedef gfx::RenderStep RenderStepType;
 REFLECT_STRUCT_BASE_BEGIN(RenderStepType)
 REFLECT_STRUCT_MEMBER(m_type)
-REFLECT_STRUCT_MEMBER(m_inputsInfo)
+REFLECT_STRUCT_MEMBER(m_textureInputs)
+REFLECT_STRUCT_MEMBER(m_resourceInputs)
 REFLECT_STRUCT_MEMBER(m_outRtId)
 REFLECT_STRUCT_MEMBER(m_maxLayer)
 REFLECT_STRUCT_MEMBER(m_sortReverse)

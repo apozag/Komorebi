@@ -459,6 +459,15 @@
     <ClInclude Include="include\Core\PrefabManager.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\Resource\HDRCubeTexture.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\GeometryShader.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\CubeRenderTarget.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -661,6 +670,15 @@
     </ClCompile>
     <ClCompile Include="source\Core\PrefabManager.cpp">
       <Filter>Archivos de origen\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\Resource\HDRCubeTexture.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\GeometryShader.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\CubeRenderTarget.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
