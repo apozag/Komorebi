@@ -2,4 +2,4 @@
 
 class Transform;
 
-void DrawImGuiTransform(Transform& localTransform, Transform& parentTransform);
+void DrawImGuiTransform(Transform& localTransform, Transform& parentGlobalTransform);

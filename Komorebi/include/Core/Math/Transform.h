@@ -17,6 +17,8 @@ public:
 
 	void Setup() override;
 
+	static const Transform& GetIdentity();
+
 	const DirectX::XMMATRIX&  GetMatrix() const {
 		return m_matrix;
 	}
@@ -164,7 +166,7 @@ public:
 		decompose();
 		m_invMatDirty = true;
 		m_dirty = true;
-	}
+	}	
 
 	REFLECT_BASE()
 
@@ -193,6 +195,8 @@ private:
 		m_matrix = DirectX::XMMatrixScalingFromVector(m_scale) * DirectX::XMMatrixRotationQuaternion(m_rotation) * DirectX::XMMatrixTranslationFromVector(m_position);
 		m_invMatDirty = true;
 	}
+
+	static const Transform* s_identity;
 
 	math::Vector3	m_position;
 	math::Quaternion m_rotation;

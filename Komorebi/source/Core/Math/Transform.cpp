@@ -2,8 +2,17 @@
 
 #include "Core/Reflection/ReflectionImplMacros.h"
 
+const Transform* Transform::s_identity;
+
 void Transform::Setup() {
 	compose();
+}
+
+const Transform& Transform::GetIdentity() {
+	if (!s_identity) {
+		s_identity = memory::Factory::Create<Transform>();
+	}
+	return *s_identity;
 }
 
 Transform operator*(Transform leftTransform, Transform rightTransform) {

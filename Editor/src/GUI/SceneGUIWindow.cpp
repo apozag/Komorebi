@@ -159,7 +159,8 @@ void DrawNodeInfo() {
     entity->GetReflectionDynamic()->Accept(&visitor);
   }
   ImGui::Separator();
-  DrawImGuiTransform(selectedNode->m_localTransform, selectedNode->m_globalTransform);
+  Transform parentGlobalTransform = selectedNode->m_parent ? selectedNode->m_parent->m_globalTransform : Transform::GetIdentity();
+  DrawImGuiTransform(selectedNode->m_localTransform, parentGlobalTransform);
   ImGui::Separator();
   DrawAddEntityButton();
 }

@@ -13,7 +13,7 @@
 #include "Scene/Node.h"
 #include "Entities/Camera.h"
 
-void DrawImGuiTransform(Transform& localTransform, Transform& parentTransform) {
+void DrawImGuiTransform(Transform& localTransform, Transform& parentGlobalTransform) {
   float matrixTranslation[3], matrixRotation[3], matrixScale[3];
   DirectX::XMMATRIX xmMatrix = localTransform.GetMatrix();
   float transformMatrix[16] = {
@@ -52,7 +52,7 @@ void DrawImGuiTransform(Transform& localTransform, Transform& parentTransform) {
      xmViewMat._31, xmViewMat._32, xmViewMat._33, xmViewMat._34,
      xmViewMat._41, xmViewMat._42, xmViewMat._43, xmViewMat._44
   };
-  DirectX::XMMATRIX xmGlobalMat = (localTransform * parentTransform).GetMatrix();
+  DirectX::XMMATRIX xmGlobalMat = (localTransform * parentGlobalTransform).GetMatrix();
   float globalMatrix[16] = {
      xmGlobalMat._11, xmGlobalMat._12, xmGlobalMat._13, xmGlobalMat._14,
      xmGlobalMat._21, xmGlobalMat._22, xmGlobalMat._23, xmGlobalMat._24,
@@ -78,6 +78,6 @@ void DrawImGuiTransform(Transform& localTransform, Transform& parentTransform) {
       globalMatrix[8], globalMatrix[9], globalMatrix[10], globalMatrix[11],
       globalMatrix[12], globalMatrix[13], globalMatrix[14], globalMatrix[15],
     };
-    localTransform.SetMatrix(DirectX::XMMatrixMultiply(xmGlobalMat, parentTransform.GetInverseMatrix()));
+    localTransform.SetMatrix(DirectX::XMMatrixMultiply(xmGlobalMat, parentGlobalTransform.GetInverseMatrix()));
   }
 }
