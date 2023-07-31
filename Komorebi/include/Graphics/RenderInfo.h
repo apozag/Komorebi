@@ -30,7 +30,7 @@ namespace gfx {
     const RenderPipeline* FindRenderPipeline(const std::string& name) const;
     const RenderTarget* FindGlobalRenderTarget(const std::string& name) const;
     const ResourceBindable* FindGlobalResource(const std::string& name) const;
-    const std::vector<RTNamePair> GetGlobalRenderTargets() const { return m_globalRTs; }
+    const std::vector<RTNamePair>& GetGlobalRenderTargets() const { return m_globalRTs; }
 
     REFLECT_BASE()
 

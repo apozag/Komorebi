@@ -1,4 +1,5 @@
 #include "Graphics/Bindables/Resource/ReflectedConstantBuffer.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 #include <sstream>
 
 namespace gfx {
@@ -106,4 +107,11 @@ namespace gfx {
 		}
 		return false;
 	}
+
+	REFLECT_STRUCT_BEGIN(ReflectedVertexConstantBuffer, ResourceBindable)
+	REFLECT_STRUCT_END(ReflectedVertexConstantBuffer)
+
+	REFLECT_STRUCT_BEGIN(ReflectedPixelConstantBuffer, ResourceBindable)
+	REFLECT_STRUCT_END(ReflectedPixelConstantBuffer)
+
 }

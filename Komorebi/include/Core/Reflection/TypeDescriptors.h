@@ -1,4 +1,5 @@
 #pragma once
+
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -328,7 +329,9 @@ namespace reflection {
 
   class TypeDescriptor_Ignored : public TypeDescriptor_Struct {
   public:
-    TypeDescriptor_Ignored() : TypeDescriptor_Struct("", (size_t)0) {}
+    //TypeDescriptor_Ignored() : TypeDescriptor_Struct("", (size_t)0) {}
+    TypeDescriptor_Ignored(void (*init)(TypeDescriptor_Struct*)) : TypeDescriptor_Struct{ init } {}
+    TypeDescriptor_Ignored(const char* name, size_t size) : TypeDescriptor_Struct{ name, size }{}
     ~TypeDescriptor_Ignored() {}
     virtual void Accept(TypeVisitor* visitor) const override;
     virtual std::string GetValueStr(const void* obj) const override { return ""; }

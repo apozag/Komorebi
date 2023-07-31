@@ -19,7 +19,8 @@ public:
 	};
 public:
 	Animation(unsigned int numKeyframes, double keyframesPerSecond, std::vector<Channel>&& channels);
-	
+	~Animation() {}
+
 	void Update();
 private:
 	float m_durationMilliseconds;

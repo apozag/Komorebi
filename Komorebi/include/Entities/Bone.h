@@ -11,6 +11,9 @@ class Bone : public Entity{
 public:
 	Bone(Skeleton* skeleton, int idx, DirectX::XMMATRIX offsetMatrix) : m_slot(idx), m_skeleton(skeleton), mOffsetMatrix(offsetMatrix) {}
 	Bone() {}
+	~Bone() {
+		m_slot = 0;
+	}
 	void Insert(Node* node, const Transform& worldTransform) override;
 private:
 	int m_slot;

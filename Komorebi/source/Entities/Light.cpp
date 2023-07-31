@@ -33,9 +33,13 @@ void PointLight::Setup() {
 }
 
 DirectionalLight::~DirectionalLight() {
+	memory::Factory::Destroy(m_rt);
+	memory::Factory::Destroy(m_camera);
 }
 
 SpotLight::~SpotLight() {
+	memory::Factory::Destroy(m_rt);
+	memory::Factory::Destroy(m_camera);
 }
 
 PointLight::~PointLight() {

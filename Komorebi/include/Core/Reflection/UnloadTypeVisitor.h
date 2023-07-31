@@ -15,6 +15,9 @@ namespace reflection {
     void Visit(const TypeDescriptor_Weak_Ptr* type) override {}
     void Visit(const TypeDescriptor_Owned_Ptr* type) override;
   private:
+
+    void UnloadMembers(const TypeDescriptor_Struct* type);
+
     void* m_pObj;
   };
 }

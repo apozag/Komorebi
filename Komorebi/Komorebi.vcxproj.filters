@@ -680,5 +680,8 @@
     <ClCompile Include="source\Graphics\Bindables\State\CubeRenderTarget.cpp">
       <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
     </ClCompile>
+    <ClCompile Include="source\Scene\AuxNode.cpp">
+      <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

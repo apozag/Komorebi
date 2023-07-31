@@ -33,7 +33,7 @@ namespace gfx {
 		GetContext()->PSSetSamplers(m_slot, 1, m_sampler.GetAddressOf());
 	}
 	void SamplerState::Unbind() const {
-		ID3D11SamplerState* nullStates = { nullptr };
+		static ID3D11SamplerState* nullStates = { nullptr };
 		GetContext()->PSSetSamplers(m_slot, 1, &nullStates);
 	}
 

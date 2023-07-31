@@ -37,7 +37,9 @@ namespace gfx {
 	RasterizerState* RasterizerState::GetDefault() {
 		static RasterizerState* rs = nullptr;
 		if (rs == nullptr) {
+			memory::Factory::PushGlobalMode(true);
 			rs = memory::Factory::Create<RasterizerState>();
+			memory::Factory::PopGlobalMode();
 		}
 		return rs;
 	}

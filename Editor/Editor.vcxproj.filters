@@ -208,7 +208,7 @@
     <FxCompile Include="assets\shaders\TexturedModelPixel.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
-    <FxCompile Include="assets\shaders\deferred\SkinnedPixel.hlsl">
+    <FxCompile Include="assets\shaders\deferred\PBRNormalPixel.hlsl">
       <Filter>Shaders\Pixel\Deferred</Filter>
     </FxCompile>
     <FxCompile Include="assets\shaders\deferred\ComposeAmbientPixel.hlsl">
@@ -249,6 +249,9 @@
     </FxCompile>
     <FxCompile Include="assets\shaders\CubemapConvolutionPixel.hlsl">
       <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\PBRFlatColorPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

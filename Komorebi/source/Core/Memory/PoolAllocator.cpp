@@ -1,3 +1,4 @@
+#include <memory>
 #include "Core/Memory/PoolAllocator.h"
 #include "Core/Exceptions/Exception.h"
 
@@ -27,10 +28,21 @@ namespace memory {
     m_pChunkUsedBytes = new size_t[m_numChunks]();
   }
 
-  void* MemoryPool::Allocate(size_t size) {
+  void* MemoryPool::Allocate(size_t size, size_t alignment) {
 
     int candidateIdx = -1;
-    unsigned int neededChunks = calculateNeededChunks(size);
+
+    size_t offset = 0;
+  
+    if (alignment > CHUNK_SIZE) {
+      size_t requiredSize = size + alignment;
+      void* ptr = std::align(alignment, size, m_pData, requiredSize);
+      offset = (char*)ptr - (char*)m_pData;
+    }
+
+    size_t totalSize = size + offset;
+
+    unsigned int neededChunks = calculateNeededChunks(totalSize);
 
     unsigned int currIdx = m_cursorIdx;
     for (unsigned int chunksSkipped = 0; chunksSkipped < m_numChunks;) {
@@ -42,9 +54,9 @@ namespace memory {
       // Check following chunks are all free
       if (candidateIdx >= 0) {
         if (currIdx - candidateIdx >= neededChunks) {
-          m_pChunkUsedBytes[candidateIdx] = size;
-          m_cursorIdx = currIdx+1;
-          return (char*)m_pData + candidateIdx * CHUNK_SIZE;
+          m_pChunkUsedBytes[candidateIdx] = totalSize;          
+          m_cursorIdx = currIdx;
+          return (char*)m_pData + candidateIdx * CHUNK_SIZE + offset;
         }
         else if (m_pChunkUsedBytes[candidateIdx] > 0) {
           candidateIdx = -1;
@@ -67,13 +79,22 @@ namespace memory {
     return nullptr;
   }
 
-  void MemoryPool::Deallocate(void* ptr) {
+  bool MemoryPool::Deallocate(void* ptr) {
+
+    long long diff = ((char*)ptr - (char*)m_pData);
+
+    if (diff % CHUNK_SIZE != 0) {
+      // TODO: [ERROR] the provided pointer is not aligned with the chunk size. All pool objects start at the begining of a chunk.
+      return false;
+    }
+
     long long chunkIdx = ((char*)ptr - (char*)m_pData) / CHUNK_SIZE;
     if (chunkIdx < 0 || chunkIdx > m_numChunks) {
       // TODO: [ERROR] the object you tried to deallocate is not in the pool
-      return;
+      return false;
     }
     m_pChunkUsedBytes[chunkIdx] = 0;
+    return true;
   }
 
   void MemoryPool::DeallocateAll() {

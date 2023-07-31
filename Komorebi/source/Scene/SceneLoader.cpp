@@ -14,15 +14,18 @@
 #include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Core/Reflection/UnloadTypeVisitor.h"
 #include "Scene/Scene.h"
+#include "Core/PrefabManager.h"
 
 using namespace reflection;
 using namespace rapidxml;
 
 constexpr const char* nodeTypeName = "Scene";
 
+std::string SceneLoader::m_lastLoadedFilename;
+
 Scene* SceneLoader::LoadScene(const char* filename) {
   
-  //memory::Factory::SetMarker();
+  memory::Factory::PushGlobalMode(false);
 
   rapidxml::file<> xmlFile(filename);
   xml_document<> doc;
@@ -43,16 +46,24 @@ Scene* SceneLoader::LoadScene(const char* filename) {
 
   ReflectionHelper::ClearAll();
 
+  m_lastLoadedFilename = filename;
+
+  memory::Factory::PopGlobalMode();
+
   return scene;
 }
 
-void SceneLoader::UnloadScene(Scene* scene) {
-  //reflection::UnloadTypeVisitor visitor(scene);
-  //reflection::__internal::forceVisitIgnored = true;
-  //scene->GetReflection().Accept(&visitor);
-  //reflection::__internal::forceVisitIgnored = false;
-  //memory::Factory::FreeToMarker();
-  memory::Factory::FreeAll();
+void SceneLoader::UnloadScene() {
+  if (Engine::GetActiveScene()) {
+    reflection::UnloadTypeVisitor visitor(Engine::GetActiveScene());
+    reflection::__internal::forceVisitIgnored = true;
+    Engine::GetActiveScene()->GetReflection().Accept(&visitor);
+    reflection::__internal::forceVisitIgnored = false;
+    memory::Factory::FreeAll();
+    PrefabManager::GetInstance()->Clear();
+    memory::Factory::Destroy(Engine::GetActiveScene());
+    Engine::SetActiveScene(nullptr);
+  }
 }
 
 void SceneLoader::SaveScene(Scene* scene, const char* filename) {

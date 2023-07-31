@@ -7,6 +7,10 @@
 #include "Core/Reflection/ReflectionHelper.h"
 #include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Core/Reflection/SerializationTypeVisitor.h"
+#include "Core/Reflection/UnloadTypeVisitor.h"
+#include "Core/Reflection/CopyTypeVisitor.h"
+#include "Core/Reflection/ReflectionSettings.h"
+#include "Core/Memory/Factory.h"
 
 std::string getFileNameFromPath(const std::string& path) {
   size_t idx = path.npos;
@@ -29,14 +33,35 @@ std::string getFileNameFromPath(const std::string& path) {
   return auxStr.substr(0, auxStr.find_last_of('.'));
 }
 
-const PrefabManager::PrefabInfo& PrefabManager::LoadPrefab(const char* filename, void* pObj, const reflection::TypeDescriptor* typeDesc, bool setup) {
+void* PrefabManager::LoadPrefab(const char* filename, const reflection::TypeDescriptor* typeDesc, bool setup) {
+
+  if (typeDesc->create == nullptr) {
+    return nullptr;
+  }
+
   std::string strFilename = filename;
   const std::string& typeName = typeDesc->getFullName();
 
+  void* pObj = typeDesc->create();
+
   // Return same instance if already loaded
-  for (PrefabInfo& prefab : m_loadedPrefabs) {
-    if (prefab.m_name == strFilename && prefab.m_typeDesc == typeDesc) {
-      return prefab;
+  for (PrefabInfo& prefab : m_GlobalLoadedPrefabs) {
+    if (prefab.m_fileName == strFilename && prefab.m_typeDesc == typeDesc) {
+      return prefab.m_ptr;
+    }
+  }
+  if (!memory::Factory::IsCurrentModeGlobal()) {
+    for (PrefabInfo& prefab : m_TransientLoadedPrefabs) {
+      if (prefab.m_fileName == strFilename && prefab.m_typeDesc == typeDesc) {
+        //if (memory::Factory::IsCurrentModeGlobal()) {
+        //  void* pObj = prefab.m_typeDesc->create();
+        //  reflection::CopyTypeVisitor copyVisitor(pObj, prefab.m_ptr);
+        //  prefab.m_typeDesc->Accept(&copyVisitor);
+        //}
+        //else {
+        return prefab.m_ptr;
+        //}
+      }
     }
   }
 
@@ -65,19 +90,21 @@ const PrefabManager::PrefabInfo& PrefabManager::LoadPrefab(const char* filename,
 
   m_loadingPrefabNameStack.pop_back();
 
-  m_loadedPrefabs.push_back({ getFileNameFromPath(strFilename), strFilename, typeDesc, pObj });
+  std::vector<PrefabInfo>& prefabs = memory::Factory::IsCurrentModeGlobal() ? m_GlobalLoadedPrefabs : m_TransientLoadedPrefabs;
+  prefabs.push_back({ getFileNameFromPath(strFilename), strFilename, typeDesc, pObj });
 
-  return m_loadedPrefabs[m_loadedPrefabs.size() - 1];
+  return pObj;
 }
 
 void PrefabManager::SavePrefab(const char* filename, void* pObj, const reflection::TypeDescriptor* typeDesc) {
   std::string strFilename = filename;
   const std::string& typeName = typeDesc->getFullName();
 
-  bool alreadyLoaded = false;
+  bool alreadyLoaded = false;  
 
-  auto it = m_loadedPrefabs.begin();
-  for (; it != m_loadedPrefabs.end(); it++) {
+  std::vector<PrefabInfo>& prefabs = memory::Factory::IsCurrentModeGlobal() ? m_GlobalLoadedPrefabs : m_TransientLoadedPrefabs;
+  auto it = prefabs.begin();
+  for (; it != prefabs.end(); it++) {
     if (it->m_fileName == strFilename && it->m_typeDesc == typeDesc) {
       alreadyLoaded = true;
       if (it->m_ptr != pObj) {
@@ -100,13 +127,18 @@ void PrefabManager::SavePrefab(const char* filename, void* pObj, const reflectio
   reflection::ReflectionHelper::ClearTrackedStrings();
 
   if (!alreadyLoaded) {
-    m_loadedPrefabs.push_back({ getFileNameFromPath(filename), filename, typeDesc, pObj });
+    prefabs.push_back({ getFileNameFromPath(filename), filename, typeDesc, pObj });
   }
 }
 
 std::vector<PrefabManager::PrefabInfo> PrefabManager::GetLoadedPrefabs(const reflection::TypeDescriptor* typeDesc) {
   std::vector<PrefabInfo> prefabs;
-  for (const PrefabManager::PrefabInfo& prefab : m_loadedPrefabs) {
+  for (const PrefabManager::PrefabInfo& prefab : m_GlobalLoadedPrefabs) {
+    if (prefab.m_typeDesc == typeDesc) {
+      prefabs.push_back(prefab);
+    }
+  }
+  for (const PrefabManager::PrefabInfo& prefab : m_TransientLoadedPrefabs) {
     if (prefab.m_typeDesc == typeDesc) {
       prefabs.push_back(prefab);
     }
@@ -114,8 +146,24 @@ std::vector<PrefabManager::PrefabInfo> PrefabManager::GetLoadedPrefabs(const ref
   return prefabs;
 }
 
+std::vector<PrefabManager::PrefabInfo>& PrefabManager::GetAllLoadedPrefabs() {
+  std::vector<PrefabInfo> prefabs;
+  for (const PrefabManager::PrefabInfo& prefab : m_GlobalLoadedPrefabs) {
+      prefabs.push_back(prefab);
+  }
+  for (const PrefabManager::PrefabInfo& prefab : m_TransientLoadedPrefabs) {
+      prefabs.push_back(prefab);
+  }
+  return prefabs;
+}
+
 const PrefabManager::PrefabInfo* PrefabManager::GetPrefabInfo(const char* filename) {
-  for (PrefabInfo& prefab : m_loadedPrefabs) {
+  for (PrefabInfo& prefab : m_GlobalLoadedPrefabs) {
+    if (prefab.m_fileName == filename) {
+      return &prefab;
+    }
+  }
+  for (PrefabInfo& prefab : m_TransientLoadedPrefabs) {
     if (prefab.m_fileName == filename) {
       return &prefab;
     }
@@ -123,3 +171,14 @@ const PrefabManager::PrefabInfo* PrefabManager::GetPrefabInfo(const char* filena
   return nullptr;
 }
 
+void PrefabManager::Clear() {
+  reflection::__internal::forceVisitIgnored = true;
+  for (PrefabInfo& prefab : m_TransientLoadedPrefabs) {
+    reflection::UnloadTypeVisitor unloadVisitor(prefab.m_ptr);
+    prefab.m_typeDesc->Accept(&unloadVisitor);
+    // The prefab type is struct and not pointer, so it doesnt call destroy. We call it here.
+    prefab.m_typeDesc->destroy(prefab.m_ptr);
+  }
+  reflection::__internal::forceVisitIgnored = false;
+  m_TransientLoadedPrefabs.clear();
+}

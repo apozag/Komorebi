@@ -86,10 +86,9 @@ namespace reflection {
   void CopyTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
     void** ppObjSrc = type->getPPtr(m_pObjSrc);
     void** ppObjDst = type->getPPtr(m_pObjDst);
-    const TypeDescriptor* dynamicType = type->GetDynamic(ppObjSrc);
-    *ppObjDst = dynamicType->create();
+    const TypeDescriptor* dynamicType = type->GetDynamic(ppObjSrc);     
     std::string filename = type->getFilename(m_pObjSrc);
-    PrefabManager::GetInstance()->LoadPrefab(filename.c_str(), *ppObjDst, dynamicType);
+    *ppObjDst = PrefabManager::GetInstance()->LoadPrefab(filename.c_str(), dynamicType);
     type->setFilename(m_pObjDst, filename);
   }
 

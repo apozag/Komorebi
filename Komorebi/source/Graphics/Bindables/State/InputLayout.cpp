@@ -1,5 +1,6 @@
 #include "Graphics/Bindables/State/InputLayout.h"
 #include "Graphics/GraphicsThrowMacros.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 
 namespace gfx {
 
@@ -18,6 +19,9 @@ namespace gfx {
 	}
 
 	void InputLayout::Unbind() const {
-	}
+	}	
+
+	REFLECT_STRUCT_BEGIN(InputLayout, StateBindable)
+	REFLECT_STRUCT_END(InputLayout)
 
 }

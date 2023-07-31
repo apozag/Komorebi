@@ -46,7 +46,7 @@ namespace gfx {
 	}
 
 	void Texture2D::Unbind() const {
-		ID3D11ShaderResourceView* nullViews[] = { nullptr };
+		static ID3D11ShaderResourceView* nullViews[] = { nullptr };
 		GetContext()->PSSetShaderResources(m_slot, 1u, nullViews);
 	}
 

@@ -31,7 +31,7 @@ public:
   REFLECT()
 public:
   Skeleton m_skeleton;
-  Animation* m_animation;
+  Animation* m_animation = nullptr;
   bool m_hasAnimation = false;
 private:
   std::vector<Drawable*> m_drawables;

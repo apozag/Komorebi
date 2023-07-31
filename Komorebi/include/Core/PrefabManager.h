@@ -26,14 +26,8 @@ public:
   
   template<class T>
   T* LoadPrefab(const char* filename, bool setup = true) {
-    static const reflection::TypeDescriptor* typeDesc = reflection::TypeResolver<T>::get();
-    void* pObj = nullptr;
-    if (typeDesc->create != nullptr) {
-      pObj = typeDesc->create();
-      LoadPrefab(filename, pObj, typeDesc, setup);
-      return (T*)pObj;
-    }
-    return nullptr;
+    static const reflection::TypeDescriptor* typeDesc = reflection::TypeResolver<T>::get();    
+    return (T*)LoadPrefab(filename, typeDesc, setup);
   }
   
   template<class T>
@@ -41,10 +35,10 @@ public:
     SavePrefab(filename, pObj, reflection::TypeResolver<T>::get());
   }
 
-  const PrefabManager::PrefabInfo& LoadPrefab(const char* filename, void* pObj, const reflection::TypeDescriptor* typeDesc, bool setup = true);
+  void* LoadPrefab(const char* filename, const reflection::TypeDescriptor* typeDesc, bool setup = true);
   void SavePrefab(const char* filename, void* pObj, const reflection::TypeDescriptor* typeDesc);
 
-  std::vector<PrefabInfo>& GetAllLoadedPrefabs() { return m_loadedPrefabs; }
+  std::vector<PrefabInfo>& GetAllLoadedPrefabs();
 
   template<class T>
   std::vector<PrefabInfo> GetLoadedPrefabs() {
@@ -56,8 +50,10 @@ public:
 
   const PrefabManager::PrefabInfo* GetPrefabInfo(const char* filename);
 
-private:  
+  void Clear();
 
+private:  
   std::vector<std::string> m_loadingPrefabNameStack;
-  std::vector<PrefabInfo> m_loadedPrefabs;
+  std::vector<PrefabInfo> m_GlobalLoadedPrefabs;
+  std::vector<PrefabInfo> m_TransientLoadedPrefabs;
 };

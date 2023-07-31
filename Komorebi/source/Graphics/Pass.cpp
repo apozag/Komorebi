@@ -60,6 +60,9 @@ namespace gfx {
 		for (StateBindable* bind : m_binds) {
 			delete(bind);
 		}*/
+
+		memory::Factory::Destroy(m_vertexShader);
+		memory::Factory::Destroy(m_pixelShader);
 	}
 
 	void Pass::AddBindable(StateBindable* bind) {

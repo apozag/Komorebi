@@ -106,8 +106,7 @@ namespace reflection {
     if (filename[0] != '\0') {
       void** ppObj = type->getPPtr(m_pObj);
       const TypeDescriptor* dynamicType = type->GetDynamic(ppObj);      
-      *ppObj = dynamicType->create();
-      PrefabManager::GetInstance()->LoadPrefab(filename, *ppObj, dynamicType);
+      *ppObj = PrefabManager::GetInstance()->LoadPrefab(filename, dynamicType);
       type->setFilename(m_pObj, filename);
     }
   }

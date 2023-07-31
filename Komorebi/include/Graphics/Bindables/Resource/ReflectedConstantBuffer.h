@@ -20,6 +20,7 @@ namespace gfx {
 
 	public:
 
+		ReflectedConstantBuffer() {}
 		ReflectedConstantBuffer(std::vector<ConstantBufferVariable> variables, unsigned int slot);
 
 		~ReflectedConstantBuffer() {
@@ -57,6 +58,7 @@ namespace gfx {
 
 	class ReflectedVertexConstantBuffer : public ReflectedConstantBuffer {
 	public:
+		ReflectedVertexConstantBuffer() {}
 		ReflectedVertexConstantBuffer(std::vector<ConstantBufferVariable> variables, unsigned int slot) : ReflectedConstantBuffer(variables, slot) {}
 		void Bind() const override {
 			GetContext()->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
@@ -68,6 +70,7 @@ namespace gfx {
 
 	class ReflectedPixelConstantBuffer : public ReflectedConstantBuffer {
 	public:
+		ReflectedPixelConstantBuffer() {}
 		ReflectedPixelConstantBuffer(std::vector<ConstantBufferVariable> variables, unsigned int slot) : ReflectedConstantBuffer(variables, slot) {}
 		void Bind() const override {
 			GetContext()->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());

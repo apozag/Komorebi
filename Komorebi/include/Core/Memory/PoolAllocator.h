@@ -8,8 +8,8 @@ namespace memory {
     bool IsInitialized() {
       return m_pData != nullptr;
     }
-    void* Allocate(size_t size);
-    void Deallocate(void*);
+    void* Allocate(size_t size, size_t alignment);
+    bool Deallocate(void*);
     void DeallocateAll();
   private:
     size_t* m_pChunkUsedBytes = nullptr;

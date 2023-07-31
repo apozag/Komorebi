@@ -28,10 +28,9 @@ void Drawable::Setup() {
 	AddBindable(m_modelCbuffer);
 }
 
-Drawable::~Drawable() {
-	//delete(m_modelCbuffer);
+Drawable::~Drawable() {	
 	for (gfx::ResourceBindable* bind : m_binds) {
-		//delete(bind);
+		memory::Factory::Destroy(bind);
 	}
 }
 

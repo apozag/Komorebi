@@ -35,8 +35,6 @@ DirectX::XMMATRIX aiMatrix4x4ToXMMATRIX(aiMatrix4x4 matrix) {
   );
 }
 
-int boneCount = 0;
-
 void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* sceneGraphParent, Model* model) {
 
   if (filename == "cube" || filename == "quad") {
@@ -59,7 +57,10 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 
   if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
   {
-    std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+    std::string errStr = "ERROR::ASSIMP:: ";
+    errStr += importer.GetErrorString();
+    OutputDebugString(errStr.c_str());
+    //std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
     return;
   }
 
@@ -75,6 +76,9 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
 
   if (model->m_hasAnimation = scene->HasAnimations()) {
     model->m_animation = processAnimation(scene);
+  }
+  else {
+    model->m_animation = nullptr;
   }
 
   matInstances.clear();
@@ -260,7 +264,6 @@ void ModelLoader::processNodeBones(aiNode* node, const aiScene* scene, Scene* sc
     sceneNode = sceneGraph->AddNode(entity, Transform(aiMatrix4x4ToXMMATRIX(node->mTransformation)), sceneGraphParent, true);
     sceneNode->m_name = nodeName;
     boneNodes[nodeIdx] = sceneNode;
-    boneCount++;
   }
   else {
     sceneNode = sceneGraphParent;
@@ -292,17 +295,19 @@ void ModelLoader::processMaterials(const aiScene* scene, gfx::Material* material
         if (aiTex->mHeight == 0) {
           // Compressed image data, we need to decode it
           Image img = ImageManager::decodeFromMemory(aiTex->mFilename.C_Str(), (unsigned char*)aiTex->pcData, aiTex->mWidth);
-          gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>((unsigned char*)img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j);
-          matInstance->AddBindable(texture);
+          if (img.data) {
+            gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>((unsigned char*)img.data, img.width, img.height, img.channels, SRV_FREE_SLOT + j);
+            matInstance->AddBindable(texture);
+          }
         }
         else {
           gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>((unsigned char*)aiTex->pcData, aiTex->mWidth, aiTex->mHeight, 4, SRV_FREE_SLOT + j);
           matInstance->AddBindable(texture);
         }
       }
-      else {
-        //regular file, read it from disk
-        gfx::Texture2D* texture = memory::Factory::Create < gfx::Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j);
+      else if (INVALID_FILE_ATTRIBUTES != GetFileAttributes(str.C_Str())) {
+        //regular file, read it from disk        
+        gfx::Texture2D* texture = memory::Factory::Create<gfx::Texture2D>(directory + str.C_Str(), SRV_FREE_SLOT + j);
         texture->Setup();
         matInstance->AddBindable(texture);
       }

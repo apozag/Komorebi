@@ -37,7 +37,8 @@ void DrawSaveSceneMenu() {
   static constexpr size_t buffSize = 64;
   static char buff[buffSize];
   if (!setup) {
-    buff[0] = '\0';
+    strcpy_s(buff, buffSize, SceneLoader::GetLastLoadedFileName().c_str());
+    //buff[0] = '\0';
     setup = true;
   }
   ImGui::InputText("##SaveFileName", buff, buffSize);
@@ -45,7 +46,6 @@ void DrawSaveSceneMenu() {
   if (ImGui::Button("Save##SaveButton") && buff[0] != '\0') {
     SceneLoader::SaveScene(Engine::GetActiveScene(), buff);
   }
-  ImGui::EndMenu();
 }
 
 void DrawLoadSceneMenu() {
@@ -53,18 +53,16 @@ void DrawLoadSceneMenu() {
   static constexpr size_t buffSize = 64;
   static char buff[buffSize];
   if (!setup) {
-    buff[0] = '\0';
+    strcpy_s(buff, buffSize, SceneLoader::GetLastLoadedFileName().c_str());
+    //buff[0] = '\0';
     setup = true;
   }
   ImGui::InputText("##LoadFileName", buff, buffSize);
   ImGui::SameLine();
-  if (ImGui::Button("Load##LoadButton") && buff[0] != '\0') {
-    //memory::Factory::FreeAll();
-    reflection::UnloadTypeVisitor unloadVisitor (Engine::GetActiveScene()->GetRootNode());
-    reflection::TypeResolver<Node>::get()->Accept(&unloadVisitor);
-    Engine::SetActiveScene(SceneLoader::LoadScene(buff));
+  if (ImGui::Button("Load##LoadButton") && buff[0] != '\0') {    
+    SceneLoader::UnloadScene();
+    Engine::SetActiveScene(SceneLoader::LoadScene(buff));    
   }
-  ImGui::EndMenu();
 }
 
 void DrawTopMenu() {
@@ -78,11 +76,13 @@ void DrawTopMenu() {
     if (ImGui::BeginMenu("Save Scene"))
     {
       DrawSaveSceneMenu();
+      ImGui::EndMenu();
     }
     // Load Scene
     if (ImGui::BeginMenu("Load Scene"))
     {
       DrawLoadSceneMenu();
+      ImGui::EndMenu();
     }
 
     ImGui::EndMenu();

@@ -63,8 +63,8 @@ namespace gfx {
 	private:
 		std::string m_PSFilename;
 		std::string m_VSFilename;
-		OWNED_PTR(PixelShader) m_pixelShader;
-		OWNED_PTR(VertexShader) m_vertexShader;
+		PixelShader* m_pixelShader;
+		VertexShader* m_vertexShader;
 		std::vector<OWNED_PTR(StateBindable)> m_binds;		
 		bool m_skinned;
 		static unsigned char static_idx;

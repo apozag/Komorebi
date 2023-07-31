@@ -14,6 +14,7 @@ class Node : public GameObject{
 public:
 
 	Node() : m_name("Node"){}
+	 ~Node() {}
 
 	template<class T>
 	inline T* GetEntity();

@@ -562,6 +562,7 @@
     <ClCompile Include="source\Graphics\RenderPipeline\RenderStep.cpp" />
     <ClCompile Include="source\Input\Keyboard.cpp" />
     <ClCompile Include="source\Input\Mouse.cpp" />
+    <ClCompile Include="source\Scene\AuxNode.cpp" />
     <ClCompile Include="source\Scene\ModelLoader.cpp" />
     <ClCompile Include="source\Scene\Node.cpp" />
     <ClCompile Include="source\Scene\Scene.cpp" />

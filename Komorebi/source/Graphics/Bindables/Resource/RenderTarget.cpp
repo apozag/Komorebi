@@ -165,7 +165,7 @@ namespace gfx {
 			GetContext()->OMSetRenderTargets(m_rtv.size(), nullViews.data(), nullptr);
 		}
 		else {
-			ID3D11RenderTargetView* nullviews[1] = { nullptr };
+			static ID3D11RenderTargetView* nullviews[1] = { nullptr };
 			GetContext()->OMSetRenderTargets(1, nullviews, nullptr);
 		}
 

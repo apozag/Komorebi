@@ -52,7 +52,8 @@ void Camera::Bind( const Transform* worldTransform) const {
 }
 
 Camera::~Camera() {
-	//delete(m_cameraTransformCB);
+  memory::Factory::Destroy(m_cameraTransformVCB);
+  memory::Factory::Destroy(m_cameraTransformPCB);
 }
 
 void Camera::Unbind( ) const {

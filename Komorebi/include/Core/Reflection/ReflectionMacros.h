@@ -30,7 +30,7 @@
 #define REFLECT_HIDE()  \
     friend struct ::reflection::DefaultResolver;	\
   static const ::reflection::TypeDescriptor_Ignored& GetReflection() { \
-    static ::reflection::TypeDescriptor_Ignored Reflection; \
+    static ::reflection::TypeDescriptor_Ignored Reflection{initReflection}; \
     return Reflection;  \
   } \
   virtual const ::reflection::TypeDescriptor_Struct* GetReflectionDynamic() const override{  \

@@ -35,14 +35,12 @@ public:
   static inline T* Create(Args&&... args) {    
 
     T* ptr = nullptr;
-
-    bool globalMode = m_modeStack.size() >= 1 ? m_modeStack[m_modeStack.size() - 1] : true;
     
-    if (globalMode) {
-      ptr = (T*)m_globalPool.Allocate(sizeof(T));
+    if (IsCurrentModeGlobal()) {
+      ptr = (T*)m_globalPool.Allocate(sizeof(T), alignof(T));
     }
     else {
-      ptr = (T*)m_transientPool.Allocate(sizeof(T));
+      ptr = (T*)m_transientPool.Allocate(sizeof(T), alignof(T));
     }
 
     if (ptr != nullptr) {
@@ -58,7 +56,9 @@ public:
       return;
     }
     ptr->~T();
-    m_transientPool.Deallocate(ptr);
+    if (!m_transientPool.Deallocate(ptr) && !m_globalPool.Deallocate(ptr)) {
+      //TODO: [ERROR] Tried to destroy an object that is not present in any pool
+    }
   }
 
   static inline void FreeAll() {
@@ -78,6 +78,10 @@ public:
     if (m_modeStack.size() > 1) {
       m_modeStack.pop_back();
     }
+  }
+
+  static bool IsCurrentModeGlobal() {
+    return m_modeStack.empty() ? true : m_modeStack[m_modeStack.size() - 1];
   }
 
 private:

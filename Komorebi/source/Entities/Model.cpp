@@ -56,7 +56,10 @@ void Model::Reconfigure(){
 }
 
 Model::~Model() {
-  //delete(m_animation);
+  if(m_hasAnimation) memory::Factory::Destroy(m_animation);
+  /*for (Drawable* drawable : m_drawables) {
+    memory::Factory::Destroy(drawable);
+  }*/
 }
 
 void Model::AddDrawable(Drawable* drawable) {

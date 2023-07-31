@@ -104,5 +104,5 @@ Camera* RecursiveFindMainCamera(Node* node) {
 
 void Engine::SetActiveScene(Scene* scene) {
 	m_activeScene = scene;
-	m_mainCamera = RecursiveFindMainCamera(m_activeScene->m_transformHierarchy);
+	m_mainCamera = m_activeScene ? RecursiveFindMainCamera(m_activeScene->m_transformHierarchy) : nullptr;
 }

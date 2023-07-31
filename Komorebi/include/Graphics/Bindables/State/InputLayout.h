@@ -10,6 +10,7 @@ namespace gfx {
 
 	class InputLayout : public StateBindable {
 	public:
+		InputLayout() {}
 		InputLayout(const D3D11_INPUT_ELEMENT_DESC* ied, unsigned int numElements, const gfx::VertexShader& vs);
 		~InputLayout();
 		void Bind()const override;

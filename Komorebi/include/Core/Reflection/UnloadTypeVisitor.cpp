@@ -1,19 +1,26 @@
 #pragma once
 
 #include "Core/Reflection/UnloadTypeVisitor.h"
+#include "Entities/Model.h"
 
 namespace reflection {
 
-  void UnloadTypeVisitor::Visit(const TypeDescriptor_Struct* type) {
+  void UnloadTypeVisitor::Visit(const TypeDescriptor_Struct* type) {    
+    UnloadMembers(type);
+  }
+
+  void UnloadTypeVisitor::UnloadMembers(const TypeDescriptor_Struct* type) {
     void* pObj = m_pObj;
 
-    int memberCount = type->members.size();
-    for (int i = 0; i < memberCount; i++) {
-      m_pObj = type->members[i].getAddress(pObj);
-      type->members[i].type->Accept(this);
+    if (type->parentTypeDesc) {
+      UnloadMembers(type->parentTypeDesc);
     }
-
-    type->destroy(pObj);
+    
+   int memberCount = type->members.size();
+   for (int i = 0; i < memberCount; i++) {
+     m_pObj = type->members[i].getAddress(pObj);
+     type->members[i].type->Accept(this);
+   }
   }
 
   void UnloadTypeVisitor::Visit(const TypeDescriptor_StdVector* type) {
@@ -28,8 +35,16 @@ namespace reflection {
   void UnloadTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
     void** ppObj = (void**)m_pObj;
     const TypeDescriptor* dynamicType = type->GetDynamic(m_pObj);
+    
     m_pObj = *ppObj;
-    dynamicType->Accept(this);    
+
+    if (dynamicType == TypeResolver<Model>::get()) {
+      int i = 0;
+    }
+
+    dynamicType->Accept(this);
+    
+    dynamicType->destroy(*ppObj);
   }
 
 }

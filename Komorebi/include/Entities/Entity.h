@@ -25,7 +25,7 @@ protected:
 	const gfx::Graphics* GetGraphics() const;
 	const Window* GetWindow() const;
 
-	Node* m_node;
+	Node* m_node = nullptr;
 
 public:
 	uint32_t m_tag = 0;

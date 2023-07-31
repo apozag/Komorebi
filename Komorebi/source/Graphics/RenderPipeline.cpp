@@ -37,30 +37,30 @@ namespace gfx {
 
       Job& job = jobs[i];
 
-      const RenderStep* step = FindRenderStep(job);
+      if (const RenderStep* step = FindRenderStep(job)) {
 
-      // Frustum culling
-      bool ignoreCull = job.pass->DoesIgnoreFrustumCulling();
-      bool cull =  !ignoreCull && math::cullAABB(planes, job.drawable->GetBVHData(), job.transform);
+        // Frustum culling
+        bool ignoreCull = job.pass->DoesIgnoreFrustumCulling();
+        bool cull = !ignoreCull && math::cullAABB(planes, job.drawable->GetBVHData(), job.transform);
 
-      job.key &= ~(uint64_t(1) << 34);
-      job.key |= uint64_t(cull) << 34;
+        job.key &= ~(uint64_t(1) << 34);
+        job.key |= uint64_t(cull) << 34;
 
-      jobsToExecute -= cull;
+        jobsToExecute -= cull;
 
-      // Depth
-      if (!cull) {
-        unsigned int shifts = step->m_sortReverse * 16;
-        job.key &= ~(uint64_t(0xFFFF) << shifts);
-        float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
-        float farZ = camView.camera->m_far;
-        float nearZ = camView.camera->m_near;
-        float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
-        uint64_t depthKeyComponent = (step->m_sortReverse ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
-        job.key |= depthKeyComponent << shifts;
-        job.key |= 0;
+        // Depth
+        if (!cull) {
+          unsigned int shifts = step->m_sortReverse * 16;
+          job.key &= ~(uint64_t(0xFFFF) << shifts);
+          float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
+          float farZ = camView.camera->m_far;
+          float nearZ = camView.camera->m_near;
+          float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
+          uint64_t depthKeyComponent = (step->m_sortReverse ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
+          job.key |= depthKeyComponent << shifts;
+          job.key |= 0;
+        }
       }
-
     }
 
     // Sort jobs based on its key

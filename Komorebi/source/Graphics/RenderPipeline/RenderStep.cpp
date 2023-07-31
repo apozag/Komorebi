@@ -134,8 +134,8 @@ namespace gfx {
 
         job.material->Unbind();        
 
-        lastPass = job.pass;
-        lastMat = job.material->GetMaterial();
+        //lastPass = job.pass;
+        //lastMat = job.material->GetMaterial();
       }
       if(lastPass) lastPass->Unbind();
       if(lastMat) lastMat->Unbind();
