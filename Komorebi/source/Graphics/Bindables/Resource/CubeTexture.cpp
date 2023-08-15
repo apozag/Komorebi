@@ -5,7 +5,7 @@
 #include "Core/Util/ImageManager.h"
 
 namespace gfx {
-	CubeTexture::CubeTexture(Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot) {
+	CubeTexture::CubeTexture(Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture, DXGI_FORMAT format, unsigned int slot) : Texture2D("", slot) {
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Format = format;
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;

@@ -66,6 +66,7 @@
 					</m_textureInputs>
 					<m_resourceInputs>
 						<resourceId>ENVMAP</resourceId>
+						<!-- <resourceId>BRDF</resourceId> -->
 					</m_resourceInputs>>
 					<m_outRtId>HDR</m_outRtId>
 					<m_screenEffectMat>assets/materials/composeAmbientMat.xml</m_screenEffectMat>
@@ -138,10 +139,17 @@
 	<m_globalResources>
 		<RTNamePairType>
 			<m_name>ENVMAP</m_name>
-			<m_resource Type="HDRCubeTexture">
+			<m_resource Type="RadianceMap">
 				<m_filename>assets\images\hdri\pine_attic_4k.png</m_filename>
 				<m_slot>12</m_slot>
 				<m_size>258</m_size>
+			</m_resource>
+		</RTNamePairType>
+		<RTNamePairType>
+			<m_name>BRDF</m_name>
+			<m_resource Type="Texture2D">
+				<m_filename>assets\images\lut\ibl_brdf_lut.png</m_filename>
+				<m_slot>14</m_slot>
 			</m_resource>
 		</RTNamePairType>
 	</m_globalResources>

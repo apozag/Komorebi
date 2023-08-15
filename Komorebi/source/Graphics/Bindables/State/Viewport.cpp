@@ -1,13 +1,15 @@
 #include "Graphics/Bindables/State/Viewport.h"
 
-namespace gfx {
+#include "Core/Reflection/ReflectionImplMacros.h"
 
-	Viewport::Viewport(int x, int y, int w, int h) {
+namespace gfx {	
+
+	void Viewport::Setup() {
 		m_viewport = {};
-		m_viewport.TopLeftX = x;
-		m_viewport.TopLeftY = y;
-		m_viewport.Width = w;
-		m_viewport.Height = h;
+		m_viewport.TopLeftX = m_x;
+		m_viewport.TopLeftY = m_y;
+		m_viewport.Width = m_w;
+		m_viewport.Height = m_h;
 		m_viewport.MaxDepth = 1;
 		m_viewport.MinDepth = 0;
 	}
@@ -18,4 +20,13 @@ namespace gfx {
 	void Viewport::Unbind() const {
 	}
 
+	REFLECT_STRUCT_BEGIN(Viewport, StateBindable)
+	REFLECT_STRUCT_MEMBER(m_x)
+	REFLECT_STRUCT_MEMBER(m_y)
+	REFLECT_STRUCT_MEMBER(m_w)
+	REFLECT_STRUCT_MEMBER(m_h)
+	REFLECT_STRUCT_END(Viewport, StateBindable)
+
 }
+
+IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, Viewport)

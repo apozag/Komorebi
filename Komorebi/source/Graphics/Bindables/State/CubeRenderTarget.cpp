@@ -52,6 +52,7 @@ namespace gfx {
 
 		if (!m_viewport) {
 			m_viewport = memory::Factory::Create<Viewport>(0, 0, m_width, m_height);
+			m_viewport->Setup();
 		}
 		
   }

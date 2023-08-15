@@ -22,7 +22,9 @@ namespace gfx {
 		virtual void Setup() override;
 
 		void Bind() const override;
+		void BindAt(unsigned int slot) const;
 		void Unbind() const override;
+		void UnbindAt(unsigned int slot) const;
 
 		ID3D11ShaderResourceView* GetSRV() const { return (ID3D11ShaderResourceView*)m_srv.Get(); }
 

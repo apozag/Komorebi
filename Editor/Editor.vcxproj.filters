@@ -253,5 +253,8 @@
     <FxCompile Include="assets\shaders\deferred\PBRFlatColorPixel.hlsl">
       <Filter>Shaders\Pixel\Deferred</Filter>
     </FxCompile>
+    <FxCompile Include="assets\shaders\BlitNoAlphaPixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

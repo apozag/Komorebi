@@ -45,9 +45,18 @@ namespace gfx {
 		GetContext()->PSSetShaderResources(m_slot, 1u, m_srv.GetAddressOf());
 	}
 
+	void Texture2D::BindAt(unsigned int slot) const {
+		GetContext()->PSSetShaderResources(slot, 1u, m_srv.GetAddressOf());
+	}
+
 	void Texture2D::Unbind() const {
 		static ID3D11ShaderResourceView* nullViews[] = { nullptr };
 		GetContext()->PSSetShaderResources(m_slot, 1u, nullViews);
+	}
+
+	void Texture2D::UnbindAt(unsigned int slot) const {
+		static ID3D11ShaderResourceView* nullViews[] = { nullptr };
+		GetContext()->PSSetShaderResources(slot, 1u, nullViews);
 	}
 
 	void Texture2D::CreateFromImage(const Image& image) {
@@ -80,6 +89,6 @@ namespace gfx {
 	}
 
 	REFLECT_STRUCT_BEGIN(Texture2D, ResourceBindable)
-		REFLECT_STRUCT_MEMBER(m_filename)
-		REFLECT_STRUCT_END(Texture2D)
+	REFLECT_STRUCT_MEMBER(m_filename)
+	REFLECT_STRUCT_END(Texture2D)
 }

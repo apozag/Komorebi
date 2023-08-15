@@ -57,6 +57,7 @@ namespace gfx {
 		m_height = rtDesc.Height;
 
 		m_viewport = memory::Factory::Create<Viewport>(0, 0, m_width, m_height);
+		m_viewport->Setup();
 	}
 
 	RenderTarget::~RenderTarget() {
@@ -140,6 +141,7 @@ namespace gfx {
 
 		if (!m_viewport) {
 			m_viewport = memory::Factory::Create<Viewport>(0, 0, m_width, m_height);
+			m_viewport->Setup();
 		}
 	}
 

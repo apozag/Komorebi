@@ -2,7 +2,7 @@
 #define _2PI 6.2832f
 #define _PI2 1.5708f
 
-TextureCube	EnvMap : register(t0);
+TextureCube	EnvMap : register(t13);
 
 SamplerState LinearSampler : register(s0);
 

@@ -30,7 +30,8 @@ Texture2D posTex : register(t9);
 //Texture2D emissiveTex : register(t10);
 Texture2D pbrParamsTex : register(t11);
 
-TextureCube	EnvMap : register(t12);
+TextureCube	EnvMapDiff : register(t12);
+TextureCube	EnvMapSpec : register(t13);
 
 SamplerState texSampler;
 
@@ -42,13 +43,19 @@ float4 main(VSout input) : SV_Target0
   pbrIn.viewDir = normalize(float4(viewInv._14, viewInv._24, viewInv._34, 1) - pbrIn.worldPos);
   pbrIn.halfVector = normalize((pbrIn.viewDir + dirLightDir) * 0.5);
   pbrIn.lightDir = float4(0,0,0,0);
-  pbrIn.lightColor = EnvMap.Sample(texSampler, pbrIn.normal);
+  pbrIn.lightColor = EnvMapDiff.Sample(texSampler, pbrIn.normal);
   pbrIn.albedo = colorTex.Sample(texSampler, input.uv);
 
   float4 pbrParams = pbrParamsTex.Sample(texSampler, input.uv);
   pbrIn.metalness = pbrParams.x;
   pbrIn.roughness = pbrParams.y;
 
-  return float4(PBRDiffuseIrradiance(pbrIn), 1);
+  float4 diff = float4(PBRDiffuseIrradiance(pbrIn), 1);
+
+  pbrIn.lightColor = EnvMapSpec.Sample(texSampler, reflect(pbrIn.viewDir, pbrIn.normal));
+
+  float4 spec = float4(PBRSpecularIBL(pbrIn), 1);
+
+  return diff + spec;
 }
 

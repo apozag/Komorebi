@@ -459,7 +459,7 @@
     <ClInclude Include="include\Core\PrefabManager.h">
       <Filter>Archivos de encabezado\Core</Filter>
     </ClInclude>
-    <ClInclude Include="include\Graphics\Bindables\Resource\HDRCubeTexture.h">
+    <ClInclude Include="include\Graphics\Bindables\Resource\RadianceMap.h">
       <Filter>Archivos de encabezado\Graphics\Bindables\Resource</Filter>
     </ClInclude>
     <ClInclude Include="include\Graphics\Bindables\State\GeometryShader.h">
@@ -671,7 +671,7 @@
     <ClCompile Include="source\Core\PrefabManager.cpp">
       <Filter>Archivos de origen\Core</Filter>
     </ClCompile>
-    <ClCompile Include="source\Graphics\Bindables\Resource\HDRCubeTexture.cpp">
+    <ClCompile Include="source\Graphics\Bindables\Resource\RadianceMap.cpp">
       <Filter>Archivos de origen\Graphics\Bindables\Resource</Filter>
     </ClCompile>
     <ClCompile Include="source\Graphics\Bindables\State\GeometryShader.cpp">

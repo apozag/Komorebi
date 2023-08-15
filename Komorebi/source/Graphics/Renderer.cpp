@@ -113,10 +113,8 @@ gfx::Renderer::Renderer() :
 
 void gfx::Renderer::Init() {
 
-  const reflection::TypeDescriptor* renderInfoType = reflection::DefaultResolver::get<RenderInfo>();
-
   reflection::SetupTypeVisitor setupVisitor(m_renderInfo);
-  renderInfoType->Accept(&setupVisitor);
+  reflection::DefaultResolver::get<RenderInfo>()->Accept(&setupVisitor);
 
   reflection::ReflectionHelper::ClearAll();
 

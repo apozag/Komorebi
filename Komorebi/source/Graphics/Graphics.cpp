@@ -202,6 +202,7 @@ namespace gfx {
 		m_target = memory::Factory::Create<RenderTarget>(m_swapChain.Get());
 
 		m_viewport = memory::Factory::Create<Viewport>(0, 0, m_viewportWidth, m_viewportHeight);
+		m_viewport->Setup();
 
 		m_target->Bind();
 		m_viewport->Bind();

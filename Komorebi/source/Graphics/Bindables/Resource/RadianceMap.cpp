@@ -1,4 +1,5 @@
-#include "Graphics/Bindables/Resource/HDRCubeTexture.h"
+#include "Graphics/Bindables/Resource/RadianceMap.h"
+#include "Graphics/Bindables/Resource/CubeTexture.h"
 #include "Core/Reflection/ReflectionImplMacros.h"
 #include "Graphics/Bindables/Resource/Texture2D.h"
 #include "Graphics/Bindables/State/PixelShader.h"
@@ -23,13 +24,18 @@ namespace gfx {
     DirectX::XMMATRIX viewProj[6];
   };
 
-  HDRCubeTexture::~HDRCubeTexture() {    
+  RadianceMap::~RadianceMap() {    
+    memory::Factory::Destroy(m_diffuseRadMap);
+    memory::Factory::Destroy(m_specularRadMap);
   }
 
-  void HDRCubeTexture::Setup() {
+  void RadianceMap::Setup() {
 
-    CubeRenderTarget* tempCubeRT = memory::Factory::Create<CubeRenderTarget>(m_size, m_size, DXGI_FORMAT_R32G32B32A32_FLOAT, m_slot);
-    tempCubeRT->Setup();
+    m_diffuseRadMap = memory::Factory::Create<CubeRenderTarget>(m_size, m_size, DXGI_FORMAT_R32G32B32A32_FLOAT, m_slot);
+    m_diffuseRadMap->Setup();
+
+    m_specularRadMap = memory::Factory::Create<CubeRenderTarget>(m_size, m_size, DXGI_FORMAT_R32G32B32A32_FLOAT, m_slot+1);
+    m_specularRadMap->Setup();    
 
     Texture2D* hdri = memory::Factory::Create<Texture2D>(m_filename, 0u);
     hdri->Setup();
@@ -112,7 +118,7 @@ namespace gfx {
     viewsCBuffer->Bind();
 
     // 2D Texture to cubemap
-    tempCubeRT->Bind();
+    m_specularRadMap->Bind();
     hdri->Bind();
     pShader->Bind();  
 
@@ -120,21 +126,18 @@ namespace gfx {
         
     pShader->Unbind();
     hdri->Unbind();
-    tempCubeRT->Unbind();
+    m_specularRadMap->Unbind();
 
-    // Cubemap convolution
-    m_cubeRT = memory::Factory::Create<CubeRenderTarget>(m_size, m_size, DXGI_FORMAT_R32G32B32A32_FLOAT, m_slot);
-    m_cubeRT->Setup();
-
-    m_cubeRT->Bind();
-    tempCubeRT->GetCubeTexture()->Bind();
+    // Cubemap convolution    
+    m_diffuseRadMap->Bind();
+    m_specularRadMap->GetCubeTexture()->Bind();
     pConvShader->Bind();
 
     unitCube->Draw(DirectX::XMMatrixIdentity());
 
     pConvShader->Unbind();
-    tempCubeRT->GetCubeTexture()->Unbind();
-    m_cubeRT->Unbind();
+    m_specularRadMap->GetCubeTexture()->Unbind();
+    m_diffuseRadMap->Unbind();
 
     // Unbind general stuff
     viewport->Unbind();
@@ -143,19 +146,25 @@ namespace gfx {
     inputLayout->Unbind();
     viewsCBuffer->Unbind();
     vShader->Unbind();
-    gShader->Unbind();
-
-    m_srv = m_cubeRT->GetCubeTexture()->GetSRV();
-
-    memory::Factory::Destroy(tempCubeRT);
-    
+    gShader->Unbind();        
   }
 
-  REFLECT_STRUCT_BEGIN(HDRCubeTexture, CubeTexture)
+  void RadianceMap::Bind() const {
+    m_diffuseRadMap->GetCubeTexture()->Bind();
+    m_specularRadMap->GetCubeTexture()->Bind();
+  }
+
+  void RadianceMap::Unbind() const {
+    m_diffuseRadMap->GetCubeTexture()->Unbind();
+    m_specularRadMap->GetCubeTexture()->Unbind();
+  }
+
+  REFLECT_STRUCT_BEGIN(RadianceMap, ResourceBindable)
+  REFLECT_STRUCT_MEMBER(m_filename)
   REFLECT_STRUCT_MEMBER(m_size)
-  REFLECT_STRUCT_END(HDRCubeTexture)
+  REFLECT_STRUCT_END(RadianceMap)
 
 }
 
-IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, HDRCubeTexture)
+IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, RadianceMap)
 

@@ -13,6 +13,9 @@ struct PBRinput {
   float metalness;
 };
 
+Texture2D	BrdfLutTex : register(t14);
+SamplerState brdfSampler;
+
 // Normal distribution function
 float _D(PBRinput input) {
   float alpha = input.roughness * input.roughness;
@@ -72,4 +75,11 @@ float3 PBRDiffuseIrradiance(PBRinput input) {
   float3 kS = _F(input);
   float3 kd = float3(1,1,1) - kS;
   return kd * input.lightColor * input.albedo;
+}
+
+float3 PBRSpecularIBL(PBRinput input) {
+  float3 kS = _F(input);
+  float NdotV = dot(input.normal, input.viewDir);
+  float2 envBRDF = BrdfLutTex.Sample(brdfSampler, float2(NdotV, input.roughness)).xy;
+  return (kS * envBRDF.x + envBRDF.y) * input.lightColor;
 }
