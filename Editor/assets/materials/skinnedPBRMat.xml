@@ -1,0 +1,38 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="788608752" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>0</m_layer>
+			<m_PSFilename>assets/shaders/deferred/PBRPixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/SkinnedVertex.cso</m_VSFilename>
+			<m_binds>
+				<DepthStencilState* PtrId="788609008" Type="DepthStencilState">
+					<m_DSAccess>DEPTH_WRITE|DEPTH_READ</m_DSAccess>
+					<m_refVal>0</m_refVal>
+				</DepthStencilState*>
+			</m_binds>
+			<m_skinned>true</m_skinned>
+			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>metalness</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>roughness</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>1</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>0.000000</float>
+					<float>0.950000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds/>
+</Material>
+

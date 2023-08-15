@@ -1,0 +1,24 @@
+<Material>
+    <m_passes>
+        <Pass* Type="Pass">
+            <m_enabled>1</m_enabled>
+            <m_layer>1</m_layer>
+            <m_PSFilename>assets/shaders/skyboxPixel.cso</m_PSFilename>
+            <m_VSFilename>assets/shaders/skyboxVertex.cso</m_VSFilename>
+            <m_binds>
+                <DepthStencilState* Type="DepthStencilState">
+                    <m_DSAccess>|DEPTH_READ</m_DSAccess>
+                    <m_refVal>0</m_refVal>
+                </DepthStencilState*>
+            </m_binds>
+            <m_skinned>0</m_skinned>
+            <m_ignoreFrustumCulling>1</m_ignoreFrustumCulling>
+        </Pass*>
+    </m_passes>
+    <m_binds>
+        <CubeTexture* Type="CubeTexture">
+            <m_path>assets/images/skybox</m_path>
+            <m_slot>0</m_slot>
+        </CubeTexture*>
+    </m_binds>
+</Material>

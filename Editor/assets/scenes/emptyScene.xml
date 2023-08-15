@@ -1,0 +1,95 @@
+<Scene>
+	<m_transformHierarchy PtrId="955843888" Type="Node">
+		<m_name>Node</m_name>
+		<m_entities/>
+		<m_localTransform>
+			<m_position>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</m_position>
+			<m_rotation>
+				<x>-0.000000</x>
+				<y>0.000000</y>
+				<z>-0.000000</z>
+				<w>1.000000</w>
+			</m_rotation>
+			<m_scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</m_scale>
+		</m_localTransform>
+		<m_children>		
+		<Node* PtrId="1360509936" Type="Node">
+				<m_enabled>true</m_enabled>
+				<m_name>Light0</m_name>
+				<m_entities>
+					<DirectionalLight* PtrId="1360510704" Type="DirectionalLight">
+						<m_tag>0</m_tag>
+						<m_node>1360509936</m_node>
+						<m_color>
+							<x>10.000000</x>
+							<y>10.000000</y>
+							<z>10.000000</z>
+						</m_color>
+					</DirectionalLight*>
+				</m_entities>
+				<m_localTransform>
+					<m_position>
+						<x>119.680344</x>
+						<y>319.322906</y>
+						<z>307.311188</z>
+					</m_position>
+					<m_rotation>
+						<x>0.853553</x>
+						<y>0.353553</y>
+						<z>-0.353553</z>
+						<w>0.146447</w>
+					</m_rotation>
+					<m_scale>
+						<x>0.999995</x>
+						<y>0.999990</y>
+						<z>0.999994</z>
+					</m_scale>
+				</m_localTransform>
+				<m_children/>
+				<m_parent>955843888</m_parent>
+			</Node*>	
+			<Node* PtrId="1360540592" Type="Node">
+				<m_enabled>true</m_enabled>
+				<m_name>Backdrop</m_name>
+				<m_entities>
+					<Model* PtrId="1360541360" Type="Model">
+						<m_tag>0</m_tag>
+						<m_node>1360540592</m_node>
+						<m_filename>assets/models/backdrop.fbx</m_filename>
+						<m_material>assets/materials/pbrFlatMat.xml</m_material>
+					</Model*>
+				</m_entities>
+				<m_localTransform>
+					<m_position>
+						<x>-94.643608</x>
+						<y>-50.115772</y>
+						<z>-69.527420</z>
+					</m_position>
+					<m_rotation>
+						<x>-0.000000</x>
+						<y>0.000000</y>
+						<z>-0.000000</z>
+						<w>1.000000</w>
+					</m_rotation>
+					<m_scale>
+						<x>0.600000</x>
+						<y>0.600000</y>
+						<z>0.600000</z>
+					</m_scale>
+				</m_localTransform>
+				<m_children/>
+				<m_parent>955843888</m_parent>
+			</Node*>
+		</m_children>
+		<m_parent>0</m_parent>
+	</m_transformHierarchy>
+</Scene>
+

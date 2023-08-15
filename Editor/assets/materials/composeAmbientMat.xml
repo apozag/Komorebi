@@ -1,0 +1,19 @@
+<Material>
+    <m_passes>
+        <Pass*>
+            <m_layer>11</m_layer>
+            <m_PSFilename>assets/shaders/deferred/ComposeAmbientPixel.cso</m_PSFilename>
+            <m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
+            <m_skinned>0</m_skinned>
+            <m_binds>
+                <BlendState* Type="BlendState">
+                    <m_enable>1</m_enable>
+                    <m_srcBlendFactor>ONE</m_srcBlendFactor>
+                    <m_dstBlendFactor>ONE</m_dstBlendFactor>
+                    <m_blendOp>ADD</m_blendOp>
+                </BlendState*>
+            </m_binds>
+        </Pass*>
+    </m_passes>
+    <m_binds/>
+</Material>

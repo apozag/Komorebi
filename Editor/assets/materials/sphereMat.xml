@@ -1,0 +1,35 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="789252144" Type="Pass">
+			<m_enabled>1</m_enabled>
+			<m_layer>0</m_layer>
+			<m_PSFilename>assets/shaders/deferred/PBRPixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/PBRVertex.cso</m_VSFilename>
+			<m_binds>
+				<DepthStencilState* PtrId="789252400" Type="DepthStencilState">
+					<m_DSAccess>|DEPTH_WRITE|DEPTH_READ</m_DSAccess>
+					<m_refVal>0</m_refVal>
+				</DepthStencilState*>
+			</m_binds>
+			<m_skinned>0</m_skinned>
+			<m_ignoreFrustumCulling>0</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo/>
+				<varsData/>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds>
+		<SamplerState* PtrId="789532080" Type="SamplerState">
+			<m_slot>7</m_slot>
+			<m_filter>D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR</m_filter>
+			<m_mode>D3D11_TEXTURE_ADDRESS_WRAP</m_mode>
+		</SamplerState*>
+        <Texture2D* PtrId="789530000" Type="Texture2D">
+            <m_filename>assets\images\hdri\graveyard_pathways_4k.hdr</m_filename>
+			<!-- <m_filename>assets\images\skybox\0.png</m_filename> -->
+            <m_slot>7</m_slot>
+        </Texture2D>
+	</m_binds>
+</Material>
+

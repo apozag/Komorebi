@@ -1,0 +1,12 @@
+<Material>
+    <m_passes>
+        <Pass*>
+            <m_layer>11</m_layer>
+            <m_PSFilename>assets/shaders/blitPixel.cso</m_PSFilename>
+            <m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
+            <m_skinned>0</m_skinned>
+            <m_binds/>
+        </Pass*>
+    </m_passes>
+    <m_binds/>
+</Material>

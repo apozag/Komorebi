@@ -1,0 +1,31 @@
+<Node>
+    <m_name>Node</m_name>
+    <m_entities>
+        <Model* PtrId="955860784" Type="Model">
+            <m_tag>0</m_tag>
+            <m_node>955860016</m_node>
+            <m_filename>assets/models/demon.fbx</m_filename>
+            <m_material>assets/prefabs/modelMat.xml</m_material>
+        </Model*>
+    </m_entities>
+    <m_localTransform>
+        <m_position>
+            <x>0.000000</x>
+            <y>0.000000</y>
+            <z>0.000000</z>
+        </m_position>
+        <m_rotation>
+            <x>-0.000000</x>
+            <y>0.000000</y>
+            <z>-0.000000</z>
+            <w>1.000000</w>
+        </m_rotation>
+        <m_scale>
+            <x>1.000000</x>
+            <y>1.000000</y>
+            <z>1.000000</z>
+        </m_scale>
+    </m_localTransform>
+    <m_children/>
+    <m_parent>0</m_parent>
+</Node>
