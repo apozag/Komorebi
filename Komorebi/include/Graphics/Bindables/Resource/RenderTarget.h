@@ -18,8 +18,8 @@ namespace gfx {
 	class RenderTarget : public StateBindable {
 	public:
 		RenderTarget(IDXGISwapChain* m_swapChain);
-		RenderTarget(unsigned int width, unsigned int height, DXGI_FORMAT format, unsigned int count, unsigned int slot) :
-			m_width(width), m_height(height), m_format(format), m_count(count), m_slot(slot) {
+		RenderTarget(unsigned int width, unsigned int height, DXGI_FORMAT format, unsigned int count, unsigned int slot, unsigned int mipLevels = 1u) :
+			m_width(width), m_height(height), m_format(format), m_count(count), m_slot(slot), m_mipLevels(mipLevels){
 		};
 		RenderTarget() {};
 		~RenderTarget();
@@ -53,6 +53,7 @@ namespace gfx {
 		int m_width, m_height;
 		DXGI_FORMAT m_format;
 		unsigned int m_count, m_slot;
+		unsigned int m_mipLevels = 1u;
 	};
 }
 

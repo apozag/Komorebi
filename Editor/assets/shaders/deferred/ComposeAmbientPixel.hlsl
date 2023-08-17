@@ -52,7 +52,8 @@ float4 main(VSout input) : SV_Target0
 
   float4 diff = float4(PBRDiffuseIrradiance(pbrIn), 1);
 
-  pbrIn.lightColor = EnvMapSpec.Sample(texSampler, reflect(pbrIn.viewDir, pbrIn.normal));
+  float lod = 5.f * pbrIn.roughness;
+  pbrIn.lightColor = EnvMapSpec.SampleLevel(texSampler, reflect(pbrIn.viewDir, pbrIn.normal), lod);
 
   float4 spec = float4(PBRSpecularIBL(pbrIn), 1);
 

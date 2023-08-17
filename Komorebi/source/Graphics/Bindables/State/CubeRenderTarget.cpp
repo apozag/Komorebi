@@ -24,7 +24,7 @@ namespace gfx {
 		D3D11_TEXTURE2D_DESC texDesc;
 		texDesc.Width = m_width;
 		texDesc.Height = m_height;
-		texDesc.MipLevels = 1;
+		texDesc.MipLevels = m_mipLevels;
 		texDesc.ArraySize = 6;
 		texDesc.Format = m_format;
 		texDesc.CPUAccessFlags = 0;
@@ -35,10 +35,14 @@ namespace gfx {
 		texDesc.CPUAccessFlags = 0;
 		texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
+		if (m_mipLevels != 1u) {
+			texDesc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		}
+
 		// Create Texture 2D
 		wrl::ComPtr<ID3D11Texture2D> pTexture;
 		GFX_THROW_INFO(GetDevice()->CreateTexture2D(&texDesc, NULL, pTexture.GetAddressOf()));
-		m_textures.push_back(memory::Factory::Create<CubeTexture>(pTexture, m_format, m_slot));
+		m_textures.push_back(memory::Factory::Create<CubeTexture>(pTexture, m_format, m_slot, m_mipLevels));
 
 		// Create Render Target View
 		wrl::ComPtr<ID3D11RenderTargetView> rtv;

@@ -33,15 +33,17 @@ void DrawImageNoAlpha(const gfx::Texture2D* tex2D) {
 void Blit(const gfx::Texture2D* src, const gfx::RenderTarget* dst) {
   const static gfx::Material* blitMat;
   if (blitMat == nullptr) {
-    blitMat = PrefabManager::GetInstance()->LoadPrefab<gfx::Material>("assets/materials/blitNoAlphaMat.xml");
+    blitMat = PrefabManager::GetInstance()->LoadPrefab<gfx::Material>("assets/materials/blitNoAlphaMat.xml", true);
   }
 
   const static Drawable* quad = Engine::GetRenderer()->GetQuadPrimitive();
 
   dst->Bind();
-  src->BindAt(0);
+  src->BindAt(0);  
   blitMat->Bind();
+  blitMat->GetPasses()[0]->Bind();
   quad->Draw(DirectX::XMMatrixIdentity());
+  blitMat->GetPasses()[0]->Unbind();
   blitMat->Unbind();
   src->UnbindAt(0);
   dst->Unbind();
@@ -52,6 +54,7 @@ void UpdateRts(float /*timeStep*/) {
     for (const gfx::Texture2D* tex : pair.m_rt.GetTextures2D()) {
       auto entry = rtMap.find(tex);
       if (entry != rtMap.end()) {
+        entry->second->Clear(0.f, 0.f, 0.f);
         Blit(entry->first, entry->second);
       }
     }
@@ -82,8 +85,9 @@ void SetupRendererGUIWindow() {
       gfx::Texture2D* tex = (gfx::Texture2D*)pair.m_resource.m_ptr;       
       gfx::RenderTarget * rt = memory::Factory::Create<gfx::RenderTarget>(texSize, texSize, DXGI_FORMAT_R8G8B8A8_UNORM, 1, 0);
       rt->Setup();
-      rtMap.emplace(tex, rt);
+      rt->Clear(0.f, 0.f, 0.f);
       Blit(tex, rt);
+      rtMap.emplace(tex, rt);      
     }
   }
 

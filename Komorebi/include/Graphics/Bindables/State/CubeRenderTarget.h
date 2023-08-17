@@ -10,8 +10,8 @@ namespace gfx {
 
   public:
     CubeRenderTarget() {}
-    CubeRenderTarget(unsigned int width, unsigned int height, DXGI_FORMAT format, unsigned int slot) :
-      RenderTarget(width, height, format, 1, slot)
+    CubeRenderTarget(unsigned int width, unsigned int height, DXGI_FORMAT format, unsigned int slot, unsigned int mipLevels = 1u) :
+      RenderTarget(width, height, format, 1, slot, mipLevels)
     {}    
 
     virtual void Setup() override;

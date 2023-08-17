@@ -1,5 +1,5 @@
 #ifndef __COMMON_HLSL__
-#define __COMMON_HLSL__ç
+#define __COMMON_HLSL__
 
 #define _PI 3.14159
 

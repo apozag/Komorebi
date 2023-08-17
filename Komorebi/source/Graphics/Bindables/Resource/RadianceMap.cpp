@@ -34,7 +34,7 @@ namespace gfx {
     m_diffuseRadMap = memory::Factory::Create<CubeRenderTarget>(m_size, m_size, DXGI_FORMAT_R32G32B32A32_FLOAT, m_slot);
     m_diffuseRadMap->Setup();
 
-    m_specularRadMap = memory::Factory::Create<CubeRenderTarget>(m_size, m_size, DXGI_FORMAT_R32G32B32A32_FLOAT, m_slot+1);
+    m_specularRadMap = memory::Factory::Create<CubeRenderTarget>(m_size, m_size, DXGI_FORMAT_R32G32B32A32_FLOAT, m_slot+1, m_mipLevels);
     m_specularRadMap->Setup();    
 
     Texture2D* hdri = memory::Factory::Create<Texture2D>(m_filename, 0u);
@@ -146,7 +146,10 @@ namespace gfx {
     inputLayout->Unbind();
     viewsCBuffer->Unbind();
     vShader->Unbind();
-    gShader->Unbind();        
+    gShader->Unbind();  
+
+    // We need mipmaps for roughness
+    m_specularRadMap->GetCubeTexture()->GenMipMaps();
   }
 
   void RadianceMap::Bind() const {
@@ -162,6 +165,7 @@ namespace gfx {
   REFLECT_STRUCT_BEGIN(RadianceMap, ResourceBindable)
   REFLECT_STRUCT_MEMBER(m_filename)
   REFLECT_STRUCT_MEMBER(m_size)
+  REFLECT_STRUCT_MEMBER(m_mipLevels)
   REFLECT_STRUCT_END(RadianceMap)
 
 }

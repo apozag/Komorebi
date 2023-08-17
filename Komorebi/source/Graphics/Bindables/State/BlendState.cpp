@@ -1,4 +1,5 @@
 #include <d3d11.h>
+#include "Graphics/GraphicsThrowMacros.h"
 #include "Graphics/Bindables/State/BlendState.h"
 
 #include "Core/Reflection/ReflectionImplMacros.h"
@@ -10,6 +11,9 @@ namespace gfx {
 	}
 
 	void BlendState::Setup() {
+
+		INFOMAN
+
 		D3D11_BLEND_DESC BlendState;
 		ZeroMemory(&BlendState, sizeof(D3D11_BLEND_DESC));
 		BlendState.RenderTarget[0].BlendEnable = m_enable;
@@ -20,7 +24,7 @@ namespace gfx {
 		BlendState.RenderTarget[0].BlendOp = (D3D11_BLEND_OP) m_blendOp;//D3D11_BLEND_OP_ADD;
 		BlendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		GetDevice()->CreateBlendState(&BlendState, &m_blendState);
+		GFX_THROW_INFO(GetDevice()->CreateBlendState(&BlendState, &m_blendState));
 	}
 
 	void BlendState::Bind()const {

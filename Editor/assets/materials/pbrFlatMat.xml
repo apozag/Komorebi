@@ -1,12 +1,12 @@
 <Material>
 	<m_passes>
-		<Pass* PtrId="1261480560" Type="Pass">
+		<Pass* PtrId="2563616112" Type="Pass">
 			<m_enabled>true</m_enabled>
 			<m_layer>0</m_layer>
 			<m_PSFilename>assets/shaders/deferred/PBRFlatColorPixel.cso</m_PSFilename>
 			<m_VSFilename>assets/shaders/PBRVertex.cso</m_VSFilename>
 			<m_binds>
-				<DepthStencilState* PtrId="1261480816" Type="DepthStencilState">
+				<DepthStencilState* PtrId="2563616368" Type="DepthStencilState">
 					<m_DSAccess>DEPTH_WRITE|DEPTH_READ</m_DSAccess>
 					<m_refVal>0</m_refVal>
 				</DepthStencilState*>
@@ -32,8 +32,8 @@
 					</CacheVarInfo>
 				</varsInfo>
 				<varsData>
-					<float>0.000000</float>
-					<float>0.800000</float>
+					<float>1.000000</float>
+					<float>0.500000</float>
 					<float>0.600000</float>
 					<float>0.600000</float>
 					<float>0.600000</float>

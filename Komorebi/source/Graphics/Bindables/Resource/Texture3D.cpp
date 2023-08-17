@@ -32,7 +32,7 @@ namespace gfx {
 		srvDesc.Texture3D.MipLevels = 1;
 		srvDesc.Texture3D.MostDetailedMip = 0;
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
-		GFX_THROW_INFO(GetDevice()->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf()));
+		GFX_THROW_INFO(GetDevice()->CreateShaderResourceView(pTexture.Get(), &srvDesc, m_srv.GetAddressOf()));		
 	}
 
 	Texture3D::~Texture3D() {

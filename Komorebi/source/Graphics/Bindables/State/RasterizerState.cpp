@@ -1,5 +1,6 @@
 
 #include <d3d11.h>
+#include "Graphics/GraphicsThrowMacros.h"
 #include "Graphics/Bindables/State/RasterizerState.h"
 
 #include "Core/Reflection/ReflectionImplMacros.h"
@@ -14,6 +15,8 @@ namespace gfx {
 
 	void RasterizerState::Setup() {
 
+		INFOMAN
+
 		D3D11_RASTERIZER_DESC desc = {};
 		desc.FillMode = m_wireframe ? D3D11_FILL_WIREFRAME : D3D11_FILL_SOLID;
 		desc.CullMode = m_cullFront ? D3D11_CULL_FRONT : D3D11_CULL_BACK;
@@ -25,7 +28,7 @@ namespace gfx {
 		desc.MultisampleEnable = true;
 		desc.AntialiasedLineEnable = true;
 
-		GetDevice()->CreateRasterizerState(&desc, &m_rasterizer);
+		GFX_THROW_INFO(GetDevice()->CreateRasterizerState(&desc, &m_rasterizer));
 	}
 
 	void RasterizerState::Bind() const {

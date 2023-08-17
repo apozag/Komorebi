@@ -14,7 +14,7 @@ struct PBRinput {
 };
 
 Texture2D	BrdfLutTex : register(t14);
-SamplerState brdfSampler;
+SamplerState brdfSampler : register(s14);
 
 // Normal distribution function
 float _D(PBRinput input) {
@@ -39,7 +39,7 @@ float _G(PBRinput input) {
 
 // Fresnell function
 float3 _F(PBRinput input) {
-  float f0 = 0.4;//input.metalness;
+  float f0 = 0.3;//input.metalness;
   float3 vF0 = input.albedo * lerp(f0, 1.0, input.metalness);
   float LdotH = max(dot(input.viewDir, input.halfVector), 0);
   return vF0 + (float3(1,1,1) - vF0) * pow(1 - LdotH, 5);
@@ -60,7 +60,6 @@ float3 PBR(PBRinput input) {
   float3 li = input.lightColor * CALC_SHADOW(input.worldPos);
 
   // BRDF
-  //float kd = lerp(1 - fresnell, 0, input.metalness);
   float3 kd = float3(1,1,1) - fresnell;
   float3 fr = max(kd * fd + fs, float3(0, 0, 0));
 
@@ -81,5 +80,5 @@ float3 PBRSpecularIBL(PBRinput input) {
   float3 kS = _F(input);
   float NdotV = dot(input.normal, input.viewDir);
   float2 envBRDF = BrdfLutTex.Sample(brdfSampler, float2(NdotV, input.roughness)).xy;
-  return (kS * envBRDF.x + envBRDF.y) * input.lightColor;
+  return (kS * envBRDF.x + envBRDF.y)* input.lightColor;
 }

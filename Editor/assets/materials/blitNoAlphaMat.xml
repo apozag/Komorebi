@@ -1,11 +1,19 @@
 <Material>
     <m_passes>
         <Pass*>
-            <m_layer>11</m_layer>
-            <m_PSFilename>assets/shaders/blitNoAlphaPixel.cso</m_PSFilename>
+            <m_layer>0</m_layer>
+            <m_PSFilename>assets/shaders/BlitNoAlphaPixel.cso</m_PSFilename>
             <m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
             <m_skinned>0</m_skinned>
-            <m_binds/>
+            <m_binds>
+                <BlendState* Type="BlendState">
+                    <m_enable>false</m_enable>
+                </BlendState*>
+                <RasterizerState* Type="RasterizerState">
+                    <m_cullFront>false</m_cullFront>
+                    <m_wireframe>false</m_wireframe>
+                </RasterizerState*>
+            </m_binds>
         </Pass*>
     </m_passes>
     <m_binds/>

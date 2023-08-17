@@ -51,7 +51,7 @@ namespace gfx {
 		descDSV.Format = DXGI_FORMAT_D32_FLOAT;
 		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		descDSV.Texture2D.MipSlice = 0u;
-		GFX_THROW_INFO(GetDevice()->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, m_dsv.GetAddressOf()));
+		GFX_THROW_INFO(GetDevice()->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, m_dsv.GetAddressOf()));		
 
 		m_width = rtDesc.Width;
 		m_height = rtDesc.Height;
@@ -109,13 +109,15 @@ namespace gfx {
 		texDesc.Width = m_width;
 		texDesc.Height = m_height;
 		texDesc.Format = m_format;
-		texDesc.MipLevels = 1;
+		texDesc.MipLevels = m_mipLevels;
 		texDesc.ArraySize = 1;
 		texDesc.SampleDesc.Count = 1;
 		texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 		texDesc.Usage = D3D11_USAGE_DEFAULT;
 		texDesc.CPUAccessFlags = 0;
-		texDesc.MiscFlags = 0;
+		if (m_mipLevels != 1u) {
+			texDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		}
 
 		assert(m_count < 10 && "RenderTarget: texture count is 10 or higher. Did you initialize m_count?");
 
@@ -135,7 +137,7 @@ namespace gfx {
 
 			m_rtv.push_back(rtv);
 
-			m_textures.push_back(memory::Factory::Create<Texture2D>(pTexture, m_format, m_slot + i));
+			m_textures.push_back(memory::Factory::Create<Texture2D>(pTexture, m_format, m_slot + i, m_mipLevels));
 		}
 		m_textures.push_back(memory::Factory::Create<Texture2D>(pDepthStencil, DXGI_FORMAT_R24_UNORM_X8_TYPELESS, m_slot + m_count));
 
@@ -192,6 +194,7 @@ namespace gfx {
 		REFLECT_STRUCT_MEMBER(m_height)
 		REFLECT_STRUCT_MEMBER(m_format)
 		REFLECT_STRUCT_MEMBER(m_slot)
+		REFLECT_STRUCT_MEMBER(m_mipLevels)
 		REFLECT_STRUCT_END(RenderTarget)
 }
 
