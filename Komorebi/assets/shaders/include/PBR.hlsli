@@ -11,6 +11,7 @@ struct PBRinput {
   float4 emissive;
   float roughness;
   float metalness;
+  float reflectivity;
 };
 
 Texture2D	BrdfLutTex : register(t14);
@@ -38,11 +39,17 @@ float _G(PBRinput input) {
 }
 
 // Fresnell function
-float3 _F(PBRinput input) {
-  float f0 = 0.3;//input.metalness;
-  float3 vF0 = input.albedo * lerp(f0, 1.0, input.metalness);
+float3 _F(PBRinput input) {  
+  float3 vF0 = input.albedo * lerp(input.reflectivity, 1.0, input.metalness);
   float LdotH = max(dot(input.viewDir, input.halfVector), 0);
   return vF0 + (float3(1,1,1) - vF0) * pow(1 - LdotH, 5);
+}
+
+float3 _FRoughness(PBRinput input) {
+  float3 F0 = input.albedo * lerp(input.reflectivity, 1.0, input.metalness);
+  float3 invRoughness = float3(1,1,1) - float3(input.roughness, input.roughness, input.roughness);
+  float LdotH = max(dot(input.viewDir, input.normal), 0);
+  return F0 + (max(invRoughness, F0) - F0) * pow(1 - LdotH, 5.0);
 }
 
 // PBR lighting
@@ -71,14 +78,14 @@ float3 PBR(PBRinput input) {
 }
 
 float3 PBRDiffuseIrradiance(PBRinput input) {  
-  float3 kS = _F(input);
+  float3 kS = _FRoughness(input);
   float3 kd = float3(1,1,1) - kS;
   return kd * input.lightColor * input.albedo;
 }
 
 float3 PBRSpecularIBL(PBRinput input) {
-  float3 kS = _F(input);
-  float NdotV = dot(input.normal, input.viewDir);
+  float3 kS = _FRoughness(input);
+  float NdotV = max(0,dot(input.normal, input.viewDir));
   float2 envBRDF = BrdfLutTex.Sample(brdfSampler, float2(NdotV, input.roughness)).xy;
-  return (kS * envBRDF.x + envBRDF.y)* input.lightColor;
+  return (kS /** envBRDF.x + envBRDF.y*/)* input.lightColor;
 }

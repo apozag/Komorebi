@@ -3,7 +3,7 @@
 cbuffer Parameters : register(b7) {
   float metalness;
   float roughness;
-  //float4 albedoAdditive = float4(0, 0, 0, 0);
+  float reflectivity;  
 };
 
 struct PS_OUTPUT {
@@ -19,9 +19,9 @@ Texture2D albedoTex : register(t7);
 PS_OUTPUT main(VSout i)
 {
   PS_OUTPUT o;
-  o.color = albedoTex.Sample(texSampler, i.uv);// +albedoAdditive;
+  o.color = albedoTex.Sample(texSampler, i.uv);
   o.normal = normalize(float4(i.normal.xyz, 0));
   o.position = i.worldPos;
-  o.pbrParams = float4(metalness, roughness, 0, 1);
+  o.pbrParams = float4(metalness, roughness, reflectivity, 1);
   return o;
 }

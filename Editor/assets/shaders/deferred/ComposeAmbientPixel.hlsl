@@ -41,22 +41,25 @@ float4 main(VSout input) : SV_Target0
   pbrIn.worldPos = posTex.Sample(texSampler, input.uv);
   pbrIn.normal = normalTex.Sample(texSampler, input.uv);
   pbrIn.viewDir = normalize(float4(viewInv._14, viewInv._24, viewInv._34, 1) - pbrIn.worldPos);
-  pbrIn.halfVector = normalize((pbrIn.viewDir + dirLightDir) * 0.5);
-  pbrIn.lightDir = float4(0,0,0,0);
+  pbrIn.lightDir = float4(0, 0, 0, 0);
+  pbrIn.halfVector = float4(0, 0, 0, 0);
   pbrIn.lightColor = EnvMapDiff.Sample(texSampler, pbrIn.normal);
   pbrIn.albedo = colorTex.Sample(texSampler, input.uv);
 
   float4 pbrParams = pbrParamsTex.Sample(texSampler, input.uv);
   pbrIn.metalness = pbrParams.x;
   pbrIn.roughness = pbrParams.y;
+  pbrIn.reflectivity = pbrParams.z;
 
-  float4 diff = float4(PBRDiffuseIrradiance(pbrIn), 1);
+  float3 diff = PBRDiffuseIrradiance(pbrIn);
 
   float lod = 5.f * pbrIn.roughness;
-  pbrIn.lightColor = EnvMapSpec.SampleLevel(texSampler, reflect(pbrIn.viewDir, pbrIn.normal), lod);
+  pbrIn.lightDir = reflect(pbrIn.viewDir, pbrIn.normal);
+  pbrIn.halfVector = normalize((pbrIn.viewDir + pbrIn.lightDir) * 0.5);
+  pbrIn.lightColor = EnvMapSpec.SampleLevel(texSampler, pbrIn.lightDir, lod);
 
-  float4 spec = float4(PBRSpecularIBL(pbrIn), 1);
+  float3 spec = PBRSpecularIBL(pbrIn);
 
-  return diff + spec;
+  return float4(diff + spec, 1);
 }
 

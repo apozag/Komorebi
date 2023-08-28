@@ -1,6 +1,6 @@
 <Material>
 	<m_passes>
-		<Pass* PtrId="304974368" Type="Pass">
+		<Pass* PtrId="1847885376" Type="Pass">
 			<m_enabled>true</m_enabled>
 			<m_layer>11</m_layer>
 			<m_PSFilename>assets/shaders/ReinhardPixel.cso</m_PSFilename>
@@ -17,7 +17,7 @@
 					</CacheVarInfo>
 				</varsInfo>
 				<varsData>
-					<float>2.500000</float>
+					<float>10.000000</float>
 				</varsData>
 			</m_cbuffCache>
 		</Pass*>

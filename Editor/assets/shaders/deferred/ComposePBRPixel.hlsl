@@ -46,6 +46,7 @@ float4 main(VSout input) : SV_Target0
   float4 pbrParams = pbrParamsTex.Sample(texSampler, input.uv);
   pbrIn.metalness = pbrParams.x;
   pbrIn.roughness = pbrParams.y;  
+  pbrIn.reflectivity = pbrParams.z;
 
   return  float4(PBR(pbrIn), 1);
 }

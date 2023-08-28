@@ -3,6 +3,7 @@
 cbuffer Parameters : register(b7) {
   float metalness;
   float roughness;
+  float reflectivity;
   float4 color;
 };
 
@@ -18,6 +19,6 @@ PS_OUTPUT main(VSout i) {
   o.color = color;
   o.normal = normalize(float4(i.normal.xyz, 0));
   o.position = i.worldPos;
-  o.pbrParams = float4(metalness, roughness, 0, 1);
+  o.pbrParams = float4(metalness, roughness, reflectivity, 1);
   return o;
 }
