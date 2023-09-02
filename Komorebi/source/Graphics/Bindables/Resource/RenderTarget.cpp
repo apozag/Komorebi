@@ -178,10 +178,10 @@ namespace gfx {
 		}
 	}
 
-	void RenderTarget::Clear(float r, float g, float b) const {
+	void RenderTarget::Clear(float r, float g, float b, float a) const {
 
 		INFOMAN_NOHR
-			const float m_color[] = { r, g, b, 1.0f };
+			const float m_color[] = { r, g, b, a };
 		for (wrl::ComPtr<ID3D11RenderTargetView> rtv : m_rtv) {
 			GFX_THROW_INFO_ONLY(GetContext()->ClearRenderTargetView(rtv.Get(), m_color));
 		}

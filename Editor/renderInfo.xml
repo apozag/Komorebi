@@ -28,18 +28,7 @@
 					</m_resourceInputs>					
 					<m_outRtId>GBUFFER</m_outRtId>
 					<m_screenEffectMat>assets/materials/hdrEnvMapMat.xml</m_screenEffectMat>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>SCREEN</m_type>
-					<m_textureInputs>
-						<TextureInfoType>
-							<m_rtId>GBUFFER</m_rtId>
-							<m_textureIdx>3</m_textureIdx>
-						</TextureInfoType>
-					</m_textureInputs>
-					<m_outRtId>HDR</m_outRtId>
-					<m_screenEffectMat>assets/materials/blitMat.xml</m_screenEffectMat>
-				</RenderStepType>
+				</RenderStepType>				
 				<RenderStepType>
 					<m_type>SCREEN</m_type>
 					<m_textureInputs>
@@ -98,6 +87,17 @@
 					<m_outRtId>HDR</m_outRtId>
 					<m_repeatFor>DIRLIGHT</m_repeatFor>
 					<m_screenEffectMat>assets/materials/composeDirlightMat.xml</m_screenEffectMat>
+				</RenderStepType>
+				<RenderStepType>
+					<m_type>SCREEN</m_type>
+					<m_textureInputs>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>3</m_textureIdx>
+						</TextureInfoType>
+					</m_textureInputs>
+					<m_outRtId>HDR</m_outRtId>
+					<m_screenEffectMat>assets/materials/blitMat.xml</m_screenEffectMat>
 				</RenderStepType>
 				<RenderStepType>
 					<m_type>SCREEN</m_type>

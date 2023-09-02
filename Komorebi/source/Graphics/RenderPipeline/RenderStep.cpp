@@ -145,7 +145,7 @@ namespace gfx {
     {
       if (m_outRt) 
       {
-        m_outRt->Clear(0, 0, 0);
+        m_outRt->Clear(0, 0, 0, 0);
       }
     }
     break;

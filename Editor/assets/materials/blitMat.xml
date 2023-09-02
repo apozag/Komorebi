@@ -5,7 +5,14 @@
             <m_PSFilename>assets/shaders/blitPixel.cso</m_PSFilename>
             <m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
             <m_skinned>0</m_skinned>
-            <m_binds/>
+            <m_binds>
+                <BlendState Type="BlendState">
+                    <m_enable>true</m_enable>
+                    <m_srcBlendFactor>SRC_ALPHA</m_srcBlendFactor>
+                    <m_dstBlendFactor>INV_SRC_ALPHA</m_dstBlendFactor>
+                    <m_blendOp>ADD</m_blendOp>
+                </BlendState>
+            </m_binds>
         </Pass*>
     </m_passes>
     <m_binds/>

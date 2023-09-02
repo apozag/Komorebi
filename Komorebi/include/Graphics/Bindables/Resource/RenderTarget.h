@@ -31,7 +31,7 @@ namespace gfx {
 
 		void Update() {};
 
-		void Clear(float r, float g, float b) const;
+		void Clear(float r, float g, float b, float a = 1.f) const;
 
 		unsigned int GetWidth() { return m_width; }
 		unsigned int GetHeight() { return m_height; }
