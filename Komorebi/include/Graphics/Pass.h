@@ -39,9 +39,17 @@ namespace gfx {
 
 	class Pass : public GameObject {
 	public:
+
+		enum LayoutType {
+			DEFAULT,
+			SKINNED,
+			PARTICLE
+		};
+
+	public:
 		Pass() : m_layer(PASSLAYER_FW_OPAQUE), m_idx(static_idx++) {}
-		Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned = false);
-		Pass(const char* vsFilename, const char* psFilename, unsigned int m_layer, bool skinned = false);
+		Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, LayoutType layoutType = LayoutType::DEFAULT);
+		Pass(const char* vsFilename, const char* psFilename, unsigned int m_layer, LayoutType layoutType = LayoutType::DEFAULT);
 		~Pass();
 
 		void Setup() override;
@@ -66,7 +74,7 @@ namespace gfx {
 		PixelShader* m_pixelShader;
 		VertexShader* m_vertexShader;
 		std::vector<OWNED_PTR(StateBindable)> m_binds;		
-		bool m_skinned;
+		LayoutType m_layoutType;
 		static unsigned char static_idx;
 		const unsigned char m_idx;
 		bool m_ignoreFrustumCulling = false;
@@ -77,6 +85,8 @@ namespace gfx {
 DECLARE_REFLECTION_VECTOR(gfx::ConstantBufferCache::VarInfo)
 
 DECLARE_REFLECTION_ENUM(gfx::ConstantBufferCache::VarInfo::VarType)
+
+DECLARE_REFLECTION_ENUM(gfx::Pass::LayoutType)
 
 DECLARE_REFLECTION_POINTER(gfx::Pass)
 DECLARE_REFLECTION_VECTOR(gfx::Pass*)

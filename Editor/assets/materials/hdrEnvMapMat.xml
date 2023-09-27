@@ -14,7 +14,7 @@
                     <m_cullFront>true</m_cullFront>
                 </RasterizerState*>
             </m_binds>
-            <m_skinned>0</m_skinned>
+            <m_layoutType>DEFAULT</m_layoutType>
             <m_ignoreFrustumCulling>1</m_ignoreFrustumCulling>
         </Pass*>
     </m_passes>

@@ -95,7 +95,7 @@ private:
 	SamplerState m_shadowMapSampler;
 	SamplerState m_PCFFiltersSampler;
 	Texture3D* m_PCFFilters;
-	PixelConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
+	ConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
 	RenderPipeline* m_shadowRenderPipeline;
 
 	std::vector<const DirectionalLight*> m_dirLights;

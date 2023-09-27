@@ -16,6 +16,9 @@
 #define VCBUFF_LIGHTTRANSFORM_SLOT	  3
 #define VCBUFF_FREE_SLOT		          4
 
+#define GCBUFF_CAMERATRANSFORM_SLOT   0
+#define GCBUFF_FREE_SLOT              1
+
 #define SRV_SHADOWMAP_SLOT	0
 #define SRV_PCF_SLOT			  6
 #define SRV_FREE_SLOT			  7

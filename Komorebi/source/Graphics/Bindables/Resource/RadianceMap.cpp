@@ -48,7 +48,7 @@ namespace gfx {
 
     static PixelShader* pConvShader = nullptr;
 
-    static GeometryConstantBuffer<ViewsCBufferData>* viewsCBuffer = nullptr;
+    static ConstantBuffer<ViewsCBufferData>* viewsCBuffer = nullptr;
     static InputLayout* inputLayout = nullptr;
     static SamplerState* samplerState = nullptr;
     static RasterizerState* rasterState = nullptr;
@@ -82,7 +82,7 @@ namespace gfx {
       data.viewProj[4] = DirectX::XMMatrixTranspose(proj);
       data.viewProj[5] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationY(_PI)), proj));     
 
-      viewsCBuffer = memory::Factory::Create<GeometryConstantBuffer<ViewsCBufferData>>(0, false, data);      
+      viewsCBuffer = memory::Factory::Create<ConstantBuffer<ViewsCBufferData>>(0, false, &data, (unsigned int)CBufferStage::GEOMETRY);
     }
     if (inputLayout == nullptr) {
       const D3D11_INPUT_ELEMENT_DESC ied[] =

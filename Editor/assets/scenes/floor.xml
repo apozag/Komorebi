@@ -85,7 +85,7 @@
 										<m_refVal>0</m_refVal>
 									</DepthStencilState*>
 								</m_binds>
-								<m_skinned>0</m_skinned>
+								<m_layoutType>DEFAULT</m_layoutType>
 								<m_ignoreFrustumCulling>1</m_ignoreFrustumCulling>
 							</Pass*>
 						</m_passes>
@@ -137,7 +137,7 @@
 										<m_refVal>0</m_refVal>
 									</DepthStencilState*>
 								</m_binds>
-								<m_skinned>1</m_skinned>
+								<m_layoutType>SKINNED</m_layoutType>
 								<m_ignoreFrustumCulling>0</m_ignoreFrustumCulling>
 							</Pass*>
 						</m_passes>
@@ -213,7 +213,7 @@
 								<m_PSFilename>assets/shaders/deferred/SolidPixel.cso</m_PSFilename>
 								<m_VSFilename>assets/shaders/cubeVertex.cso</m_VSFilename>
 								<m_binds/>
-								<m_skinned>0</m_skinned>
+								<m_layoutType>DEFAULT</m_layoutType>
 								<m_ignoreFrustumCulling>0</m_ignoreFrustumCulling>
 							</Pass*>
 						</m_passes>

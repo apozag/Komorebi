@@ -10,10 +10,10 @@
 #define MAIN_CAMERA_TAG 5
 
 namespace gfx {
+
 	template<typename T>
-	class VertexConstantBuffer;
-	template<typename T>
-	class PixelConstantBuffer;
+	class ConstantBuffer;
+
 	class RenderTarget;
 }
 
@@ -66,8 +66,7 @@ public:
 	int m_priority;
 
 	DirectX::XMMATRIX m_proj;
-	gfx::VertexConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformVCB;
-	gfx::PixelConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformPCB;
+	gfx::ConstantBuffer<Camera::CameraTransformCB>* m_cameraTransformCB;
 
 	
 

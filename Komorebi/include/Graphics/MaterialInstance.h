@@ -14,6 +14,7 @@ namespace gfx {
     MaterialInstance() {}
     MaterialInstance(Material* material) : m_material(material) {}
 
+    void Setup();
     void Bind();
     void Unbind();
 

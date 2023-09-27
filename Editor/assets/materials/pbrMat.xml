@@ -11,7 +11,7 @@
 					<m_refVal>0</m_refVal>
 				</DepthStencilState*>
 			</m_binds>
-			<m_skinned>false</m_skinned>
+			<m_layoutType>DEFAULT</m_layoutType>
 			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>
 			<m_cbuffCache>
 				<varsInfo>

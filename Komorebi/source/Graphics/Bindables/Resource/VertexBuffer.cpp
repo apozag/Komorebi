@@ -6,15 +6,15 @@ namespace wrl = Microsoft::WRL;
 
 namespace gfx {
 
-	VertexBuffer::VertexBuffer(POD::Vertex* data, unsigned int size, unsigned int stride, unsigned int offset) {
+	VertexBuffer::VertexBuffer(void* data, unsigned int size, unsigned int stride, unsigned int offset, bool dynamic) {
 		INFOMAN
 
-			D3D11_BUFFER_DESC bd = {};
+		D3D11_BUFFER_DESC bd = {};
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.Usage = D3D11_USAGE_IMMUTABLE;
-		bd.CPUAccessFlags = 0u;
+		bd.Usage = dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_IMMUTABLE;
+		bd.CPUAccessFlags = dynamic ? D3D11_CPU_ACCESS_WRITE : 0u;
 		bd.MiscFlags = 0u;
-		bd.ByteWidth = size * sizeof(POD::Vertex);
+		bd.ByteWidth = size;
 		bd.StructureByteStride = 0;// sizeof(Vertex);
 
 		D3D11_SUBRESOURCE_DATA sd = {};
@@ -24,6 +24,7 @@ namespace gfx {
 
 		m_stride = stride;
 		m_offset = offset;
+		m_count = (float)(size - offset) / (float)stride;
 	}
 
 	VertexBuffer::~VertexBuffer() {

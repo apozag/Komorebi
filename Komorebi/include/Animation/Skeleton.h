@@ -24,5 +24,5 @@ public:
 	bool isDirty() { return m_dirty; }
 private:
 	bool m_dirty;
-	gfx::VertexConstantBuffer<BoneCBuffData> m_cbuffer;
+	gfx::ConstantBuffer<BoneCBuffData> m_cbuffer;
 };

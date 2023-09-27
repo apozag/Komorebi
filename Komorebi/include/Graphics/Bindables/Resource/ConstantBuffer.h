@@ -7,8 +7,15 @@
 
 namespace gfx {
 
+	enum CBufferStage {
+		ALL				= 0,
+		VERTEX		= 1,
+		GEOMETRY	= 2,
+		PIXEL			= 4
+	};
+
 	template<typename T>
-	class ConstantBuffer : public ResourceBindable {
+	class ConstantBuffer : public ResourceBindable {			
 	public:
 		ConstantBuffer(unsigned int slot) : m_dynamic(true), m_slot(slot) {
 
@@ -26,7 +33,7 @@ namespace gfx {
 		}
 
 
-		ConstantBuffer(unsigned int slot, bool m_dynamic, const T& buffer) : m_dynamic(m_dynamic), m_slot(slot) {
+		ConstantBuffer(unsigned int slot, bool dynamic, const T* buffer, unsigned int stageMask) : m_dynamic(dynamic), m_slot(slot), m_stageMask(stageMask) {
 			INFOMAN
 
 				D3D11_BUFFER_DESC cbd = {};
@@ -51,16 +58,36 @@ namespace gfx {
 			GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, &sd, m_constantBuffer.GetAddressOf()));
 		}
 
+
+		// The variadic arguments in Factory::Create dont do automatic casting, so we have to be more explicit here...
+
+		/*ConstantBuffer(unsigned int slot, bool dynamic, const void* buffer, CBufferStage stageMask)
+			: ConstantBuffer(slot, dynamic, (T*)buffer, (unsigned int)stageMask) {
+		}
+
+		ConstantBuffer(unsigned int slot, bool dynamic, const void* buffer, unsigned int stageMask)
+			: ConstantBuffer(slot, dynamic, buffer, stageMask) {
+		}*/
+
 		ConstantBuffer(unsigned int slot, T& buffer) : ConstantBuffer(slot) {
 			m_buffer(buffer);
 		}
 
-		~ConstantBuffer() {
-			//m_constantBuffer->Release();
+		~ConstantBuffer() {}
+
+		virtual void Bind() const override {
+			if ((m_stageMask & CBufferStage::VERTEX) != 0u) {
+				GetContext()->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+			}
+			if ((m_stageMask & CBufferStage::GEOMETRY) != 0u) {
+				GetContext()->GSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+			}
+			if ((m_stageMask & CBufferStage::PIXEL) != 0u) {
+				GetContext()->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+			}
 		}
 
-		virtual void Bind() const override = 0;
-		virtual void Unbind() const override = 0;
+		virtual void Unbind() const override {}
 
 		void Update() {
 			if (!m_dynamic) return;
@@ -78,13 +105,15 @@ namespace gfx {
 
 		T m_buffer;
 
+		unsigned int m_stageMask = 0u;
+
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11Buffer> m_constantBuffer;		
 		unsigned int m_slot;
 		bool m_dynamic;
 	};
 
-	template<typename T>
+	/*template<typename T>
 	class VertexConstantBuffer : public ConstantBuffer<T> {
 		using ConstantBuffer<T>::m_constantBuffer;
 		using ConstantBuffer<T>::m_slot;
@@ -124,5 +153,5 @@ namespace gfx {
 			GetContext()->GSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 		}
 		void Unbind() const override {}
-	};
+	};*/
 }

@@ -1,0 +1,20 @@
+<Material>
+    <m_passes>
+        <Pass*>
+            <m_layer>11</m_layer>
+            <m_PSFilename>assets/shaders/ParticlePixel.cso</m_PSFilename>
+            <m_VSFilename>assets/shaders/ParticleVertex.cso</m_VSFilename>
+            <m_layoutType>PARTICLE</m_layoutType>
+            <m_binds>
+                <GeometryShader Type="GeometryShader">
+                    <m_filename>assets/shaders/ParticleGeom.cso</m_filename>
+                </GeometryShader>
+                <DepthStencilState* Type="DepthStencilState">
+					<m_DSAccess>DEPTH_WRITE|DEPTH_READ</m_DSAccess>
+					<m_refVal>0</m_refVal>
+				</DepthStencilState*>
+            </m_binds>
+        </Pass*>
+    </m_passes>
+    <m_binds/>
+</Material>

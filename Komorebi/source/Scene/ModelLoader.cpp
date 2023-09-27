@@ -46,7 +46,7 @@ void ModelLoader::LoadModel(std::string filename, Scene* sceneGraph, Node* scene
       mesh = GenerateQuad();
     }
      
-    mesh->m_material = memory::Factory::Create<gfx::MaterialInstance>(model->GetMaterial());
+    mesh->m_matInstance = memory::Factory::Create<gfx::MaterialInstance>(model->GetMaterial());
     sceneGraph->AddNode(mesh, Transform(), sceneGraphParent, true);
     model->AddDrawable(mesh);
     return;
@@ -105,7 +105,7 @@ Mesh* ModelLoader::GenerateMesh(std::vector<POD::Vertex> vertices, std::vector<u
     max.z = std::max(max.z, vertices[i].pos.z);
   }
   BVHData bvhData{ {min.x, min.y, min.z}, {max.x, max.y, max.z} };
-  Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, bvhData);
+  Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, bvhData);  
   m->Setup();
   return m;
 }
@@ -385,7 +385,7 @@ Mesh* ModelLoader::processMesh(aiMesh* mesh, const aiScene* scene, Scene* sceneG
       indices[i * 3u + j] = face.mIndices[j];
   }
   Mesh* m = memory::Factory::Create<Mesh>(vertices, indices, BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
-  m->m_material = matInstances[mesh->mMaterialIndex];
+  m->m_matInstance = matInstances[mesh->mMaterialIndex];
   sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
 
   return m;
@@ -486,7 +486,7 @@ SkinnedMesh* ModelLoader::processSkinnedMesh(aiMesh* mesh, const aiScene* scene,
   free(boneFreeSlots);
 
   SkinnedMesh* m = memory::Factory::Create<SkinnedMesh>(vertices, indices, &model->m_skeleton, BVHData{ {minVertex.x, minVertex.y, minVertex.z}, {maxVertex.x, maxVertex.y, maxVertex.z} });
-  m->m_material = matInstances[mesh->mMaterialIndex];
+  m->m_matInstance = matInstances[mesh->mMaterialIndex];
   Node* meshNode = sceneGraph->AddNode(m, Transform(), sceneGraphParent, true);
   meshNode->m_name = mesh->mName.C_Str();
   return m;

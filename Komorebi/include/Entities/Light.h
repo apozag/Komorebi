@@ -22,14 +22,14 @@ private:
   };
 public:
   DirectionalLight() : 
-    m_pcbuffer(gfx::PixelConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::PixelConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT))
-  {};
-  DirectionalLight(DirectX::SimpleMath::Vector3 m_color) : 
-    m_color(m_color), 
-    m_pcbuffer(gfx::PixelConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::PixelConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT))
-  {};
+    m_pcbuffer(gfx::ConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+  };
+  DirectionalLight(DirectX::SimpleMath::Vector3 m_color) :
+    m_color(m_color),
+    m_pcbuffer(gfx::ConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+  };
 
   ~DirectionalLight();
 
@@ -49,8 +49,8 @@ private:
   Camera* m_camera;
   gfx::RenderTarget* m_rt;
 
-  gfx::PixelConstantBuffer<DirLightData> m_pcbuffer;
-  gfx::PixelConstantBuffer<LightTransformData> m_vcbuffer;
+  gfx::ConstantBuffer<DirLightData> m_pcbuffer;
+  gfx::ConstantBuffer<LightTransformData> m_vcbuffer;
 };
 
 class PointLight : public Entity {
@@ -61,15 +61,15 @@ private:
   };
 
 public:
-  PointLight() : 
-    m_pcbuffer(gfx::PixelConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT))
-  {};
+  PointLight() :
+    m_pcbuffer(gfx::ConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+  };
   PointLight(DirectX::SimpleMath::Vector3 m_color) :
     m_color(m_color),
-    m_pcbuffer(gfx::PixelConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT))
-  {}
+    m_pcbuffer(gfx::ConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+  }
 
   ~PointLight();
 
@@ -89,8 +89,8 @@ private:
   Camera m_cameras[6];
   gfx::RenderTarget m_rts[6];
 
-  gfx::PixelConstantBuffer<PointLightData> m_pcbuffer;
-  gfx::VertexConstantBuffer<LightTransformData> m_vcbuffer;
+  gfx::ConstantBuffer<PointLightData> m_pcbuffer;
+  gfx::ConstantBuffer<LightTransformData> m_vcbuffer;
 };
 
 class SpotLight : public Entity {
@@ -103,16 +103,16 @@ private:
   };
 
 public:
-  SpotLight() : 
-    m_pcbuffer(gfx::PixelConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT))
-  {};
+  SpotLight() :
+    m_pcbuffer(gfx::ConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+  };
   SpotLight(DirectX::SimpleMath::Vector3 m_color, float m_phi, float m_theta) :
     m_color(m_color),
     m_phi(m_phi),
     m_theta(m_theta),
-    m_pcbuffer(gfx::PixelConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT)),
-    m_vcbuffer(gfx::VertexConstantBuffer<LightTransformData>(VCBUFF_LIGHTTRANSFORM_SLOT))
+    m_pcbuffer(gfx::ConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL))
   {}
 
   ~SpotLight();
@@ -134,6 +134,6 @@ private:
   Camera* m_camera;
   gfx::RenderTarget* m_rt;
 
-  gfx::PixelConstantBuffer<SpotLightData> m_pcbuffer;
-  gfx::VertexConstantBuffer<LightTransformData> m_vcbuffer;
+  gfx::ConstantBuffer<SpotLightData> m_pcbuffer;
+  gfx::ConstantBuffer<LightTransformData> m_vcbuffer;
 };

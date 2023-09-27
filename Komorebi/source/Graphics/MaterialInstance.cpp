@@ -7,6 +7,10 @@
 
 namespace gfx {
 
+  void MaterialInstance::Setup() {
+
+  }
+
   void MaterialInstance::Bind() {
     //m_material->Bind();
     for (ResourceBindable* bind : m_binds) {

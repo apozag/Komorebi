@@ -6,7 +6,7 @@
 			<m_PSFilename>assets/shaders/ReinhardPixel.cso</m_PSFilename>
 			<m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
 			<m_binds/>
-			<m_skinned>false</m_skinned>
+			<m_layoutType>DEFAULT</m_layoutType>
 			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>
 			<m_cbuffCache>
 				<varsInfo>

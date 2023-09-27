@@ -4,6 +4,7 @@
 #include "Entities/Entity.h"
 //#include "Core/Math/MathWrappers.h"
 #include "Core/Math/BvhData.h"
+#include "Graphics/Topology.h"
 
 namespace gfx {
 	class Graphics;
@@ -13,7 +14,8 @@ namespace gfx {
 	class MaterialInstance;
 
 	template<typename T>
-	class VertexConstantBuffer;
+	class ConstantBuffer;
+	class VertexBuffer;
 }
 
 class Drawable : public Entity {
@@ -22,7 +24,6 @@ private:
 	struct ModelMatrixData {
 		DirectX::XMMATRIX model;
 	};
-public:
 	
 public:
 	Drawable() {};
@@ -35,6 +36,7 @@ public:
 	virtual void Setup() override;
 
 	void AddBindable(gfx::ResourceBindable* bind);
+	void AddBindable(gfx::VertexBuffer* bind);
 	void AddIndexBuffer(gfx::IndexBuffer* ib);
 	const BVHData& GetBVHData() const { return m_bvhData; }
 	
@@ -45,12 +47,20 @@ public:
 	REFLECT()
 
 public:
-	OWNED_PTR(gfx::MaterialInstance) m_material;
+	OWNED_PTR(gfx::MaterialInstance) m_matInstance;
+
+	gfx::Topology m_topology = gfx::Topology::TRIANGLES;
+
 protected:
 	BVHData m_bvhData;
 private:
 	std::vector<gfx::ResourceBindable*> m_binds;
 	unsigned int m_indexCount;
+	unsigned int m_vertexCount;
 
-	gfx::VertexConstantBuffer<ModelMatrixData>* m_modelCbuffer;
+	gfx::ConstantBuffer<ModelMatrixData>* m_modelCbuffer;
+
+	bool m_bIndexed = false;
+	
 };
+

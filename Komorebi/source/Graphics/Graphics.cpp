@@ -7,6 +7,7 @@
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 #include "Graphics/Bindables/State/Viewport.h"
 #include "Core/WindowAttachment.h"
+#include "Core/Reflection/ReflectionImplMacros.h"
 
 namespace wrl = Microsoft::WRL;
 
@@ -210,7 +211,11 @@ namespace gfx {
 		m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 
-	void Graphics::Draw(unsigned int count) {
+	void Graphics::SetTopology(Topology topology) const {
+		m_context->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)topology);
+	}
+
+	void Graphics::Draw(unsigned int count) const {
 		m_context->Draw(count, 0);
 	}
 	void Graphics::DrawIndexed(unsigned int count) const {

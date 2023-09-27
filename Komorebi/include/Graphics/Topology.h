@@ -1,0 +1,16 @@
+#pragma once
+
+#include "Core/Reflection/ReflectionMacros.h"
+
+#include <d3dcommon.h>
+
+namespace gfx {
+	enum Topology {
+		TRIANGLESTRIP = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
+		TRIANGLES = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		POINTS = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,
+		LINES = D3D11_PRIMITIVE_TOPOLOGY_LINELIST
+	};
+}
+
+DECLARE_REFLECTION_ENUM(gfx::Topology)

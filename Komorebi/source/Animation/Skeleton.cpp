@@ -2,7 +2,7 @@
 
 #include "Graphics/Renderer.h"
 
-Skeleton::Skeleton() : m_cbuffer( VCBUFF_BONES_SLOT){}
+Skeleton::Skeleton() : m_cbuffer( VCBUFF_BONES_SLOT, true, nullptr, gfx::CBufferStage::VERTEX){}
 
 void Skeleton::UpdateBone(int idx, DirectX::XMMATRIX matrix){
 	m_dirty = true;

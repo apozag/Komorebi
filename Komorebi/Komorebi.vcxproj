@@ -451,6 +451,7 @@
     <ClInclude Include="include\Entities\Light.h" />
     <ClInclude Include="include\Entities\Mesh.h" />
     <ClInclude Include="include\Entities\Model.h" />
+    <ClInclude Include="include\Entities\ParticleSource.h" />
     <ClInclude Include="include\Entities\Script.h" />
     <ClInclude Include="include\Entities\SkinnedMesh.h" />
     <ClInclude Include="include\Graphics\BindableSlotsInfo.h" />
@@ -487,6 +488,7 @@
     <ClInclude Include="include\Graphics\RenderInfo.h" />
     <ClInclude Include="include\Graphics\RenderPipeline.h" />
     <ClInclude Include="include\Graphics\RenderPipeline\RenderStep.h" />
+    <ClInclude Include="include\Graphics\Topology.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
     <ClInclude Include="include\Scene\AuxNode.h" />
@@ -527,6 +529,7 @@
     <ClCompile Include="source\Entities\Light.cpp" />
     <ClCompile Include="source\Entities\Mesh.cpp" />
     <ClCompile Include="source\Entities\Model.cpp" />
+    <ClCompile Include="source\Entities\ParticleSource.cpp" />
     <ClCompile Include="source\Entities\Script.cpp" />
     <ClCompile Include="source\Entities\SkinnedMesh.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Bindable.cpp" />
@@ -560,6 +563,7 @@
     <ClCompile Include="source\Graphics\RenderInfo.cpp" />
     <ClCompile Include="source\Graphics\RenderPipeline.cpp" />
     <ClCompile Include="source\Graphics\RenderPipeline\RenderStep.cpp" />
+    <ClCompile Include="source\Graphics\Topology.cpp" />
     <ClCompile Include="source\Input\Keyboard.cpp" />
     <ClCompile Include="source\Input\Mouse.cpp" />
     <ClCompile Include="source\Scene\AuxNode.cpp" />

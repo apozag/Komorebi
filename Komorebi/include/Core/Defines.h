@@ -20,6 +20,12 @@ namespace POD {
 		Vector2 uv;
 	};
 
+	struct Particle {
+		Vector3 pos;
+		Vector3 velocity;
+		float lifeTime;
+	};
+
 #define MAX_BONES_PER_VERTEX 4
 
 	struct SkinnedVertex {

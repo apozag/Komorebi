@@ -6,6 +6,7 @@
 #include <vector>
 #include "Core/Exceptions/Exception.h"
 #include "Graphics/DxgiInfoManager.h"
+#include "Graphics/Topology.h"
 
 class WindowAttachment;
 
@@ -13,7 +14,7 @@ namespace gfx {
 
 	class Bindable;
 	class RenderTarget;
-	class Viewport;
+	class Viewport;	
 
 	class Graphics {
 		friend class Bindable;
@@ -46,7 +47,8 @@ namespace gfx {
 			const char* GetType() const noexcept override;
 		private:
 			std::string reason;
-		};
+		};		
+
 	public:
 		Graphics(HWND hWnd, int width, int height);
 		Graphics& operator=(const Graphics&) = delete;
@@ -55,7 +57,8 @@ namespace gfx {
 		void SwapBuffers();
 		void ClearBuffer(float r, float g, float b) noexcept;
 		void Init();
-		void Draw(unsigned int count);
+		void SetTopology(Topology topology) const;
+		void Draw(unsigned int count) const;
 		void DrawIndexed(unsigned int count) const;
 		RenderTarget* GetDefaultRenderTarget() {
 			return m_target;

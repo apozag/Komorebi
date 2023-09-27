@@ -50,7 +50,7 @@ namespace gfx {
 }
 
 gfx::Renderer::Renderer() :
-  m_shadowInfoCbuff(PixelConstantBuffer<ShadowInfoData>(PCBUFF_SHADOW_SLOT)),
+  m_shadowInfoCbuff(ConstantBuffer<ShadowInfoData>(PCBUFF_SHADOW_SLOT, true, nullptr, CBufferStage::PIXEL)),
   m_shadowMapSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, SRV_SHADOWMAP_SLOT),
   m_PCFFiltersSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, SRV_PCF_SLOT) {
   // Initialize PCF filter random values

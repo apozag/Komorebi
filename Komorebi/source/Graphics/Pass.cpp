@@ -21,16 +21,31 @@ namespace gfx {
 
 	unsigned char Pass::static_idx = 0;
 
-	Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, bool skinned) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
+	Pass::Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, LayoutType layoutType) : m_vertexShader(vs), m_pixelShader(ps), m_layer(layer), m_layoutType(layoutType), m_idx(static_idx++) {}
 
-	Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, bool skinned) : m_VSFilename(vsFilename), m_PSFilename(psFilename), m_layer(layer), m_skinned(skinned), m_idx(static_idx++) {}
+	Pass::Pass(const char* vsFilename, const char* psFilename, unsigned int layer, LayoutType layoutType) : m_VSFilename(vsFilename), m_PSFilename(psFilename), m_layer(layer), m_layoutType(layoutType), m_idx(static_idx++) {}
 
 	void Pass::Setup() {
 		m_vertexShader = memory::Factory::Create<VertexShader>(m_VSFilename.c_str());
 		m_pixelShader = memory::Factory::Create<PixelShader>(m_PSFilename.c_str());
 		m_vertexShader->Setup();
 		m_pixelShader->Setup();
-		if (m_skinned) {
+
+		switch (m_layoutType) {
+		case DEFAULT:
+		{
+			const D3D11_INPUT_ELEMENT_DESC ied[] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,							  D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,	 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+			};
+			AddBindable(memory::Factory::Create<InputLayout>(ied, 4, *m_vertexShader));
+		}
+			break;
+		case SKINNED:
+		{
 			const D3D11_INPUT_ELEMENT_DESC ied[] =
 			{
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 0,							 D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -42,15 +57,18 @@ namespace gfx {
 			};
 			AddBindable(memory::Factory::Create<InputLayout>(ied, 6, *m_vertexShader));
 		}
-		else {
+			break;
+		case PARTICLE:
+		{
 			const D3D11_INPUT_ELEMENT_DESC ied[] =
 			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,							  D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,	 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,	0, 0,							 D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"VELOCITY",   0, DXGI_FORMAT_R32G32B32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"LIFETIME",  0, DXGI_FORMAT_R32_FLOAT,	0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			AddBindable(memory::Factory::Create<InputLayout>(ied, 4, *m_vertexShader));
+			AddBindable(memory::Factory::Create<InputLayout>(ied, 3, *m_vertexShader));
+		}
+			break;
 		}
 	}
 
@@ -99,7 +117,7 @@ namespace gfx {
 	REFLECT_STRUCT_MEMBER(m_PSFilename)
 	REFLECT_STRUCT_MEMBER(m_VSFilename)
 	REFLECT_STRUCT_MEMBER(m_binds)
-	REFLECT_STRUCT_MEMBER(m_skinned)
+	REFLECT_STRUCT_MEMBER(m_layoutType)
 	REFLECT_STRUCT_MEMBER(m_ignoreFrustumCulling)
 	REFLECT_STRUCT_MEMBER(m_cbuffCache)
 	REFLECT_STRUCT_END(Pass)
@@ -110,6 +128,13 @@ REFLECT_ENUM_BEGIN(CacheVarType)
 REFLECT_ENUM_VALUE(SCALAR)
 REFLECT_ENUM_VALUE(VECTOR)
 REFLECT_ENUM_END(CacheVarType)
+
+typedef gfx::Pass::LayoutType PassLayoutType;
+REFLECT_ENUM_BEGIN(PassLayoutType)
+REFLECT_ENUM_VALUE(DEFAULT)
+REFLECT_ENUM_VALUE(SKINNED)
+REFLECT_ENUM_VALUE(PARTICLE)
+REFLECT_ENUM_END(PassLayoutType)
 
 typedef gfx::ConstantBufferCache::VarInfo CacheVarInfo;
 REFLECT_STRUCT_BASE_BEGIN(CacheVarInfo)

@@ -4,7 +4,7 @@
             <m_layer>11</m_layer>
             <m_PSFilename>assets/shaders/deferred/ComposePBRPixel.cso</m_PSFilename>
             <m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
-            <m_skinned>0</m_skinned>
+            <m_layoutType>DEFAULT</m_layoutType>
             <m_binds>
                 <BlendState* Type="BlendState">
                     <m_enable>1</m_enable>

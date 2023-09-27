@@ -256,5 +256,14 @@
     <FxCompile Include="assets\shaders\BlitNoAlphaPixel.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="assets\shaders\ParticleVertex.hlsl">
+      <Filter>Shaders\Vertex</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\ParticleGeom.hlsl">
+      <Filter>Shaders\Geometry</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\ParticlePixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -468,6 +468,12 @@
     <ClInclude Include="include\Graphics\Bindables\State\CubeRenderTarget.h">
       <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
     </ClInclude>
+    <ClInclude Include="include\Entities\ParticleSource.h">
+      <Filter>Archivos de encabezado\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Topology.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -682,6 +688,12 @@
     </ClCompile>
     <ClCompile Include="source\Scene\AuxNode.cpp">
       <Filter>Archivos de origen\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Entities\ParticleSource.cpp">
+      <Filter>Archivos de origen\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Topology.cpp">
+      <Filter>Archivos de origen\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

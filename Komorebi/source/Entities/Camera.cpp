@@ -15,8 +15,8 @@
 void Camera::Setup() {
 
   Reconfigure();
-	m_cameraTransformVCB = memory::Factory::Create<gfx::VertexConstantBuffer<CameraTransformCB>>(VCBUFF_CAMERATRANSFORM_SLOT);
-	m_cameraTransformPCB = memory::Factory::Create<gfx::PixelConstantBuffer<CameraTransformCB>>(PCBUFF_CAMERATRANSFORM_SLOT);
+	m_cameraTransformCB = memory::Factory::Create<gfx::ConstantBuffer<CameraTransformCB>>(
+    VCBUFF_CAMERATRANSFORM_SLOT, true, nullptr, (unsigned int)(gfx::CBufferStage::VERTEX | gfx::CBufferStage::GEOMETRY | gfx::CBufferStage::PIXEL));
 }
 
 void Camera::Reconfigure() {
@@ -36,29 +36,23 @@ void Camera::Bind( const Transform* worldTransform) const {
 	const DirectX::XMMATRIX view = worldTransform->GetInverseMatrixUnsafe();
 	const DirectX::XMMATRIX& viewInv = worldTransform->GetMatrix();
 	DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiply(view, m_proj);
-	m_cameraTransformVCB->m_buffer = CameraTransformCB{
+	m_cameraTransformCB->m_buffer = CameraTransformCB{
 		DirectX::XMMatrixTranspose(viewProj),
 		DirectX::XMMatrixTranspose(view),
 		DirectX::XMMatrixTranspose(m_proj),
     viewInv
 	};
-	m_cameraTransformVCB->Update ();
-	m_cameraTransformVCB->Bind ();
-  
-  m_cameraTransformPCB->m_buffer = m_cameraTransformVCB->m_buffer;
-	m_cameraTransformPCB->Update ();
-	m_cameraTransformPCB->Bind ();
+	m_cameraTransformCB->Update ();
+	m_cameraTransformCB->Bind ();
 
 }
 
 Camera::~Camera() {
-  memory::Factory::Destroy(m_cameraTransformVCB);
-  memory::Factory::Destroy(m_cameraTransformPCB);
+  memory::Factory::Destroy(m_cameraTransformCB);
 }
 
 void Camera::Unbind( ) const {
-  m_cameraTransformVCB->Unbind();
-  m_cameraTransformPCB->Unbind();
+  m_cameraTransformCB->Unbind();
 }
 
 DirectX::XMMATRIX Camera::getProj() const {
