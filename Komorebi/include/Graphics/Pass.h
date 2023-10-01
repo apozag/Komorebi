@@ -60,6 +60,18 @@ namespace gfx {
 		unsigned char GetIdx() const { return m_idx; }
 		PixelShader const* GetPixelShader() const { return m_pixelShader; }
 		VertexShader const* GetVertexShader() const { return m_vertexShader; }
+
+		template<typename T, typename std::enable_if<std::is_base_of<StateBindable, T>::value, int>::type = 0>
+		const T* GetBindable() {
+			const reflection::TypeDescriptor_Struct* typeDesc = (const reflection::TypeDescriptor_Struct*) (reflection::TypeResolver<T>::get());
+			for (StateBindable* bind : m_binds) {
+				if (typeDesc->CanUpCast(bind->GetReflectionDynamic())) {
+					return (const T*) bind;
+				}
+			}
+			return nullptr;
+		}
+
 		bool DoesIgnoreFrustumCulling() const { return m_ignoreFrustumCulling; }
 
 		REFLECT_BASE()

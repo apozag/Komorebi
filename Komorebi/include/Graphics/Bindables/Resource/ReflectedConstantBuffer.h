@@ -79,4 +79,16 @@ namespace gfx {
 
 		REFLECT_HIDE()
 	};
+
+	class ReflectedGeomConstantBuffer : public ReflectedConstantBuffer {
+	public:
+		ReflectedGeomConstantBuffer() {}
+		ReflectedGeomConstantBuffer(std::vector<ConstantBufferVariable> variables, unsigned int slot) : ReflectedConstantBuffer(variables, slot) {}
+		void Bind() const override {
+			GetContext()->GSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+		}
+		void Unbind() const override {}
+
+		REFLECT_HIDE()
+	};
 }

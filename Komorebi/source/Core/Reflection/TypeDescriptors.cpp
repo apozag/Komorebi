@@ -47,6 +47,16 @@ namespace reflection {
     return parentTypeDesc->getFirstMemberIdx() + parentTypeDesc->members.size();
   }
 
+  bool TypeDescriptor_Struct::CanUpCast(const TypeDescriptor_Struct* type) const {
+    while (type != nullptr) {
+      if (type == this) {
+        return true;
+      }
+      type = type->parentTypeDesc;
+    }
+    return false;
+  }
+
   std::string TypeDescriptor_Enum::GetValueStr(const void* obj) const {
     int val = *(int*)obj;
     for (int i = 0; i < values.size(); i++) {

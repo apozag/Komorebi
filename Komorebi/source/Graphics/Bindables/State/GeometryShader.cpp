@@ -16,6 +16,8 @@ namespace gfx {
 		Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
 		GFX_THROW_INFO(D3DReadFileToBlob(WideStringUtility::charToLPWSTR(m_filename.c_str()).c_str(), &pBlob));
 
+		GFX_THROW_INFO(D3DReflect(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)m_reflection.GetAddressOf()));
+
 		GFX_THROW_INFO(GetDevice()->CreateGeometryShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, m_geometryShader.GetAddressOf()));
 	}
 

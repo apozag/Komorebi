@@ -7,6 +7,7 @@
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Bindables/State/PixelShader.h"
+#include "Graphics/Bindables/State/GeometryShader.h"
 #include "Graphics/Bindables/State/VertexShader.h"
 #include "Graphics/BindableSlotsInfo.h"
 #include "Graphics/Bindables/State/RasterizerState.h"
@@ -91,6 +92,55 @@ namespace gfx {
 				ReflectedVertexConstantBuffer* cbuff = memory::Factory::Create<ReflectedVertexConstantBuffer>(variables, register_index);
 				m_cbuffers.push_back(cbuff);
 				m_binds.push_back(cbuff);
+			}
+		}
+
+		// Geometry Shader
+		{
+			const GeometryShader* gs = pass->GetBindable<GeometryShader>();
+
+			if (gs != nullptr) {
+				ID3D11ShaderReflection* reflection = gs->GetShaderReflection();
+
+				D3D11_SHADER_DESC desc = {};
+				reflection->GetDesc(&desc);
+
+				for (unsigned int i = 0; i < desc.ConstantBuffers; ++i) {
+					unsigned int register_index = 0;
+					ID3D11ShaderReflectionConstantBuffer* buffer = reflection->GetConstantBufferByIndex(i);
+
+					D3D11_SHADER_BUFFER_DESC bdesc;
+					buffer->GetDesc(&bdesc);
+
+					for (unsigned int k = 0; k < desc.BoundResources; ++k) {
+						D3D11_SHADER_INPUT_BIND_DESC ibdesc;
+						reflection->GetResourceBindingDesc(k, &ibdesc);
+
+						if (!strcmp(ibdesc.Name, bdesc.Name)) {
+							register_index = ibdesc.BindPoint;
+							break;
+						}
+					}
+
+					if (register_index < GCBUFF_FREE_SLOT) continue;
+
+					std::vector<ReflectedConstantBuffer::ConstantBufferVariable> variables;
+					for (unsigned int j = 0; j < bdesc.Variables; ++j) {
+						ID3D11ShaderReflectionVariable* variable = buffer->GetVariableByIndex(j);
+
+						D3D11_SHADER_VARIABLE_DESC vdesc;
+						variable->GetDesc(&vdesc);
+						ID3D11ShaderReflectionType* type = variable->GetType();
+						D3D11_SHADER_TYPE_DESC tdesc;
+						type->GetDesc(&tdesc);
+
+
+						variables.push_back({ vdesc, tdesc });
+					}
+					ReflectedGeomConstantBuffer* cbuff = memory::Factory::Create<ReflectedGeomConstantBuffer>(variables, register_index);
+					m_cbuffers.push_back(cbuff);
+					m_binds.push_back(cbuff);
+				}
 			}
 		}
 

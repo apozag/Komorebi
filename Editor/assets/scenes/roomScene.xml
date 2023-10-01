@@ -1,5 +1,5 @@
 <Scene>
-	<m_transformHierarchy PtrId="4243387312" Type="Node">
+	<m_transformHierarchy PtrId="2277745584" Type="Node">
 		<m_enabled>true</m_enabled>
 		<m_name>Node</m_name>
 		<m_entities/>
@@ -22,13 +22,13 @@
 			</m_scale>
 		</m_localTransform>
 		<m_children>
-			<Node* PtrId="4243388080" Type="Node">
+			<Node* PtrId="2277746352" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Camera</m_name>
 				<m_entities>
-					<Camera* PtrId="4243388848" Type="Camera">
+					<Camera* PtrId="2277747120" Type="Camera">
 						<m_tag>5</m_tag>
-						<m_node>4243388080</m_node>
+						<m_node>2277746352</m_node>
 						<m_fov>1.047200</m_fov>
 						<m_aspectratio>1.000000</m_aspectratio>
 						<m_near>0.100000</m_near>
@@ -40,24 +40,24 @@
 						<m_priority>0</m_priority>
 						<m_renderPipelineId>DEFERRED</m_renderPipelineId>
 					</Camera*>
-					<CameraMovement* PtrId="4243389040" Type="CameraMovement">
+					<CameraMovement* PtrId="2277747312" Type="CameraMovement">
 						<m_tag>0</m_tag>
-						<m_node>4243388080</m_node>
+						<m_node>2277746352</m_node>
 						<m_speed>300.000000</m_speed>
 						<m_sensitivity>0.300000</m_sensitivity>
 					</CameraMovement*>
 				</m_entities>
 				<m_localTransform>
 					<m_position>
-						<x>-38.970234</x>
-						<y>303.709900</y>
-						<z>652.240967</z>
+						<x>-162.192047</x>
+						<y>469.180542</y>
+						<z>987.245911</z>
 					</m_position>
 					<m_rotation>
-						<x>-0.005612</x>
-						<y>0.994387</y>
-						<z>-0.074117</z>
-						<w>-0.075296</w>
+						<x>0.003986</x>
+						<y>0.994803</y>
+						<z>-0.043001</z>
+						<w>0.092205</w>
 					</m_rotation>
 					<m_scale>
 						<x>1.000000</x>
@@ -66,15 +66,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243389104" Type="Node">
+			<Node* PtrId="2277747376" Type="Node">
 				<m_enabled>false</m_enabled>
 				<m_name>Light0</m_name>
 				<m_entities>
-					<DirectionalLight* PtrId="4243389872" Type="DirectionalLight">
+					<DirectionalLight* PtrId="2277748144" Type="DirectionalLight">
 						<m_tag>0</m_tag>
-						<m_node>4243389104</m_node>
+						<m_node>2277747376</m_node>
 						<m_color>
 							<x>0.000000</x>
 							<y>10.000000</y>
@@ -101,15 +101,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243390192" Type="Node">
+			<Node* PtrId="2277748464" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Light1</m_name>
 				<m_entities>
-					<DirectionalLight* PtrId="4243390960" Type="DirectionalLight">
+					<DirectionalLight* PtrId="2277749232" Type="DirectionalLight">
 						<m_tag>0</m_tag>
-						<m_node>4243390192</m_node>
+						<m_node>2277748464</m_node>
 						<m_color>
 							<x>10.000000</x>
 							<y>10.000000</y>
@@ -136,15 +136,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243391280" Type="Node">
+			<Node* PtrId="2277749552" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Demon</m_name>
 				<m_entities>
-					<Model* PtrId="4243392048" Type="Model">
+					<Model* PtrId="2277750320" Type="Model">
 						<m_tag>0</m_tag>
-						<m_node>4243391280</m_node>
+						<m_node>2277749552</m_node>
 						<m_filename>assets/models/demon.fbx</m_filename>
 						<m_material>assets/materials/skinnedPBRNormalMat.xml</m_material>
 					</Model*>
@@ -168,15 +168,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243406064" Type="Node">
+			<Node* PtrId="2277764400" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Nanosuit</m_name>
 				<m_entities>
-					<Model* PtrId="4243406832" Type="Model">
+					<Model* PtrId="2277765168" Type="Model">
 						<m_tag>0</m_tag>
-						<m_node>4243406064</m_node>
+						<m_node>2277764400</m_node>
 						<m_filename>assets/models/nanosuit/nanosuit.fbx</m_filename>
 						<m_material>assets/materials/pbrMat.xml</m_material>
 					</Model*>
@@ -200,15 +200,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243420848" Type="Node">
+			<Node* PtrId="2277779248" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Backdrop</m_name>
 				<m_entities>
-					<Model* PtrId="4243421616" Type="Model">
+					<Model* PtrId="2277780016" Type="Model">
 						<m_tag>0</m_tag>
-						<m_node>4243420848</m_node>
+						<m_node>2277779248</m_node>
 						<m_filename>assets/models/backdrop.fbx</m_filename>
 						<m_material>assets/materials/pbrFlatMat.xml</m_material>
 					</Model*>
@@ -232,15 +232,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243435632" Type="Node">
+			<Node* PtrId="2277794096" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Breakdance</m_name>
 				<m_entities>
-					<Model* PtrId="4243436400" Type="Model">
+					<Model* PtrId="2277794864" Type="Model">
 						<m_tag>0</m_tag>
-						<m_node>4243435632</m_node>
+						<m_node>2277794096</m_node>
 						<m_filename>assets/models/breakdance.fbx</m_filename>
 						<m_material>assets/materials/skinnedPBRMat.xml</m_material>
 					</Model*>
@@ -264,15 +264,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243450416" Type="Node">
+			<Node* PtrId="2277808944" Type="Node">
 				<m_enabled>false</m_enabled>
 				<m_name>Light2</m_name>
 				<m_entities>
-					<DirectionalLight* PtrId="4243451184" Type="DirectionalLight">
+					<DirectionalLight* PtrId="2277809712" Type="DirectionalLight">
 						<m_tag>0</m_tag>
-						<m_node>4243450416</m_node>
+						<m_node>2277808944</m_node>
 						<m_color>
 							<x>5.000000</x>
 							<y>5.000000</y>
@@ -299,15 +299,15 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<Node* PtrId="4243451504" Type="Node">
+			<Node* PtrId="2277810032" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Shpere</m_name>
 				<m_entities>
-					<Model* PtrId="4243452272" Type="Model">
+					<Model* PtrId="2277810800" Type="Model">
 						<m_tag>0</m_tag>
-						<m_node>4243451504</m_node>
+						<m_node>2277810032</m_node>
 						<m_filename>assets/models/sphere.fbx</m_filename>
 						<m_material>assets/materials/pbrFlatMat.xml</m_material>
 					</Model*>
@@ -331,26 +331,40 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
+				<m_parent>2277745584</m_parent>
 			</Node*>
-			<!-- <Node* PtrId="4243927984" Type="Node">
+			<Node* PtrId="2277824112" Type="Node">
 				<m_enabled>true</m_enabled>
 				<m_name>Particles</m_name>
 				<m_entities>
-					<ParticleSource* PtrId="9999999" Type="ParticleSource">
+					<ParticleSource* PtrId="2277824880" Type="ParticleSource">
 						<m_tag>0</m_tag>
-						<m_node>4243927984</m_node>
-						<m_matInstance>
+						<m_node>2277824112</m_node>
+						<m_matInstance PtrId="2277825136" Type="MaterialInstance">
 							<m_material>assets/materials/particleMat.xml</m_material>
+							<m_binds/>
 						</m_matInstance>
-						<m_maxParticles>100</m_maxParticles>
+						<m_topology>POINTS</m_topology>
+						<m_bvhData>
+							<m_min>
+								<x>0.000000</x>
+								<y>0.000000</y>
+								<z>0.000000</z>
+							</m_min>
+							<m_max>
+								<x>50.000000</x>
+								<y>50.000000</y>
+								<z>0.000000</z>
+							</m_max>
+						</m_bvhData>
+						<m_maxParticles>999</m_maxParticles>
 					</ParticleSource*>
 				</m_entities>
 				<m_localTransform>
 					<m_position>
-						<x>0.000000</x>
-						<y>0.000000</y>
-						<z>0.000000</z>
+						<x>-132.792999</x>
+						<y>270.699341</y>
+						<z>268.562225</z>
 					</m_position>
 					<m_rotation>
 						<x>-0.000000</x>
@@ -365,8 +379,8 @@
 					</m_scale>
 				</m_localTransform>
 				<m_children/>
-				<m_parent>4243387312</m_parent>
-			</Node*> -->
+				<m_parent>2277745584</m_parent>
+			</Node*>
 		</m_children>
 		<m_parent>0</m_parent>
 	</m_transformHierarchy>

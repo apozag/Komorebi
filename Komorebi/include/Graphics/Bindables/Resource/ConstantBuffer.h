@@ -49,13 +49,16 @@ namespace gfx {
 			cbd.MiscFlags = 0u;
 			cbd.ByteWidth = sizeof(T);
 			cbd.StructureByteStride = 0;
-
-			D3D11_SUBRESOURCE_DATA sd = {};
-			sd.pSysMem = &buffer;
-			sd.SysMemPitch = 0;
-			sd.SysMemSlicePitch = 0;
-
-			GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, &sd, m_constantBuffer.GetAddressOf()));
+			if (buffer != nullptr) {
+				D3D11_SUBRESOURCE_DATA sd = {};
+				sd.pSysMem = buffer;
+				sd.SysMemPitch = 0;
+				sd.SysMemSlicePitch = 0;
+				GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, &sd, m_constantBuffer.GetAddressOf()));
+			}
+			else {
+				GFX_THROW_INFO(GetDevice()->CreateBuffer(&cbd, NULL, m_constantBuffer.GetAddressOf()));
+			}
 		}
 
 

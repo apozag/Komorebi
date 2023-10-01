@@ -103,6 +103,8 @@ namespace reflection {
 
     int getFirstMemberIdx() const;
     
+    bool CanUpCast(const TypeDescriptor_Struct* type) const;
+    
   private:
     std::string GetValueStr(const void* obj) const override { return {}; }
     void SetValueFromString(void* pObj, const char* valueCStr) const override {}

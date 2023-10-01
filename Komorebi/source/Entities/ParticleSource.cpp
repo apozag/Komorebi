@@ -16,10 +16,11 @@ void ParticleSource::Setup() {
   size_t size = m_maxParticles * sizeof(POD::Particle);
   m_data = (POD::Particle*)malloc(size);
   //ZeroMemory(m_data, size);
+  float padding = 20.f;
   int columns = 10;
   for (float i = 0; i < m_maxParticles / columns; i++) {
     for (float j = 0; j < columns; j++) {
-      m_data[(int)(i * columns + j)].pos = { i * 5.f, j * 5.f, 0.f };
+      m_data[(int)(i * columns + j)].pos = { i * padding, j * padding, 0.f };
     }
   }
   m_bvhData.m_min = math::Vector3{ 0.f,0.f,0.f };

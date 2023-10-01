@@ -24,7 +24,9 @@ void ImGuiTypeVisitor::Visit(const TypeDescriptor* type) {
   // Bools as checkboxes
   static const TypeDescriptor* boolTypeDesc = reflection::TypeResolver<bool>::get();
   if (type == boolTypeDesc) {
-    ImGui::Checkbox(UNIQUE_LABEL(m_currName + "##"), (bool*)m_pObj);
+    if (ImGui::Checkbox(UNIQUE_LABEL(m_currName + "##"), (bool*)m_pObj)) {
+      m_dirty = true;
+    }
   }
   // Everything else as text fields
   else {

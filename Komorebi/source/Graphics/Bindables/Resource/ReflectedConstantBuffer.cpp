@@ -114,4 +114,7 @@ namespace gfx {
 	REFLECT_STRUCT_BEGIN(ReflectedPixelConstantBuffer, ResourceBindable)
 	REFLECT_STRUCT_END(ReflectedPixelConstantBuffer)
 
+	REFLECT_STRUCT_BEGIN(ReflectedGeomConstantBuffer, ResourceBindable)
+	REFLECT_STRUCT_END(ReflectedGeomConstantBuffer)
+
 }
