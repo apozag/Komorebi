@@ -44,6 +44,9 @@ public:
 
 	virtual void Draw(const DirectX::XMMATRIX&& modelMatrix) const;
 
+	void SetVertexCount(unsigned int count) { m_vertexCount = count; }
+	void SetIndexCount(unsigned int count) { m_indexCount = count; }
+
 	REFLECT()
 
 public:

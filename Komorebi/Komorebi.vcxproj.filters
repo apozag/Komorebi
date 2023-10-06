@@ -474,6 +474,9 @@
     <ClInclude Include="include\Graphics\Topology.h">
       <Filter>Archivos de encabezado\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="include\Core\Math\Shapes.h">
+      <Filter>Archivos de encabezado\Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -694,6 +697,9 @@
     </ClCompile>
     <ClCompile Include="source\Graphics\Topology.cpp">
       <Filter>Archivos de origen\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Core\Math\Shapes.cpp">
+      <Filter>Archivos de origen\Core\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

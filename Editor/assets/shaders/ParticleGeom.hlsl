@@ -26,6 +26,10 @@ void main(
 	inout TriangleStream< GSout > output
 )
 {	
+	if (input[0].lifeTime <= 0.f) {
+		return;
+	}
+
 	//float4 worldPos = mul(input[0].pos, viewproj);
 	float4 worldPos = input[0].pos;
 	//float4 worldPos = mul(input[0].pos, proj);

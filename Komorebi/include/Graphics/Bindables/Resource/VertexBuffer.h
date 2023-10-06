@@ -11,6 +11,7 @@ namespace gfx {
 	public:
 		VertexBuffer(void* vertices, unsigned int size, unsigned int stride, unsigned int offset, bool dynamic = false);
 		~VertexBuffer();
+		void SetData(void* data, size_t size);
 		void Bind()const override;
 		void Unbind()const override;
 		void Update();

@@ -31,6 +31,13 @@ namespace gfx {
 		//m_vertexBuffer->Release();
 	}
 
+	void VertexBuffer::SetData(void* data, size_t size) {
+		D3D11_MAPPED_SUBRESOURCE resource;
+		GetContext()->Map(m_vertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		memcpy(resource.pData, data, size);
+		GetContext()->Unmap(m_vertexBuffer.Get(), 0);
+	}
+
 	void VertexBuffer::Bind() const {
 		GetContext()->IASetVertexBuffers(0u, 1u, m_vertexBuffer.GetAddressOf(), &m_stride, &m_offset);
 	}

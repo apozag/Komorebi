@@ -1,25 +1,39 @@
 <Material>
-    <m_passes>
-        <Pass*>
-            <m_layer>0</m_layer>
-            <m_PSFilename>assets/shaders/ParticlePixel.cso</m_PSFilename>
-            <m_VSFilename>assets/shaders/ParticleVertex.cso</m_VSFilename>
-            <m_layoutType>PARTICLE</m_layoutType>
-            <m_ignoreFrustumCulling>true</m_ignoreFrustumCulling>
-            <m_binds>
-                <GeometryShader Type="GeometryShader">
-                    <m_filename>assets/shaders/ParticleGeom.cso</m_filename>
-                </GeometryShader>
-                <DepthStencilState* Type="DepthStencilState">
+	<m_passes>
+		<Pass* PtrId="3021880176" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>0</m_layer>
+			<m_PSFilename>assets/shaders/ParticlePixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/ParticleVertex.cso</m_VSFilename>
+			<m_binds>
+				<GeometryShader* PtrId="3021880432" Type="GeometryShader">
+					<m_filename>assets/shaders/ParticleGeom.cso</m_filename>
+				</GeometryShader*>
+				<DepthStencilState* PtrId="3021880560" Type="DepthStencilState">
 					<m_DSAccess>DEPTH_WRITE|DEPTH_READ</m_DSAccess>
 					<m_refVal>0</m_refVal>
 				</DepthStencilState*>
-                <RasterizerState* Type="RasterizerState">
+				<RasterizerState* PtrId="3021880624" Type="RasterizerState">
 					<m_cullFront>true</m_cullFront>
 					<m_wireframe>false</m_wireframe>
 				</RasterizerState*>
-            </m_binds>
-        </Pass*>
-    </m_passes>
-    <m_binds/>
+			</m_binds>
+			<m_layoutType>PARTICLE</m_layoutType>
+			<m_ignoreFrustumCulling>true</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>quadSize</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>3.000000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds/>
 </Material>
+

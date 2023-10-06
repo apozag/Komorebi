@@ -413,6 +413,7 @@
     <ClInclude Include="include\3rd\std_image\stb_image.h" />
     <ClInclude Include="include\Animation\Animation.h" />
     <ClInclude Include="include\Animation\Skeleton.h" />
+    <ClInclude Include="include\Core\Math\Shapes.h" />
     <ClInclude Include="include\Core\PrefabManager.h" />
     <ClInclude Include="include\Core\Math\BvhData.h" />
     <ClInclude Include="include\Core\Math\MathUtils.h" />
@@ -505,6 +506,7 @@
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp" />
     <ClCompile Include="source\Animation\Animation.cpp" />
     <ClCompile Include="source\Animation\Skeleton.cpp" />
+    <ClCompile Include="source\Core\Math\Shapes.cpp" />
     <ClCompile Include="source\Core\PrefabManager.cpp" />
     <ClCompile Include="source\Core\Engine.cpp" />
     <ClCompile Include="source\Core\Exceptions\Exception.cpp" />

@@ -6,6 +6,18 @@
 #include "Core/Reflection/ReflectionMacros.h"
 
 namespace math {
+
+  class Vector2 : public DirectX::SimpleMath::Vector2, public GameObject {
+  public:
+    Vector2() {}
+    Vector2(DirectX::SimpleMath::Vector2& v) { x = v.x; y = v.y; }
+    Vector2(DirectX::SimpleMath::Vector3&& v) { x = v.x; y = v.y; }
+    Vector2(float x, float y) : DirectX::SimpleMath::Vector2(x, y) {}
+    Vector2(std::initializer_list<Vector2> l) {}
+    REFLECT_BASE()
+      using DirectX::SimpleMath::Vector2::operator=;
+  };
+
   class Vector3 : public DirectX::SimpleMath::Vector3, public GameObject {
   public:
     Vector3() {}

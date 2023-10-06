@@ -1,5 +1,7 @@
 #pragma once
 
+#include <math.h>
+
 namespace POD {
 	struct Vector2 {
 		float x, y;
@@ -7,7 +9,20 @@ namespace POD {
 
 	struct Vector3 {
 		float x, y, z;
+
+		inline float mangitude() const { return sqrt(sqrMangitude()); }
+		inline float sqrMangitude() const { return x * x + y * y + z * z; }		
+
+		inline void operator+=(const Vector3& v) { x+=v.x; y+=v.y; z+=v.z; }
+		inline void operator-=(const Vector3& v) { x-=v.x; y-=v.y; z-=v.z; }
+		inline void operator*=(const Vector3& v) { x*=v.x; y*=v.y; z*=v.z; }
+		inline void operator*=(float f) { x*=f; y*=f; z*=f; }
 	};
+
+	inline Vector3 operator-(const Vector3& v0, const Vector3& v1) { return { v0.x - v1.x, v0.y - v1.y, v0.z - v1.z }; }
+	inline Vector3 operator+(const Vector3& v0, const Vector3& v1) { return { v0.x + v1.x, v0.y + v1.y, v0.z + v1.z }; }	
+	inline Vector3 operator*(const Vector3& v0, const Vector3& v1) { return { v0.x * v1.x, v0.y * v1.y, v0.z * v1.z }; }
+	inline Vector3 operator*(const Vector3& v, float f) { return { v.x * f, v.y * f, v.z * f }; }
 
 	struct Vector4 {
 		float x, y, z, w;
