@@ -7,6 +7,7 @@ struct VSout {
 struct GSout {
 	float4 pos : SV_Position;
 	float3 velocity : VELOCITY;
+	float2 uv : TEXCOORD;
 	float lifeTime : LIFETIME;
 };
 
@@ -37,6 +38,7 @@ void main(
 	GSout p0;
 	p0.pos = worldPos + float4(quadSize, -quadSize, 0, 0);
 	p0.pos = mul(p0.pos, proj);
+	p0.uv = float2(1, 0);
 	p0.velocity = input[0].velocity;
 	p0.lifeTime = input[0].lifeTime;
 	output.Append(p0);
@@ -44,6 +46,7 @@ void main(
 	GSout p1;
 	p1.pos = worldPos + float4(quadSize, quadSize, 0, 0);
 	p1.pos = mul(p1.pos, proj);
+	p1.uv = float2(1, 1);
 	p1.velocity = input[0].velocity;
 	p1.lifeTime = input[0].lifeTime;
 	output.Append(p1);
@@ -51,6 +54,7 @@ void main(
 	GSout p2;
 	p2.pos = worldPos + float4(-quadSize, -quadSize, 0, 0);
 	p2.pos = mul(p2.pos, proj);
+	p2.uv = float2(0, 0);
 	p2.velocity = input[0].velocity;
 	p2.lifeTime = input[0].lifeTime;
 	output.Append(p2);
@@ -58,6 +62,7 @@ void main(
 	GSout p3;
 	p3.pos = worldPos + float4(-quadSize, quadSize, 0, 0);
 	p3.pos = mul(p3.pos, proj);
+	p3.uv = float2(0, 1);
 	p3.velocity = input[0].velocity;
 	p3.lifeTime = input[0].lifeTime;
 	output.Append(p3);

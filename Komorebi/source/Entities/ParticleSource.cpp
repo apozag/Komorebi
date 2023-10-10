@@ -1,7 +1,5 @@
 #include  "Entities/ParticleSource.h"
 
-#include <cstdlib>
-
 #include "Core/Engine.h"
 #include "Core/Reflection/ReflectionImplMacros.h"
 #include "Core/Memory/Factory.h"
@@ -34,56 +32,69 @@ void ParticleSource::Insert(Node* node, const Transform& worldTransform) {
     return;
   }
 
-  float dt = Engine::GetDeltaTime();
-
-  cumDeltaTime += dt;
-
-  unsigned int numToSpawn = (unsigned int) (cumDeltaTime * m_emissionRate);
-
-  cumDeltaTime = numToSpawn > 0u ? 0.f : cumDeltaTime;
+  float dt = Engine::GetDeltaTime();  
   
-  {
-    for (unsigned i = 0u; i < m_currentParticles; i++) {
-      m_data[i].lifeTime -= dt;
-      if (m_data[i].lifeTime <= 0.f) {
-        m_currentParticles--;
-        if (m_currentParticles >= 0) {
-          m_data[i] = m_data[m_currentParticles];
-          m_data[i].lifeTime -= dt;
-          m_data[m_currentParticles] = {};
-        }
+  for (unsigned i = 0u; i < m_currentParticles; i++) {
+    m_data[i].lifeTime -= dt;
+    if (m_data[i].lifeTime <= 0.f) {
+      m_currentParticles--;
+      if (m_currentParticles >= 0) {
+        m_data[i] = m_data[m_currentParticles];
+        m_data[i].lifeTime -= dt;
+        m_data[m_currentParticles] = {};
       }
-      m_data[i].pos += m_data[i].velocity * m_speed * dt;      
+    }
+    m_data[i].pos += m_data[i].velocity * m_speed * dt;      
+  }
+
+  if ((m_loop || m_start) && m_currentTime >= m_duration) {
+    m_currentTime = 0.f;
+    m_start = false;
+  }
+  
+  m_dispersion = fmaxf(fminf(m_dispersion, 1.f), 0.f);
+
+  if (m_currentTime < m_duration) {
+    cumDeltaTime += dt;
+    m_currentTime += dt;
+    unsigned int numToSpawn = (unsigned int)(cumDeltaTime * m_emissionRate);
+    cumDeltaTime = numToSpawn > 0u ? 0.f : cumDeltaTime;
+    for (unsigned int i = 0u; i < numToSpawn && m_currentParticles < m_maxParticles; i++) {
+      math::Vector3 point = m_emitterShape->SampleRandomPoint();
+      math::Vector3 center = m_emitterShape->GetCenter();
+      math::Vector3 dirToCenter = point - center;
+      dirToCenter.Normalize();
+      math::Vector3 velocity = dirToCenter * m_dispersion + math::Vector3::UnitZ*(1.f-m_dispersion);
+      velocity.Normalize();      
+      if (m_world) {
+        point = worldTransform.PointToWorld(point);
+      }            
+      m_data[m_currentParticles].pos = { point.x, point.y, point.z };
+      m_data[m_currentParticles].velocity = { velocity.x, velocity.y, velocity.z };
+      m_data[m_currentParticles].lifeTime = m_lifetime;
+
+      m_currentParticles = min(m_currentParticles + 1, m_maxParticles);
     }
   }
 
-  for(unsigned int i = 0u; i < numToSpawn && m_currentParticles < m_maxParticles; i++) {
-    float r0 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    float r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    math::Vector3 point = m_emitterShape->SampleRandomPoint({ r0, r1 });
-    math::Vector3 center = m_emitterShape->GetCenter();
-    math::Vector3 velocity = point - center;
-    velocity.Normalize();
-    m_data[m_currentParticles].pos = { point.x, point.y, point.z };
-    m_data[m_currentParticles].velocity = { velocity.x, velocity.y, velocity.z};
-    m_data[m_currentParticles].lifeTime = m_lifetime;
-    
-    m_currentParticles = min(m_currentParticles + 1, m_maxParticles);
-  }
-
   SetVertexCount(m_currentParticles);
-  m_vBuffer->SetData(m_data, m_currentParticles * sizeof(POD::Particle));
+  m_vBuffer->SetData(m_data, m_currentParticles * sizeof(POD::Particle));  
 
-  Drawable::Insert(node, worldTransform);
+  Drawable::Insert(node, m_world ? Transform::GetIdentity() : worldTransform);  
 }
 
 
 REFLECT_STRUCT_BEGIN(ParticleSource, Drawable)
 REFLECT_STRUCT_MEMBER(m_maxParticles)
-REFLECT_STRUCT_MEMBER(m_emitterShape)
+REFLECT_STRUCT_MEMBER(m_start)
+REFLECT_STRUCT_MEMBER(m_loop)
+REFLECT_STRUCT_MEMBER(m_world)
+REFLECT_STRUCT_MEMBER(m_dispersion)
+REFLECT_STRUCT_MEMBER(m_duration)
 REFLECT_STRUCT_MEMBER(m_emissionRate)
 REFLECT_STRUCT_MEMBER(m_speed)
 REFLECT_STRUCT_MEMBER(m_lifetime)
+REFLECT_STRUCT_MEMBER(m_emitterShape)
 REFLECT_STRUCT_END(ParticleSource)
 
 REGISTER_ENTITY(ParticleSource)

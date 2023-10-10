@@ -100,6 +100,13 @@
 					<m_screenEffectMat>assets/materials/blitMat.xml</m_screenEffectMat>
 				</RenderStepType>
 				<RenderStepType>
+					<m_type>DEFAULT</m_type>
+					<m_textureInputs/>
+					<m_outRtId>HDR</m_outRtId>
+					<m_outDSId>GBUFFER</m_outDSId>
+					<m_maxLayer>199</m_maxLayer>
+				</RenderStepType>
+				<RenderStepType>
 					<m_type>SCREEN</m_type>
 					<m_textureInputs>
 						<TextureInfoType>

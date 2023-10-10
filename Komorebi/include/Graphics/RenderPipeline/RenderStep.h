@@ -40,6 +40,7 @@ namespace gfx {
     std::vector<TextureInfo> m_textureInputs;
     std::vector<std::string> m_resourceInputs;
     std::string m_outRtId;
+    std::string m_outDSId = "";
     unsigned int m_maxLayer = 0;
     bool m_sortReverse = false;
     BITMASK(RepeatFor) m_repeatFor = 0u;
@@ -50,6 +51,7 @@ namespace gfx {
     std::vector<const Texture2D*> m_inRts;
     std::vector<const ResourceBindable*> m_inResources;
     const RenderTarget* m_outRt;
+    const RenderTarget* m_outDS;
 
     RenderStep() {}
     RenderStep(Type type, std::vector<TextureInfo> inputs, const char* outid, unsigned int layer, bool sort)
@@ -59,13 +61,13 @@ namespace gfx {
     void Setup() override;
 
     void Bind() const;
-    void Execute(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int idx) const;
+    void Execute(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int startIdx, unsigned int& endIdx) const;
     void Unbind() const;
 
     REFLECT_BASE()
 
   private:
-    void ExecuteInternal(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int idx) const;
+    void ExecuteInternal(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int startIdx, unsigned int& endIdx) const;
   };
 
 }

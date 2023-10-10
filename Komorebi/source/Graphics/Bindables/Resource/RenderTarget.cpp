@@ -162,6 +162,16 @@ namespace gfx {
 		}
 	}
 
+	void RenderTarget::BindWithDS(const RenderTarget* rt) const {
+		if (m_rtv.size()) {
+			GetContext()->OMSetRenderTargets(m_rtv.size(), m_rtv[0].GetAddressOf(), rt->m_dsv.Get());
+		}		
+
+		if (m_viewport) {
+			m_viewport->Bind();
+		}
+	}
+
 	void RenderTarget::Unbind() const {
 
 		if (m_rtv.size()) {

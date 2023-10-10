@@ -5,7 +5,7 @@
 class Shape : public GameObject{
 public:
   virtual bool IsPointInside(const math::Vector3& point) = 0;
-  virtual math::Vector3 SampleRandomPoint(const math::Vector2& uniformSamples) = 0;
+  virtual math::Vector3 SampleRandomPoint() = 0;
   virtual math::Vector3 GetCenter() = 0;
   REFLECT_BASE()
 };
@@ -13,7 +13,7 @@ public:
 class PointShape : public Shape {
 public:
   bool IsPointInside(const math::Vector3& point) override;
-  math::Vector3 SampleRandomPoint(const math::Vector2& uniformSamples) override;
+  math::Vector3 SampleRandomPoint() override;
   math::Vector3 GetCenter() override;
   REFLECT()
 
@@ -23,7 +23,18 @@ public:
 class CircleShape : public Shape {
 public:
   bool IsPointInside(const math::Vector3& point) override;
-  math::Vector3 SampleRandomPoint(const math::Vector2& uniformSamples) override;
+  math::Vector3 SampleRandomPoint() override;
+  math::Vector3 GetCenter() override;
+  REFLECT()
+
+  math::Vector3 m_center;
+  float m_radius;
+};
+
+class SphereShape : public Shape {
+public:
+  bool IsPointInside(const math::Vector3& point) override;
+  math::Vector3 SampleRandomPoint() override;
   math::Vector3 GetCenter() override;
   REFLECT()
 
@@ -34,7 +45,7 @@ public:
 class SquareShape : public Shape {
 public:
   bool IsPointInside(const math::Vector3& point) override;
-  math::Vector3 SampleRandomPoint(const math::Vector2& uniformSamples) override;
+  math::Vector3 SampleRandomPoint() override;
   math::Vector3 GetCenter() override;
   REFLECT()
 

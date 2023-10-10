@@ -80,5 +80,5 @@ void Drawable::Draw(const DirectX::XMMATRIX&& modelMatrix) const {
 REFLECT_STRUCT_BEGIN(Drawable, Entity)
 REFLECT_STRUCT_MEMBER(m_matInstance)
 REFLECT_STRUCT_MEMBER(m_topology)
-REFLECT_STRUCT_MEMBER(m_bvhData)
+//REFLECT_STRUCT_MEMBER(m_bvhData)
 REFLECT_STRUCT_END(Drawable)

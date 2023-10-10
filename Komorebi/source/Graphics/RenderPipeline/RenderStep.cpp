@@ -40,6 +40,18 @@ namespace gfx {
     else {
       m_outRt = renderInfo->FindGlobalRenderTarget(m_outRtId);
     }
+
+    if (!m_outDSId.empty()) {
+      if (m_outDSId == "DEFAULT") {
+        m_outDS = Engine::GetDefaultRendertarget();
+      }
+      else {
+        m_outDS = renderInfo->FindGlobalRenderTarget(m_outDSId);
+      }
+    }
+    else {
+      m_outDS = nullptr;
+    }
   }
 
   void RenderStep::Bind() const {
@@ -49,8 +61,11 @@ namespace gfx {
     for (const ResourceBindable* resource : m_inResources) {
       resource->Bind();
     }
-    if (m_outRt) { 
-      m_outRt->Bind(); 
+    if (m_outDS && m_outRt){
+      m_outRt->BindWithDS(m_outDS);
+    }
+    else if(m_outRt){
+      m_outRt->Bind();
     }
   }
 
@@ -64,32 +79,32 @@ namespace gfx {
     if (m_outRt) m_outRt->Unbind();
   }
 
-  void RenderStep::Execute(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int idx) const {
+  void RenderStep::Execute(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int startIdx, unsigned int& endIdx) const {
 
     Bind();
 
     if (m_repeatFor == RepeatFor::ONCE) {
-      ExecuteInternal(jobs, jobsToExecute, idx);
+      ExecuteInternal(jobs, jobsToExecute, startIdx, endIdx);
     } 
     else {
       if ((m_repeatFor & RepeatFor::DIRLIGHT) != 0) {
         for (const DirectionalLight* light : Engine::GetRenderer()->GetDirLights()) {
           light->Bind();
-          ExecuteInternal(jobs, jobsToExecute, idx);
+          ExecuteInternal(jobs, jobsToExecute, startIdx, endIdx);
           light->Unbind();
         }
       }
       if ((m_repeatFor & RepeatFor::SPOTLIGHT) != 0) {
         for (const SpotLight* light : Engine::GetRenderer()->GetSpotLights()) {
           light->Bind();
-          ExecuteInternal(jobs, jobsToExecute, idx);
+          ExecuteInternal(jobs, jobsToExecute, startIdx, endIdx);
           light->Unbind();
         }
       }
       if ((m_repeatFor & RepeatFor::POINTLIGHT) != 0) {
         for (const PointLight* light : Engine::GetRenderer()->GetPointLights()) {
           light->Bind();
-          ExecuteInternal(jobs, jobsToExecute, idx);
+          ExecuteInternal(jobs, jobsToExecute, startIdx, endIdx);
           light->Unbind();
         }
       }
@@ -98,17 +113,18 @@ namespace gfx {
     Unbind();
   }
 
-  void RenderStep::ExecuteInternal(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int idx) const {
+  void RenderStep::ExecuteInternal(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int startIdx, unsigned int& endIdx) const {
     switch (m_type) {
     case DEFAULT:
     {
       const Pass* lastPass = nullptr;
       const Material* lastMat = nullptr;
-      for (int i = idx; i < jobsToExecute; i++) {
+      for (int i = startIdx; i < jobsToExecute; i++) {
 
         Job job = jobs[i];
 
         if (job.pass->m_layer > m_maxLayer) {
+          endIdx = i;
           break;
         }
 
@@ -209,6 +225,7 @@ REFLECT_STRUCT_MEMBER(m_type)
 REFLECT_STRUCT_MEMBER(m_textureInputs)
 REFLECT_STRUCT_MEMBER(m_resourceInputs)
 REFLECT_STRUCT_MEMBER(m_outRtId)
+REFLECT_STRUCT_MEMBER(m_outDSId)
 REFLECT_STRUCT_MEMBER(m_maxLayer)
 REFLECT_STRUCT_MEMBER(m_sortReverse)
 REFLECT_STRUCT_MEMBER(m_repeatFor)

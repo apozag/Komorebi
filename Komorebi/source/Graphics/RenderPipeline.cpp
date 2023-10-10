@@ -71,9 +71,10 @@ namespace gfx {
 
     // Execute render steps
     unsigned int startJobIdx = 0u;
+    unsigned int endJobIdx = 0u;
     for (const RenderStep& step : m_steps) {
-      step.Execute(jobs, jobsToExecute, startJobIdx);
-      startJobIdx = step.m_maxLayer;
+      step.Execute(jobs, jobsToExecute, startJobIdx, endJobIdx);
+      startJobIdx = endJobIdx;
     }
 
     /*std::ostringstream os_;

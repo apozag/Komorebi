@@ -1,0 +1,51 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="673696624" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>100</m_layer>
+			<m_PSFilename>assets/shaders/ParticlePixelTransparent.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/ParticleVertex.cso</m_VSFilename>
+			<m_binds>
+				<GeometryShader* PtrId="673696880" Type="GeometryShader">
+					<m_filename>assets/shaders/ParticleGeom.cso</m_filename>
+				</GeometryShader*>
+				<DepthStencilState* PtrId="673697008" Type="DepthStencilState">
+					<m_DSAccess>DEPTH_READ</m_DSAccess>
+					<m_refVal>0</m_refVal>
+				</DepthStencilState*>
+				<RasterizerState* PtrId="673697072" Type="RasterizerState">
+					<m_cullFront>true</m_cullFront>
+					<m_wireframe>false</m_wireframe>
+				</RasterizerState*>
+				<BlendState* PtrId="673697136" Type="BlendState">
+					<m_enable>true</m_enable>
+					<m_srcBlendFactor>SRC_ALPHA</m_srcBlendFactor>
+					<m_dstBlendFactor>INV_SRC_ALPHA</m_dstBlendFactor>
+					<m_blendOp>ADD</m_blendOp>
+				</BlendState*>
+			</m_binds>
+			<m_layoutType>PARTICLE</m_layoutType>
+			<m_ignoreFrustumCulling>true</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>quadSize</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>20.000000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds>
+		<Texture2D* PtrId="673697200" Type="Texture2D">
+			<m_slot>0</m_slot>
+			<m_filename>assets\images\particles\magic_05.png</m_filename>
+			<m_mipLevels>1</m_mipLevels>
+		</Texture2D*>
+	</m_binds>
+</Material>
+

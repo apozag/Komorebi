@@ -29,6 +29,8 @@ namespace gfx {
 		void Bind()const override;
 		void Unbind()const override;
 
+		void BindWithDS(const RenderTarget* rt) const;
+
 		void Update() {};
 
 		void Clear(float r, float g, float b, float a = 1.f) const;

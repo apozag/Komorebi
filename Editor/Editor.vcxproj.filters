@@ -265,5 +265,8 @@
     <FxCompile Include="assets\shaders\ParticlePixel.hlsl">
       <Filter>Shaders\Pixel</Filter>
     </FxCompile>
+    <FxCompile Include="assets\shaders\ParticlePixelTransparent.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

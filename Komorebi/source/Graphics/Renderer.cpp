@@ -108,13 +108,20 @@ gfx::Renderer::Renderer() :
 
   m_shadowRenderPipeline = memory::Factory::Create<RenderPipeline>();
   m_shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::CLEAR, {}, "", 0, false));
-  m_shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::DEFAULT, {}, "", 0xFFFFFFFF, false));
+  m_shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::DEFAULT, {}, "", 0xFFFFFFFF, false));  
 }
 
 void gfx::Renderer::Init() {
 
-  reflection::SetupTypeVisitor setupVisitor(m_renderInfo);
-  reflection::DefaultResolver::get<RenderInfo>()->Accept(&setupVisitor);
+  {
+    reflection::SetupTypeVisitor setupVisitor(m_renderInfo);
+    reflection::DefaultResolver::get<RenderInfo>()->Accept(&setupVisitor);
+  }
+
+  {
+    reflection::SetupTypeVisitor setupVisitor(m_shadowRenderPipeline);
+    reflection::TypeResolver<RenderPipeline>::get()->Accept(&setupVisitor);
+  }
 
   reflection::ReflectionHelper::ClearAll();
 
