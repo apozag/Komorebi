@@ -2,16 +2,15 @@
 
 #include <vector>
 #include "Entities/Entity.h"
-//#include "Core/Math/MathWrappers.h"
 #include "Core/Math/BvhData.h"
 #include "Graphics/Topology.h"
+#include "Graphics/MaterialInstance.h"
 
 namespace gfx {
 	class Graphics;
 	class Pass;
 	class ResourceBindable;
-	class IndexBuffer;
-	class MaterialInstance;
+	class IndexBuffer;	
 
 	template<typename T>
 	class ConstantBuffer;
@@ -47,10 +46,12 @@ public:
 	void SetVertexCount(unsigned int count) { m_vertexCount = count; }
 	void SetIndexCount(unsigned int count) { m_indexCount = count; }
 
+	void CopyFromMaterialInstance(const gfx::MaterialInstance*);
+
 	REFLECT()
 
 public:
-	OWNED_PTR(gfx::MaterialInstance) m_matInstance;
+	gfx::MaterialInstance m_matInstance;
 
 	gfx::Topology m_topology = gfx::Topology::TRIANGLES;
 

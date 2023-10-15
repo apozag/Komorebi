@@ -5,6 +5,9 @@
 #include "Core/Reflection/ReflectionImplMacros.h"
 
 #include "Core/Memory/Factory.h"
+#include "Core/Reflection/UnloadTypeVisitor.h"
+#include "Core/Reflection/CopyTypeVisitor.h"
+#include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/IndexBuffer.h"
@@ -14,10 +17,11 @@
 
 Drawable::Drawable(const Drawable& drawable) {
 	this->m_indexCount = drawable.m_indexCount;
-	this->m_binds = std::vector(drawable.m_binds);
-	this->m_matInstance = drawable.m_matInstance;
+	this->m_binds = std::vector(drawable.m_binds);	
 	this->m_modelCbuffer = drawable.m_modelCbuffer;
 	this->m_bvhData = drawable.m_bvhData;
+
+	CopyFromMaterialInstance(&drawable.m_matInstance);
 }
 
 Drawable* Drawable::Clone() {
@@ -50,8 +54,16 @@ void Drawable::AddIndexBuffer(gfx::IndexBuffer* ib) {
 	m_bIndexed = true;
 }
 
+void Drawable::CopyFromMaterialInstance(const gfx::MaterialInstance* matInstance) {	
+	const reflection::TypeDescriptor* typeDesc = reflection::TypeResolver<gfx::MaterialInstance>::get();
+	reflection::UnloadTypeVisitor unloadVisitor(&m_matInstance);
+	typeDesc->Accept(&unloadVisitor);	
+	m_matInstance = *matInstance;
+	m_matInstance.Setup();
+}
+
 void Drawable::Insert(Node* node, const Transform& worldTransform) {
-	GetRenderer()->SubmitDrawable(this, &worldTransform, m_matInstance);
+	GetRenderer()->SubmitDrawable(this, &worldTransform, &m_matInstance);
 }
 
 void Drawable::Draw(const DirectX::XMMATRIX&& modelMatrix) const {

@@ -455,6 +455,9 @@
     <ClInclude Include="include\Entities\ParticleSource.h" />
     <ClInclude Include="include\Entities\Script.h" />
     <ClInclude Include="include\Entities\SkinnedMesh.h" />
+    <ClInclude Include="include\FX\FXManager.h" />
+    <ClInclude Include="include\FX\ParticleSource.h" />
+    <ClInclude Include="include\FX\ParticleSourcePreset.h" />
     <ClInclude Include="include\Graphics\BindableSlotsInfo.h" />
     <ClInclude Include="include\Graphics\Bindables\Bindable.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\ConstantBuffer.h" />
@@ -534,6 +537,7 @@
     <ClCompile Include="source\Entities\ParticleSource.cpp" />
     <ClCompile Include="source\Entities\Script.cpp" />
     <ClCompile Include="source\Entities\SkinnedMesh.cpp" />
+    <ClCompile Include="source\FX\ParticleSourcePreset.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Bindable.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\CubeTexture.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\RadianceMap.cpp" />

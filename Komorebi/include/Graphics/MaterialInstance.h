@@ -21,6 +21,7 @@ namespace gfx {
     void AddBindable(ResourceBindable* bind) { m_binds.push_back(bind); }
 
     const Material* GetMaterial() { return m_material; }
+    const void SetMaterial(Material* mat) { m_material = mat; }
     
     REFLECT_BASE()
 

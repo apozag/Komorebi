@@ -3,6 +3,7 @@
 
 #include "GUI\SceneGUIWindow.h"
 #include "GUI\ImGuiTypeVisitor.h"
+#include "GUI\ImGuiEditPtrTypeVisitor.h"
 #include "GUI\GizmoUtils.h"
 #include "Core/Engine.h"
 #include "Core/Reflection/ReflectionHelper.h"
@@ -75,7 +76,7 @@ void DrawAddEntityButton() {
     }
 
     if (pObj && typeDesc && currItem >= 0 && currItem < entityNames.size()) {
-      ImGuiTypeVisitor visitor_imgui(pObj, typeDesc->getFullName());
+      ImGuiEditPtrTypeVisitor visitor_imgui(pObj, typeDesc->getFullName());
       typeDesc->Accept(&visitor_imgui);
 
       if (ImGui::Button("Accept##AcceptEntity") && pObj != nullptr) {

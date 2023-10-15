@@ -38,10 +38,6 @@ namespace reflection {
     
     m_pObj = *ppObj;
 
-    if (dynamicType == TypeResolver<Model>::get()) {
-      int i = 0;
-    }
-
     dynamicType->Accept(this);
     
     dynamicType->destroy(*ppObj);

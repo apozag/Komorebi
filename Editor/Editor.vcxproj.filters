@@ -99,6 +99,9 @@
     <ClCompile Include="src\GUI\MaterialGUIWindow.cpp">
       <Filter>Archivos de origen\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\ImGuiEditPtrTypeVisitor.cpp">
+      <Filter>Archivos de origen\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3rd\imgui\imgui.h">
@@ -150,6 +153,9 @@
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
     <ClInclude Include="include\GUI\MaterialGUIWindow.h">
+      <Filter>Archivos de encabezado\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\ImGuiEditPtrTypeVisitor.h">
       <Filter>Archivos de encabezado\GUI</Filter>
     </ClInclude>
   </ItemGroup>

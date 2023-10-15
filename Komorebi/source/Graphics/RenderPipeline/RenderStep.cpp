@@ -119,12 +119,12 @@ namespace gfx {
     {
       const Pass* lastPass = nullptr;
       const Material* lastMat = nullptr;
-      for (int i = startIdx; i < jobsToExecute; i++) {
+      unsigned int i;
+      for (i = startIdx; i < jobsToExecute; i++) {
 
         Job job = jobs[i];
 
-        if (job.pass->m_layer > m_maxLayer) {
-          endIdx = i;
+        if (job.pass->m_layer > m_maxLayer) {          
           break;
         }
 
@@ -153,6 +153,7 @@ namespace gfx {
         //lastPass = job.pass;
         //lastMat = job.material->GetMaterial();
       }
+      endIdx = i;
       if(lastPass) lastPass->Unbind();
       if(lastMat) lastMat->Unbind();
     }

@@ -86,10 +86,10 @@ namespace reflection {
   void CopyTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
     void** ppObjSrc = type->getPPtr(m_pObjSrc);
     void** ppObjDst = type->getPPtr(m_pObjDst);
-    const TypeDescriptor* dynamicType = type->GetDynamic(ppObjSrc);     
-    std::string filename = type->getFilename(m_pObjSrc);
-    *ppObjDst = PrefabManager::GetInstance()->LoadPrefab(filename.c_str(), dynamicType);
-    type->setFilename(m_pObjDst, filename);
+    //const TypeDescriptor* dynamicType = type->GetDynamic(ppObjSrc);         
+    type->setFilename(m_pObjDst, type->getFilename(m_pObjSrc));
+    *type->getPPtr(m_pObjDst) = *type->getPPtr(m_pObjSrc);
+    //*ppObjDst = PrefabManager::GetInstance()->LoadPrefab(filename.c_str(), dynamicType);    
   }
 
 }

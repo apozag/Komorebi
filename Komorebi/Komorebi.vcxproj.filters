@@ -117,6 +117,12 @@
     <Filter Include="Archivos de origen\Graphics\RenderPipeline">
       <UniqueIdentifier>{c0441962-fe6c-4642-adc4-24cd285f7452}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\FX">
+      <UniqueIdentifier>{12ecd3c8-d558-44ab-b1cc-c62afbef09e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\FX">
+      <UniqueIdentifier>{5e0b0c65-4463-44f2-aaa0-3b551b9de6e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\3rd\dxerr\DXGetErrorDescription.inl">
@@ -477,6 +483,15 @@
     <ClInclude Include="include\Core\Math\Shapes.h">
       <Filter>Archivos de encabezado\Core\Math</Filter>
     </ClInclude>
+    <ClInclude Include="include\FX\FXManager.h">
+      <Filter>Archivos de encabezado\FX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FX\ParticleSourcePreset.h">
+      <Filter>Archivos de encabezado\FX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FX\ParticleSource.h">
+      <Filter>Archivos de encabezado\FX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\3rd\dxerr\dxerr.cpp">
@@ -700,6 +715,9 @@
     </ClCompile>
     <ClCompile Include="source\Core\Math\Shapes.cpp">
       <Filter>Archivos de origen\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FX\ParticleSourcePreset.cpp">
+      <Filter>Archivos de origen\FX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
