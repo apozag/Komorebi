@@ -32,7 +32,7 @@
 					</CacheVarInfo>
 					<CacheVarInfo>
 						<varName>color</varName>
-						<varType>VECTOR</varType>
+						<varType>VECTOR4</varType>
 						<dataIdx>3</dataIdx>
 					</CacheVarInfo>
 				</varsInfo>

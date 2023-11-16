@@ -33,13 +33,15 @@ namespace gfx {
 		const std::vector<ConstantBufferVariable>& GetVariables() const { return m_variables; }
 
 		bool HasFloat(const char* name);
-		bool HasVector4(const char* name);
+		bool HasVector(const char* name);
 
 		float GetFloat(const char* name);
+		void GetVector2(const char* name, float* values);
 		void GetVector4(const char* name, float* values);
 
 		bool SetFloat(const char* name, float value);
 		bool SetVector4(const char* name, float* data);
+		bool SetVector2(const char* name, float* data);
 		bool SetMat4(const char* name, float* data);
 
 		void Update();

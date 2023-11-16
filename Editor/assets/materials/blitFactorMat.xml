@@ -1,0 +1,34 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="4082896544" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>11</m_layer>
+			<m_PSFilename>assets/shaders/blitFactorPixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
+			<m_binds>
+				<BlendState* PtrId="4082896800" Type="BlendState">
+					<m_enable>true</m_enable>
+					<m_srcBlendFactor>ONE</m_srcBlendFactor>
+					<m_dstBlendFactor>ONE</m_dstBlendFactor>
+					<m_blendOp>ADD</m_blendOp>
+				</BlendState*>
+			</m_binds>
+			<m_layoutType>DEFAULT</m_layoutType>
+			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>srcFactor</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>0.300000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds/>
+</Material>
+

@@ -1,23 +1,23 @@
 <Material>
 	<m_passes>
-		<Pass* PtrId="133565296" Type="Pass">
+		<Pass* PtrId="2041622256" Type="Pass">
 			<m_enabled>true</m_enabled>
 			<m_layer>100</m_layer>
 			<m_PSFilename>assets/shaders/ParticlePixelTransparent.cso</m_PSFilename>
 			<m_VSFilename>assets/shaders/ParticleVertex.cso</m_VSFilename>
 			<m_binds>
-				<GeometryShader* PtrId="133565552" Type="GeometryShader">
+				<GeometryShader* PtrId="2041622512" Type="GeometryShader">
 					<m_filename>assets/shaders/ParticleGeom.cso</m_filename>
 				</GeometryShader*>
-				<DepthStencilState* PtrId="133565680" Type="DepthStencilState">
+				<DepthStencilState* PtrId="2041622640" Type="DepthStencilState">
 					<m_DSAccess>DEPTH_READ</m_DSAccess>
 					<m_refVal>0</m_refVal>
 				</DepthStencilState*>
-				<RasterizerState* PtrId="133565744" Type="RasterizerState">
-					<m_cullFront>true</m_cullFront>
+				<RasterizerState* PtrId="2041622704" Type="RasterizerState">
+					<m_cullMode>FRONT</m_cullMode>
 					<m_wireframe>false</m_wireframe>
 				</RasterizerState*>
-				<BlendState* PtrId="133565808" Type="BlendState">
+				<BlendState* PtrId="2041622768" Type="BlendState">
 					<m_enable>true</m_enable>
 					<m_srcBlendFactor>SRC_ALPHA</m_srcBlendFactor>
 					<m_dstBlendFactor>INV_SRC_ALPHA</m_dstBlendFactor>
@@ -33,9 +33,18 @@
 						<varType>SCALAR</varType>
 						<dataIdx>0</dataIdx>
 					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>color</varName>
+						<varType>VECTOR4</varType>
+						<dataIdx>1</dataIdx>
+					</CacheVarInfo>
 				</varsInfo>
 				<varsData>
 					<float>5.000000</float>
+					<float>10.000000</float>
+					<float>10.000000</float>
+					<float>20.000000</float>
+					<float>10.000000</float>
 				</varsData>
 			</m_cbuffCache>
 		</Pass*>

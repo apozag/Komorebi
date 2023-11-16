@@ -3,34 +3,31 @@
 		<RenderPipeline>
 			<m_name>DEFERRED</m_name>
 			<m_steps>
-				<RenderStepType>
-					<m_type>CLEAR</m_type>
+				<!-- Clear rendertargets -->
+				<RenderStep Type="ClearRenderStepType">
 					<m_outRtId>DEFAULT</m_outRtId>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>CLEAR</m_type>
+				</RenderStep>
+				<RenderStep Type="ClearRenderStepType">
 					<m_outRtId>GBUFFER</m_outRtId>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>CLEAR</m_type>
+				</RenderStep>
+				<RenderStep Type="ClearRenderStepType">
 					<m_outRtId>HDR</m_outRtId>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>DEFAULT</m_type>
-					<m_textureInputs/>
+				</RenderStep>
+				<!-- Render opaque geometry to GBuffer -->
+				<RenderStep Type="GeometryRenderStepType">
 					<m_outRtId>GBUFFER</m_outRtId>
 					<m_maxLayer>99</m_maxLayer>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>CUBE</m_type>
+				</RenderStep>
+				<!-- Render skybox to separate rt -->
+				<RenderStep Type="CubeRenderStepType">
 					<m_resourceInputs>
 						<resourceId>ENVMAP</resourceId>
 					</m_resourceInputs>					
 					<m_outRtId>GBUFFER</m_outRtId>
-					<m_screenEffectMat>assets/materials/hdrEnvMapMat.xml</m_screenEffectMat>
-				</RenderStepType>				
-				<RenderStepType>
-					<m_type>SCREEN</m_type>
+					<m_material>assets/materials/hdrEnvMapMat.xml</m_material>
+				</RenderStep>			
+				<!-- Ambient IBL -->	
+				<RenderStep Type="ScreenRenderStepType">
 					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>GBUFFER</m_rtId>
@@ -58,10 +55,10 @@
 						<resourceId>BRDF</resourceId>
 					</m_resourceInputs>>
 					<m_outRtId>HDR</m_outRtId>
-					<m_screenEffectMat>assets/materials/composeAmbientMat.xml</m_screenEffectMat>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>SCREEN</m_type>
+					<m_material>assets/materials/composeAmbientMat.xml</m_material>
+				</RenderStep>
+				<!-- Directional lights -->
+				<RenderStep Type="ScreenRenderStepType">
 					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>GBUFFER</m_rtId>
@@ -86,28 +83,62 @@
 					</m_textureInputs>					
 					<m_outRtId>HDR</m_outRtId>
 					<m_repeatFor>DIRLIGHT</m_repeatFor>
-					<m_screenEffectMat>assets/materials/composeDirlightMat.xml</m_screenEffectMat>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>SCREEN</m_type>
+					<m_material>assets/materials/composeDirlightMat.xml</m_material>
+				</RenderStep>
+				<!-- Copy skybox to HDR -->
+				<RenderStep Type="ScreenRenderStepType">
 					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>GBUFFER</m_rtId>
 							<m_textureIdx>3</m_textureIdx>
+							<m_slot>0</m_slot>
 						</TextureInfoType>
 					</m_textureInputs>
 					<m_outRtId>HDR</m_outRtId>
-					<m_screenEffectMat>assets/materials/blitMat.xml</m_screenEffectMat>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>DEFAULT</m_type>
-					<m_textureInputs/>
+					<m_material>assets/materials/blitMat.xml</m_material>
+				</RenderStep>
+				<!-- Render transparent geometry -->
+				<RenderStepType Type="GeometryRenderStepType">
+					<m_textureInputs>
+						<TextureInfoType>
+							<m_rtId>GBUFFER</m_rtId>
+							<m_textureIdx>2</m_textureIdx>
+						</TextureInfoType>
+					</m_textureInputs>
 					<m_outRtId>HDR</m_outRtId>
 					<m_outDSId>GBUFFER</m_outDSId>
 					<m_maxLayer>199</m_maxLayer>
-				</RenderStepType>
-				<RenderStepType>
-					<m_type>SCREEN</m_type>
+					<m_sortReverse>true</m_sortReverse>
+				</RenderStep>
+				<!-- Copy HDR to bloom texture -->
+				<RenderStep Type="ScreenRenderStepType">
+					<m_textureInputs>
+						<TextureInfoType>
+							<m_rtId>HDR</m_rtId>
+							<m_textureIdx>0</m_textureIdx>
+						</TextureInfoType>
+					</m_textureInputs>
+					<m_outRtId>BLOOM</m_outRtId>
+					<m_material>assets/materials/filterBrightBlitMat.xml</m_material>
+				</RenderStep>
+				<!-- Blur bloom texture -->
+				<RenderStep Type="DownsampleRenderStepType">					
+					<m_outRtId>BLOOM</m_outRtId>
+					<m_iterations>5</m_iterations>
+				</RenderStep>
+				<!-- Add blurred bloom to HDR -->
+				<RenderStep Type="ScreenRenderStepType">
+					<m_textureInputs>
+						<TextureInfoType>
+							<m_rtId>BLOOM</m_rtId>
+							<m_textureIdx>0</m_textureIdx>
+						</TextureInfoType>
+					</m_textureInputs>
+					<m_outRtId>HDR</m_outRtId>
+					<m_material>assets/materials/blitAddMat.xml</m_material>
+				</RenderStep>
+				<!-- Tonemapping -->
+				<RenderStep Type="ScreenRenderStepType">
 					<m_textureInputs>
 						<TextureInfoType>
 							<m_rtId>HDR</m_rtId>
@@ -116,8 +147,8 @@
 					</m_textureInputs>
 					<m_outRtId>DEFAULT</m_outRtId>
 					<m_repeatFor>ONCE</m_repeatFor>
-					<m_screenEffectMat>assets/materials/tonemappingMat.xml</m_screenEffectMat>
-				</RenderStepType>
+					<m_material>assets/materials/tonemappingMat.xml</m_material>
+				</RenderStep>
 			</m_steps>
 		</RenderPipeline>	
 	</m_renderPipelines>
@@ -130,6 +161,8 @@
 				<m_height>-1</m_height>
 				<m_format>DXGI_FORMAT_R32G32B32A32_FLOAT</m_format>
 				<m_slot>0</m_slot>
+				<m_mipLevels>1</m_mipLevels>
+				<m_hasDS>false</m_hasDS>
 			</m_rt>
 		</RTNamePairType>
 		<RTNamePairType>
@@ -140,6 +173,21 @@
 				<m_height>-1</m_height>
 				<m_format>DXGI_FORMAT_R32G32B32A32_FLOAT</m_format>
 				<m_slot>7</m_slot>
+				<m_mipLevels>1</m_mipLevels>
+				<m_hasDS>true</m_hasDS>
+			</m_rt>
+		</RTNamePairType>
+		<RTNamePairType>
+			<m_name>BLOOM</m_name>
+			<m_rt>
+				<m_count>1</m_count>
+				<m_width>-1</m_width>
+				<m_height>-1</m_height>
+				<m_format>DXGI_FORMAT_R32G32B32A32_FLOAT</m_format>
+				<m_slot>0</m_slot>
+				<m_mipLevels>1</m_mipLevels>
+				<m_hasDS>false</m_hasDS>
+				<m_allowUAV>true</m_allowUAV>
 			</m_rt>
 		</RTNamePairType>
 	</m_globalRTs>
@@ -162,5 +210,3 @@
 		</RTNamePairType>
 	</m_globalResources>
 </RenderInfo>
-
-

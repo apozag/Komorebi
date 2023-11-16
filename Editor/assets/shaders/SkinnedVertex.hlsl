@@ -1,6 +1,6 @@
 #include "VertexCommon.hlsli"
 
-cbuffer BonesTransform : register(b2) {
+cbuffer BonesTransform : register(b3) {
 	matrix bones[60];
 }
 

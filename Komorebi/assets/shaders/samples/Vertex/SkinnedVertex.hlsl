@@ -7,22 +7,22 @@ struct VSout
 	float3 m_color : COLOR;
 };
 
-cbuffer CameraTransform : register(b0)
+cbuffer CameraTransform : register(b1)
 {
 	matrix viewproj;
 	matrix view;
 	matrix proj;
 };
 
-cbuffer Modeltransform : register(b1) {
+cbuffer Modeltransform : register(b2) {
 	matrix model;
 }
 
-cbuffer BonesTransform : register(b2) {
+cbuffer BonesTransform : register(b3) {
 	matrix bones[60];
 }
 
-cbuffer LightTransform : register(b3) {
+cbuffer LightTransform : register(b4) {
 	matrix lightViewProj[5];
 }
 

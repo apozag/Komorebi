@@ -289,7 +289,8 @@ void ModelLoader::processMaterials(const aiScene* scene, gfx::Material* material
         aiTextureType_DIFFUSE, // t0
         aiTextureType_NORMALS, // t1
         aiTextureType_METALNESS, // t2
-        aiTextureType_DIFFUSE_ROUGHNESS // t3
+        //aiTextureType_DIFFUSE_ROUGHNESS, // t3
+        aiTextureType_UNKNOWN // t3
     };
     for (int j = 0; j < types.size(); j++) {
       if (aiMat->GetTextureCount(types[j]) == 0) continue;

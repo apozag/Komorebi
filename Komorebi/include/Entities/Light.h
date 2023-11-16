@@ -4,6 +4,7 @@
 #include "Entities/Camera.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"
+#include "Graphics/PipelineStage.h"
 #include "Core/Math/MathWrappers.h"
 #include "Graphics/BindableSlotsInfo.h"
 #include "Core\Defines.h"
@@ -22,13 +23,13 @@ private:
   };
 public:
   DirectionalLight() : 
-    m_pcbuffer(gfx::ConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
-    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+    m_pcbuffer(gfx::ConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::PipelineStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::PipelineStage::PIXEL)) {
   };
   DirectionalLight(DirectX::SimpleMath::Vector3 m_color) :
     m_color(m_color),
-    m_pcbuffer(gfx::ConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
-    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+    m_pcbuffer(gfx::ConstantBuffer<DirLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::PipelineStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::PipelineStage::PIXEL)) {
   };
 
   ~DirectionalLight();
@@ -42,7 +43,7 @@ public:
 
   DirectX::SimpleMath::Vector3 GetColor() const { return m_color; }
   const Camera* GetCamera() const { return m_camera; }
-  const gfx::RenderTarget* GetShadowMap() const { return m_rt; }
+  gfx::RenderTarget* GetShadowMap() const { return m_rt; }
   REFLECT()
 private:
   math::Vector3 m_color;
@@ -62,13 +63,13 @@ private:
 
 public:
   PointLight() :
-    m_pcbuffer(gfx::ConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
-    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+    m_pcbuffer(gfx::ConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::PipelineStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::PipelineStage::PIXEL)) {
   };
   PointLight(DirectX::SimpleMath::Vector3 m_color) :
     m_color(m_color),
-    m_pcbuffer(gfx::ConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
-    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+    m_pcbuffer(gfx::ConstantBuffer<PointLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::PipelineStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::PipelineStage::PIXEL)) {
   }
 
   ~PointLight();
@@ -82,7 +83,7 @@ public:
 
   DirectX::SimpleMath::Vector3 GetColor() const { return m_color; }
   const Camera* GetCameras() const { return m_cameras; }
-  const gfx::RenderTarget* GetShadowMaps() const { return m_rts; }
+  gfx::RenderTarget* GetShadowMaps() { return m_rts; }
   REFLECT()
 private:
   math::Vector3 m_color;
@@ -104,15 +105,15 @@ private:
 
 public:
   SpotLight() :
-    m_pcbuffer(gfx::ConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
-    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL)) {
+    m_pcbuffer(gfx::ConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::PipelineStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::PipelineStage::PIXEL)) {
   };
   SpotLight(DirectX::SimpleMath::Vector3 m_color, float m_phi, float m_theta) :
     m_color(m_color),
     m_phi(m_phi),
     m_theta(m_theta),
-    m_pcbuffer(gfx::ConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::CBufferStage::PIXEL)),
-    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::CBufferStage::PIXEL))
+    m_pcbuffer(gfx::ConstantBuffer<SpotLightData>(PCBUFF_LIGHTINFO_SLOT, true, NULL, gfx::PipelineStage::PIXEL)),
+    m_vcbuffer(gfx::ConstantBuffer<LightTransformData>(PCBUFF_LIGHTTRANSFORM_SLOT, true, NULL, gfx::PipelineStage::PIXEL))
   {}
 
   ~SpotLight();
@@ -126,7 +127,7 @@ public:
 
   DirectX::SimpleMath::Vector3 GetColor() const { return m_color; }
   const Camera* GetCamera() const { return m_camera; }
-  const gfx::RenderTarget* GetShadowMap() const { return m_rt; }
+  gfx::RenderTarget* GetShadowMap() const { return m_rt; }
   REFLECT()
 private:
   math::Vector3 m_color;

@@ -11,7 +11,7 @@
                     <m_refVal>0</m_refVal>
                 </DepthStencilState*>
                 <RasterizerState* Type="RasterizerState">
-                    <m_cullFront>true</m_cullFront>
+                    <m_cullMode>FRONT</m_cullMode>
                 </RasterizerState*>
             </m_binds>
             <m_layoutType>DEFAULT</m_layoutType>

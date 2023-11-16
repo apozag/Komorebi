@@ -43,6 +43,7 @@ int CALLBACK WinMain(
 		//SceneLoader::LoadScene("assets/scenes/sphereScene.xml");
 		//SceneLoader::LoadScene("assets/scenes/testScene.xml");
 		SceneLoader::LoadScene("assets/scenes/roomScene.xml");
+		//SceneLoader::LoadScene("assets/scenes/cerberusScene.xml");
 		//SceneLoader::LoadScene("assets/scenes/emptyScene.xml");
 		//SceneLoader::LoadScene("assets/scenes/sponzascene.xml");
 

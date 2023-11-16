@@ -25,6 +25,7 @@ class Pass;
 class Texture2D;
 class Texture3D;
 class MaterialInstance;
+class Material;
 class RenderInfo;
 class RenderPipeline;
 
@@ -44,7 +45,7 @@ struct CameraView {
 struct LightView {
 	const Camera* m_camera;
 	const Transform* m_transform;
-	const RenderTarget* m_rt;
+	RenderTarget* m_rt;
 };
 
 class Renderer {
@@ -56,7 +57,14 @@ private:
 		float pcfWindowSize;
 		float pcfFilterSize;
 		float pcfFilterSizeInv;
-		int a, b, c;
+
+		float pad0, pad1, pad2;
+	};
+
+	struct alignas(16) GlobalData {
+		float time;
+
+		float pad0, pad1, pad2;
 	};
 
 public:
@@ -65,18 +73,20 @@ public:
 	void Init();
 
 	void SubmitDrawable(const Drawable* drawable, const Transform* transform, MaterialInstance* material);
-	void SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform);
-	void SubmitDirectionalLight(const DirectionalLight* spotlight, const Transform* worldTransform);
-	void SubmitPointLight(const PointLight* spotlight, const Transform* worldTransform);
+	void SubmitSpotlight(SpotLight* spotlight, const Transform* worldTransform);
+	void SubmitDirectionalLight(DirectionalLight* spotlight, const Transform* worldTransform);
+	void SubmitPointLight(PointLight* spotlight, const Transform* worldTransform);
 	void SubmitCamera(const Camera* camera, const Transform* worldTransform);
 
 	void Render();
 	void Clear();
 
+	static void Blit(const gfx::Texture2D* src, const gfx::RenderTarget* dst, const Material* material = nullptr);
+
 	const std::vector<Job>& GetJobs() const { return m_jobs; }
 
-	const Drawable* GetQuadPrimitive() const;
-	const Drawable* GetCubePrimitive() const;
+	static const Drawable* GetQuadPrimitive();
+	static const Drawable* GetCubePrimitive();
 
 	RenderTarget* GetGlobalRenderTarget(unsigned int idx) const { return m_renderTargets[idx]; }
 
@@ -96,6 +106,7 @@ private:
 	SamplerState m_PCFFiltersSampler;
 	Texture3D* m_PCFFilters;
 	ConstantBuffer<ShadowInfoData> m_shadowInfoCbuff;
+	ConstantBuffer<GlobalData> m_globalCbuff;
 	RenderPipeline* m_shadowRenderPipeline;
 
 	std::vector<const DirectionalLight*> m_dirLights;

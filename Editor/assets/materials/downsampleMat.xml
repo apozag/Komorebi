@@ -1,0 +1,42 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="1114173040" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>0</m_layer>
+			<m_PSFilename>assets/shaders/downsamplePixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
+			<m_binds/>
+			<m_layoutType>DEFAULT</m_layoutType>
+			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>texelSize</varName>
+						<varType>VECTOR2</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>delta</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>4</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>intensity</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>5</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>0.015873</float>
+					<float>0.016393</float>
+					<float>1.000000</float>
+					<float>1.000000</float>
+					<float>1.000000</float>
+					<float>1.000000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds/>
+</Material>
+

@@ -38,7 +38,7 @@ namespace gfx {
 	bool ReflectedConstantBuffer::HasFloat(const char* name) {
 		return GetVariable(D3D_SVC_SCALAR, name) != nullptr;
 	}
-	bool ReflectedConstantBuffer::HasVector4(const char* name) {
+	bool ReflectedConstantBuffer::HasVector(const char* name) {
 		return GetVariable(D3D_SVC_VECTOR, name) != nullptr;
 	}
 
@@ -46,8 +46,11 @@ namespace gfx {
 		float* ptr = (float*)GetVariable(D3D_SVC_SCALAR, name);
 		return ptr != nullptr? *ptr : 0.f;
 	}
+	void ReflectedConstantBuffer::GetVector2(const char* name, float* values) {
+		memcpy(values, GetVariable(D3D_SVC_VECTOR, name), 2 * sizeof(float));
+	}
 	void ReflectedConstantBuffer::GetVector4(const char* name, float* values) {
-		memcpy(values, GetVariable(D3D_SVC_VECTOR, name), 4*sizeof(float));
+		memcpy(values, GetVariable(D3D_SVC_VECTOR, name), 4 * sizeof(float));
 	}
 
 	bool ReflectedConstantBuffer::SetFloat(const char* name, float value) {
@@ -55,6 +58,9 @@ namespace gfx {
 	}
 	bool ReflectedConstantBuffer::SetVector4(const char* name, float* data) {
 		return SetVariable(D3D_SVC_VECTOR, name, data, 4 * sizeof(float));
+	}
+	bool ReflectedConstantBuffer::SetVector2(const char* name, float* data) {
+		return SetVariable(D3D_SVC_VECTOR, name, data, 2 * sizeof(float));
 	}
 	bool ReflectedConstantBuffer::SetMat4(const char* name, float* data) {
 		return SetVariable(D3D_SVC_MATRIX_ROWS, name, data, 16 * sizeof(float));
@@ -94,7 +100,10 @@ namespace gfx {
 	bool ReflectedConstantBuffer::SetVariable(D3D_SHADER_VARIABLE_CLASS varClass, const char* name, void* data, size_t size) {
 		try {
 			for (ConstantBufferVariable variable : m_variables) {
-				if (variable.typeDesc.Class == varClass && !std::strcmp(variable.desc.Name, name)) {
+				if (variable.typeDesc.Class == varClass && std::strcmp(variable.desc.Name, name) == 0) {
+					if (size > variable.typeDesc.Columns * sizeof(float)) {
+						return false;
+					}
 					size_t offset = variable.desc.StartOffset / sizeof(float);
 					memcpy(m_buffer + offset, data, size);
 					m_dirty = true;

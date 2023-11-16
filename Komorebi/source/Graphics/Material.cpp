@@ -216,17 +216,27 @@ namespace gfx {
 						break;
 					case D3D_SVC_VECTOR:
 					{
-						if (!cbuffer->HasVector4(varInfo.varName.c_str())) {
+						if (!cbuffer->HasVector(varInfo.varName.c_str())) {
 							skipBuffer = true;
 							break;
 						}
-						varInfo.varType = ConstantBufferCache::VarInfo::VarType::VECTOR;
-						float values[4];
-						cbuffer->GetVector4(varInfo.varName.c_str(), &(values[0]));
-						pass->m_cbuffCache.varsData.push_back(values[0]);
-						pass->m_cbuffCache.varsData.push_back(values[1]);
-						pass->m_cbuffCache.varsData.push_back(values[2]);
-						pass->m_cbuffCache.varsData.push_back(values[3]);
+
+						if (variable.typeDesc.Columns == 2) {
+							varInfo.varType = ConstantBufferCache::VarInfo::VarType::VECTOR2;
+							float values[2];
+							cbuffer->GetVector2(varInfo.varName.c_str(), &(values[0]));
+							pass->m_cbuffCache.varsData.push_back(values[0]);
+							pass->m_cbuffCache.varsData.push_back(values[1]);
+						}
+						else {
+							varInfo.varType = ConstantBufferCache::VarInfo::VarType::VECTOR4;							
+							float values[4];
+							cbuffer->GetVector4(varInfo.varName.c_str(), &(values[0]));
+							pass->m_cbuffCache.varsData.push_back(values[0]);
+							pass->m_cbuffCache.varsData.push_back(values[1]);
+							pass->m_cbuffCache.varsData.push_back(values[2]);
+							pass->m_cbuffCache.varsData.push_back(values[3]);
+						}												
 					}
 						break;
 					}				
@@ -251,7 +261,10 @@ namespace gfx {
 				case CacheVarType::SCALAR:
 					SetFloat(varInfo.varName.c_str(), *pValue);
 					break;
-				case CacheVarType::VECTOR:
+				case CacheVarType::VECTOR2:
+					SetVector2(varInfo.varName.c_str(), pValue);
+					break;
+				case CacheVarType::VECTOR4:
 					SetVector4(varInfo.varName.c_str(), pValue);
 					break;
 				}
@@ -268,6 +281,12 @@ namespace gfx {
 	bool Material::SetVector4(const char* name, float* data) {
 		for (ReflectedConstantBuffer* cbuff : m_cbuffers) {
 			if (cbuff->SetVector4(name, data)) return true;
+		}
+		return false;
+	}
+	bool Material::SetVector2(const char* name, float* data) {
+		for (ReflectedConstantBuffer* cbuff : m_cbuffers) {
+			if (cbuff->SetVector2(name, data)) return true;
 		}
 		return false;
 	}

@@ -2,28 +2,6 @@
 
 #include "PBR.hlsli"
 
-/*
-struct VSout
-{
-	float4 pos : SV_Position;
-	float2 uv : TEXCOORD;
-	float4 lightSpacePos : LIGHTPOS;
-	float4 viewSpacePos : VIEWPOS;
-	float4 worldPos : WORLDPOS;
-	float3 normal : NORMAL;
-	float3 tangent : TANGENT;
-	float3 bitangent : BITANGENT;
-};
-*/
-
-
-cbuffer CameraTransform : register(b0) {
-  matrix viewproj;
-  matrix view;
-  matrix proj;
-  matrix viewInv;
-};
-
 Texture2D colorTex : register(t7);
 Texture2D normalTex : register(t8);
 Texture2D posTex : register(t9);

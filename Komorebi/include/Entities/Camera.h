@@ -6,6 +6,7 @@
 #include "SimpleMath.h"
 #include "Entities/Entity.h"
 #include "Core/Reflection/ReflectionMacros.h"
+#include "Core/Defines.h"
 
 #define MAIN_CAMERA_TAG 5
 
@@ -24,6 +25,7 @@ public:
 		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX proj;
 		DirectX::XMMATRIX viewInv;
+		POD::Vector4 nfwh;
 	};
 public:
 	Camera(float fov, float aspectratio, float nearZ, float farZ, bool orthographic = false, float orthoWidth = 500, float orthoHeight = 500)

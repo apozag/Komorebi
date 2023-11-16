@@ -10,7 +10,7 @@
                     <m_enable>false</m_enable>
                 </BlendState*>
                 <RasterizerState* Type="RasterizerState">
-                    <m_cullFront>false</m_cullFront>
+                    <m_cullMode>BACK</m_cullMode>
                     <m_wireframe>false</m_wireframe>
                 </RasterizerState*>
             </m_binds>

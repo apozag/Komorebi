@@ -11,19 +11,11 @@ struct VSin {
 	float2 uv : TexCoord;
 };
 
-cbuffer CameraTransform : register(b0)
-{
-	matrix viewproj;
-	matrix view;
-	matrix proj;
-};
-
-cbuffer Modeltransform : register(b1) {
+cbuffer Modeltransform : register(b2) {
 	matrix model;
 }
 
 #define WORLD_POS(i) mul(float4(i.p, 1.0), model)
 #define WORLD_TO_PROJ(p) mul(vso.worldPos, viewproj)
-#define WORLD_TO_LIGHT(p, idx) mul(p, lightViewProj[idx])
 
 #endif // __VERTEXCOMMON_HLSL

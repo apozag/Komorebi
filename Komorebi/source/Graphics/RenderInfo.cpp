@@ -4,8 +4,8 @@
 
 namespace gfx {
 
-  const RenderPipeline* RenderInfo::FindRenderPipeline(const std::string& name) const {
-    for (const RenderPipeline& pipeline : m_renderPipelines) {
+  RenderPipeline* RenderInfo::FindRenderPipeline(const std::string& name) {
+    for (RenderPipeline& pipeline : m_renderPipelines) {
       if (pipeline.GetName() == name) {
         return &pipeline;
       }
@@ -14,8 +14,8 @@ namespace gfx {
     return nullptr;
   }
 
-  const RenderTarget* RenderInfo::FindGlobalRenderTarget(const std::string& name) const {
-    for (const RTNamePair& pair : m_globalRTs) {
+  RenderTarget* RenderInfo::FindGlobalRenderTarget(const std::string& name) {
+    for (RTNamePair& pair : m_globalRTs) {
       if (pair.m_name == name) {
         return &pair.m_rt;
       }

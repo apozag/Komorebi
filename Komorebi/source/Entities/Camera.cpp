@@ -11,12 +11,13 @@
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Bindables/Resource/RenderTarget.h"
+#include "Graphics/PipelineStage.h"
 
 void Camera::Setup() {
 
   Reconfigure();
 	m_cameraTransformCB = memory::Factory::Create<gfx::ConstantBuffer<CameraTransformCB>>(
-    VCBUFF_CAMERATRANSFORM_SLOT, true, nullptr, (unsigned int)(gfx::CBufferStage::VERTEX | gfx::CBufferStage::GEOMETRY | gfx::CBufferStage::PIXEL));
+    VCBUFF_CAMERATRANSFORM_SLOT, true, nullptr, (unsigned int)(gfx::PipelineStage::VERTEX | gfx::PipelineStage::GEOMETRY | gfx::PipelineStage::PIXEL));
 }
 
 void Camera::Reconfigure() {
@@ -40,7 +41,8 @@ void Camera::Bind( const Transform* worldTransform) const {
 		DirectX::XMMatrixTranspose(viewProj),
 		DirectX::XMMatrixTranspose(view),
 		DirectX::XMMatrixTranspose(m_proj),
-    viewInv
+    viewInv,
+    {m_near, m_far, m_orthoWidth, m_orthoHeight}
 	};
 	m_cameraTransformCB->Update ();
 	m_cameraTransformCB->Bind ();

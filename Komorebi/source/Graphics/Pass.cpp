@@ -126,7 +126,8 @@ namespace gfx {
 typedef gfx::ConstantBufferCache::VarInfo::VarType CacheVarType;
 REFLECT_ENUM_BEGIN(CacheVarType)
 REFLECT_ENUM_VALUE(SCALAR)
-REFLECT_ENUM_VALUE(VECTOR)
+REFLECT_ENUM_VALUE(VECTOR2)
+REFLECT_ENUM_VALUE(VECTOR4)
 REFLECT_ENUM_END(CacheVarType)
 
 typedef gfx::Pass::LayoutType PassLayoutType;

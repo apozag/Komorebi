@@ -1,0 +1,32 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="909822976" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>11</m_layer>
+			<m_PSFilename>assets/shaders/filterBrightPixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/composeVertex.cso</m_VSFilename>
+			<m_binds>
+				<DepthStencilState* PtrId="909823232" Type="DepthStencilState">
+					<m_DSAccess>DEPTH_READ</m_DSAccess>
+					<m_refVal>0</m_refVal>
+				</DepthStencilState*>
+			</m_binds>
+			<m_layoutType>DEFAULT</m_layoutType>
+			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>threshold</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>3.000000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds/>
+</Material>
+

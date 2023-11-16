@@ -13,6 +13,7 @@
 #include "Core/Memory/Factory.h"
 #include "Core/Reflection/DeserializationTypeVisitor.h"
 #include "Core/Reflection/ReflectionHelper.h"
+#include "Core/PrefabManager.h"
 #include "Entities/Drawable.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Renderer.h"
@@ -23,7 +24,10 @@
 #include "Graphics/Material.h"
 #include "Graphics/MaterialInstance.h"
 #include "Graphics/RenderPipeline.h"
+#include "Graphics/RenderPipeline/ClearRenderStep.h"
+#include "Graphics/RenderPipeline/GeometryRenderStep.h"
 #include "Graphics/RenderInfo.h"
+#include "Graphics/PipelineStage.h"
 
 #include "Scene\ModelLoader.h"
 
@@ -50,7 +54,8 @@ namespace gfx {
 }
 
 gfx::Renderer::Renderer() :
-  m_shadowInfoCbuff(ConstantBuffer<ShadowInfoData>(PCBUFF_SHADOW_SLOT, true, nullptr, CBufferStage::PIXEL)),
+  m_shadowInfoCbuff(ConstantBuffer<ShadowInfoData>(PCBUFF_SHADOW_SLOT, true, nullptr, PipelineStage::PIXEL)),
+  m_globalCbuff(ConstantBuffer<GlobalData>(PCBUFF_GLOBAL_SLOT, true, nullptr, PipelineStage::ALL)),
   m_shadowMapSampler(D3D11_FILTER_MIN_MAG_MIP_LINEAR, D3D11_TEXTURE_ADDRESS_BORDER, SRV_SHADOWMAP_SLOT),
   m_PCFFiltersSampler(D3D11_FILTER_MIN_MAG_MIP_POINT, D3D11_TEXTURE_ADDRESS_WRAP, SRV_PCF_SLOT) {
   // Initialize PCF filter random values
@@ -107,8 +112,8 @@ gfx::Renderer::Renderer() :
   reflection::ReflectionHelper::ClearAll();
 
   m_shadowRenderPipeline = memory::Factory::Create<RenderPipeline>();
-  m_shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::CLEAR, {}, "", 0, false));
-  m_shadowRenderPipeline->m_steps.push_back(RenderStep(RenderStep::Type::DEFAULT, {}, "", 0xFFFFFFFF, false));  
+  m_shadowRenderPipeline->m_steps.push_back(memory::Factory::Create<ClearRenderStep>(std::vector<RenderStep::TextureInfo>{}, ""));
+  m_shadowRenderPipeline->m_steps.push_back(memory::Factory::Create<GeometryRenderStep>(std::vector<RenderStep::TextureInfo>{}, "", 99, false));  
 }
 
 void gfx::Renderer::Init() {
@@ -130,26 +135,9 @@ void gfx::Renderer::Init() {
 }
 
 void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* transform, MaterialInstance* material) {
-  for (const Pass* pass : material->GetMaterial()->GetPasses()) {
-    //Opaque:			    29 empty + 1 culling + 2 layer + 8 matIdx + 8 passIdx + 16 depth
-    //Transparent:		29 empty + 1 culling + 2 layer + 16 depth + 8 matIdx + 8 passIdx
-
-    bool isTransparent = pass->m_layer == PASSLAYER_TRANSPARENT;
-
-    // Pass layer
-    uint64_t key = uint64_t(pass->m_layer) << 32;
-
-    // Material (resource binds)
-    unsigned int idx = material->GetMaterial()->GetIdx();
-    unsigned int shifts = 8 + 16 * isTransparent;
-    key |= ((uint64_t)idx) << shifts;
-
-    // Pass index (state binds)
-    shifts = !isTransparent * 16;
-    key |= uint64_t(pass->GetIdx()) << shifts;
-
+  for (const Pass* pass : material->GetMaterial()->GetPasses()) {   
     m_jobs.push_back(Job{
-      key,
+      0u,
       drawable,
       transform,
       pass,
@@ -158,18 +146,18 @@ void gfx::Renderer::SubmitDrawable(const Drawable* drawable, const Transform* tr
   }
 }
 
-void gfx::Renderer::SubmitSpotlight(const SpotLight* spotlight, const Transform* worldTransform) {
+void gfx::Renderer::SubmitSpotlight(SpotLight* spotlight, const Transform* worldTransform) {
   // Shadow mapping camera
   m_lightViews.push_back({ spotlight->GetCamera() , worldTransform, spotlight->GetShadowMap() });
   m_spotLights.push_back(spotlight);
 }
 
-void gfx::Renderer::SubmitDirectionalLight(const DirectionalLight* dirlight, const Transform* worldTransform) {  
+void gfx::Renderer::SubmitDirectionalLight(DirectionalLight* dirlight, const Transform* worldTransform) {  
   m_lightViews.push_back({ dirlight->GetCamera() , worldTransform, dirlight->GetShadowMap()});
   m_dirLights.push_back(dirlight);
 }
 
-void gfx::Renderer::SubmitPointLight(const PointLight* pointlight, const Transform* worldTransform) {
+void gfx::Renderer::SubmitPointLight(PointLight* pointlight, const Transform* worldTransform) {
   for (int i = 0; i < 6; i++) {
     m_lightViews.push_back({ pointlight->GetCameras() + i, worldTransform, pointlight->GetShadowMaps() + i });
   }
@@ -183,14 +171,18 @@ void gfx::Renderer::SubmitCamera(const Camera* camera, const Transform* worldTra
 void gfx::Renderer::Render() {   
 
   // Render shadowmaps  
-  for (const LightView& lv : m_lightViews) {
-    m_shadowRenderPipeline->m_steps[0].m_outRt = lv.m_rt;
-    m_shadowRenderPipeline->m_steps[1].m_outRt = lv.m_rt;
+  for (LightView& lv : m_lightViews) {
+    m_shadowRenderPipeline->m_steps[0]->m_outRt = lv.m_rt;
+    m_shadowRenderPipeline->m_steps[1]->m_outRt = lv.m_rt;
     m_shadowRenderPipeline->Execute({ lv.m_camera, lv.m_transform }, m_jobs);
   }
 
   // Cameras sorted by priority.
   std::sort(m_camViews.begin(), m_camViews.end(), compareCamera);
+
+  m_globalCbuff.m_buffer.time = Engine::GetGameTime();
+  m_globalCbuff.Update();
+  m_globalCbuff.Bind();
 
   // Draw scene
   for (int i = 0; i < m_camViews.size(); i++) {
@@ -211,7 +203,32 @@ void gfx::Renderer::Clear() {
   m_pointLights.clear();
 }
 
-const Drawable* gfx::Renderer::GetQuadPrimitive() const {
+void gfx::Renderer::Blit(const gfx::Texture2D* src, const gfx::RenderTarget* dst, const gfx::Material* material) {
+  
+  if (material == nullptr) {
+    static const gfx::Material* defaultBlitMat = nullptr;
+    if (defaultBlitMat == nullptr) {
+      defaultBlitMat = PrefabManager::GetInstance()->LoadPrefab<gfx::Material>("assets/materials/blitMat.xml", true);
+    }
+    material = defaultBlitMat;
+  }
+
+  const static Drawable* quad = GetQuadPrimitive();
+
+  dst->Bind();
+  src->BindAt(0u);
+  material->Bind();
+  for (Pass* pass : material->GetPasses()) {
+    pass->Bind();
+    quad->Draw(DirectX::XMMatrixIdentity());
+    pass->Unbind();
+  }
+  material->Unbind();
+  src->UnbindAt(0u);
+  dst->Unbind();
+}
+
+const Drawable* gfx::Renderer::GetQuadPrimitive() {
   static Drawable* quad = nullptr;
   if (quad == nullptr) {
     quad = (Drawable*)(ModelLoader::GetInstance()->GenerateQuad());
@@ -219,7 +236,7 @@ const Drawable* gfx::Renderer::GetQuadPrimitive() const {
   return quad;
 }
 
-const Drawable* gfx::Renderer::GetCubePrimitive() const {
+const Drawable* gfx::Renderer::GetCubePrimitive() {
   static Drawable* cube = nullptr;
   if (cube == nullptr) {
     cube = (Drawable*)(ModelLoader::GetInstance()->GenerateCube());

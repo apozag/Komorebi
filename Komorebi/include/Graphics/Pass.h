@@ -11,18 +11,13 @@ namespace gfx {
 	class VertexShader;
 	class StateBindable;
 
-#define PASSLAYER_FW_OPAQUE		0u
-#define PASSLAYER_SKYBOX		1u
-#define PASSLAYER_PREPASS		2u
-#define PASSLAYER_TRANSPARENT	3u
-#define PASSLAYER_SCREEN		4u	
-
 	class ConstantBufferCache : public GameObject{
 		public:
 		struct VarInfo : public GameObject {
 			enum VarType {
 				SCALAR,
-				VECTOR
+				VECTOR2, 
+				VECTOR4
 			};
 			std::string varName;
 			VarType varType;
@@ -47,7 +42,7 @@ namespace gfx {
 		};
 
 	public:
-		Pass() : m_layer(PASSLAYER_FW_OPAQUE), m_idx(static_idx++) {}
+		Pass() : m_layer(0u), m_idx(static_idx++) {}
 		Pass(VertexShader* vs, PixelShader* ps, unsigned int layer, LayoutType layoutType = LayoutType::DEFAULT);
 		Pass(const char* vsFilename, const char* psFilename, unsigned int m_layer, LayoutType layoutType = LayoutType::DEFAULT);
 		~Pass();

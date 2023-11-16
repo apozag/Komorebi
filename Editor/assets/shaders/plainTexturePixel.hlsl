@@ -1,7 +1,7 @@
 #define MAX_DIRLIGHTS   5
 
 
-cbuffer DirLights : register(b0) {
+cbuffer DirLights : register(b1) {
 	uint count;
 	float4 m_color[MAX_DIRLIGHTS];
 	float4 dir[MAX_DIRLIGHTS];

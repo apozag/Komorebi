@@ -17,19 +17,20 @@ namespace gfx {
 
   void RenderStep::Setup() {
 
-    const RenderInfo* renderInfo = Engine::GetRenderer()->GetRenderInfo();
+    RenderInfo* renderInfo = Engine::GetRenderer()->GetRenderInfo();
 
     for (RenderStep::TextureInfo& texInfo : m_textureInputs) {
       const RenderTarget* rt = renderInfo->FindGlobalRenderTarget(texInfo.m_rtId);
       if (rt != nullptr) {
         // TODO: [ERROR] Texture index is higher than texture count
-        m_inRts.push_back(rt->GetTextures2D()[texInfo.m_textureIdx]);
+        Texture2D* tex = rt->GetTextures2D()[texInfo.m_textureIdx];
+        m_inRts.push_back(tex);
       }
     }
 
     for (const std::string& resName : m_resourceInputs) {
       const ResourceBindable* resource = renderInfo->FindGlobalResource(resName);
-      if (resource != nullptr) {        
+      if (resource != nullptr) {
         m_inResources.push_back(resource);
       }
     }
@@ -55,16 +56,23 @@ namespace gfx {
   }
 
   void RenderStep::Bind() const {
-    for (const Texture2D* rt : m_inRts) {
-      rt->Bind();
+    for (int i = 0; i < m_inRts.size(); i++) {
+      const Texture2D* rt = m_inRts[i];
+      const RenderStep::TextureInfo& texInfo = m_textureInputs[i];
+      if (texInfo.m_slot < 0) {
+        rt->Bind();
+      }
+      else {
+        rt->BindAt(texInfo.m_slot);
+      }
     }
     for (const ResourceBindable* resource : m_inResources) {
       resource->Bind();
     }
-    if (m_outDS && m_outRt){
+    if (m_outDS && m_outRt) {
       m_outRt->BindWithDS(m_outDS);
     }
-    else if(m_outRt){
+    else if (m_outRt) {
       m_outRt->Bind();
     }
   }
@@ -85,7 +93,7 @@ namespace gfx {
 
     if (m_repeatFor == RepeatFor::ONCE) {
       ExecuteInternal(jobs, jobsToExecute, startIdx, endIdx);
-    } 
+    }
     else {
       if ((m_repeatFor & RepeatFor::DIRLIGHT) != 0) {
         for (const DirectionalLight* light : Engine::GetRenderer()->GetDirLights()) {
@@ -108,101 +116,11 @@ namespace gfx {
           light->Unbind();
         }
       }
-    }    
+    }
 
     Unbind();
   }
-
-  void RenderStep::ExecuteInternal(std::vector<Job>& jobs, unsigned int jobsToExecute, unsigned int startIdx, unsigned int& endIdx) const {
-    switch (m_type) {
-    case DEFAULT:
-    {
-      const Pass* lastPass = nullptr;
-      const Material* lastMat = nullptr;
-      unsigned int i;
-      for (i = startIdx; i < jobsToExecute; i++) {
-
-        Job job = jobs[i];
-
-        if (job.pass->m_layer > m_maxLayer) {          
-          break;
-        }
-
-        const Pass* pass = job.pass;
-        if (pass != lastPass) {
-          if (lastPass) lastPass->Unbind();
-          pass->Bind();
-          lastPass = pass;
-          //stateBindCount++;
-        }
-
-        const Material* material = job.material->GetMaterial();
-        if (material != lastMat) {
-          if (lastMat) lastMat->Unbind();
-          material->Bind();
-          lastMat = material;
-          //resourceBindCount++;
-        }
-
-        job.material->Bind();
-
-        job.drawable->Draw(DirectX::XMMatrixTranspose(job.transform->GetMatrix()));
-
-        job.material->Unbind();        
-
-        //lastPass = job.pass;
-        //lastMat = job.material->GetMaterial();
-      }
-      endIdx = i;
-      if(lastPass) lastPass->Unbind();
-      if(lastMat) lastMat->Unbind();
-    }
-    break;
-    case CLEAR:
-    {
-      if (m_outRt) 
-      {
-        m_outRt->Clear(0, 0, 0, 0);
-      }
-    }
-    break;
-    case SCREEN:
-    {
-      if (m_screenEffectMat) {
-        m_screenEffectMat->Bind();
-        for (Pass* pass : m_screenEffectMat->GetPasses()) {
-          pass->Bind();
-          Engine::GetRenderer()->GetQuadPrimitive()->Draw(DirectX::XMMatrixIdentity());
-          pass->Unbind();
-        }
-        m_screenEffectMat->Unbind();
-      }
-    }
-    break;
-    case CUBE:
-    {
-      if (m_screenEffectMat) {
-        m_screenEffectMat->Bind();
-        for (Pass* pass : m_screenEffectMat->GetPasses()) {
-          pass->Bind();
-          Engine::GetRenderer()->GetCubePrimitive()->Draw(DirectX::XMMatrixIdentity());
-          pass->Unbind();
-        }
-        m_screenEffectMat->Unbind();
-      }
-    }
-    break;
-    }
-  }  
 }
-
-typedef gfx::RenderStep::Type RenderStepTypeEnum;
-REFLECT_ENUM_BEGIN(RenderStepTypeEnum)
-REFLECT_ENUM_VALUE(DEFAULT)
-REFLECT_ENUM_VALUE(CLEAR)
-REFLECT_ENUM_VALUE(SCREEN)
-REFLECT_ENUM_VALUE(CUBE)
-REFLECT_ENUM_END(RenderStepTypeEnum)
 
 typedef gfx::RenderStep::RepeatFor RepeatForEnum;
 REFLECT_ENUM_BEGIN(RepeatForEnum)
@@ -218,20 +136,19 @@ typedef gfx::RenderStep::TextureInfo TextureInfoType;
 REFLECT_STRUCT_BASE_BEGIN(TextureInfoType)
 REFLECT_STRUCT_MEMBER(m_rtId)
 REFLECT_STRUCT_MEMBER(m_textureIdx)
+REFLECT_STRUCT_MEMBER(m_slot)
 REFLECT_STRUCT_END(TextureInfoType)
 
 typedef gfx::RenderStep RenderStepType;
-REFLECT_STRUCT_BASE_BEGIN(RenderStepType)
-REFLECT_STRUCT_MEMBER(m_type)
+REFLECT_STRUCT_BASE_VIRTUAL_BEGIN(RenderStepType)
 REFLECT_STRUCT_MEMBER(m_textureInputs)
 REFLECT_STRUCT_MEMBER(m_resourceInputs)
 REFLECT_STRUCT_MEMBER(m_outRtId)
 REFLECT_STRUCT_MEMBER(m_outDSId)
-REFLECT_STRUCT_MEMBER(m_maxLayer)
-REFLECT_STRUCT_MEMBER(m_sortReverse)
 REFLECT_STRUCT_MEMBER(m_repeatFor)
-REFLECT_STRUCT_MEMBER(m_screenEffectMat)
 REFLECT_STRUCT_END(RenderStepType)
 
-IMPLEMENT_REFLECTION_VECTOR(gfx::RenderStep)
+IMPLEMENT_REFLECTION_POINTER_NAMESPACE(gfx, RenderStep)
+
+IMPLEMENT_REFLECTION_VECTOR(OWNED_PTR(gfx::RenderStep))
 IMPLEMENT_REFLECTION_VECTOR(gfx::RenderStep::TextureInfo)

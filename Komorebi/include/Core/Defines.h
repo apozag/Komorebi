@@ -10,7 +10,7 @@ namespace POD {
 	struct Vector3 {
 		float x, y, z;
 
-		inline float mangitude() const { return sqrt(sqrMangitude()); }
+		inline float mangitude() const { return sqrtf(sqrMangitude()); }
 		inline float sqrMangitude() const { return x * x + y * y + z * z; }		
 
 		inline void operator+=(const Vector3& v) { x+=v.x; y+=v.y; z+=v.z; }

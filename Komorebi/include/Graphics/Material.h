@@ -36,6 +36,7 @@ namespace gfx {
 
 		bool SetFloat(const char* name, float value);
 		bool SetVector4(const char* name, float* data);
+		bool SetVector2(const char* name, float* data);
 		bool SetMat4(const char* name, float* data);
 
 		REFLECT_BASE()

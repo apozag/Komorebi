@@ -1,65 +1,81 @@
 #include <algorithm>
+//#include <sstream>
 
-#include "Graphics\RenderPipeline.h"
+#include "Graphics/RenderPipeline.h"
 
 #include "Core/Reflection/ReflectionImplMacros.h"
 
-#include "Graphics\RenderInfo.h"
-#include "Core\Engine.h"
+#include "Graphics/RenderInfo.h"
+#include "Core/Engine.h"
 #include "Core/Math/Transform.h"
 #include "Core/Math/MathUtils.h"
-#include "Graphics\Renderer.h"
-#include "Entities\Camera.h"
-#include "Entities\Drawable.h"
-#include "Graphics\Pass.h"
-#include "Graphics\Material.h"
-#include "Graphics\Bindables\Resource\RenderTarget.h"
-#include "Graphics\Bindables\Resource\Texture2D.h"
+#include "Graphics/Renderer.h"
+#include "Entities/Camera.h"
+#include "Entities/Drawable.h"
+#include "Graphics/RenderPipeline/GeometryRenderStep.h"
+#include "Graphics/Pass.h"
+#include "Graphics/Material.h"
+#include "Graphics/Bindables/Resource/RenderTarget.h"
+#include "Graphics/Bindables/Resource/Texture2D.h"
 
 bool compareJob(const gfx::Job& j1, const gfx::Job& j2) {
   return j1.key < j2.key;
 }
 
-namespace gfx { 
+namespace gfx {
 
   void RenderPipeline::Setup() {
   }
 
-  void RenderPipeline::Execute(CameraView camView, std::vector<Job>& jobs) const {
+  void RenderPipeline::Execute(const CameraView& camView, std::vector<Job>& jobs) const {
 
     unsigned int jobsToExecute = jobs.size();
 
     // Get frustum planes for culling
     const std::vector<DirectX::XMFLOAT4>& planes = camView.camera->GetFrustumPlanes(*camView.transform);
 
-    // Update job sorting keys for this camera. 
+    // Build job sorting keys
+    //Opaque:			    15 empty + 1 culling + 16 layer + 8 matIdx + 8 passIdx + 16 depth
+    //Transparent:		15 empty + 1 culling + 16 layer + 16 depth + 8 matIdx + 8 passIdx
     for (int i = 0; i < jobs.size(); i++) {
 
       Job& job = jobs[i];
 
-      if (const RenderStep* step = FindRenderStep(job)) {
+      const GeometryRenderStep* step = FindGeomRenderStep(job);
 
-        // Frustum culling
-        bool ignoreCull = job.pass->DoesIgnoreFrustumCulling();
-        bool cull = !ignoreCull && math::cullAABB(planes, job.drawable->GetBVHData(), job.transform);
+      // Frustum culling
+      bool ignoreCull = job.pass->DoesIgnoreFrustumCulling();
+      bool cull = step == nullptr || !ignoreCull && math::cullAABB(planes, job.drawable->GetBVHData(), job.transform);      
 
-        job.key &= ~(uint64_t(1) << 34);
-        job.key |= uint64_t(cull) << 34;
+      job.key = 0u;
+      //job.key &= ~(uint64_t(1) << 48);
+      job.key |= uint64_t(cull) << 48;
 
-        jobsToExecute -= cull;
+      jobsToExecute -= cull;
+
+      if (!cull) {
+        // Pass layer    
+        unsigned int layer = job.pass->m_layer > 0xFFFF ? 0xFFFF : job.pass->m_layer;
+        uint64_t key = uint64_t(layer) << 32u;
+
+        // Material (resource binds)
+        unsigned int idx = job.material->GetMaterial()->GetIdx();
+        unsigned int shifts = 8u + 16u * step->GetSortReverse();
+        key |= ((uint64_t)idx) << shifts;
+
+        // Pass index (state binds)
+        shifts = step->GetSortReverse() * 16u;
+        key |= uint64_t(job.pass->GetIdx()) << shifts;
 
         // Depth
-        if (!cull) {
-          unsigned int shifts = step->m_sortReverse * 16;
-          job.key &= ~(uint64_t(0xFFFF) << shifts);
-          float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
-          float farZ = camView.camera->m_far;
-          float nearZ = camView.camera->m_near;
-          float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
-          uint64_t depthKeyComponent = (step->m_sortReverse ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
-          job.key |= depthKeyComponent << shifts;
-          job.key |= 0;
-        }
+        shifts = step->GetSortReverse() * 16;
+        job.key &= ~(uint64_t(0xFFFF) << shifts);
+        float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
+        float farZ = camView.camera->m_far;
+        float nearZ = camView.camera->m_near;
+        float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
+        uint64_t depthKeyComponent = (step->GetSortReverse() ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
+        job.key |= depthKeyComponent << shifts;
       }
     }
 
@@ -67,34 +83,35 @@ namespace gfx {
     std::sort(jobs.begin(), jobs.end(), compareJob);
 
     // Bind camera
-    camView.camera->Bind(camView.transform); 
+    camView.camera->Bind(camView.transform);
 
     // Execute render steps
     unsigned int startJobIdx = 0u;
     unsigned int endJobIdx = 0u;
-    for (const RenderStep& step : m_steps) {
-      step.Execute(jobs, jobsToExecute, startJobIdx, endJobIdx);
+    for (const RenderStep* step : m_steps) {
+      step->Execute(jobs, jobsToExecute, startJobIdx, endJobIdx);
       startJobIdx = endJobIdx;
     }
 
     /*std::ostringstream os_;
-    os_ << "setPass: " << stateBindCount <<
-      " setMat: " << resourceBindCount <<
-      " DrawCalls: " << jobsToExecute << "\n";
+    os_ << " Job to execute: " << jobsToExecute << "\n";
     OutputDebugString(os_.str().c_str());*/
 
     camView.camera->Unbind();
   }
 
   const RenderStep* RenderPipeline::GetRenderStep(unsigned int idx) const {
-    return &m_steps[idx];
+    return m_steps[idx];
   }
 
-  const RenderStep* RenderPipeline::FindRenderStep(const Job& job) const { 
+  const GeometryRenderStep* RenderPipeline::FindGeomRenderStep(const Job& job) const {
     unsigned int layer = job.pass->m_layer;
-    for (const RenderStep& step : m_steps) {
-      if (layer <= step.m_maxLayer) {
-        return &step;
+    for (const RenderStep* step : m_steps) {
+      if (step->GetReflectionDynamic() == reflection::TypeResolver<GeometryRenderStep>::get()) {
+        const GeometryRenderStep* geomStep = static_cast<const GeometryRenderStep*>(step);
+        if (layer <= geomStep->GetMaxLayer()) {
+          return geomStep;
+        }
       }
     }
     // TODO: [ERROR] No RenderStep found for pass layer
@@ -102,8 +119,8 @@ namespace gfx {
   }
 
   REFLECT_STRUCT_BASE_BEGIN(RenderPipeline)
-  REFLECT_STRUCT_MEMBER(m_name)
-  REFLECT_STRUCT_MEMBER(m_steps)
-  REFLECT_STRUCT_END(RenderPipeline)
+    REFLECT_STRUCT_MEMBER(m_name)
+    REFLECT_STRUCT_MEMBER(m_steps)
+    REFLECT_STRUCT_END(RenderPipeline)
 
 }

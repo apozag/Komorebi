@@ -7,8 +7,16 @@ struct ID3D11RasterizerState;
 namespace gfx {
 
 	class RasterizerState : public StateBindable {
+	public: 
+
+		enum CullMode {						
+			NONE,
+			FRONT,
+			BACK
+		};
+
 	public:
-		RasterizerState(bool cullFront = false, bool wireframe = false) : m_cullFront(cullFront), m_wireframe(wireframe) {}
+		RasterizerState(CullMode cullMode = CullMode::BACK, bool wireframe = false) : m_cullMode(cullMode), m_wireframe(wireframe) {}
 		~RasterizerState();
 
 		void Setup() override;
@@ -28,8 +36,9 @@ namespace gfx {
 		// Serializable
 		//////////////////
 
-		bool m_cullFront;
+		CullMode m_cullMode;
 		bool m_wireframe;
 	};
-
 }
+
+DECLARE_REFLECTION_ENUM(gfx::RasterizerState::CullMode);

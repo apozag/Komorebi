@@ -1,8 +1,9 @@
 #include "Animation/Skeleton.h"
 
 #include "Graphics/Renderer.h"
+#include "Graphics/PipelineStage.h"
 
-Skeleton::Skeleton() : m_cbuffer( VCBUFF_BONES_SLOT, true, nullptr, gfx::CBufferStage::VERTEX){}
+Skeleton::Skeleton() : m_cbuffer( VCBUFF_BONES_SLOT, true, nullptr, gfx::PipelineStage::VERTEX){}
 
 void Skeleton::UpdateBone(int idx, DirectX::XMMATRIX matrix){
 	m_dirty = true;

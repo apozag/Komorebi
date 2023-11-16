@@ -13,8 +13,8 @@
 #include "Scene/Node.h"
 #include "Scene/Scene.h"
 
-#define UNIQUE_LABEL(LABEL) (std::string(LABEL) + std::to_string((size_t)m_pObj)).c_str()
-#define UNIQUE_LABEL2(LABEL) (std::string(LABEL) + std::to_string((size_t)ppObj)).c_str()
+#define UNIQUE_LABEL(LABEL) (std::string(LABEL) + "##" + std::to_string((size_t)m_pObj)).c_str()
+#define UNIQUE_LABEL2(LABEL) (std::string(LABEL) + "##" + std::to_string((size_t)ppObj)).c_str()
 
 using namespace reflection;
 
@@ -59,7 +59,7 @@ void ImGuiEditPtrTypeVisitor::Visit(const TypeDescriptor_Owned_Ptr* type) {
       static int currItem = 0;
       if (possibleTypes.size() > 1 && ImGui::Combo(UNIQUE_LABEL2("##EntityCombo"), &currItem, possibleTypesStr.c_str())) {
         dynamicTypeDesc = possibleTypes[currItem];
-        //if (*currEditPPtr != nullptr) dynamicTypeDesc->destroy(*currEditPPtr);
+        if (*currEditPPtr != nullptr) dynamicTypeDesc->destroy(*currEditPPtr);
         if (currItem >= 0 && currItem < possibleTypes.size()) {
           *currEditPPtr = dynamicTypeDesc->create();
         }

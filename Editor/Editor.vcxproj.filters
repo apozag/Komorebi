@@ -49,6 +49,9 @@
     <Filter Include="Shaders\Geometry">
       <UniqueIdentifier>{5dfd2a6e-5aee-4874-a2aa-eff6b31ee8ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Compute">
+      <UniqueIdentifier>{12eb5f0f-9365-471f-b80c-2e8f434a0d3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp">
@@ -273,6 +276,27 @@
     </FxCompile>
     <FxCompile Include="assets\shaders\ParticlePixelTransparent.hlsl">
       <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\deferred\PBRTexParamsPixel.hlsl">
+      <Filter>Shaders\Pixel\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\downsamplePixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\filterBrightPixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\compute\downsampleCompute.hlsl">
+      <Filter>Shaders\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\blitFactorPixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\ForceFieldPixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\ForceFieldVertex.hlsl">
+      <Filter>Shaders\Vertex</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

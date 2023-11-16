@@ -31,6 +31,7 @@ public:
 	static void AddPostRenderCallback(CallbackFunc func) { m_postRenderCallbacks.push_back(func); }
 
 	static float GetDeltaTime() { return m_dt; }
+	static float GetGameTime() { return m_gameTime; }
 	static gfx::RenderTarget* GetDefaultRendertarget();
 
 	static Window* GetWindow() { return m_window; }
@@ -56,6 +57,7 @@ private:
 	static Camera* m_mainCamera;
 
 	static float m_dt;
+	static float m_gameTime;
 
 	static float m_targetFramerate;
 };

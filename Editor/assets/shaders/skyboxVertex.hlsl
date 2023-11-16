@@ -1,4 +1,4 @@
-cbuffer Constant : register(b0){
+cbuffer Constant : register(b1){
     matrix viewproj;
     matrix view;
     matrix proj;

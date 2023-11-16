@@ -3,16 +3,16 @@
 
 #include "Common.hlsli"
 
-cbuffer DirLights : register(b1) {
+cbuffer DirLights : register(b2) {
 	float4 dirLightColor;
 	float4 dirLightDir;
 };
 
-cbuffer LightTransform : register(b2) {
+cbuffer LightTransform : register(b3) {
 	matrix lightViewProj;
 }
 
-cbuffer ShadowInfo : register(b3) {
+cbuffer ShadowInfo : register(b4) {
 	float shadowmapSize;
 	float shadowmapTexelSize;
 	float pcfWindowSize;
@@ -60,8 +60,8 @@ float calcShadow(float4 worldPos) {
 	float4 lightSpacePos = mul(worldPos, lightViewProj);
 	// perform perspective divide and transform to [0,1] range
 	float3 projCoords = lightSpacePos.xyz;
-	projCoords.x = lightSpacePos.x / lightSpacePos.w * 0.5 + 0.5f;
-	projCoords.y = 1-(lightSpacePos.y / lightSpacePos.w * 0.5 + 0.5f);
+	projCoords.x = (lightSpacePos.x / lightSpacePos.w) * 0.5 + 0.5f;
+	projCoords.y = 1-((lightSpacePos.y / lightSpacePos.w) * 0.5 + 0.5f);
 	projCoords.z = lightSpacePos.z / lightSpacePos.w;
 
 	if (projCoords.x > 1 || projCoords.x < 0 || projCoords.y > 1 || projCoords.y < 0) {

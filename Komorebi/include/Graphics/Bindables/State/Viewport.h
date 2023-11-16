@@ -15,6 +15,10 @@ namespace gfx {
 		void Setup() override;
 		void Bind()const override;
 		void Unbind()const override;
+
+		void SetSize(float width, float height) { m_w = width; m_h = height; Setup(); }
+		void SetPos(float x, float y) { m_x = x; m_y = y; Setup(); }
+
 		REFLECT()
 	private:
 		int m_x, m_y, m_w, m_h;

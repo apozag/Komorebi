@@ -4,15 +4,9 @@
 #include "Graphics/Bindables/Resource/ResourceBindable.h"
 #include "Graphics/Graphics.h"
 #include "Graphics/GraphicsThrowMacros.h"
+#include "Graphics/PipelineStage.h"
 
-namespace gfx {
-
-	enum CBufferStage {
-		ALL				= 0,
-		VERTEX		= 1,
-		GEOMETRY	= 2,
-		PIXEL			= 4
-	};
+namespace gfx {	
 
 	template<typename T>
 	class ConstantBuffer : public ResourceBindable {			
@@ -61,17 +55,6 @@ namespace gfx {
 			}
 		}
 
-
-		// The variadic arguments in Factory::Create dont do automatic casting, so we have to be more explicit here...
-
-		/*ConstantBuffer(unsigned int slot, bool dynamic, const void* buffer, CBufferStage stageMask)
-			: ConstantBuffer(slot, dynamic, (T*)buffer, (unsigned int)stageMask) {
-		}
-
-		ConstantBuffer(unsigned int slot, bool dynamic, const void* buffer, unsigned int stageMask)
-			: ConstantBuffer(slot, dynamic, buffer, stageMask) {
-		}*/
-
 		ConstantBuffer(unsigned int slot, T& buffer) : ConstantBuffer(slot) {
 			m_buffer(buffer);
 		}
@@ -79,14 +62,17 @@ namespace gfx {
 		~ConstantBuffer() {}
 
 		virtual void Bind() const override {
-			if ((m_stageMask & CBufferStage::VERTEX) != 0u) {
+			if ((m_stageMask & PipelineStage::VERTEX) != 0u) {
 				GetContext()->VSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 			}
-			if ((m_stageMask & CBufferStage::GEOMETRY) != 0u) {
+			if ((m_stageMask & PipelineStage::GEOMETRY) != 0u) {
 				GetContext()->GSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 			}
-			if ((m_stageMask & CBufferStage::PIXEL) != 0u) {
+			if ((m_stageMask & PipelineStage::PIXEL) != 0u) {
 				GetContext()->PSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
+			}
+			if ((m_stageMask & PipelineStage::COMPUTE) != 0u) {
+				GetContext()->CSSetConstantBuffers(m_slot, 1u, m_constantBuffer.GetAddressOf());
 			}
 		}
 

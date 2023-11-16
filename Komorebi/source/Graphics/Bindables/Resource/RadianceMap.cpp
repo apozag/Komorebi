@@ -10,6 +10,7 @@
 #include "Graphics/Bindables/State/RasterizerState.h"
 #include "Graphics/Bindables/State/Viewport.h"
 #include "Graphics/Bindables/Resource/ConstantBuffer.h"
+#include "Graphics/PipelineStage.h"
 #include "Graphics/Renderer.h"
 #include "Core/Engine.h"
 #include "Entities/Drawable.h"
@@ -82,7 +83,7 @@ namespace gfx {
       data.viewProj[4] = DirectX::XMMatrixTranspose(proj);
       data.viewProj[5] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(DirectX::XMMatrixInverse(nullptr, DirectX::XMMatrixRotationY(_PI)), proj));     
 
-      viewsCBuffer = memory::Factory::Create<ConstantBuffer<ViewsCBufferData>>(0, false, &data, (unsigned int)CBufferStage::GEOMETRY);
+      viewsCBuffer = memory::Factory::Create<ConstantBuffer<ViewsCBufferData>>(0, false, &data, (unsigned int)PipelineStage::GEOMETRY);
     }
     if (inputLayout == nullptr) {
       const D3D11_INPUT_ELEMENT_DESC ied[] =
@@ -99,7 +100,7 @@ namespace gfx {
       samplerState->Setup();
     }
     if (rasterState == nullptr) {
-      rasterState = memory::Factory::Create<RasterizerState>(true);
+      rasterState = memory::Factory::Create<RasterizerState>(RasterizerState::CullMode::FRONT);
       rasterState->Setup();
     }
     if (viewport == nullptr) {

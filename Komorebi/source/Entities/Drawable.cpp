@@ -14,6 +14,7 @@
 #include "Graphics/Bindables/Resource/VertexBuffer.h"
 #include "Graphics/Pass.h"
 #include "Graphics/Material.h"
+#include "Graphics/PipelineStage.h"
 
 Drawable::Drawable(const Drawable& drawable) {
 	this->m_indexCount = drawable.m_indexCount;
@@ -29,7 +30,7 @@ Drawable* Drawable::Clone() {
 }
 
 void Drawable::Setup() {
-	m_modelCbuffer = memory::Factory::Create< gfx::ConstantBuffer<ModelMatrixData>>(VCBUFF_MODEL_SLOT, true, nullptr, (unsigned int)gfx::CBufferStage::VERTEX);
+	m_modelCbuffer = memory::Factory::Create< gfx::ConstantBuffer<ModelMatrixData>>(VCBUFF_MODEL_SLOT, true, nullptr, (unsigned int)gfx::PipelineStage::VERTEX);
 	AddBindable(m_modelCbuffer);
 }
 

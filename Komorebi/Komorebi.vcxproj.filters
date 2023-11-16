@@ -483,14 +483,29 @@
     <ClInclude Include="include\Core\Math\Shapes.h">
       <Filter>Archivos de encabezado\Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="include\FX\FXManager.h">
-      <Filter>Archivos de encabezado\FX</Filter>
-    </ClInclude>
     <ClInclude Include="include\FX\ParticleSourcePreset.h">
       <Filter>Archivos de encabezado\FX</Filter>
     </ClInclude>
-    <ClInclude Include="include\FX\ParticleSource.h">
-      <Filter>Archivos de encabezado\FX</Filter>
+    <ClInclude Include="include\Graphics\RenderPipeline\GeometryRenderStep.h">
+      <Filter>Archivos de encabezado\Graphics\RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\RenderPipeline\ScreenRenderStep.h">
+      <Filter>Archivos de encabezado\Graphics\RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\RenderPipeline\CubeRenderStep.h">
+      <Filter>Archivos de encabezado\Graphics\RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\RenderPipeline\ClearRenderStep.h">
+      <Filter>Archivos de encabezado\Graphics\RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\RenderPipeline\DownsampleRenderStep.h">
+      <Filter>Archivos de encabezado\Graphics\RenderPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\Bindables\State\ComputeShader.h">
+      <Filter>Archivos de encabezado\Graphics\Bindables\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Graphics\PipelineStage.h">
+      <Filter>Archivos de encabezado\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -718,6 +733,24 @@
     </ClCompile>
     <ClCompile Include="source\FX\ParticleSourcePreset.cpp">
       <Filter>Archivos de origen\FX</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderPipeline\GeometryRenderStep.cpp">
+      <Filter>Archivos de origen\Graphics\RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderPipeline\ScreenRenderStep.cpp">
+      <Filter>Archivos de origen\Graphics\RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderPipeline\CubeRenderStep.cpp">
+      <Filter>Archivos de origen\Graphics\RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderPipeline\ClearRenderStep.cpp">
+      <Filter>Archivos de origen\Graphics\RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\RenderPipeline\DownsampleRenderStep.cpp">
+      <Filter>Archivos de origen\Graphics\RenderPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Graphics\Bindables\State\ComputeShader.cpp">
+      <Filter>Archivos de origen\Graphics\Bindables\State</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

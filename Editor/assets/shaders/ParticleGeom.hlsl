@@ -11,13 +11,13 @@ struct GSout {
 	float lifeTime : LIFETIME;
 };
 
-cbuffer CameraTransform : register(b0) {
+cbuffer CameraTransform : register(b1) {
 	matrix viewproj;
 	matrix view;
 	matrix proj;
 };
 
-cbuffer QuadSize : register(b1) {
+cbuffer QuadSize : register(b2) {
 	float quadSize = 1.f;
 };
 

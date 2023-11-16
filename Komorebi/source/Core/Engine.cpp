@@ -20,6 +20,7 @@ ScriptDispatcher Engine::m_scriptDispatcher;
 std::vector<Engine::CallbackFunc> Engine::m_preRenderCallbacks;
 std::vector<Engine::CallbackFunc> Engine::m_postRenderCallbacks;
 float Engine::m_dt;
+float Engine::m_gameTime;
 float Engine::m_targetFramerate;
 
 gfx::RenderTarget* Engine::GetDefaultRendertarget() {
@@ -35,6 +36,7 @@ void Engine::Init(const char* windowTitle, int windowWidth, int windowHeight, fl
 	m_targetFramerate = targetFramerate;
 	m_renderer->Init();
 	memory::Factory::SetGlobalMode(false);
+	m_gameTime = 0.f;
 }
 
 int Engine::Run() 	
@@ -77,6 +79,7 @@ int Engine::Run()
 		timer.Mark();
 
 		m_dt = (float)(elapsed + to_sleep)*0.001f;
+		m_gameTime += m_dt;
 	}
 
 

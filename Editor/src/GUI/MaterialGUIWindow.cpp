@@ -9,6 +9,8 @@
 #define GUI_ORANGE IM_COL32(255, 69, 0, 255)
 #define GUI_WHITE IM_COL32(255, 255, 255, 255)
 
+#define UNIQUE_LABEL(LABEL, PTR) (std::string(LABEL) + "##" + std::to_string((size_t)PTR)).c_str()
+
 void SetupMaterialGUIWindow() {
 
 }
@@ -23,17 +25,26 @@ void DrawMaterialInfo(const PrefabManager::PrefabInfo& prefabInfo) {
         case D3D_SHADER_VARIABLE_CLASS::D3D10_SVC_SCALAR:
         {
           float value = cbuffer->GetFloat(variable.desc.Name);
-          if (ImGui::InputFloat(variable.desc.Name, &value)) {
+          if (ImGui::InputFloat(UNIQUE_LABEL(variable.desc.Name, &variable), &value)) {
             cbuffer->SetFloat(variable.desc.Name, value);
           }
         }
           break;
         case D3D_SHADER_VARIABLE_CLASS::D3D_SVC_VECTOR:
         {
-          float values[4];
-          cbuffer->GetVector4(variable.desc.Name, values);
-          if (ImGui::InputFloat4(variable.desc.Name, values)) {
-            cbuffer->SetVector4(variable.desc.Name, values);
+          if (variable.typeDesc.Columns > 2u) {
+            float values[4];
+            cbuffer->GetVector4(variable.desc.Name, values);
+            if (ImGui::InputFloat4(UNIQUE_LABEL(variable.desc.Name, &variable), values)) {
+              cbuffer->SetVector4(variable.desc.Name, values);
+            }
+          }
+          else {
+            float values[2];
+            cbuffer->GetVector2(variable.desc.Name, values);
+            if (ImGui::InputFloat2(UNIQUE_LABEL(variable.desc.Name, &variable), values)) {
+              cbuffer->SetVector2(variable.desc.Name, values);
+            }
           }
         }
         break;
@@ -45,12 +56,12 @@ void DrawMaterialInfo(const PrefabManager::PrefabInfo& prefabInfo) {
     ImGui::Separator();
   }
 
-  if (ImGui::Button("Save##MaterialParams")) {
+  if (ImGui::Button(UNIQUE_LABEL("Save", prefabInfo.m_ptr))) {
     material->UpdateConstantBufferCache();
     PrefabManager::GetInstance()->SavePrefab(prefabInfo.m_fileName.c_str(), material);
   }
   ImGui::SameLine();
-  if (ImGui::Button("Reset to last save")) {
+  if (ImGui::Button(UNIQUE_LABEL("Reset to last save", prefabInfo.m_ptr))) {
     material->CopyFromConstantBufferCache();
   }
 }
@@ -60,7 +71,7 @@ void DrawMaterialGUIWindow() {
   auto materialPrefabs = PrefabManager::GetInstance()->GetLoadedPrefabs<gfx::Material>();
   for (const PrefabManager::PrefabInfo& prefabInfo : materialPrefabs) {
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_ORANGE);
-    bool open = ImGui::TreeNode(prefabInfo.m_name.c_str());
+    bool open = ImGui::TreeNode(UNIQUE_LABEL(prefabInfo.m_name.c_str(), prefabInfo.m_ptr));
     ImGui::PopStyleColor();
     if (open) {
       DrawMaterialInfo(prefabInfo);

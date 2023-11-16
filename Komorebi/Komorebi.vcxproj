@@ -455,8 +455,6 @@
     <ClInclude Include="include\Entities\ParticleSource.h" />
     <ClInclude Include="include\Entities\Script.h" />
     <ClInclude Include="include\Entities\SkinnedMesh.h" />
-    <ClInclude Include="include\FX\FXManager.h" />
-    <ClInclude Include="include\FX\ParticleSource.h" />
     <ClInclude Include="include\FX\ParticleSourcePreset.h" />
     <ClInclude Include="include\Graphics\BindableSlotsInfo.h" />
     <ClInclude Include="include\Graphics\Bindables\Bindable.h" />
@@ -472,6 +470,7 @@
     <ClInclude Include="include\Graphics\Bindables\Resource\Texture3D.h" />
     <ClInclude Include="include\Graphics\Bindables\Resource\VertexBuffer.h" />
     <ClInclude Include="include\Graphics\Bindables\State\BlendState.h" />
+    <ClInclude Include="include\Graphics\Bindables\State\ComputeShader.h" />
     <ClInclude Include="include\Graphics\Bindables\State\CubeRenderTarget.h" />
     <ClInclude Include="include\Graphics\Bindables\State\DepthStencilState.h" />
     <ClInclude Include="include\Graphics\Bindables\State\GeometryShader.h" />
@@ -488,10 +487,16 @@
     <ClInclude Include="include\Graphics\Material.h" />
     <ClInclude Include="include\Graphics\MaterialInstance.h" />
     <ClInclude Include="include\Graphics\Pass.h" />
+    <ClInclude Include="include\Graphics\PipelineStage.h" />
     <ClInclude Include="include\Graphics\Renderer.h" />
     <ClInclude Include="include\Graphics\RenderInfo.h" />
     <ClInclude Include="include\Graphics\RenderPipeline.h" />
+    <ClInclude Include="include\Graphics\RenderPipeline\ClearRenderStep.h" />
+    <ClInclude Include="include\Graphics\RenderPipeline\CubeRenderStep.h" />
+    <ClInclude Include="include\Graphics\RenderPipeline\DownsampleRenderStep.h" />
+    <ClInclude Include="include\Graphics\RenderPipeline\GeometryRenderStep.h" />
     <ClInclude Include="include\Graphics\RenderPipeline\RenderStep.h" />
+    <ClInclude Include="include\Graphics\RenderPipeline\ScreenRenderStep.h" />
     <ClInclude Include="include\Graphics\Topology.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
@@ -550,6 +555,7 @@
     <ClCompile Include="source\Graphics\Bindables\Resource\Texture3D.cpp" />
     <ClCompile Include="source\Graphics\Bindables\Resource\VertexBuffer.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\BlendState.cpp" />
+    <ClCompile Include="source\Graphics\Bindables\State\ComputeShader.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\CubeRenderTarget.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\DepthStencilState.cpp" />
     <ClCompile Include="source\Graphics\Bindables\State\GeometryShader.cpp" />
@@ -568,7 +574,12 @@
     <ClCompile Include="source\Graphics\Renderer.cpp" />
     <ClCompile Include="source\Graphics\RenderInfo.cpp" />
     <ClCompile Include="source\Graphics\RenderPipeline.cpp" />
+    <ClCompile Include="source\Graphics\RenderPipeline\ClearRenderStep.cpp" />
+    <ClCompile Include="source\Graphics\RenderPipeline\CubeRenderStep.cpp" />
+    <ClCompile Include="source\Graphics\RenderPipeline\DownsampleRenderStep.cpp" />
+    <ClCompile Include="source\Graphics\RenderPipeline\GeometryRenderStep.cpp" />
     <ClCompile Include="source\Graphics\RenderPipeline\RenderStep.cpp" />
+    <ClCompile Include="source\Graphics\RenderPipeline\ScreenRenderStep.cpp" />
     <ClCompile Include="source\Graphics\Topology.cpp" />
     <ClCompile Include="source\Input\Keyboard.cpp" />
     <ClCompile Include="source\Input\Mouse.cpp" />
