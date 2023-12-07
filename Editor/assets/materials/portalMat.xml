@@ -1,0 +1,21 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="2970786864" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>300</m_layer>
+			<m_PSFilename>assets/shaders/BlitPixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/cubeVertex.cso</m_VSFilename>
+			<m_binds />			
+			<m_layoutType>DEFAULT</m_layoutType>
+			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>			
+		</Pass*>
+	</m_passes>
+	<m_binds>
+		<SamplerState* PtrId="2970787312" Type="SamplerState">
+			<m_slot>0</m_slot>
+			<m_filter>D3D11_FILTER_MIN_MAG_MIP_LINEAR</m_filter>
+			<m_mode>D3D11_TEXTURE_ADDRESS_WRAP</m_mode>
+		</SamplerState*>
+	</m_binds>
+</Material>
+

@@ -63,16 +63,21 @@ void ParticleSource::Insert(Node* node, const Transform& worldTransform) {
     m_currentTime += dt;
     unsigned int numToSpawn = (unsigned int)(cumDeltaTime * m_preset->m_emissionRate);
     cumDeltaTime = numToSpawn > 0u ? 0.f : cumDeltaTime;
+    math::Vector3 forward = worldTransform.GetForward();
     for (unsigned int i = 0u; i < numToSpawn && m_currentParticles < m_preset->m_maxParticles; i++) {
-      math::Vector3 point = m_preset->m_emitterShape->SampleRandomPoint();
+      math::Vector3 point = m_preset->m_emitterShape->SampleRandomPoint();      
       math::Vector3 center = m_preset->m_emitterShape->GetCenter();
-      math::Vector3 dirToCenter = point - center;
-      dirToCenter.Normalize();
-      math::Vector3 velocity = dirToCenter * m_preset->m_dispersion + math::Vector3::UnitZ*(1.f- m_preset->m_dispersion);
-      velocity.Normalize();      
       if (m_preset->m_world) {
         point = worldTransform.PointToWorld(point);
-      }            
+        center = worldTransform.PointToWorld(center);
+      }
+      else {
+        point = worldTransform.DirectionToWorld(point);
+      }
+      math::Vector3 dirToCenter = point - center;
+      dirToCenter.Normalize();
+      math::Vector3 velocity = dirToCenter * m_preset->m_dispersion + forward * (1.f- m_preset->m_dispersion);
+      velocity.Normalize();                     
       m_data[m_currentParticles].pos = { point.x, point.y, point.z };
       m_data[m_currentParticles].velocity = { velocity.x, velocity.y, velocity.z };
       m_data[m_currentParticles].lifeTime = m_preset->m_lifetime;

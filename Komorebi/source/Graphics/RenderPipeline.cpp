@@ -48,33 +48,37 @@ namespace gfx {
       bool cull = step == nullptr || !ignoreCull && math::cullAABB(planes, job.drawable->GetBVHData(), job.transform);      
 
       job.key = 0u;
-      //job.key &= ~(uint64_t(1) << 48);
+      ////job.key &= ~(uint64_t(1) << 48);
       job.key |= uint64_t(cull) << 48;
 
       jobsToExecute -= cull;
 
       if (!cull) {
+
+        unsigned isTransparent = (unsigned)step->GetSortReverse();
+        unsigned isOpaque = 1u - isTransparent;
+
         // Pass layer    
         unsigned int layer = job.pass->m_layer > 0xFFFF ? 0xFFFF : job.pass->m_layer;
-        uint64_t key = uint64_t(layer) << 32u;
+        job.key |= uint64_t(layer) << 32u;
 
         // Material (resource binds)
         unsigned int idx = job.material->GetMaterial()->GetIdx();
-        unsigned int shifts = 8u + 16u * step->GetSortReverse();
-        key |= ((uint64_t)idx) << shifts;
+        unsigned int shifts = 8u + 16u * isOpaque;
+        job.key |= ((uint64_t)idx) << shifts;
 
         // Pass index (state binds)
-        shifts = step->GetSortReverse() * 16u;
-        key |= uint64_t(job.pass->GetIdx()) << shifts;
+        shifts = 16u * isOpaque;
+        job.key |= uint64_t(job.pass->GetIdx()) << shifts;
 
         // Depth
-        shifts = step->GetSortReverse() * 16;
+        shifts = isTransparent * 16;
         job.key &= ~(uint64_t(0xFFFF) << shifts);
         float depth = camView.transform->PointToLocalUnsafe(job.transform->GetPositionUnsafe()).Length();
         float farZ = camView.camera->m_far;
         float nearZ = camView.camera->m_near;
         float normalizedDepth = (depth - nearZ) / (farZ - nearZ);
-        uint64_t depthKeyComponent = (step->GetSortReverse() ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
+        uint64_t depthKeyComponent = (isTransparent ? 1.0f - normalizedDepth : normalizedDepth) * 0xFFFF;
         job.key |= depthKeyComponent << shifts;
       }
     }

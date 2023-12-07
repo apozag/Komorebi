@@ -1,6 +1,6 @@
 #include "VertexCommon.hlsli"
 
-VSout main(VSin input) {
+VSout vs_main(VSin input) {
 	VSout vso;
 
 	float4 worldPos = mul(float4(input.p, 1.0), model);

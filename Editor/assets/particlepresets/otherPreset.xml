@@ -1,28 +1,29 @@
-<ParticleSourcePreset>    
-    <m_maxParticles>999</m_maxParticles>
-    <m_loop>true</m_loop>
-    <m_world>true</m_world>
-    <m_duration>1.000000</m_duration>
-    <m_dispersion>1</m_dispersion>
-    <m_emissionRate>100.000000</m_emissionRate>
-    <m_speed>300.000000</m_speed>
-    <m_lifetime>1.000000</m_lifetime>
-    <m_matInstance>
-        <m_material>assets/materials/particleMatTransparent.xml</m_material>
-        <m_binds>        
-            <Texture2D* Type="Texture2D">
-                <m_slot>0</m_slot>
-                <m_filename>assets\images\particles\trace_01.png</m_filename>
-                <m_mipLevels>1</m_mipLevels>
-            </Texture2D*>
-        </m_binds>
-    </m_matInstance>
-    <m_emitterShape Type="SphereShape">
-        <m_center>
-            <x>0.000000</x>
-            <y>0.000000</y>
-            <z>0.000000</z>
-        </m_center>
-        <m_radius>25.000000</m_radius>
-    </m_emitterShape>
+<ParticleSourcePreset>
+	<m_maxParticles>999</m_maxParticles>
+	<m_loop>true</m_loop>
+	<m_world>true</m_world>
+	<m_dispersion>0.100000</m_dispersion>
+	<m_duration>1.000000</m_duration>
+	<m_emissionRate>100.000000</m_emissionRate>
+	<m_speed>100.000000</m_speed>
+	<m_lifetime>1.000000</m_lifetime>
+	<m_emitterShape PtrId="1370522864" Type="SphereShape">
+		<m_center>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</m_center>
+		<m_radius>15.000000</m_radius>
+	</m_emitterShape>
+	<m_matInstance>
+		<m_material>assets/materials/particleMatTransparent.xml</m_material>
+		<m_binds>
+			<Texture2D* PtrId="1370522736" Type="Texture2D">
+				<m_slot>0</m_slot>
+				<m_filename>assets\images\particles\trace_01.png</m_filename>
+				<m_mipLevels>1</m_mipLevels>
+			</Texture2D*>
+		</m_binds>
+	</m_matInstance>
 </ParticleSourcePreset>
+

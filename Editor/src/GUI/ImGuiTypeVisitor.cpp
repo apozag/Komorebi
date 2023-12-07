@@ -253,6 +253,9 @@ void ImGuiTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* type) {
         ImGui::Begin((prefabInfo->m_name + "##" + filename).c_str());
         ImGuiTypeVisitor visitor(prefabInfo->m_ptr, prefabInfo->m_typeDesc->GetDynamic(prefabInfo->m_ptr)->getFullName());
         prefabInfo->m_typeDesc->Accept(&visitor);
+        if (ImGui::Button((std::string("Save##Prefab") + filename).c_str())) {
+          PrefabManager::GetInstance()->SavePrefab(selectedPrefab->m_fileName.c_str(), selectedPrefab->m_ptr, selectedPrefab->m_typeDesc);
+        }
         if (ImGui::Button((std::string("Close##Prefab") + filename).c_str())) {
           selectedPrefab = nullptr;
         }

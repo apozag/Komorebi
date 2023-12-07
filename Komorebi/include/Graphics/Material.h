@@ -33,6 +33,7 @@ namespace gfx {
 		std::vector<ReflectedConstantBuffer*> GetReflectedConstantBuffers() { return m_cbuffers; }
 		void UpdateConstantBufferCache();
 		void CopyFromConstantBufferCache();
+		void ShaderHotReload();
 
 		bool SetFloat(const char* name, float value);
 		bool SetVector4(const char* name, float* data);

@@ -69,6 +69,8 @@ namespace gfx {
 
 		bool DoesIgnoreFrustumCulling() const { return m_ignoreFrustumCulling; }
 
+		void ShaderHotReload();
+
 		REFLECT_BASE()
 
 	public:

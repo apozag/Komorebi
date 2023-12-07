@@ -1,0 +1,54 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="1055252656" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>100</m_layer>
+			<m_PSFilename>assets/shaders/ParticlePixelTransparent.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/ParticleVertex.cso</m_VSFilename>
+			<m_binds>
+				<GeometryShader* PtrId="1055252912" Type="GeometryShader">
+					<m_filename>assets/shaders/ParticleGeom.cso</m_filename>
+				</GeometryShader*>
+				<DepthStencilState* PtrId="1055253040" Type="DepthStencilState">
+					<m_DSAccess>DEPTH_READ</m_DSAccess>
+					<m_refVal>0</m_refVal>
+				</DepthStencilState*>
+				<RasterizerState* PtrId="1055253104" Type="RasterizerState">
+					<m_cullMode>FRONT</m_cullMode>
+					<m_wireframe>false</m_wireframe>
+				</RasterizerState*>
+				<BlendState* PtrId="1055253168" Type="BlendState">
+					<m_enable>true</m_enable>
+					<m_srcBlendFactor>SRC_ALPHA</m_srcBlendFactor>
+					<m_dstBlendFactor>INV_SRC_ALPHA</m_dstBlendFactor>
+					<m_blendOp>ADD</m_blendOp>
+				</BlendState*>
+			</m_binds>
+			<m_layoutType>PARTICLE</m_layoutType>
+			<m_ignoreFrustumCulling>true</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>quadSize</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>color</varName>
+						<varType>VECTOR4</varType>
+						<dataIdx>1</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>5.000000</float>
+					<float>5.000000</float>
+					<float>5.000000</float>
+					<float>5.000000</float>
+					<float>1.000000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds/>
+</Material>
+

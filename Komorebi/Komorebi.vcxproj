@@ -497,6 +497,7 @@
     <ClInclude Include="include\Graphics\RenderPipeline\GeometryRenderStep.h" />
     <ClInclude Include="include\Graphics\RenderPipeline\RenderStep.h" />
     <ClInclude Include="include\Graphics\RenderPipeline\ScreenRenderStep.h" />
+    <ClInclude Include="include\Graphics\ShaderInclude.h" />
     <ClInclude Include="include\Graphics\Topology.h" />
     <ClInclude Include="include\Input\Keyboard.h" />
     <ClInclude Include="include\Input\Mouse.h" />
@@ -580,6 +581,7 @@
     <ClCompile Include="source\Graphics\RenderPipeline\GeometryRenderStep.cpp" />
     <ClCompile Include="source\Graphics\RenderPipeline\RenderStep.cpp" />
     <ClCompile Include="source\Graphics\RenderPipeline\ScreenRenderStep.cpp" />
+    <ClCompile Include="source\Graphics\ShaderInclude.cpp" />
     <ClCompile Include="source\Graphics\Topology.cpp" />
     <ClCompile Include="source\Input\Keyboard.cpp" />
     <ClCompile Include="source\Input\Mouse.cpp" />

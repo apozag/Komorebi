@@ -1,22 +1,22 @@
 <Material>
 	<m_passes>
-		<Pass* PtrId="2237134320" Type="Pass">
+		<Pass* PtrId="2970786864" Type="Pass">
 			<m_enabled>true</m_enabled>
-			<m_layer>100</m_layer>
-			<m_PSFilename>assets/shaders/ForceFieldPixel.cso</m_PSFilename>
-			<m_VSFilename>assets/shaders/ForceFieldVertex.cso</m_VSFilename>
+			<m_layer>102</m_layer>
+			<m_PSFilename>assets/shaders/FirePixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/PBRVertex.cso</m_VSFilename>
 			<m_binds>
-				<DepthStencilState* PtrId="2237134576" Type="DepthStencilState">
+				<DepthStencilState* PtrId="2970787120" Type="DepthStencilState">
 					<m_DSAccess>DEPTH_READ</m_DSAccess>
 					<m_refVal>0</m_refVal>
 				</DepthStencilState*>
-				<BlendState* PtrId="2237134640" Type="BlendState">
+				<BlendState* PtrId="2970787184" Type="BlendState">
 					<m_enable>true</m_enable>
 					<m_srcBlendFactor>SRC_ALPHA</m_srcBlendFactor>
 					<m_dstBlendFactor>INV_SRC_ALPHA</m_dstBlendFactor>
 					<m_blendOp>ADD</m_blendOp>
 				</BlendState*>
-				<RasterizerState* PtrId="2237134704" Type="RasterizerState">
+				<RasterizerState* PtrId="2970787248" Type="RasterizerState">
 					<m_cullMode>NONE</m_cullMode>
 					<m_wireframe>false</m_wireframe>
 				</RasterizerState*>
@@ -26,66 +26,70 @@
 			<m_cbuffCache>
 				<varsInfo>
 					<CacheVarInfo>
-						<varName>color</varName>
+						<varName>color0</varName>
 						<varType>VECTOR4</varType>
 						<dataIdx>0</dataIdx>
 					</CacheVarInfo>
 					<CacheVarInfo>
-						<varName>uvMult</varName>
-						<varType>VECTOR2</varType>
+						<varName>color1</varName>
+						<varType>VECTOR4</varType>
 						<dataIdx>4</dataIdx>
 					</CacheVarInfo>
 					<CacheVarInfo>
-						<varName>fresnellExp1</varName>
-						<varType>SCALAR</varType>
-						<dataIdx>6</dataIdx>
-					</CacheVarInfo>
-					<CacheVarInfo>
-						<varName>fresnellExp2</varName>
-						<varType>SCALAR</varType>
-						<dataIdx>7</dataIdx>
-					</CacheVarInfo>
-					<CacheVarInfo>
-						<varName>attenuation</varName>
-						<varType>SCALAR</varType>
+						<varName>ellipse</varName>
+						<varType>VECTOR2</varType>
 						<dataIdx>8</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>uvMult</varName>
+						<varType>VECTOR2</varType>
+						<dataIdx>10</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>threshold</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>12</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>smooth</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>13</dataIdx>
 					</CacheVarInfo>
 					<CacheVarInfo>
 						<varName>animSpeed</varName>
 						<varType>SCALAR</varType>
-						<dataIdx>9</dataIdx>
-					</CacheVarInfo>
-					<CacheVarInfo>
-						<varName>contactDist</varName>
-						<varType>SCALAR</varType>
-						<dataIdx>10</dataIdx>
+						<dataIdx>14</dataIdx>
 					</CacheVarInfo>
 				</varsInfo>
 				<varsData>
-					<float>40.000000</float>
-					<float>80.000000</float>
-					<float>200.000000</float>
-					<float>0.000000</float>
-					<float>2.000000</float>
-					<float>2.000000</float>
-					<float>3.000000</float>
+					<float>20.000000</float>
+					<float>20.000000</float>
 					<float>10.000000</float>
-					<float>0.050000</float>
-					<float>0.100000</float>
-					<float>30.000000</float>
+					<float>0.000000</float>
+					<float>10.000000</float>
+					<float>0.000000</float>
+					<float>0.000000</float>
+					<float>0.000000</float>
+					<float>0.400000</float>
+					<float>1.000000</float>
+					<float>0.500000</float>
+					<float>0.500000</float>
+					<float>0.150000</float>
+					<float>0.500000</float>
+					<float>1.000000</float>
 				</varsData>
 			</m_cbuffCache>
 		</Pass*>
 	</m_passes>
 	<m_binds>
-		<SamplerState* PtrId="2237134768" Type="SamplerState">
+		<SamplerState* PtrId="2970787312" Type="SamplerState">
 			<m_slot>7</m_slot>
 			<m_filter>D3D11_FILTER_MIN_MAG_MIP_LINEAR</m_filter>
 			<m_mode>D3D11_TEXTURE_ADDRESS_WRAP</m_mode>
 		</SamplerState*>
-		<Texture2D* PtrId="2237134832" Type="Texture2D">
+		<Texture2D* PtrId="2970787376" Type="Texture2D">
 			<m_slot>7</m_slot>
-			<m_filename>assets\images\vfx\caustics.png</m_filename>
+			<m_filename>assets\images\vfx\fire.png</m_filename>
 			<m_mipLevels>1</m_mipLevels>
 		</Texture2D*>
 	</m_binds>

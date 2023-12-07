@@ -1,4 +1,3 @@
-
 #include <d3d11.h>
 
 #include "Graphics/Pass.h"
@@ -105,6 +104,11 @@ namespace gfx {
 			bind->Unbind();
 		}
 	}	
+
+	void Pass::ShaderHotReload() {		
+		m_pixelShader->HotReload();
+		m_vertexShader->HotReload();		
+	}
 	
 	REFLECT_STRUCT_BASE_BEGIN(ConstantBufferCache)
 	REFLECT_STRUCT_MEMBER(varsInfo)

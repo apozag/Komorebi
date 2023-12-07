@@ -22,7 +22,9 @@ namespace gfx {
 		void Bind()const override;
 		void Unbind()const override {}
 		void Update() {}
-		ID3D11ShaderReflection* const GetShaderReflection() const { return m_reflection.Get(); }
+		ID3D11ShaderReflection* const GetShaderReflection() const { return m_reflection.Get(); }		
+
+		void HotReload();
 
 		REFLECT()
 

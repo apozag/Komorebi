@@ -96,7 +96,7 @@ void ImGuiEditPtrTypeVisitor::Visit(const reflection::TypeDescriptor_Asset_Ptr* 
       ImGui::InputText("Asset filename", str, buffSize);
       if (ImGui::Button(UNIQUE_LABEL("Accept"))) {
         const TypeDescriptor* dynamicType = type->GetDynamic(ppObj);
-        *ppObj = PrefabManager::GetInstance()->LoadPrefab(str, dynamicType, false);
+        *ppObj = PrefabManager::GetInstance()->LoadPrefab(str, dynamicType, true);
         type->setFilename(m_pObj, str);
       }
     }

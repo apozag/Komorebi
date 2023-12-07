@@ -272,6 +272,20 @@ namespace gfx {
 		}
 	}
 
+	void Material::ShaderHotReload() {
+		for (Pass* pass : m_passes) {
+			pass->ShaderHotReload();
+		}
+		for (ReflectedConstantBuffer* cbuffer : m_cbuffers) {
+			m_binds.erase(std::find(m_binds.begin(), m_binds.end(), static_cast<ResourceBindable*>(cbuffer)));
+			memory::Factory::Destroy(cbuffer);
+		}
+		m_cbuffers.clear();
+		for (Pass* pass : m_passes) {
+			ProcessPass(pass);
+		}
+	}
+
 	bool Material::SetFloat(const char* name, float value) {
 		for (ReflectedConstantBuffer* cbuff : m_cbuffers) {
 			if (cbuff->SetFloat(name, value)) return true;

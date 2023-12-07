@@ -52,7 +52,7 @@ void DrawMaterialInfo(const PrefabManager::PrefabInfo& prefabInfo) {
           break;
         }
       }
-    }    
+    }        
     ImGui::Separator();
   }
 
@@ -63,6 +63,10 @@ void DrawMaterialInfo(const PrefabManager::PrefabInfo& prefabInfo) {
   ImGui::SameLine();
   if (ImGui::Button(UNIQUE_LABEL("Reset to last save", prefabInfo.m_ptr))) {
     material->CopyFromConstantBufferCache();
+  }
+  ImGui::SameLine();
+  if (ImGui::Button(UNIQUE_LABEL("Shader Reload", material))) {
+    material->ShaderHotReload();
   }
 }
 

@@ -298,5 +298,14 @@
     <FxCompile Include="assets\shaders\ForceFieldVertex.hlsl">
       <Filter>Shaders\Vertex</Filter>
     </FxCompile>
+    <FxCompile Include="assets\shaders\FirePixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\RipplePixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
+    <FxCompile Include="assets\shaders\WaterPixel.hlsl">
+      <Filter>Shaders\Pixel</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -1,0 +1,74 @@
+<Material>
+	<m_passes>
+		<Pass* PtrId="2128537456" Type="Pass">
+			<m_enabled>true</m_enabled>
+			<m_layer>101</m_layer>
+			<m_PSFilename>assets/shaders/RipplePixel.cso</m_PSFilename>
+			<m_VSFilename>assets/shaders/PBRVertex.cso</m_VSFilename>
+			<m_binds>
+				<DepthStencilState* PtrId="2128537712" Type="DepthStencilState">
+					<m_DSAccess>DEPTH_READ</m_DSAccess>
+					<m_refVal>0</m_refVal>
+				</DepthStencilState*>
+				<BlendState* PtrId="2128537776" Type="BlendState">
+					<m_enable>true</m_enable>
+					<m_srcBlendFactor>SRC_ALPHA</m_srcBlendFactor>
+					<m_dstBlendFactor>INV_SRC_ALPHA</m_dstBlendFactor>
+					<m_blendOp>ADD</m_blendOp>
+				</BlendState*>
+				<RasterizerState* PtrId="2128537840" Type="RasterizerState">
+					<m_cullMode>NONE</m_cullMode>
+					<m_wireframe>false</m_wireframe>
+				</RasterizerState*>
+			</m_binds>
+			<m_layoutType>DEFAULT</m_layoutType>
+			<m_ignoreFrustumCulling>false</m_ignoreFrustumCulling>
+			<m_cbuffCache>
+				<varsInfo>
+					<CacheVarInfo>
+						<varName>color</varName>
+						<varType>VECTOR4</varType>
+						<dataIdx>0</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>animSpeed</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>4</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>threshold</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>5</dataIdx>
+					</CacheVarInfo>
+					<CacheVarInfo>
+						<varName>smooth</varName>
+						<varType>SCALAR</varType>
+						<dataIdx>6</dataIdx>
+					</CacheVarInfo>
+				</varsInfo>
+				<varsData>
+					<float>3.000000</float>
+					<float>3.000000</float>
+					<float>3.000000</float>
+					<float>0.000000</float>
+					<float>-0.700000</float>
+					<float>0.200000</float>
+					<float>0.200000</float>
+				</varsData>
+			</m_cbuffCache>
+		</Pass*>
+	</m_passes>
+	<m_binds>
+		<SamplerState* PtrId="2128537904" Type="SamplerState">
+			<m_slot>7</m_slot>
+			<m_filter>D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR</m_filter>
+			<m_mode>D3D11_TEXTURE_ADDRESS_WRAP</m_mode>
+		</SamplerState*>
+		<Texture2D* PtrId="2128537968" Type="Texture2D">
+			<m_slot>7</m_slot>
+			<m_filename>assets\images\vfx\ripples.png</m_filename>
+			<m_mipLevels>1</m_mipLevels>
+		</Texture2D*>
+	</m_binds>
+</Material>
+

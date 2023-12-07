@@ -24,6 +24,8 @@ namespace gfx {
 		ID3DBlob* GetBytecode() const;
 		ID3D11ShaderReflection* const GetShaderReflection() const { return m_reflection.Get(); }
 
+		void HotReload();
+
 		REFLECT()
 
 	private:
